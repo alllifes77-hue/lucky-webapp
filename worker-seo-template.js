@@ -339,6 +339,7 @@ ${hreflangs}
 <script type="application/ld+json">${faqSchema}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;color:#1c1917;}
 .hero{background:linear-gradient(135deg,#1e1b4b,#312e81,#4c1d95);color:#fff;padding:28px 20px 22px;text-align:center;}
 .hero h1{font-size:clamp(20px,3.5vw,34px);font-weight:900;margin-bottom:8px;}
@@ -365,7 +366,7 @@ iframe{width:100%;border:none;display:block;min-height:900px;transition:height 0
   <h1>${esc(L.h1)}</h1>
   <p>${esc(L.body)}</p>
   <div class="chips">${featuresHtml}</div>
-  <a class="start-btn" href="${esc(iframeSrc)}">${esc(L.start)}</a>
+  <a class="start-btn" href="#lucky-frame">${esc(L.start)}</a>
 </div>
 <div class="lang-bar">${langBarHtml}</div>
 <iframe id="lucky-frame" src="${esc(iframeSrc)}" scrolling="no" title="${esc(L.h1)}"></iframe>
