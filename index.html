@@ -83,8 +83,11 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 .home-content{padding:28px 20px 40px;}
 .input-card{background:var(--card);border:2px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow);max-width:500px;margin:0 auto 24px;}
 .input-label{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:.3px;text-transform:uppercase;}
-.date-input{width:100%;padding:14px 16px;border:2px solid var(--border2);border-radius:12px;font-size:17px;color:var(--text);background:#fff;margin-bottom:20px;outline:none;transition:border .2s;font-family:inherit;}
-.date-input:focus{border-color:var(--gold);}
+.date-3-wrap{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:20px;}
+.date-3-input{width:100%;padding:14px 10px;border:2px solid var(--border2);border-radius:12px;font-size:17px;font-weight:600;color:var(--text);background:#fff;outline:none;transition:border .2s;font-family:inherit;text-align:center;-moz-appearance:textfield;}
+.date-3-input::-webkit-outer-spin-button,.date-3-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.date-3-input:focus{border-color:var(--gold);}
+.date-3-input.err{border-color:#dc2626;}
 .lottery-select{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:600;color:var(--text);background:#fff;margin-bottom:16px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;transition:border .2s;}
 .lottery-select:focus{border-color:var(--gold);}
 .lottery-name-badge{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:700;color:var(--text);background:#fafaf9;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
@@ -230,7 +233,11 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 
         <!-- 생년월일 -->
         <div class="input-label" id="txt-birthday-label">생년월일 입력</div>
-        <input type="date" id="birthday-input" class="date-input" min="1920-01-01" max="2009-12-31">
+        <div class="date-3-wrap">
+          <input type="number" id="bday-year"  class="date-3-input" placeholder="연도" min="1920" max="2009" inputmode="numeric">
+          <input type="number" id="bday-month" class="date-3-input" placeholder="월"   min="1"    max="12"   inputmode="numeric">
+          <input type="number" id="bday-day"   class="date-3-input" placeholder="일"   min="1"    max="31"   inputmode="numeric">
+        </div>
 
         <!-- 추첨일 (선택) -->
         <div class="draw-date-wrap">
@@ -239,7 +246,11 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
             <span id="txt-draw-date-label">추첨일 입력 (선택) — 더 정밀한 분석</span>
           </button>
           <div class="draw-date-body" id="draw-date-body">
-            <input type="date" id="draw-date-input" class="date-input" style="margin-bottom:0;">
+            <div class="date-3-wrap" style="margin-bottom:0;">
+              <input type="number" id="draw-year"  class="date-3-input" placeholder="연도" min="2020" max="2035" inputmode="numeric">
+              <input type="number" id="draw-month" class="date-3-input" placeholder="월"   min="1"    max="12"   inputmode="numeric">
+              <input type="number" id="draw-day"   class="date-3-input" placeholder="일"   min="1"    max="31"   inputmode="numeric">
+            </div>
             <p class="draw-date-note" id="txt-draw-date-note">추첨일의 기운(일진·UDN·일성)이 생년 에너지와 결합되어 더 정밀한 번호가 생성됩니다</p>
           </div>
         </div>

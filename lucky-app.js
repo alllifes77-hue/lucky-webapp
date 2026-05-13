@@ -977,17 +977,26 @@ function selectSets(btn) {
 }
 
 function startGenerate() {
-  const input = document.getElementById('birthday-input');
-  const val = input.value;
-  if (!val) {
-    input.focus();
-    input.style.borderColor = '#dc2626';
-    setTimeout(() => { input.style.borderColor = ''; }, 1500);
+  const yearEl  = document.getElementById('bday-year');
+  const monthEl = document.getElementById('bday-month');
+  const dayEl   = document.getElementById('bday-day');
+  const year  = parseInt(yearEl.value)  || 0;
+  const month = parseInt(monthEl.value) || 0;
+  const day   = parseInt(dayEl.value)   || 0;
+  if (!year || !month || !day || year < 1920 || year > 2009) {
+    [yearEl, monthEl, dayEl].forEach(el => {
+      if (!el.value) { el.classList.add('err'); setTimeout(() => el.classList.remove('err'), 1500); }
+    });
+    yearEl.focus();
     return;
   }
-  const [year, month, day] = val.split('-').map(Number);
-  const lotteryId   = (document.getElementById('lottery-select')  || {}).value || null;
-  const drawDateStr = (document.getElementById('draw-date-input') || {}).value || null;
+  const lotteryId = (document.getElementById('lottery-select') || {}).value || null;
+  const drawYear  = parseInt((document.getElementById('draw-year')  || {}).value || 0);
+  const drawMonth = parseInt((document.getElementById('draw-month') || {}).value || 0);
+  const drawDay   = parseInt((document.getElementById('draw-day')   || {}).value || 0);
+  const drawDateStr = (drawYear && drawMonth && drawDay)
+    ? `${drawYear}-${String(drawMonth).padStart(2,'0')}-${String(drawDay).padStart(2,'0')}`
+    : null;
   const setsCount   = parseInt((document.querySelector('.sets-btn.active') || {}).dataset?.sets || '1');
   showScreen('s-gen');
   setTimeout(() => {
@@ -1014,10 +1023,18 @@ function applyLang() {
   const lang = window.LUCKY_CURRENT_LANG || 'ko';
 
   document.documentElement.lang = L.htmlLang || lang;
-  const bi = document.getElementById('birthday-input');
-  if (bi) bi.lang = L.htmlLang || lang;
-  const di = document.getElementById('draw-date-input');
-  if (di) di.lang = L.htmlLang || lang;
+  const BDAY_PH = {
+    year:  {ko:'연도',en:'Year', ja:'年', de:'Jahr',  fr:'Année',es:'Año', pt:'Ano', it:'Anno',  id:'Tahun'},
+    month: {ko:'월',  en:'Month',ja:'月', de:'Monat', fr:'Mois', es:'Mes', pt:'Mês', it:'Mese',  id:'Bulan'},
+    day:   {ko:'일',  en:'Day',  ja:'日', de:'Tag',   fr:'Jour', es:'Día', pt:'Dia', it:'Giorno',id:'Tgl'},
+  };
+  const setph = (id, ph) => { const el = document.getElementById(id); if (el) el.placeholder = ph; };
+  setph('bday-year',  BDAY_PH.year[lang]  || 'Year');
+  setph('bday-month', BDAY_PH.month[lang] || 'Month');
+  setph('bday-day',   BDAY_PH.day[lang]   || 'Day');
+  setph('draw-year',  BDAY_PH.year[lang]  || 'Year');
+  setph('draw-month', BDAY_PH.month[lang] || 'Month');
+  setph('draw-day',   BDAY_PH.day[lang]   || 'Day');
   if (L.docTitle) document.title = L.docTitle;
 
   const url = lang === 'ko' ? 'https://lucky.all-lifes.com/' : `https://lucky.all-lifes.com/?lang=${lang}`;
@@ -1126,7 +1143,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (p.get('y') && p.get('m') && p.get('dy')) {
     const year = parseInt(p.get('y')), month = parseInt(p.get('m')), day = parseInt(p.get('dy'));
     if (year && month && day) {
-      document.getElementById('birthday-input').value = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      document.getElementById('bday-year').value  = year;
+      document.getElementById('bday-month').value = month;
+      document.getElementById('bday-day').value   = day;
     }
   }
 
