@@ -476,6 +476,9 @@ function renderResults(data) {
   // "Why these numbers?" insight panel
   renderDrawEnergyPanel(data);
 
+  // Algorithm / science explanation panel
+  renderAlgorithmPanel(data);
+
   // Share buttons
   renderShareBtns(data);
 
@@ -636,6 +639,184 @@ function renderDrawEnergyPanel(data) {
   panel.innerHTML = html;
 
   // Insert before share section
+  const shareSection = document.querySelector('.share-section');
+  if (shareSection) shareSection.before(panel);
+}
+
+function renderAlgorithmPanel(data) {
+  const existing = document.getElementById('algorithm-panel');
+  if (existing) existing.remove();
+
+  const lang = data.lang;
+
+  const ALGO = {
+    panelTitle: {
+      ko:'🔬 왜 이 번호들의 확률이 높은가?',
+      en:'🔬 Why These Numbers Have Higher Probability',
+      ja:'🔬 なぜこれらの数字の確率が高いのか',
+      de:'🔬 Warum diese Zahlen wahrscheinlicher sind',
+      fr:'🔬 Pourquoi ces numéros sont plus probables',
+      es:'🔬 Por qué estos números tienen mayor probabilidad',
+      pt:'🔬 Por que esses números têm maior probabilidade',
+      it:'🔬 Perché questi numeri hanno probabilità maggiore',
+      id:'🔬 Mengapa angka ini memiliki probabilitas lebih tinggi',
+    },
+    systemOrigin: {
+      saju: {
+        ko:'사주팔자(四柱八字)는 3,000년 이상의 역사를 지닌 동양 운명 분석 체계입니다. 생년월일에서 천간(天干)과 지지(地支)를 추출해 오행(木·火·土·金·水)으로 분류하고, 각 오행에 전통적으로 배속된 행운 숫자를 도출합니다.',
+        en:'Four Pillars of Destiny (四柱八字) is a 3,000+ year-old Eastern fate analysis system. The birth year is mapped to Heavenly Stems and Earthly Branches, then classified into one of the Five Elements (Wood·Fire·Earth·Metal·Water), each with traditionally assigned lucky numbers.',
+        ja:'四柱推命は3,000年以上の歴史を持つ東洋の運命分析体系です。生年月日から天干・地支を抽出し、五行（木・火・土・金・水）に分類して、各五行に伝統的に配属された吉数を導出します。',
+        de:'Die Vier Säulen des Schicksals (四柱八字) ist ein über 3.000 Jahre altes östliches Schicksalsanalysesystem. Das Geburtsjahr wird auf Himmlische Stämme und Irdische Zweige abgebildet und einem der Fünf Elemente zugeordnet.',
+        fr:'Les Quatre Piliers du Destin (四柱八字) est un système d\'analyse du destin oriental vieux de plus de 3 000 ans. L\'année de naissance est mappée aux Tiges Célestes et Branches Terrestres, puis classée dans l\'un des Cinq Éléments.',
+        es:'Los Cuatro Pilares del Destino (四柱八字) es un sistema oriental de análisis del destino con más de 3.000 años de historia. El año de nacimiento se asigna a Tallos Celestiales y Ramas Terrestres, luego se clasifica en uno de los Cinco Elementos.',
+        pt:'Os Quatro Pilares do Destino (四柱八字) é um sistema oriental de análise do destino com mais de 3.000 anos. O ano de nascimento é mapeado para Caules Celestiais e Galhos Terrestres, depois classificado em um dos Cinco Elementos.',
+        it:'I Quattro Pilastri del Destino (四柱八字) è un sistema orientale di analisi del destino con oltre 3.000 anni di storia. L\'anno di nascita viene mappato su Steli Celesti e Rami Terrestri, poi classificato in uno dei Cinque Elementi.',
+        id:'Empat Pilar Nasib (四柱八字) adalah sistem analisis nasib Timur berusia lebih dari 3.000 tahun. Tahun kelahiran dipetakan ke Batang Langit dan Cabang Bumi, lalu diklasifikasikan ke salah satu dari Lima Elemen.',
+      },
+      kyusei: {
+        ko:'구성기학(九星気学)은 1,200년 이상의 역사를 가진 일본 전통 점술입니다. 탄생년도에서 1~9의 본명성(本命星)을 산출하고, 각 별의 오행 속성에 따라 행운 숫자를 전통적으로 도출합니다.',
+        en:'Nine Star Ki (九星気学) is a 1,200+ year-old Japanese divination system. The birth year determines a Life Star (1–9), each with a Five Element attribute and traditionally associated lucky numbers.',
+        ja:'九星気学は1,200年以上の歴史を持つ日本伝統の占術です。生まれ年から本命星（1〜9）を算出し、各星の五行属性に基づく吉数を伝統的に導出します。',
+        de:'Nine Star Ki (九星気学) ist ein über 1.200 Jahre altes japanisches Wahrsagesystem. Das Geburtsjahr bestimmt einen Lebensstern (1–9) mit einem Fünf-Elemente-Attribut und traditionell zugeordneten Glückszahlen.',
+        fr:'Nine Star Ki (九星気学) est un système divinatoire japonais vieux de plus de 1.200 ans. L\'année de naissance détermine une Étoile de Vie (1–9) avec un attribut des Cinq Éléments et des numéros chanceux associés.',
+        es:'Nine Star Ki (九星気学) es un sistema de adivinación japonés de más de 1.200 años. El año de nacimiento determina una Estrella de Vida (1–9) con un atributo de los Cinco Elementos y números de la suerte asociados.',
+        pt:'Nine Star Ki (九星気学) é um sistema de adivinhação japonês de mais de 1.200 anos. O ano de nascimento determina uma Estrela de Vida (1–9) com um atributo dos Cinco Elementos e números sortudos associados.',
+        it:'Nine Star Ki (九星気学) è un sistema divinatorio giapponese di oltre 1.200 anni. L\'anno di nascita determina una Stella di Vita (1–9) con un attributo dei Cinque Elementi e numeri fortunati associati.',
+        id:'Nine Star Ki (九星気学) adalah sistem ramalan Jepang berusia lebih dari 1.200 tahun. Tahun kelahiran menentukan Bintang Kehidupan (1–9) dengan atribut Lima Elemen dan angka hoki yang terkait secara tradisional.',
+      },
+      numerology: {
+        ko:'수비학(數秘學)은 고대 피타고라스(기원전 570~495)에서 유래한 숫자 분석 체계입니다. 생년월일의 모든 숫자를 합산해 생명 경로 수(Life Path Number, 1~9 또는 마스터넘버 11·22·33)를 산출하며, 각 번호는 고유한 진동수와 공명 행운 숫자를 지닙니다.',
+        en:'Numerology traces to the Pythagorean school (570–495 BC). All digits of the birth date are summed to derive the Life Path Number (1–9, or master numbers 11·22·33). Each number vibrates at a unique frequency with resonant lucky numbers confirmed across Kabbalistic and modern traditions.',
+        ja:'数秘術はピタゴラス学派（紀元前570〜495年）に由来します。生年月日のすべての数字を合計してライフパスナンバー（1〜9またはマスターナンバー11·22·33）を算出し、各数字は固有の振動数と共鳴する吉数を持ちます。',
+        de:'Numerologie geht auf die pythagoräische Schule (570–495 v. Chr.) zurück. Alle Ziffern des Geburtsdatums werden summiert, um die Lebenspfadzahl (1–9 oder Meisterzahlen 11·22·33) zu ermitteln.',
+        fr:'La numérologie remonte à l\'école pythagoricienne (570–495 av. J.-C.). Toutes les chiffres de la date de naissance sont additionnées pour dériver le Nombre de Chemin de Vie (1–9 ou nombres maîtres 11·22·33).',
+        es:'La numerología se remonta a la escuela pitagórica (570–495 a.C.). Todos los dígitos de la fecha de nacimiento se suman para derivar el Número del Camino de Vida (1–9 o números maestros 11·22·33).',
+        pt:'A numerologia remonta à escola pitagórica (570–495 a.C.). Todos os dígitos da data de nascimento são somados para derivar o Número do Caminho de Vida (1–9 ou números mestres 11·22·33).',
+        it:'La numerologia risale alla scuola pitagorica (570–495 a.C.). Tutte le cifre della data di nascita vengono sommate per ricavare il Numero del Percorso di Vita (1–9 o numeri maestri 11·22·33).',
+        id:'Numerologi berasal dari mazhab Pythagoras (570–495 SM). Semua digit tanggal lahir dijumlahkan untuk mendapatkan Nomor Jalur Kehidupan (1–9 atau nomor master 11·22·33).',
+      },
+      jawanese: {
+        ko:'자와 달력의 Weton은 7일 양력과 5일 파사란 주기(Legi·Pahing·Pon·Wage·Kliwon)의 조합입니다. 프리봄(Primbon) 전통에서 각 파사란은 특정 숫자와 공명 관계를 가지며, 이를 Togel 번호 생성에 활용합니다.',
+        en:'Javanese Weton combines the 7-day Gregorian week with the 5-day Pasaran cycle (Legi·Pahing·Pon·Wage·Kliwon). In the Primbon tradition — a 600+ year-old Javanese manuscript — each Pasaran resonates with specific numbers used for Togel number generation.',
+        ja:'ジャワ暦のWetonは7日周期と5日周期のパサラン（Legi·Pahing·Pon·Wage·Kliwon）の組み合わせです。600年以上の歴史を持つプリンボン伝統では、各パサランが特定の数字と共鳴します。',
+        de:'Das Javanische Weton kombiniert die 7-tägige Gregorianische Woche mit dem 5-tägigen Pasaran-Zyklus (Legi·Pahing·Pon·Wage·Kliwon). In der 600+ Jahre alten Primbon-Tradition resoniert jedes Pasaran mit spezifischen Glückszahlen.',
+        fr:'Le Weton javanais combine la semaine grégorienne de 7 jours avec le cycle Pasaran de 5 jours (Legi·Pahing·Pon·Wage·Kliwon). Dans la tradition Primbon (600+ ans), chaque Pasaran résonne avec des numéros spécifiques.',
+        es:'El Weton javanés combina la semana gregoriana de 7 días con el ciclo Pasaran de 5 días (Legi·Pahing·Pon·Wage·Kliwon). En la tradición Primbon (más de 600 años), cada Pasaran resuena con números específicos.',
+        pt:'O Weton javanês combina a semana gregoriana de 7 dias com o ciclo Pasaran de 5 dias (Legi·Pahing·Pon·Wage·Kliwon). Na tradição Primbon (600+ anos), cada Pasaran ressoa com números específicos.',
+        it:'Il Weton giavanese combina la settimana gregoriana di 7 giorni con il ciclo Pasaran di 5 giorni (Legi·Pahing·Pon·Wage·Kliwon). Nella tradizione Primbon (600+ anni), ogni Pasaran risuona con numeri specifici.',
+        id:'Weton Jawa menggabungkan siklus 7 hari Masehi dengan siklus 5 hari Pasaran (Legi·Pahing·Pon·Wage·Kliwon). Dalam tradisi Primbon (600+ tahun), setiap Pasaran beresonansi dengan angka-angka tertentu.',
+      },
+    },
+    calcChainTitle: {ko:'계산 과정',en:'Calculation Chain',ja:'計算プロセス',de:'Rechenweg',fr:'Processus de calcul',es:'Proceso de cálculo',pt:'Processo de cálculo',it:'Processo di calcolo',id:'Proses perhitungan'},
+    luckyPoolTitle: {ko:'행운 번호 풀 (4배 가중치)',en:'Lucky Number Pool (4× weighted)',ja:'吉数プール（4倍の重み）',de:'Glückszahlen-Pool (4-fach)',fr:'Réservoir de numéros chanceux (4×)',es:'Grupo de números de la suerte (4×)',pt:'Pool de números sortudos (4×)',it:'Pool di numeri fortunati (4×)',id:'Kumpulan angka hoki (bobot 4×)'},
+    probabilityTitle: {ko:'확률 원리',en:'Probability Principle',ja:'確率の原理',de:'Wahrscheinlichkeitsprinzip',fr:'Principe de probabilité',es:'Principio de probabilidad',pt:'Princípio de probabilidade',it:'Principio di probabilità',id:'Prinsip probabilitas'},
+    probabilityDesc: {
+      ko:'행운 번호 풀의 각 숫자는 선택 풀에 4번 삽입되고, 일반 숫자는 1번만 삽입됩니다. 이로 인해 9개의 행운 번호가 전체 범위의 다른 숫자들보다 통계적으로 선택될 확률이 높아집니다.',
+      en:'Each lucky number is inserted 4 times into the selection pool, while ordinary numbers are inserted only once. This makes the lucky numbers statistically more likely to be selected compared to all other numbers in the range.',
+      ja:'各吉数は選択プールに4回挿入され、通常の数字は1回のみ挿入されます。これにより、吉数が全範囲の他の数字よりも統計的に選択されやすくなります。',
+      de:'Jede Glückszahl wird 4-mal in den Auswahlpool eingefügt, während gewöhnliche Zahlen nur einmal eingefügt werden. Dadurch werden die Glückszahlen statistisch häufiger ausgewählt.',
+      fr:'Chaque numéro chanceux est inséré 4 fois dans le pool de sélection, tandis que les numéros ordinaires ne sont insérés qu\'une seule fois. Cela rend les numéros chanceux statistiquement plus susceptibles d\'être sélectionnés.',
+      es:'Cada número de la suerte se inserta 4 veces en el grupo de selección, mientras que los números ordinarios se insertan solo una vez. Esto hace que los números de la suerte tengan estadísticamente más probabilidades de ser seleccionados.',
+      pt:'Cada número sortudo é inserido 4 vezes no pool de seleção, enquanto os números ordinários são inseridos apenas uma vez. Isso torna os números sortudos estatisticamente mais prováveis de serem selecionados.',
+      it:'Ogni numero fortunato viene inserito 4 volte nel pool di selezione, mentre i numeri ordinari vengono inseriti solo una volta. Ciò rende i numeri fortunati statisticamente più probabili di essere selezionati.',
+      id:'Setiap angka hoki dimasukkan 4 kali ke dalam kolam seleksi, sedangkan angka biasa hanya dimasukkan sekali. Ini membuat angka-angka hoki secara statistik lebih mungkin terpilih.',
+    },
+    disclaimer: {
+      ko:'※ 로또는 완전한 무작위 추첨 게임입니다. 이 분석은 전통 문화 지혜에 기반한 오락 콘텐츠이며, 당첨을 보장하지 않습니다.',
+      en:'※ Lottery draws are completely random events. This analysis is entertainment based on cultural tradition and does not guarantee any winnings. Please play responsibly.',
+      ja:'※ 宝くじは完全な無作為抽選です。この分析は文化的伝統に基づいたエンターテインメントであり、当選を保証するものではありません。',
+      de:'※ Lottoziehungen sind vollständig zufällig. Diese Analyse dient der Unterhaltung basierend auf kultureller Tradition und garantiert keine Gewinne.',
+      fr:'※ Les tirages de loterie sont des événements complètement aléatoires. Cette analyse est un divertissement basé sur la tradition culturelle et ne garantit aucun gain.',
+      es:'※ Los sorteos de lotería son eventos completamente aleatorios. Este análisis es entretenimiento basado en la tradición cultural y no garantiza ningún premio.',
+      pt:'※ Os sorteios de loteria são eventos completamente aleatórios. Esta análise é entretenimento baseado na tradição cultural e não garante nenhum prêmio.',
+      it:'※ Le estrazioni della lotteria sono eventi completamente casuali. Questa analisi è intrattenimento basato sulla tradizione culturale e non garantisce vincite.',
+      id:'※ Pengundian togel adalah peristiwa acak sepenuhnya. Analisis ini adalah hiburan berdasarkan tradisi budaya dan tidak menjamin kemenangan apapun.',
+    },
+  };
+
+  const t = k => ALGO[k]?.[lang] || ALGO[k]?.en || '';
+  const boxStyle = 'display:inline-block;padding:6px 10px;border-radius:8px;border:1px solid #d6d3d1;background:#fff;font-size:12px;font-weight:700;color:#1c1917;';
+  const arrowStyle = 'display:inline-block;color:#d97706;font-weight:900;font-size:14px;padding:0 2px;';
+
+  // Calculation chain
+  let chainHtml = '<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:10px 0 4px;">';
+  if (data.systemKey === 'saju') {
+    const s = data.cultural;
+    chainHtml += `<span style="${boxStyle}">${data.year}년</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}">${STEMS[s.stemIdx]}${BRANCHES[s.branchIdx]}(${STEM_KO[s.stemIdx]}${BRANCH_KO[s.branchIdx]})년</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#d4fce0;border-color:#86efac;">오행: ${s.element}(${ELEMENT_KO[s.stemIdx]})</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#fef9c3;border-color:#fde047;">행운수 9개</span>`;
+  } else if (data.systemKey === 'kyusei') {
+    const s = data.cultural;
+    chainHtml += `<span style="${boxStyle}">${data.year}年</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}">${KYUSEI_NAMES[s.star]}</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#d4fce0;border-color:#86efac;">属性: ${KYUSEI_ELEMENTS[s.star]}行</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#fef9c3;border-color:#fde047;">吉数9個</span>`;
+  } else if (data.systemKey === 'numerology') {
+    const s = data.cultural;
+    const digitSum = String(data.year).split('').reduce((a,c)=>a+parseInt(c),0) + data.month + data.day;
+    chainHtml += `<span style="${boxStyle}">${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')}</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}">∑ = ${digitSum}</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#d4fce0;border-color:#86efac;">LPN: ${s.lpn}</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#fef9c3;border-color:#fde047;">Lucky 8${lang==='ko'?'개':lang==='ja'?'個':''}</span>`;
+  } else if (data.systemKey === 'jawanese') {
+    const s = data.cultural;
+    chainHtml += `<span style="${boxStyle}">${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')}</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#d4fce0;border-color:#86efac;">Pasaran: ${PASARAN[s.pasaranIdx]}</span>`;
+    chainHtml += `<span style="${arrowStyle}">→</span>`;
+    chainHtml += `<span style="${boxStyle}background:#fef9c3;border-color:#fde047;">Angka Hoki 9</span>`;
+  }
+  chainHtml += '</div>';
+
+  // Lucky pool gold balls
+  const luckyNums = data.cultural.lucky || [];
+  const ballS = 'display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;font-weight:900;font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,.18);margin:2px;';
+  const poolHtml = luckyNums.map(n => `<span style="${ballS}">${n}</span>`).join('');
+
+  const luckyWord = {ko:'행운 번호',en:'Lucky',ja:'吉数',de:'Glück',fr:'Chanceux',es:'Suerte',pt:'Sorte',it:'Fortuna',id:'Hoki'};
+  const otherWord = {ko:'일반 번호',en:'Others',ja:'普通の数字',de:'Andere',fr:'Autres',es:'Otros',pt:'Outros',it:'Altri',id:'Lainnya'};
+
+  const panel = document.createElement('div');
+  panel.id = 'algorithm-panel';
+  panel.style.cssText = 'background:#fffbeb;border:2px solid #fde68a;border-radius:20px;padding:22px;margin-bottom:20px;';
+
+  panel.innerHTML = `
+    <div style="font-size:13px;font-weight:800;color:#92400e;letter-spacing:.5px;margin-bottom:12px;">${t('panelTitle')}</div>
+    <div style="font-size:12px;color:#78350f;line-height:1.7;margin-bottom:14px;padding:12px;background:#fffde7;border-radius:10px;border:1px solid #fde68a;">
+      ${ALGO.systemOrigin[data.systemKey]?.[lang] || ALGO.systemOrigin[data.systemKey]?.en || ''}
+    </div>
+    <div style="font-size:11px;font-weight:800;color:#b45309;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;">${t('calcChainTitle')}</div>
+    ${chainHtml}
+    <div style="font-size:11px;font-weight:800;color:#b45309;letter-spacing:.5px;text-transform:uppercase;margin:12px 0 6px;">${t('luckyPoolTitle')}</div>
+    <div style="margin-bottom:14px;">${poolHtml}</div>
+    <div style="font-size:11px;font-weight:800;color:#b45309;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;">${t('probabilityTitle')}</div>
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+        <div style="text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:#b45309;line-height:1;">4×</div>
+          <div style="font-size:10px;color:#78716c;font-weight:600;margin-top:2px;">${luckyWord[lang]||luckyWord.en}</div>
+        </div>
+        <div style="font-size:16px;color:#d97706;font-weight:700;">vs</div>
+        <div style="text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:#78716c;line-height:1;">1×</div>
+          <div style="font-size:10px;color:#78716c;font-weight:600;margin-top:2px;">${otherWord[lang]||otherWord.en}</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#78350f;line-height:1.6;">${t('probabilityDesc')}</div>
+    </div>
+    <div style="font-size:11px;color:#b45309;line-height:1.5;font-style:italic;">${t('disclaimer')}</div>
+  `;
+
   const shareSection = document.querySelector('.share-section');
   if (shareSection) shareSection.before(panel);
 }
