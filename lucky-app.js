@@ -881,6 +881,22 @@ function initLotterySelect() {
   const lang = window.LUCKY_CURRENT_LANG || 'ko';
   const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
   sel.innerHTML = opts.map(o => `<option value="${o.id}">${o.name}</option>`).join('');
+
+  let badge = document.getElementById('lottery-name-badge');
+  if (opts.length <= 1) {
+    sel.style.display = 'none';
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.id = 'lottery-name-badge';
+      badge.className = 'lottery-name-badge';
+      sel.insertAdjacentElement('afterend', badge);
+    }
+    badge.textContent = '🎫 ' + (opts[0] ? opts[0].name : '—');
+    badge.style.display = '';
+  } else {
+    sel.style.display = '';
+    if (badge) badge.style.display = 'none';
+  }
 }
 
 function toggleDrawDate() {
