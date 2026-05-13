@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Questions Fréquentes',
   copyLabel: 'Copier',
 
+  lotterySelectLabel: 'Choisir la loterie',
+  drawDateLabel: 'Date du tirage (facultatif) — pour une analyse plus précise',
+  drawDateNote: "L'énergie de la date de tirage (Tige du Jour · UDN · Étoile du Jour) est combinée à votre énergie de naissance pour des numéros plus précis.",
+  whyTitle: 'Pourquoi ces numéros ?',
+  birthEnergyLabel: 'Énergie natale',
+  drawEnergyLabel: 'Énergie du tirage',
+
   methodTitle: '🔢 Numérologie — Chemin de Vie',
   methodDesc: "Votre numéro de chemin de vie est calculé en additionnant tous les chiffres de votre date de naissance. Chaque nombre (1–9, nombres maîtres 11, 22, 33) porte des propriétés uniques et des numéros chanceux associés issus de la tradition de la Kabbale.",
   methodBadges: ['🌟 Chemin de Vie','🎯 EuroMillions 5+2','✨ Personnalisé'],

@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Pertanyaan Umum',
   copyLabel: 'Salin',
 
+  lotterySelectLabel: 'Pilih Lotre',
+  drawDateLabel: 'Tanggal undian (opsional) — untuk analisis lebih presisi',
+  drawDateNote: 'Energi tanggal undian (Batang Hari · UDN · Bintang Hari) digabungkan dengan energi kelahiran Anda untuk menghasilkan angka yang lebih presisi.',
+  whyTitle: 'Mengapa angka ini?',
+  birthEnergyLabel: 'Energi Kelahiran',
+  drawEnergyLabel: 'Energi Undian',
+
   methodTitle: '🔮 Kalender Jawa — Weton & Hari Pasaran',
   methodDesc: 'Weton dihitung dari kombinasi hari pasaran Jawa (Legi, Pahing, Pon, Wage, Kliwon) dan hari Masehi. Setiap pasaran memiliki nilai numerik dan angka keberuntungan dalam tradisi primbon Jawa yang digunakan untuk prediksi Togel.',
   methodBadges: ['🌟 Hari Pasaran','🎯 Togel 4D','✨ Berdasarkan Weton'],

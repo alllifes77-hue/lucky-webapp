@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Perguntas Frequentes',
   copyLabel: 'Copiar',
 
+  lotterySelectLabel: 'Selecionar loteria',
+  drawDateLabel: 'Data do sorteio (opcional) — para análise mais precisa',
+  drawDateNote: 'A energia da data do sorteio (Talo do Dia · UDN · Estrela do Dia) é combinada com sua energia natal para gerar números mais precisos.',
+  whyTitle: 'Por que esses números?',
+  birthEnergyLabel: 'Energia natal',
+  drawEnergyLabel: 'Energia do sorteio',
+
   methodTitle: '🔢 Numerologia — Número do Caminho de Vida',
   methodDesc: 'Seu número do caminho de vida é calculado somando todos os dígitos da sua data de nascimento. Cada número (1–9, números mestres 11, 22, 33) carrega propriedades únicas e números da sorte associados da tradição numerológica.',
   methodBadges: ['🌟 Caminho de Vida','🎯 Mega-Sena (1-60)','✨ Personalizado'],

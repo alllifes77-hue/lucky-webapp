@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'よくある質問',
   copyLabel: 'コピー',
 
+  lotterySelectLabel: '宝くじを選択',
+  drawDateLabel: '抽選日（任意）— より精密な分析',
+  drawDateNote: '抽選日のエネルギー（日干・UDN・日星）が生年のエネルギーと組み合わされ、より精密な数字が生成されます。',
+  whyTitle: 'なぜこの数字？',
+  birthEnergyLabel: '生年の気',
+  drawEnergyLabel: '抽選日の気',
+
   methodTitle: '⭐ 九星気学 — 本命星分析',
   methodDesc: '生年月日から本命星（一白水星〜九紫火星）を算出し、各星の五行属性（水・木・火・土・金）に対応する幸運の数字を導き出します。立春（2月4日頃）を基準に年を調整します。',
   methodBadges: ['🌟 本命星算出','🎯 ロト6 (1〜43)','✨ 個人専用'],

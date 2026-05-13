@@ -846,6 +846,9 @@ function applyLang() {
   setTxt('txt-faq-h2', L.faqH2);
   setTxt('txt-lottery-label', L.lotteryLabel);
   setTxt('result-badge', L.resultBadge || '🍀 Lucky');
+  setTxt('txt-lottery-select-label', L.lotterySelectLabel);
+  setTxt('txt-draw-date-label', L.drawDateLabel);
+  setTxt('txt-draw-date-note', L.drawDateNote);
 
   // Trust chips
   if (L.trustChips) {

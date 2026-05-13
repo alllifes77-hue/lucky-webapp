@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Häufig gestellte Fragen',
   copyLabel: 'Kopieren',
 
+  lotterySelectLabel: 'Lotterie wählen',
+  drawDateLabel: 'Ziehungsdatum (optional) — für präzisere Analyse',
+  drawDateNote: 'Die Energie des Ziehungsdatums (Tagsstamm · UDN · Tagsstern) wird mit Ihrer Geburtsenergie kombiniert, um präzisere Zahlen zu erzeugen.',
+  whyTitle: 'Warum diese Zahlen?',
+  birthEnergyLabel: 'Geburtsenergie',
+  drawEnergyLabel: 'Ziehungsenergie',
+
   methodTitle: '🔢 Numerologie — Lebenspfadzahl',
   methodDesc: 'Ihre Lebenspfadzahl wird berechnet, indem alle Ziffern Ihres Geburtsdatums summiert werden. Jede Zahl (1–9, Meisterzahlen 11, 22, 33) trägt einzigartige Eigenschaften und zugehörige Glückszahlen aus der Kabalah-Numerologie.',
   methodBadges: ['🌟 Lebenspfadzahl','🎯 EuroMillions 5+2','✨ Personalisiert'],

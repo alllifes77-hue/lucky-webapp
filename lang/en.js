@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Frequently Asked Questions',
   copyLabel: 'Copy Link',
 
+  lotterySelectLabel: 'Select Lottery',
+  drawDateLabel: 'Draw Date (optional) — for enhanced precision',
+  drawDateNote: 'The draw date\'s energy (Day Stem · Universal Day · Day Star) is combined with your birth energy to generate more precise numbers.',
+  whyTitle: 'Why these numbers?',
+  birthEnergyLabel: 'Birth Energy',
+  drawEnergyLabel: 'Draw Energy',
+
   methodTitle: '🔢 Numerology — Life Path Number',
   methodDesc: 'Your Life Path Number is calculated by summing all digits of your birth date. Each number (1–9, master numbers 11, 22, 33) carries unique energetic properties and associated lucky numbers drawn from numerological tradition.',
   methodBadges: ['🌟 Life Path Number','🎯 Powerball 5+1','✨ Personalized'],

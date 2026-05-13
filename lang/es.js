@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Preguntas Frecuentes',
   copyLabel: 'Copiar',
 
+  lotterySelectLabel: 'Seleccionar lotería',
+  drawDateLabel: 'Fecha del sorteo (opcional) — para mayor precisión',
+  drawDateNote: 'La energía de la fecha del sorteo (Tallo del Día · UDN · Estrella del Día) se combina con tu energía natal para generar números más precisos.',
+  whyTitle: '¿Por qué estos números?',
+  birthEnergyLabel: 'Energía natal',
+  drawEnergyLabel: 'Energía del sorteo',
+
   methodTitle: '🔢 Numerología — Número de Camino de Vida',
   methodDesc: 'Tu número de camino de vida se calcula sumando todos los dígitos de tu fecha de nacimiento. Cada número (1–9, números maestros 11, 22, 33) porta propiedades únicas y números de la suerte asociados de la tradición numerológica de la Cábala.',
   methodBadges: ['🌟 Camino de Vida','🎯 EuroMillions 5+2','✨ Personalizado'],

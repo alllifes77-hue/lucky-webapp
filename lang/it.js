@@ -27,6 +27,13 @@ window.LUCKY_LANG = {
   faqH2: 'Domande Frequenti',
   copyLabel: 'Copia',
 
+  lotterySelectLabel: 'Seleziona lotteria',
+  drawDateLabel: "Data dell'estrazione (facoltativa) — per analisi più precisa",
+  drawDateNote: "L'energia della data di estrazione (Gambo del Giorno · UDN · Stella del Giorno) si combina con la tua energia natale per generare numeri più precisi.",
+  whyTitle: 'Perché questi numeri?',
+  birthEnergyLabel: 'Energia natale',
+  drawEnergyLabel: "Energia dell'estrazione",
+
   methodTitle: '🔢 Numerologia — Numero del Percorso di Vita',
   methodDesc: 'Il tuo numero del percorso di vita viene calcolato sommando tutte le cifre della tua data di nascita. Ogni numero (1–9, numeri maestri 11, 22, 33) porta proprietà uniche e numeri fortunati associati della tradizione numerologica della Kabbalah.',
   methodBadges: ['🌟 Percorso di Vita','🎯 SuperEnalotto (1-90)','✨ Personalizzato'],
