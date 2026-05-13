@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'Frequently Asked Questions',
   copyLabel: 'Copy Link',
 
+  setsLabel: 'Number of Sets',
   lotterySelectLabel: 'Select Lottery',
   drawDateLabel: 'Draw Date (optional) — for enhanced precision',
   drawDateNote: 'The draw date\'s energy (Day Stem · Universal Day · Day Star) is combined with your birth energy to generate more precise numbers.',

@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'Domande Frequenti',
   copyLabel: 'Copia',
 
+  setsLabel: 'Numero di giocate',
   lotterySelectLabel: 'Seleziona lotteria',
   drawDateLabel: "Data dell'estrazione (facoltativa) — per analisi più precisa",
   drawDateNote: "L'energia della data di estrazione (Gambo del Giorno · UDN · Stella del Giorno) si combina con la tua energia natale per generare numeri più precisi.",

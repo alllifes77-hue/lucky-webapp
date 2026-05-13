@@ -88,6 +88,13 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 .lottery-select{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:600;color:var(--text);background:#fff;margin-bottom:16px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;transition:border .2s;}
 .lottery-select:focus{border-color:var(--gold);}
 .lottery-name-badge{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:700;color:var(--text);background:#fafaf9;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.sets-select-wrap{display:flex;gap:8px;margin-bottom:16px;}
+.sets-btn{flex:1;padding:11px 0;border:2px solid var(--border2);border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:var(--text2);transition:all .2s;}
+.sets-btn.active{border-color:var(--gold);background:var(--gold-light);color:var(--gold-dark);}
+.sets-btn:hover:not(.active){border-color:var(--gold-mid);color:var(--gold-mid);}
+.set-block{padding:14px 0;border-bottom:1px dashed var(--border);}
+.set-block:last-child{border-bottom:none;padding-bottom:0;}
+.set-num-label{font-size:12px;font-weight:800;color:var(--gold-mid);letter-spacing:.5px;margin-bottom:8px;}
 .draw-date-wrap{margin-bottom:20px;}
 .draw-date-toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;margin-bottom:0;padding:10px 0;border:none;background:none;width:100%;}
 .draw-date-toggle .toggle-icon{font-size:16px;transition:transform .2s;}
@@ -211,6 +218,15 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
         <!-- 복권 선택 -->
         <div class="input-label" id="txt-lottery-select-label">복권 선택</div>
         <select id="lottery-select" class="lottery-select"></select>
+
+        <!-- 세트 수 선택 -->
+        <div class="input-label" id="txt-sets-label">추천 세트 수</div>
+        <div class="sets-select-wrap">
+          <button class="sets-btn active" data-sets="1" onclick="selectSets(this)">1</button>
+          <button class="sets-btn" data-sets="3" onclick="selectSets(this)">3</button>
+          <button class="sets-btn" data-sets="5" onclick="selectSets(this)">5</button>
+          <button class="sets-btn" data-sets="10" onclick="selectSets(this)">10</button>
+        </div>
 
         <!-- 생년월일 -->
         <div class="input-label" id="txt-birthday-label">생년월일 입력</div>

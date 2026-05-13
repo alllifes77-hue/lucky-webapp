@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'Perguntas Frequentes',
   copyLabel: 'Copiar',
 
+  setsLabel: 'Número de jogos',
   lotterySelectLabel: 'Selecionar loteria',
   drawDateLabel: 'Data do sorteio (opcional) — para análise mais precisa',
   drawDateNote: 'A energia da data do sorteio (Talo do Dia · UDN · Estrela do Dia) é combinada com sua energia natal para gerar números mais precisos.',

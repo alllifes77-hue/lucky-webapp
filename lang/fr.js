@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'Questions Fréquentes',
   copyLabel: 'Copier',
 
+  setsLabel: 'Nombre de grilles',
   lotterySelectLabel: 'Choisir la loterie',
   drawDateLabel: 'Date du tirage (facultatif) — pour une analyse plus précise',
   drawDateNote: "L'énergie de la date de tirage (Tige du Jour · UDN · Étoile du Jour) est combinée à votre énergie de naissance pour des numéros plus précis.",

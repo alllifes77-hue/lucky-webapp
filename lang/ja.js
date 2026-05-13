@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'よくある質問',
   copyLabel: 'コピー',
 
+  setsLabel: 'セット数',
   lotterySelectLabel: '宝くじを選択',
   drawDateLabel: '抽選日（任意）— より精密な分析',
   drawDateNote: '抽選日のエネルギー（日干・UDN・日星）が生年のエネルギーと組み合わされ、より精密な数字が生成されます。',

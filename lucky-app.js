@@ -303,7 +303,7 @@ function ballClass(n, format) {
 // ── Main Generate Function ────────────────────────────────
 let lastResult = null;
 
-function generateLucky(year, month, day, lang, lotteryId, drawDateStr) {
+function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
   // Resolve lottery format
   const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
   const lotto = (lotteryId ? opts.find(l => l.id === lotteryId) : null) || opts[0];
@@ -380,6 +380,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr) {
     }
   }
 
+  if (setIdx) seed = ((seed >>> 0) + setIdx * 999983) >>> 0;
   const rng = mkRng(seed);
   let mainNums, bonusNums = null;
 
@@ -424,57 +425,8 @@ function renderResults(data) {
   }
   document.getElementById('cultural-info').innerHTML = culturalHtml;
 
-  // Format name
-  document.getElementById('lottery-format-name').textContent = data.fmt.name || 'Lucky Numbers';
-
-  // Main balls
-  const mainEl = document.getElementById('main-balls');
-  mainEl.innerHTML = '';
-  if (data.fmt.togel) {
-    data.mainNums.forEach((n, i) => {
-      const ball = document.createElement('div');
-      ball.className = `ball ball-digit`;
-      ball.style.animationDelay = `${i * 0.12}s`;
-      ball.textContent = n;
-      mainEl.appendChild(ball);
-    });
-    // Show 3D and 2D sub-numbers below
-    const digits = data.mainNums;
-    const d3 = digits.slice(1).join('');
-    const d2 = digits.slice(2).join('');
-    const subRow = document.createElement('div');
-    subRow.style.cssText = 'margin-top:14px;font-size:13px;color:#78716c;';
-    subRow.innerHTML = `<strong>3D:</strong> ${d3} &nbsp;|&nbsp; <strong>2D:</strong> ${d2}`;
-    mainEl.parentElement.appendChild(subRow);
-  } else {
-    const fmtKey = lang === 'ko' ? 'ko' : lang === 'ja' ? 'ja' : lang === 'en' ? 'en' : lang === 'pt' ? 'pt' : lang === 'it' ? 'it' : 'euro';
-    data.mainNums.forEach((n, i) => {
-      const ball = document.createElement('div');
-      ball.className = `ball ${ballClass(n, fmtKey)}`;
-      ball.style.animationDelay = `${i * 0.12}s`;
-      ball.textContent = n;
-      mainEl.appendChild(ball);
-    });
-  }
-
-  // Bonus balls
-  const bonusRow = document.getElementById('bonus-row');
-  if (data.bonusNums && data.fmt.bonus) {
-    bonusRow.style.display = '';
-    document.getElementById('bonus-label').textContent = data.fmt.bonus.label;
-    const bonusEl = document.getElementById('bonus-balls');
-    bonusEl.innerHTML = '';
-    const bKey = lang === 'en' ? 'en-bonus' : 'euro-star';
-    data.bonusNums.forEach((n, i) => {
-      const ball = document.createElement('div');
-      ball.className = `ball sz-sm ${ballClass(n, bKey)}`;
-      ball.style.animationDelay = `${(data.mainNums.length + i) * 0.12}s`;
-      ball.textContent = n;
-      bonusEl.appendChild(ball);
-    });
-  } else {
-    bonusRow.style.display = 'none';
-  }
+  // All sets rendering
+  renderLotterySets(data.sets || [data], L, lang);
 
   // Fortune grid
   const dayName = data.dayData ? (data.dayData[lang] || data.dayData.en || '—') : '—';
@@ -519,6 +471,57 @@ function renderResults(data) {
 
   // FAQ
   renderFaq();
+}
+
+const SET_NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'];
+
+function renderLotterySets(setsData, L, lang) {
+  const section = document.getElementById('lottery-section');
+  const multi = setsData.length > 1;
+  const fmtName = setsData[0].fmt.name || 'Lucky Numbers';
+  const lottLabel = L.lotteryLabel || 'Lucky Numbers';
+  const fmtKey = lang === 'ko' ? 'ko' : lang === 'ja' ? 'ja' : lang === 'en' ? 'en' : lang === 'pt' ? 'pt' : lang === 'it' ? 'it' : 'euro';
+
+  let html = `
+    <div class="lottery-format-name" id="lottery-format-name">${escHtml(fmtName)}</div>
+    <div class="lottery-label" id="txt-lottery-label">${escHtml(lottLabel)}</div>
+  `;
+
+  setsData.forEach((data, idx) => {
+    html += `<div class="set-block">`;
+    if (multi) html += `<div class="set-num-label">${SET_NUMS[idx] || (idx + 1)}</div>`;
+
+    html += `<div class="balls-row">`;
+    if (data.fmt.digits) {
+      data.mainNums.forEach((n, i) => {
+        html += `<div class="ball ball-digit" style="animation-delay:${i * 0.12}s">${n}</div>`;
+      });
+    } else {
+      data.mainNums.forEach((n, i) => {
+        html += `<div class="ball ${ballClass(n, fmtKey)}" style="animation-delay:${i * 0.12}s">${n}</div>`;
+      });
+    }
+    html += `</div>`;
+
+    if (data.bonusNums && data.fmt.bonus) {
+      const bKey = lang === 'en' ? 'en-bonus' : 'euro-star';
+      html += `<div class="bonus-row" style="display:flex"><div class="bonus-label">${escHtml(data.fmt.bonus.label)}</div><div class="balls-row">`;
+      data.bonusNums.forEach((n, i) => {
+        html += `<div class="ball sz-sm ${ballClass(n, bKey)}" style="animation-delay:${(data.mainNums.length + i) * 0.12}s">${n}</div>`;
+      });
+      html += `</div></div>`;
+    }
+
+    if (data.fmt.digits === 4) {
+      const d3 = data.mainNums.slice(1).join('');
+      const d2 = data.mainNums.slice(2).join('');
+      html += `<div style="margin-top:8px;font-size:12px;color:#78716c;"><strong>3D:</strong> ${d3} &nbsp;|&nbsp; <strong>2D:</strong> ${d2}</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  section.innerHTML = html;
 }
 
 function renderDrawEnergyPanel(data) {
@@ -652,7 +655,7 @@ const SHARE_PLATFORMS = {
 
 function buildShareText(data) {
   const L = window.LUCKY_LANG || {};
-  const nums = data.fmt.togel
+  const nums = data.fmt.digits
     ? data.mainNums.join('')
     : data.mainNums.join(', ') + (data.bonusNums ? ' + ' + data.bonusNums.join(', ') : '');
   const tpl = L.shareText || '🍀 Lucky Numbers: {numbers}\nTry yours →';
@@ -776,6 +779,11 @@ function showScreen(id) {
   }
 }
 
+function selectSets(btn) {
+  document.querySelectorAll('.sets-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
 function startGenerate() {
   const input = document.getElementById('birthday-input');
   const val = input.value;
@@ -786,12 +794,17 @@ function startGenerate() {
     return;
   }
   const [year, month, day] = val.split('-').map(Number);
-  const lotteryId  = (document.getElementById('lottery-select')  || {}).value || null;
+  const lotteryId   = (document.getElementById('lottery-select')  || {}).value || null;
   const drawDateStr = (document.getElementById('draw-date-input') || {}).value || null;
+  const setsCount   = parseInt((document.querySelector('.sets-btn.active') || {}).dataset?.sets || '1');
   showScreen('s-gen');
   setTimeout(() => {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
-    lastResult = generateLucky(year, month, day, lang, lotteryId, drawDateStr);
+    const sets = [];
+    for (let i = 0; i < setsCount; i++) {
+      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i));
+    }
+    lastResult = { ...sets[0], sets };
     applyLangToResults(lastResult);
     renderResults(lastResult);
     showScreen('s-result');
@@ -800,9 +813,6 @@ function startGenerate() {
 
 function resetApp() {
   showScreen('s-home');
-  // Clean up togel sub-row if present
-  const subRow = document.querySelector('#main-balls + div');
-  if (subRow) subRow.remove();
 }
 
 // ── applyLang (static text updates) ──────────────────────
@@ -849,6 +859,7 @@ function applyLang() {
   setTxt('txt-lottery-select-label', L.lotterySelectLabel);
   setTxt('txt-draw-date-label', L.drawDateLabel);
   setTxt('txt-draw-date-note', L.drawDateNote);
+  setTxt('txt-sets-label', L.setsLabel);
 
   // Trust chips
   if (L.trustChips) {

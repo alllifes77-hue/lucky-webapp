@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'Häufig gestellte Fragen',
   copyLabel: 'Kopieren',
 
+  setsLabel: 'Anzahl der Tipps',
   lotterySelectLabel: 'Lotterie wählen',
   drawDateLabel: 'Ziehungsdatum (optional) — für präzisere Analyse',
   drawDateNote: 'Die Energie des Ziehungsdatums (Tagsstamm · UDN · Tagsstern) wird mit Ihrer Geburtsenergie kombiniert, um präzisere Zahlen zu erzeugen.',

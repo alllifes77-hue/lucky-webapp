@@ -27,6 +27,7 @@ window.LUCKY_LANG = {
   faqH2: 'Pertanyaan Umum',
   copyLabel: 'Salin',
 
+  setsLabel: 'Jumlah Set',
   lotterySelectLabel: 'Pilih Lotre',
   drawDateLabel: 'Tanggal undian (opsional) — untuk analisis lebih presisi',
   drawDateNote: 'Energi tanggal undian (Batang Hari · UDN · Bintang Hari) digabungkan dengan energi kelahiran Anda untuk menghasilkan angka yang lebih presisi.',
