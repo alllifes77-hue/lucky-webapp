@@ -88,6 +88,8 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 .date-3-input::-webkit-outer-spin-button,.date-3-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 .date-3-input:focus{border-color:var(--gold);}
 .date-3-input.err{border-color:#dc2626;}
+.date-hint{font-size:12px;color:var(--text3);text-align:center;margin-top:-10px;margin-bottom:18px;letter-spacing:.2px;transition:opacity .22s;}
+.date-hint.hidden{opacity:0;pointer-events:none;}
 .lottery-select{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:600;color:var(--text);background:#fff;margin-bottom:16px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;transition:border .2s;}
 .lottery-select:focus{border-color:var(--gold);}
 .lottery-name-badge{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:700;color:var(--text);background:#fafaf9;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
@@ -238,6 +240,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           <input type="number" id="bday-month" class="date-3-input" placeholder="월"   min="1"    max="12"   inputmode="numeric">
           <input type="number" id="bday-day"   class="date-3-input" placeholder="일"   min="1"    max="31"   inputmode="numeric">
         </div>
+        <div class="date-hint" id="date-hint">예) 1985 · 10 · 15</div>
 
         <!-- 추첨일 (선택) -->
         <div class="draw-date-wrap">

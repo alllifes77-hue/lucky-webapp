@@ -473,6 +473,9 @@ function renderResults(data) {
     document.getElementById('fortune-msg').textContent = fortunes[msgIdx];
   }
 
+  // Personal reading: what this means for YOU
+  renderInterpretation(data);
+
   // "Why these numbers?" insight panel
   renderDrawEnergyPanel(data);
 
@@ -639,6 +642,66 @@ function renderDrawEnergyPanel(data) {
   panel.innerHTML = html;
 
   // Insert before share section
+  const shareSection = document.querySelector('.share-section');
+  if (shareSection) shareSection.before(panel);
+}
+
+function renderInterpretation(data) {
+  const existing = document.getElementById('interpretation-panel');
+  if (existing) existing.remove();
+
+  const lang = data.lang;
+  const luckyNums = data.cultural.lucky || [];
+  const numsStr = luckyNums.join(', ');
+
+  const TITLE = {
+    ko:'🔮 나의 번호 해석',en:'🔮 Your Number Reading',ja:'🔮 あなたの数字の解釈',
+    de:'🔮 Ihre Zahlen-Deutung',fr:'🔮 Votre Lecture Personnelle',es:'🔮 Tu Lectura Personal',
+    pt:'🔮 Sua Leitura Pessoal',it:'🔮 La Tua Lettura Personale',id:'🔮 Pembacaan Angka Anda',
+  };
+
+  let body = '';
+
+  if (data.systemKey === 'saju') {
+    const s = data.cultural;
+    const ganji = `${STEMS[s.stemIdx]}${BRANCHES[s.branchIdx]}`;
+    const elName = ELEMENT_KO_NAME[s.element] || s.element;
+    body = `<strong>${data.year}년</strong>생은 육십갑자(六十甲子)로 <strong>${ganji}(${STEM_KO[s.stemIdx]}${BRANCH_KO[s.branchIdx]})년</strong>입니다. 천간(天干) <strong>${STEMS[s.stemIdx]}(${STEM_KO[s.stemIdx]})</strong>은 오행 중 <strong>${elName}</strong>에 속합니다.<br><br>3,000년 역사의 사주팔자 전통에서 <strong>${elName}</strong> 기운을 타고난 사람에게는 <strong>${numsStr}</strong>이 강한 에너지 공명을 가진 행운의 숫자로 전해집니다. 이 ${luckyNums.length}개 숫자는 번호 생성 풀에서 다른 숫자보다 <strong>4배 높은 비중</strong>으로 포함되었기 때문에, 오늘의 행운 번호에 통계적으로 더 높은 확률로 선택되었습니다.`;
+
+  } else if (data.systemKey === 'kyusei') {
+    const s = data.cultural;
+    const starName = KYUSEI_NAMES[s.star];
+    const elName = KYUSEI_ELEMENTS[s.star];
+    body = `${data.year}年生まれのあなたの<strong>本命星は${starName}</strong>です。<br><br>1,200年の歴史を持つ九星気学では、${starName}は<strong>${elName}行</strong>の性質を持ち、<strong>${numsStr}</strong>が吉数として伝えられています。今回の生成では、これら${luckyNums.length}つの吉数が選択プールに<strong>4倍の重み</strong>で組み込まれており、他の数字よりも統計的に選ばれやすい確率で今日の番号に反映されています。`;
+
+  } else if (data.systemKey === 'jawanese') {
+    const s = data.cultural;
+    const pas = PASARAN[s.pasaranIdx];
+    body = `Tanggal lahir Anda jatuh pada <strong>Pasaran ${pas}</strong> dalam kalender Jawa.<br><br>Menurut tradisi <strong>Primbon</strong> yang telah ada selama lebih dari 600 tahun, Pasaran <strong>${pas}</strong> beresonansi kuat dengan angka <strong>${numsStr}</strong>. Dalam proses pemilihan angka Togel Anda, ${luckyNums.length} angka hoki ini dimasukkan ke kolam seleksi dengan <strong>bobot 4× lebih tinggi</strong> dibanding angka lainnya — sehingga secara statistik lebih berpeluang muncul sebagai angka keberuntungan Anda hari ini.`;
+
+  } else {
+    const s = data.cultural;
+    const lpn = s.lpn;
+    const NUMO = {
+      en: `Your birth date digits sum to <strong>Life Path Number ${lpn}</strong>.<br><br>In Pythagorean numerology (570 BC), Life Path <strong>${lpn}</strong> carries a unique vibrational frequency traditionally linked to <strong>${numsStr}</strong>. These ${luckyNums.length} numbers are weighted <strong>4× higher</strong> in your selection pool — making them statistically more likely to appear in your lucky numbers today.`,
+      de: `Die Ziffern Ihres Geburtsdatums ergeben die <strong>Lebenspfadzahl ${lpn}</strong>.<br><br>In der pythagoräischen Numerologie (570 v. Chr.) trägt Lebenspfad <strong>${lpn}</strong> eine einzigartige Schwingungsfrequenz, die traditionell mit <strong>${numsStr}</strong> resoniert. Diese ${luckyNums.length} Zahlen werden mit <strong>4-facher Gewichtung</strong> in Ihren Auswahlpool aufgenommen — sie erscheinen heute statistisch häufiger in Ihren Glückszahlen.`,
+      fr: `Les chiffres de votre date de naissance donnent le <strong>Nombre de Chemin de Vie ${lpn}</strong>.<br><br>Dans la numérologie pythagoricienne (570 av. J.-C.), le Chemin de Vie <strong>${lpn}</strong> possède une fréquence vibratoire unique, liée traditionnellement à <strong>${numsStr}</strong>. Ces ${luckyNums.length} numéros sont pondérés <strong>4× plus fort</strong> dans votre réservoir — ils apparaissent donc statistiquement plus souvent dans vos numéros chanceux aujourd'hui.`,
+      es: `Los dígitos de tu fecha de nacimiento suman el <strong>Número del Camino de Vida ${lpn}</strong>.<br><br>En la numerología pitagórica (570 a.C.), el Camino de Vida <strong>${lpn}</strong> posee una frecuencia vibratoria única vinculada tradicionalmente a <strong>${numsStr}</strong>. Estos ${luckyNums.length} números tienen un <strong>peso 4× mayor</strong> en tu grupo de selección — apareciendo estadísticamente con más frecuencia en tus números de la suerte hoy.`,
+      pt: `Os dígitos da sua data de nascimento somam o <strong>Número do Caminho de Vida ${lpn}</strong>.<br><br>Na numerologia pitagórica (570 a.C.), o Caminho de Vida <strong>${lpn}</strong> possui uma frequência vibratória única, ligada tradicionalmente a <strong>${numsStr}</strong>. Esses ${luckyNums.length} números têm <strong>peso 4× maior</strong> no seu pool de seleção — aparecendo estatisticamente com mais frequência nos seus números da sorte hoje.`,
+      it: `Le cifre della tua data di nascita sommano al <strong>Numero del Percorso di Vita ${lpn}</strong>.<br><br>Nella numerologia pitagorica (570 a.C.), il Percorso di Vita <strong>${lpn}</strong> possiede una frequenza vibratoria unica, legata tradizionalmente a <strong>${numsStr}</strong>. Questi ${luckyNums.length} numeri hanno un <strong>peso 4× maggiore</strong> nel tuo pool di selezione — apparendo statisticamente più spesso nei tuoi numeri fortunati oggi.`,
+      ko: `생년월일 숫자 합산으로 당신의 <strong>생명 경로 수는 ${lpn}</strong>입니다.<br><br>피타고라스 수비학(기원전 570년)에서 경로 수 <strong>${lpn}</strong>은 <strong>${numsStr}</strong>과 강한 진동 에너지를 공유한다고 알려져 있습니다. 이 ${luckyNums.length}개 숫자는 번호 생성 풀에서 <strong>4배 높은 가중치</strong>로 포함되어 통계적으로 더 높은 확률로 오늘의 행운 번호에 반영되었습니다.`,
+    };
+    body = NUMO[lang] || NUMO.en;
+  }
+
+  const panel = document.createElement('div');
+  panel.id = 'interpretation-panel';
+  panel.style.cssText = 'background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:2px solid #7dd3fc;border-radius:20px;padding:20px 22px;margin-bottom:20px;font-size:13px;color:#0c4a6e;line-height:1.9;';
+  panel.innerHTML = `
+    <div style="font-size:13px;font-weight:800;color:#0369a1;letter-spacing:.5px;margin-bottom:10px;">${TITLE[lang]||TITLE.en}</div>
+    <div>${body}</div>
+  `;
+
   const shareSection = document.querySelector('.share-section');
   if (shareSection) shareSection.before(panel);
 }
@@ -1035,6 +1098,9 @@ function applyLang() {
   setph('draw-year',  BDAY_PH.year[lang]  || 'Year');
   setph('draw-month', BDAY_PH.month[lang] || 'Month');
   setph('draw-day',   BDAY_PH.day[lang]   || 'Day');
+  const HINT_PREFIX = {ko:'예)',en:'e.g.',ja:'例)',de:'z.B.',fr:'ex.',es:'ej.',pt:'ex.',it:'es.',id:'cth.'};
+  const hintEl = document.getElementById('date-hint');
+  if (hintEl) hintEl.textContent = `${HINT_PREFIX[lang]||'e.g.'} 1985 · 10 · 15`;
   if (L.docTitle) document.title = L.docTitle;
 
   const url = lang === 'ko' ? 'https://lucky.all-lifes.com/' : `https://lucky.all-lifes.com/?lang=${lang}`;
@@ -1137,6 +1203,20 @@ document.addEventListener('DOMContentLoaded', () => {
   applyLang();
   renderFaq();
   initLotterySelect();
+
+  // Date hint show/hide on focus/input
+  const _hint = document.getElementById('date-hint');
+  if (_hint) {
+    const _bdayIds = ['bday-year','bday-month','bday-day'];
+    const _hasVal = () => _bdayIds.some(id => (document.getElementById(id)||{}).value);
+    _bdayIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('focus', () => _hint.classList.add('hidden'));
+      el.addEventListener('blur',  () => { if (!_hasVal()) _hint.classList.remove('hidden'); });
+      el.addEventListener('input', () => _hint.classList.add('hidden'));
+    });
+  }
 
   // Check URL params for direct result share
   const p = new URLSearchParams(location.search);
