@@ -1014,6 +1014,10 @@ function applyLang() {
   const lang = window.LUCKY_CURRENT_LANG || 'ko';
 
   document.documentElement.lang = L.htmlLang || lang;
+  const bi = document.getElementById('birthday-input');
+  if (bi) bi.lang = L.htmlLang || lang;
+  const di = document.getElementById('draw-date-input');
+  if (di) di.lang = L.htmlLang || lang;
   if (L.docTitle) document.title = L.docTitle;
 
   const url = lang === 'ko' ? 'https://lucky.all-lifes.com/' : `https://lucky.all-lifes.com/?lang=${lang}`;
