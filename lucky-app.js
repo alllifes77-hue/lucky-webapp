@@ -216,6 +216,16 @@ const LOTTERY_OPTIONS = {
   ],
 };
 
+// ── UI Fallback Translations (resilience against CDN-cached lang files) ──────
+const UI_FALLBACKS = {
+  lotterySelectLabel: {ko:'복권 선택',en:'Select Lottery',ja:'宝くじを選択',de:'Lotterie wählen',fr:'Choisir la loterie',es:'Seleccionar lotería',pt:'Selecionar loteria',it:'Seleziona lotteria',id:'Pilih Lotre'},
+  setsLabel:          {ko:'추천 세트 수',en:'Number of Sets',ja:'セット数',de:'Anzahl der Tipps',fr:'Nombre de grilles',es:'Número de combinaciones',pt:'Número de jogos',it:'Numero di giocate',id:'Jumlah Set'},
+  drawDateLabel:      {ko:'추첨일 입력 (선택) — 더 정밀한 분석',en:'Draw Date (optional) — enhanced precision',ja:'抽選日（任意）— より精密な分析',de:'Ziehungsdatum (optional) — präzisere Analyse',fr:'Date du tirage (facultatif) — plus précise',es:'Fecha del sorteo (opcional) — más precisión',pt:'Data do sorteio (opcional) — mais preciso',it:"Data estrazione (facoltativa) — più precisa",id:'Tanggal undian (opsional) — lebih presisi'},
+  whyTitle:           {ko:'왜 이 번호인가?',en:'Why these numbers?',ja:'なぜこの数字？',de:'Warum diese Zahlen?',fr:'Pourquoi ces numéros ?',es:'¿Por qué estos números?',pt:'Por que esses números?',it:'Perché questi numeri?',id:'Mengapa angka ini?'},
+  birthEnergyLabel:   {ko:'생년 기운',en:'Birth Energy',ja:'生年の気',de:'Geburtsenergie',fr:'Énergie natale',es:'Energía natal',pt:'Energia natal',it:'Energia natale',id:'Energi Kelahiran'},
+  drawEnergyLabel:    {ko:'추첨일 기운',en:'Draw Energy',ja:'抽選日の気',de:'Ziehungsenergie',fr:'Énergie du tirage',es:'Energía del sorteo',pt:'Energia do sorteio',it:"Energia estrazione",id:'Energi Undian'},
+};
+
 // ── Draw Date Energy Algorithms ───────────────────────────
 
 // Korean: Day Stem (日干) approximation via days from known 甲子日 reference
@@ -534,7 +544,8 @@ function renderDrawEnergyPanel(data) {
   panel.id = 'draw-energy-panel';
   panel.style.cssText = 'background:#f0fdf4;border:2px solid #86efac;border-radius:20px;padding:22px;margin-bottom:20px;';
 
-  let html = `<div style="font-size:13px;font-weight:800;color:#15803d;letter-spacing:.5px;margin-bottom:14px;">🔍 ${L.whyTitle||'왜 이 번호인가?'}</div>`;
+  const fb = k => L[k] || (UI_FALLBACKS[k] && UI_FALLBACKS[k][lang]) || '';
+  let html = `<div style="font-size:13px;font-weight:800;color:#15803d;letter-spacing:.5px;margin-bottom:14px;">🔍 ${fb('whyTitle')}</div>`;
 
   if (data.drawEnergy) {
     const de = data.drawEnergy;
@@ -546,13 +557,13 @@ function renderDrawEnergyPanel(data) {
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.birthEnergyLabel||'생년 기운'}</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')}</div>
             <div style="font-size:22px;">${de.birthEl}</div>
             <div style="font-size:12px;font-weight:700;color:#1c1917;">${birthElName}</div>
           </div>
           <div style="font-size:24px;text-align:center;">${h.emoji}</div>
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.drawEnergyLabel||'추첨일 기운'}</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('drawEnergyLabel')}</div>
             <div style="font-size:22px;">${de.drawEl}</div>
             <div style="font-size:12px;font-weight:700;color:#1c1917;">${drawElName}</div>
           </div>
@@ -565,12 +576,12 @@ function renderDrawEnergyPanel(data) {
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.birthEnergyLabel||'本命星'}</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')||'本命星'}</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.birthStar]||de.birthStar}</div>
           </div>
           <div style="font-size:24px;text-align:center;">${h.emoji}</div>
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.drawEnergyLabel||'日星'}</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('drawEnergyLabel')||'日星'}</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.drawStar]||de.drawStar}</div>
           </div>
         </div>
@@ -581,12 +592,12 @@ function renderDrawEnergyPanel(data) {
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.birthEnergyLabel||'Life Path'}</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')||'Life Path'}</div>
             <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.lpn}</div>
           </div>
           <div style="font-size:24px;text-align:center;">✕</div>
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.drawEnergyLabel||'Universal Day'}</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('drawEnergyLabel')||'Universal Day'}</div>
             <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.udn}</div>
           </div>
         </div>
@@ -856,10 +867,11 @@ function applyLang() {
   setTxt('txt-faq-h2', L.faqH2);
   setTxt('txt-lottery-label', L.lotteryLabel);
   setTxt('result-badge', L.resultBadge || '🍀 Lucky');
-  setTxt('txt-lottery-select-label', L.lotterySelectLabel);
-  setTxt('txt-draw-date-label', L.drawDateLabel);
+  const getLbl = k => L[k] || (UI_FALLBACKS[k] && UI_FALLBACKS[k][lang]) || '';
+  setTxt('txt-lottery-select-label', getLbl('lotterySelectLabel'));
+  setTxt('txt-draw-date-label', getLbl('drawDateLabel'));
   setTxt('txt-draw-date-note', L.drawDateNote);
-  setTxt('txt-sets-label', L.setsLabel);
+  setTxt('txt-sets-label', getLbl('setsLabel'));
 
   // Trust chips
   if (L.trustChips) {
