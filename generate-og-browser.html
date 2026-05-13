@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lucky OG Image Generator</title>
+<style>
+body{font-family:sans-serif;background:#1e1b4b;color:#fff;padding:20px;text-align:center;}
+h1{margin-bottom:20px;color:#fbbf24;}
+.controls{background:#312e81;padding:16px;border-radius:12px;margin-bottom:20px;display:inline-block;}
+select,button{padding:8px 16px;border-radius:8px;border:none;font-size:14px;margin:4px;cursor:pointer;}
+select{background:#4338ca;color:#fff;}
+button{background:#d97706;color:#fff;font-weight:700;}
+button:hover{background:#b45309;}
+canvas{border:2px solid #4338ca;border-radius:8px;display:block;margin:0 auto;}
+.download-all{background:#059669;font-size:16px;padding:12px 24px;}
+</style>
+</head>
+<body>
+<h1>🍀 Lucky Number OG Image Generator</h1>
+<div class="controls">
+  <select id="lang-sel">
+    <option value="ko">Korean (ko)</option>
+    <option value="en">English (en)</option>
+    <option value="ja">Japanese (ja)</option>
+    <option value="de">German (de)</option>
+    <option value="fr">French (fr)</option>
+    <option value="es">Spanish (es)</option>
+    <option value="pt">Portuguese (pt)</option>
+    <option value="it">Italian (it)</option>
+    <option value="id">Indonesian (id)</option>
+  </select>
+  <button onclick="renderOG()">Preview</button>
+  <button onclick="downloadCurrent()">Download PNG</button>
+  <button class="download-all" onclick="downloadAll()">Download All Languages</button>
+</div>
+<canvas id="cvs" width="1200" height="630"></canvas>
+
+<script>
+const CONFIGS = {
+  ko: { appName:'행운의 번호', tagline:'생년월일로 뽑는 나만의 번호', system:'사주팔자', badge:'로또 6/45', color:'#d97706' },
+  en: { appName:'Lucky Numbers', tagline:'Generated from your birthday', system:'Numerology', badge:'Powerball', color:'#1d4ed8' },
+  ja: { appName:'幸運の番号', tagline:'生年月日から引く幸運の番号', system:'九星気学', badge:'ロト6', color:'#7c3aed' },
+  de: { appName:'Glückszahlen', tagline:'Aus Ihrem Geburtstag', system:'Numerologie', badge:'EuroMillions', color:'#059669' },
+  fr: { appName:'Numéros Chanceux', tagline:'Depuis votre anniversaire', system:'Numérologie', badge:'EuroMillions', color:'#dc2626' },
+  es: { appName:'Números de la Suerte', tagline:'Desde tu cumpleaños', system:'Numerología', badge:'EuroMillions', color:'#d97706' },
+  pt: { appName:'Números da Sorte', tagline:'Do seu aniversário', system:'Numerologia', badge:'Mega-Sena', color:'#16a34a' },
+  it: { appName:'Numeri Fortunati', tagline:'Dal tuo compleanno', system:'Numerologia', badge:'SuperEnalotto', color:'#1d4ed8' },
+  id: { appName:'Angka Keberuntungan', tagline:'Dari tanggal lahir Anda', system:'Weton Jawa', badge:'Togel 4D', color:'#7c3aed' },
+};
+
+const SAMPLE_BALLS = [7, 15, 22, 31, 38, 42];
+const BALL_COLORS = [
+  { fill:'#d97706', shadow:'#92400e' },
+  { fill:'#1d4ed8', shadow:'#1e3a8a' },
+  { fill:'#dc2626', shadow:'#7f1d1d' },
+  { fill:'#374151', shadow:'#111827' },
+  { fill:'#059669', shadow:'#064e3b' },
+  { fill:'#7c3aed', shadow:'#4c1d95' },
+];
+
+function renderOG(langOverride) {
+  const lang = langOverride || document.getElementById('lang-sel').value;
+  const cfg = CONFIGS[lang] || CONFIGS.en;
+  const cvs = document.getElementById('cvs');
+  const ctx = cvs.getContext('2d');
+  const W = 1200, H = 630;
+
+  // Background gradient
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#1e1b4b');
+  bg.addColorStop(0.5, '#312e81');
+  bg.addColorStop(1, '#4c1d95');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Decorative circles
+  ctx.save();
+  ctx.globalAlpha = 0.06;
+  ctx.fillStyle = '#7c3aed';
+  ctx.beginPath(); ctx.arc(1050, 80, 200, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = cfg.color;
+  ctx.beginPath(); ctx.arc(100, 520, 160, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+
+  // Left accent bar
+  ctx.fillStyle = cfg.color;
+  ctx.fillRect(0, 0, 8, H);
+
+  // Bottom bar
+  ctx.globalAlpha = 0.3;
+  ctx.fillStyle = cfg.color;
+  ctx.fillRect(0, H - 12, W, 12);
+  ctx.globalAlpha = 1;
+
+  // Header text
+  ctx.fillStyle = '#c4b5fd';
+  ctx.font = 'bold 16px Arial';
+  ctx.letterSpacing = '3px';
+  ctx.fillText('🍀 ' + cfg.appName.toUpperCase(), 58, 52);
+
+  // Site URL
+  ctx.fillStyle = '#6366f1';
+  ctx.font = '15px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillText('all-lifes.com', W - 52, 52);
+  ctx.textAlign = 'left';
+
+  // Big emoji
+  ctx.font = '72px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🍀', W / 2, 185);
+
+  // App name
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 44px Arial Black, Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText(cfg.appName, W / 2, 260);
+
+  // Tagline
+  ctx.fillStyle = '#c4b5fd';
+  ctx.globalAlpha = 0.9;
+  ctx.font = '20px Arial';
+  ctx.fillText(cfg.tagline, W / 2, 305);
+  ctx.globalAlpha = 1;
+
+  // Lottery balls
+  const ballsY = 385;
+  const totalBalls = SAMPLE_BALLS.length;
+  const ballR = 50;
+  const spacing = 140;
+  const startX = W / 2 - ((totalBalls - 1) * spacing) / 2;
+
+  SAMPLE_BALLS.forEach((n, i) => {
+    const cx = startX + i * spacing;
+    const cy = ballsY;
+    const c = BALL_COLORS[i % BALL_COLORS.length];
+
+    // Shadow
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 16;
+    ctx.shadowOffsetY = 6;
+    ctx.fillStyle = c.fill;
+    ctx.beginPath(); ctx.arc(cx, cy, ballR, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // Ball
+    const grad = ctx.createRadialGradient(cx - 14, cy - 14, 8, cx, cy, ballR);
+    grad.addColorStop(0, lighten(c.fill, 40));
+    grad.addColorStop(1, c.fill);
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(cx, cy, ballR, 0, Math.PI * 2); ctx.fill();
+
+    // Shine
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(cx - 14, cy - 16, 20, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // Number
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${n >= 10 ? 30 : 34}px Arial Black, Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n, cx, cy + 2);
+  });
+
+  // System & badge row
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 18px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${cfg.system}  ·  ${cfg.badge}`, W / 2, 495);
+
+  // Bottom badge
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  roundRect(ctx, W/2 - 160, 510, 320, 40, 20);
+  ctx.fill();
+  ctx.fillStyle = '#e0e7ff';
+  ctx.font = '14px Arial';
+  ctx.fillText('✅ 100% Free  ·  🔒 No Login  ·  lucky.all-lifes.com', W / 2, 535);
+
+  return cvs;
+}
+
+function lighten(hex, amount) {
+  const num = parseInt(hex.replace('#',''), 16);
+  const r = Math.min(255, (num >> 16) + amount);
+  const g = Math.min(255, ((num >> 8) & 0xFF) + amount);
+  const b = Math.min(255, (num & 0xFF) + amount);
+  return `rgb(${r},${g},${b})`;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function downloadCurrent() {
+  const lang = document.getElementById('lang-sel').value;
+  renderOG(lang);
+  const cvs = document.getElementById('cvs');
+  const a = document.createElement('a');
+  a.href = cvs.toDataURL('image/png');
+  a.download = `og-${lang}.png`;
+  a.click();
+}
+
+async function downloadAll() {
+  const langs = Object.keys(CONFIGS);
+  for (const lang of langs) {
+    document.getElementById('lang-sel').value = lang;
+    renderOG(lang);
+    const cvs = document.getElementById('cvs');
+    const a = document.createElement('a');
+    a.href = cvs.toDataURL('image/png');
+    a.download = `og-${lang}.png`;
+    a.click();
+    await new Promise(r => setTimeout(r, 300));
+  }
+  alert('All OG images downloaded!');
+}
+
+// Initial render
+renderOG('ko');
+</script>
+</body>
+</html>
