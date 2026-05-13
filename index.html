@@ -85,6 +85,15 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 .input-label{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:.3px;text-transform:uppercase;}
 .date-input{width:100%;padding:14px 16px;border:2px solid var(--border2);border-radius:12px;font-size:17px;color:var(--text);background:#fff;margin-bottom:20px;outline:none;transition:border .2s;font-family:inherit;}
 .date-input:focus{border-color:var(--gold);}
+.lottery-select{width:100%;padding:13px 16px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-weight:600;color:var(--text);background:#fff;margin-bottom:16px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;transition:border .2s;}
+.lottery-select:focus{border-color:var(--gold);}
+.draw-date-wrap{margin-bottom:20px;}
+.draw-date-toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;margin-bottom:0;padding:10px 0;border:none;background:none;width:100%;}
+.draw-date-toggle .toggle-icon{font-size:16px;transition:transform .2s;}
+.draw-date-toggle.open .toggle-icon{transform:rotate(90deg);}
+.draw-date-body{display:none;padding-top:8px;}
+.draw-date-body.open{display:block;}
+.draw-date-note{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.5;}
 .input-note{text-align:center;font-size:12px;color:var(--text3);margin-top:14px;line-height:1.5;}
 
 .method-section{max-width:500px;margin:0 auto;}
@@ -198,8 +207,26 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
   <div class="home-content">
     <div class="container">
       <div class="input-card">
+        <!-- 복권 선택 -->
+        <div class="input-label" id="txt-lottery-select-label">복권 선택</div>
+        <select id="lottery-select" class="lottery-select"></select>
+
+        <!-- 생년월일 -->
         <div class="input-label" id="txt-birthday-label">생년월일 입력</div>
         <input type="date" id="birthday-input" class="date-input" min="1920-01-01" max="2009-12-31">
+
+        <!-- 추첨일 (선택) -->
+        <div class="draw-date-wrap">
+          <button type="button" class="draw-date-toggle" id="draw-date-toggle" onclick="toggleDrawDate()">
+            <span class="toggle-icon">▶</span>
+            <span id="txt-draw-date-label">추첨일 입력 (선택) — 더 정밀한 분석</span>
+          </button>
+          <div class="draw-date-body" id="draw-date-body">
+            <input type="date" id="draw-date-input" class="date-input" style="margin-bottom:0;">
+            <p class="draw-date-note" id="txt-draw-date-note">추첨일의 기운(일진·UDN·일성)이 생년 에너지와 결합되어 더 정밀한 번호가 생성됩니다</p>
+          </div>
+        </div>
+
         <button class="btn-lucky" onclick="startGenerate()">
           <span class="btn-icon">🍀</span>
           <span id="txt-btn-generate">행운의 번호 뽑기</span>

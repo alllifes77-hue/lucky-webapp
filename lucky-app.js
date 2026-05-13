@@ -153,18 +153,120 @@ function calcJawanese(year, month, day) {
   return { pasaranIdx, lucky: PASARAN_LUCKY[pasaranIdx], seed };
 }
 
-// ── Lottery Formats ───────────────────────────────────────
+// ── Lottery Formats (default per lang) ───────────────────
 const FORMATS = {
-  ko: { name:'로또 6/45',   main:{min:1,max:45,count:6}, bonus:null },
-  ja: { name:'ロト6',       main:{min:1,max:43,count:6}, bonus:null },
-  en: { name:'Powerball',   main:{min:1,max:69,count:5}, bonus:{min:1,max:26,count:1,label:'Powerball'} },
-  de: { name:'EuroMillions',main:{min:1,max:50,count:5}, bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
-  fr: { name:'EuroMillions',main:{min:1,max:50,count:5}, bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
-  es: { name:'EuroMillions',main:{min:1,max:50,count:5}, bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
-  pt: { name:'Mega-Sena',   main:{min:1,max:60,count:6}, bonus:null },
-  it: { name:'SuperEnalotto',main:{min:1,max:90,count:6},bonus:null },
-  id: { name:'Togel 4D',    togel:true, count:4 },
+  ko: { name:'로또 6/45',    main:{min:1,max:45,count:6}, bonus:null },
+  ja: { name:'ロト6',        main:{min:1,max:43,count:6}, bonus:null },
+  en: { name:'Powerball',    main:{min:1,max:69,count:5}, bonus:{min:1,max:26,count:1,label:'Powerball'} },
+  de: { name:'EuroMillions', main:{min:1,max:50,count:5}, bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
+  fr: { name:'EuroMillions', main:{min:1,max:50,count:5}, bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
+  es: { name:'EuroMillions', main:{min:1,max:50,count:5}, bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
+  pt: { name:'Mega-Sena',    main:{min:1,max:60,count:6}, bonus:null },
+  it: { name:'SuperEnalotto',main:{min:1,max:90,count:6}, bonus:null },
+  id: { name:'Togel 4D',     digits:4 },
 };
+
+// ── Extended Lottery Options per language ─────────────────
+const LOTTERY_OPTIONS = {
+  ko: [
+    { id:'lotto645',     name:'로또 6/45',      main:{min:1,max:45,count:6},  bonus:null },
+  ],
+  en: [
+    { id:'powerball',    name:'Powerball',       main:{min:1,max:69,count:5},  bonus:{min:1,max:26,count:1,label:'Powerball'} },
+    { id:'megamillions', name:'Mega Millions',   main:{min:1,max:70,count:5},  bonus:{min:1,max:25,count:1,label:'Mega Ball'} },
+    { id:'pick4',        name:'Pick 4',          digits:4 },
+    { id:'pick3',        name:'Pick 3',          digits:3 },
+  ],
+  ja: [
+    { id:'loto6',        name:'ロト6',            main:{min:1,max:43,count:6},  bonus:null },
+    { id:'loto7',        name:'ロト7',            main:{min:1,max:37,count:7},  bonus:null },
+    { id:'miniloto',     name:'ミニロト',          main:{min:1,max:31,count:5},  bonus:null },
+    { id:'numbers4',     name:'ナンバーズ4',       digits:4 },
+    { id:'numbers3',     name:'ナンバーズ3',       digits:3 },
+  ],
+  de: [
+    { id:'euromillions', name:'EuroMillions',    main:{min:1,max:50,count:5},  bonus:{min:1,max:12,count:2,label:'Lucky Stars'} },
+    { id:'eurojackpot',  name:'EuroJackpot',     main:{min:1,max:50,count:5},  bonus:{min:1,max:10,count:2,label:'Euro Nums'} },
+    { id:'lotto649',     name:'Lotto 6aus49',    main:{min:1,max:49,count:6},  bonus:null },
+  ],
+  fr: [
+    { id:'euromillions', name:'EuroMillions',    main:{min:1,max:50,count:5},  bonus:{min:1,max:12,count:2,label:'Étoiles'} },
+    { id:'loto',         name:'Loto',            main:{min:1,max:49,count:5},  bonus:{min:1,max:10,count:1,label:'Chance'} },
+    { id:'eurojackpot',  name:'EuroJackpot',     main:{min:1,max:50,count:5},  bonus:{min:1,max:10,count:2,label:'Euro Nums'} },
+  ],
+  es: [
+    { id:'euromillions', name:'EuroMillions',    main:{min:1,max:50,count:5},  bonus:{min:1,max:12,count:2,label:'Estrellas'} },
+    { id:'primitiva',    name:'La Primitiva',    main:{min:1,max:49,count:6},  bonus:null },
+    { id:'bonoloto',     name:'BonoLoto',        main:{min:1,max:49,count:6},  bonus:null },
+  ],
+  pt: [
+    { id:'megasena',     name:'Mega-Sena',       main:{min:1,max:60,count:6},  bonus:null },
+    { id:'lotofacil',    name:'Lotofácil',       main:{min:1,max:25,count:15}, bonus:null },
+    { id:'quina',        name:'Quina',           main:{min:1,max:80,count:5},  bonus:null },
+  ],
+  it: [
+    { id:'superenalotto',name:'SuperEnalotto',   main:{min:1,max:90,count:6},  bonus:null },
+    { id:'euromillions', name:'EuroMillions',    main:{min:1,max:50,count:5},  bonus:{min:1,max:12,count:2,label:'Stelle'} },
+    { id:'eurojackpot',  name:'EuroJackpot',     main:{min:1,max:50,count:5},  bonus:{min:1,max:10,count:2,label:'Euro Nums'} },
+  ],
+  id: [
+    { id:'togel4d',      name:'Togel 4D',        digits:4 },
+    { id:'togel3d',      name:'Togel 3D',        digits:3 },
+    { id:'togel2d',      name:'Togel 2D',        digits:2 },
+  ],
+};
+
+// ── Draw Date Energy Algorithms ───────────────────────────
+
+// Korean: Day Stem (日干) approximation via days from known 甲子日 reference
+function calcDayStemIdx(year, month, day) {
+  // Reference: Jan 20, 2020 ≈ 甲 day (stem 0) in Korean/Chinese day cycle
+  const ref = new Date(2020, 0, 20);
+  const diff = Math.round((new Date(year, month - 1, day) - ref) / 86400000);
+  return ((diff % 10) + 10) % 10;
+}
+
+// Numerology: Universal Day Number
+function calcUDN(year, month, day) {
+  let n = year + month + day;
+  while (n >= 10) n = String(n).split('').reduce((a, d) => a + +d, 0);
+  return n || 9;
+}
+
+// Kyusei: Day Star (日星) — 9-day cycle
+function calcDayKyusei(year, month, day) {
+  // Reference: Jan 1, 2000 = 一白水星 day (star 1)
+  const diff = Math.round((new Date(year, month - 1, day) - new Date(2000, 0, 1)) / 86400000);
+  return ((1 - diff % 9 + 99999 * 9) % 9) + 1;
+}
+
+// Javanese: Draw date Pasaran
+function calcDrawPasaran(year, month, day) {
+  const jd = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month < 3 ? month + 13 : month + 1)) + day - 1524;
+  return ((jd % 5) + 5) % 5;
+}
+
+// Five-element harmony (五行相生相克)
+const OHAENG_SHENG = {'木':'火','火':'土','土':'金','金':'水','水':'木'};
+const OHAENG_KE    = {'木':'土','土':'水','水':'火','火':'金','金':'木'};
+const ELEMENT_KO_NAME = {'木':'목(나무)','火':'화(불)','土':'토(흙)','金':'금(금속)','水':'수(물)'};
+
+function calcOhaengHarmony(birthEl, drawEl) {
+  const H = {
+    same:    { rel:'同氣', emoji:'🔥', weight:[6,6], ko:`${ELEMENT_KO_NAME[birthEl]} 기운이 강화 — 두 기운이 합쳐져 최대 에너지`, en:`Same element amplified — double energy`, ja:`同気相助 — エネルギー最大` },
+    sheng:   { rel:'相生', emoji:'🌱', weight:[5,3], ko:`생년 기운이 추첨일 기운을 생성 — 최적의 조화`, en:`Birth generates Draw — optimal harmony`, ja:`生年の気が日の気を生む — 最高の調和` },
+    recv:    { rel:'受生', emoji:'💧', weight:[5,3], ko:`추첨일 기운이 생년을 보강 — 상호 보완`, en:`Draw reinforces Birth — mutual support`, ja:`日の気が生年を補強 — 相互補完` },
+    ke:      { rel:'相克', emoji:'⚔️', weight:[4,2], ko:`생년이 추첨일을 제압 — 생년 에너지 우선`, en:`Birth controls Draw — birth energy dominant`, ja:`生年が日を制す — 生年優先` },
+    beKe:    { rel:'被克', emoji:'🛡️', weight:[3,3], ko:`두 기운이 긴장 관계 — 균형 전략 적용`, en:`Tension between energies — balanced approach`, ja:`拮抗 — バランス型` },
+    neutral: { rel:'中立', emoji:'⚖️', weight:[4,3], ko:`중립 — 두 기운이 균형있게 작용`, en:`Neutral — balanced energies`, ja:`中立 — バランスよく作用` },
+  };
+  if (birthEl === drawEl)          return {...H.same,   birthEl, drawEl};
+  if (OHAENG_SHENG[birthEl]===drawEl) return {...H.sheng,  birthEl, drawEl};
+  if (OHAENG_SHENG[drawEl]===birthEl) return {...H.recv,   birthEl, drawEl};
+  if (OHAENG_KE[birthEl]===drawEl)    return {...H.ke,     birthEl, drawEl};
+  if (OHAENG_KE[drawEl]===birthEl)    return {...H.beKe,   birthEl, drawEl};
+  return {...H.neutral, birthEl, drawEl};
+}
 
 // ── Ball color by range ───────────────────────────────────
 function ballClass(n, format) {
@@ -201,41 +303,89 @@ function ballClass(n, format) {
 // ── Main Generate Function ────────────────────────────────
 let lastResult = null;
 
-function generateLucky(year, month, day, lang) {
-  const fmt = FORMATS[lang] || FORMATS.ko;
-  let cultural, seed, luckyBase, colorData, dayData, systemKey;
+function generateLucky(year, month, day, lang, lotteryId, drawDateStr) {
+  // Resolve lottery format
+  const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
+  const lotto = (lotteryId ? opts.find(l => l.id === lotteryId) : null) || opts[0];
+  const fmt   = lotto;
+
+  let cultural, seed, luckyBase, colorData, dayData, systemKey, drawEnergy = null;
+
+  // Parse draw date
+  let dy, dm, dd;
+  if (drawDateStr) {
+    [dy, dm, dd] = drawDateStr.split('-').map(Number);
+  }
 
   if (lang === 'ko') {
     const s = calcSaju(year, month, day);
-    cultural = s; seed = s.seed; luckyBase = s.lucky; systemKey = 'saju';
+    cultural = s; seed = s.seed; systemKey = 'saju';
     colorData = ELEMENT_COLOR[s.element];
-    dayData = ELEMENT_DAY[s.element];
+    dayData   = ELEMENT_DAY[s.element];
+    if (dy) {
+      const dsi = calcDayStemIdx(dy, dm, dd);
+      const drawEl = ELEMENTS[dsi];
+      const harmony = calcOhaengHarmony(s.element, drawEl);
+      drawEnergy = { type:'saju', birthEl:s.element, drawEl, dayStemIdx:dsi, harmony };
+      // Combine: birth lucky at harmony.weight[0]x, draw lucky at harmony.weight[1]x
+      const birthPool = s.lucky.flatMap(n => Array(harmony.weight[0]).fill(n));
+      const drawPool  = ELEMENT_LUCKY[drawEl].flatMap(n => Array(harmony.weight[1]).fill(n));
+      luckyBase = [...new Set([...s.lucky, ...ELEMENT_LUCKY[drawEl]])];
+      seed = seed + dy * 10000 + dm * 100 + dd;
+    } else {
+      luckyBase = s.lucky;
+    }
   } else if (lang === 'ja') {
     const s = calcKyusei(year, month, day);
-    cultural = s; seed = s.seed; luckyBase = s.lucky; systemKey = 'kyusei';
-    const elColor = ELEMENT_COLOR[s.element] || ELEMENT_COLOR['水'];
-    colorData = { hex: KYUSEI_COLORS[s.star] || elColor.hex, en: elColor.en };
-    dayData = ELEMENT_DAY[s.element] || ELEMENT_DAY['水'];
+    cultural = s; seed = s.seed; systemKey = 'kyusei';
+    colorData = { hex: KYUSEI_COLORS[s.star] || ELEMENT_COLOR['水'].hex, en: ELEMENT_COLOR[s.element]?.en || 'Blue' };
+    dayData   = ELEMENT_DAY[s.element] || ELEMENT_DAY['水'];
+    if (dy) {
+      const drawStar = calcDayKyusei(dy, dm, dd);
+      const drawEl   = KYUSEI_ELEMENTS[drawStar] || s.element;
+      const harmony  = calcOhaengHarmony(s.element, drawEl);
+      drawEnergy = { type:'kyusei', birthStar:s.star, drawStar, birthEl:s.element, drawEl, harmony };
+      luckyBase = [...new Set([...s.lucky, ...(KYUSEI_LUCKY[drawStar] || s.lucky)])];
+      seed = seed + dy * 10000 + dm * 100 + dd;
+    } else {
+      luckyBase = s.lucky;
+    }
   } else if (lang === 'id') {
     const s = calcJawanese(year, month, day);
-    cultural = s; seed = s.seed; luckyBase = s.lucky; systemKey = 'jawanese';
+    cultural = s; seed = s.seed; systemKey = 'jawanese';
     colorData = { hex: PASARAN_COLORS[s.pasaranIdx], en: 'Purple' };
-    dayData = ELEMENT_DAY['土'];
+    dayData   = ELEMENT_DAY['土'];
+    if (dy) {
+      const drawPas = calcDrawPasaran(dy, dm, dd);
+      drawEnergy = { type:'jawanese', birthPas:s.pasaranIdx, drawPas,
+        birthName: PASARAN[s.pasaranIdx], drawName: PASARAN[drawPas] };
+      luckyBase = [...new Set([...PASARAN_LUCKY[s.pasaranIdx], ...PASARAN_LUCKY[drawPas]])];
+      seed = seed + dy * 10000 + dm * 100 + dd;
+    } else {
+      luckyBase = s.lucky;
+    }
   } else {
     const s = calcNumerology(year, month, day);
-    cultural = s; seed = s.seed; luckyBase = s.lucky; systemKey = 'numerology';
+    cultural = s; seed = s.seed; systemKey = 'numerology';
     colorData = LIFE_PATH_COLORS[s.lpn] || LIFE_PATH_COLORS[1];
-    dayData = { ko:'일요일', en: LIFE_PATH_DAYS[s.lpn] || 'Sunday', ja:'日曜日', de:'Sonntag', fr:'Dimanche', es:'Domingo', pt:'Domingo', it:'Domenica', id:'Minggu' };
+    dayData   = { ko:'일요일', en: LIFE_PATH_DAYS[s.lpn]||'Sunday', ja:'日曜日', de:'Sonntag', fr:'Dimanche', es:'Domingo', pt:'Domingo', it:'Domenica', id:'Minggu' };
+    if (dy) {
+      const udn = calcUDN(dy, dm, dd);
+      drawEnergy = { type:'numerology', lpn:s.lpn, udn };
+      const udnLucky = LIFE_PATH_LUCKY_BASE[udn] || LIFE_PATH_LUCKY_BASE[9];
+      luckyBase = [...new Set([...s.lucky, ...udnLucky])];
+      seed = seed + dy * 10000 + dm * 100 + dd;
+    } else {
+      luckyBase = s.lucky;
+    }
   }
 
   const rng = mkRng(seed);
-
   let mainNums, bonusNums = null;
 
-  if (fmt.togel) {
-    // Togel 4D: 4 digits each 0-9
+  if (fmt.digits) {
     mainNums = [];
-    for (let i = 0; i < 4; i++) mainNums.push(Math.floor(rng() * 10));
+    for (let i = 0; i < fmt.digits; i++) mainNums.push(Math.floor(rng() * 10));
   } else {
     mainNums = pickBiased(rng, fmt.main.min, fmt.main.max, fmt.main.count, luckyBase);
     if (fmt.bonus) {
@@ -243,7 +393,7 @@ function generateLucky(year, month, day, lang) {
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -361,11 +511,119 @@ function renderResults(data) {
     document.getElementById('fortune-msg').textContent = fortunes[msgIdx];
   }
 
+  // "Why these numbers?" insight panel
+  renderDrawEnergyPanel(data);
+
   // Share buttons
   renderShareBtns(data);
 
   // FAQ
   renderFaq();
+}
+
+function renderDrawEnergyPanel(data) {
+  const existing = document.getElementById('draw-energy-panel');
+  if (existing) existing.remove();
+
+  const lang = data.lang;
+  const L = window.LUCKY_LANG || {};
+  const panel = document.createElement('div');
+  panel.id = 'draw-energy-panel';
+  panel.style.cssText = 'background:#f0fdf4;border:2px solid #86efac;border-radius:20px;padding:22px;margin-bottom:20px;';
+
+  let html = `<div style="font-size:13px;font-weight:800;color:#15803d;letter-spacing:.5px;margin-bottom:14px;">🔍 ${L.whyTitle||'왜 이 번호인가?'}</div>`;
+
+  if (data.drawEnergy) {
+    const de = data.drawEnergy;
+
+    if (de.type === 'saju') {
+      const h = de.harmony;
+      const birthElName = ELEMENT_KO_NAME[de.birthEl]||de.birthEl;
+      const drawElName  = ELEMENT_KO_NAME[de.drawEl]||de.drawEl;
+      html += `
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.birthEnergyLabel||'생년 기운'}</div>
+            <div style="font-size:22px;">${de.birthEl}</div>
+            <div style="font-size:12px;font-weight:700;color:#1c1917;">${birthElName}</div>
+          </div>
+          <div style="font-size:24px;text-align:center;">${h.emoji}</div>
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.drawEnergyLabel||'추첨일 기운'}</div>
+            <div style="font-size:22px;">${de.drawEl}</div>
+            <div style="font-size:12px;font-weight:700;color:#1c1917;">${drawElName}</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
+          <strong>${h.rel} (${h.emoji})</strong> — ${h[lang]||h.en}
+        </div>`;
+    } else if (de.type === 'kyusei') {
+      const h = de.harmony;
+      html += `
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.birthEnergyLabel||'本命星'}</div>
+            <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.birthStar]||de.birthStar}</div>
+          </div>
+          <div style="font-size:24px;text-align:center;">${h.emoji}</div>
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.drawEnergyLabel||'日星'}</div>
+            <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.drawStar]||de.drawStar}</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
+          ${h.ja||h.en}
+        </div>`;
+    } else if (de.type === 'numerology') {
+      html += `
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.birthEnergyLabel||'Life Path'}</div>
+            <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.lpn}</div>
+          </div>
+          <div style="font-size:24px;text-align:center;">✕</div>
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${L.drawEnergyLabel||'Universal Day'}</div>
+            <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.udn}</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
+          Life Path ${de.lpn} × Universal Day ${de.udn} — resonance applied to number selection
+        </div>`;
+    } else if (de.type === 'jawanese') {
+      html += `
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Weton Lahir</div>
+            <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${de.birthName}</div>
+          </div>
+          <div style="font-size:24px;text-align:center;">+</div>
+          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Pasaran Togel</div>
+            <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${de.drawName}</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
+          Kombinasi Weton lahir (${de.birthName}) dan pasaran hari pengundian (${de.drawName}) diterapkan pada pemilihan angka.
+        </div>`;
+    }
+  } else {
+    // No draw date — show base explanation
+    const baseExplain = {
+      saju:      { ko:'연주(年柱) 천간에서 오행을 산출해 전통 행운 숫자에 4배 가중치를 적용했습니다. 추첨일을 입력하면 일진(日辰) 에너지까지 결합해 더 정밀한 번호가 생성됩니다.', en:'Birth year element analyzed via Four Pillars. Add draw date for enhanced precision.', ja:'生年の天干から五行を算出し、伝統的な吉数に4倍の重みを適用しました。' },
+      kyusei:    { ko:'본명성(本命星)으로 오행을 산출하고 행운 숫자에 가중치를 부여했습니다. 추첨일을 입력하면 일성(日星)과의 상호작용이 반영됩니다.', en:'Nine Star Ki birth star analyzed. Add draw date to incorporate day star interaction.', ja:'本命星の五行から吉数を算出しました。日付を追加すると日星との相互作用が反映されます。' },
+      numerology:{ ko:'생년월일 합산으로 생명 경로 수(Life Path Number)를 산출하고 공명 숫자에 가중치를 적용했습니다. 추첨일을 입력하면 그 날의 에너지(UDN)가 결합됩니다.', en:'Life Path Number calculated from birthday. Add draw date to combine Universal Day Number.', ja:'誕生日からライフパスナンバーを算出しました。日付を追加すると宇宙の日数が加わります。' },
+      jawanese:  { ko:'생년월일의 파사란(Pasaran)을 산출하고 전통 행운 숫자에 가중치를 적용했습니다. 추첨일을 입력하면 당일 파사란이 결합됩니다.', en:'Birth date Pasaran (Weton) calculated. Add draw date to combine draw day Pasaran.', id:'Pasaran hari lahir dihitung. Tambahkan tanggal undian untuk kombinasi Pasaran hari undian.' },
+    };
+    const txt = baseExplain[data.systemKey]?.[lang] || baseExplain[data.systemKey]?.en || '';
+    html += `<div style="font-size:13px;color:#166534;line-height:1.7;">${txt}</div>`;
+  }
+
+  panel.innerHTML = html;
+
+  // Insert before share section
+  const shareSection = document.querySelector('.share-section');
+  if (shareSection) shareSection.before(panel);
 }
 
 function getSytemName(key, lang) {
@@ -528,10 +786,12 @@ function startGenerate() {
     return;
   }
   const [year, month, day] = val.split('-').map(Number);
+  const lotteryId  = (document.getElementById('lottery-select')  || {}).value || null;
+  const drawDateStr = (document.getElementById('draw-date-input') || {}).value || null;
   showScreen('s-gen');
   setTimeout(() => {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
-    lastResult = generateLucky(year, month, day, lang);
+    lastResult = generateLucky(year, month, day, lang, lotteryId, drawDateStr);
     applyLangToResults(lastResult);
     renderResults(lastResult);
     showScreen('s-result');
@@ -612,9 +872,27 @@ function sendHeight() {
   window.parent.postMessage({ type: 'lucky-resize', height: document.body.scrollHeight }, '*');
 }
 
+function initLotterySelect() {
+  const sel = document.getElementById('lottery-select');
+  if (!sel) return;
+  const lang = window.LUCKY_CURRENT_LANG || 'ko';
+  const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
+  sel.innerHTML = opts.map(o => `<option value="${o.id}">${o.name}</option>`).join('');
+}
+
+function toggleDrawDate() {
+  const btn  = document.getElementById('draw-date-toggle');
+  const body = document.getElementById('draw-date-body');
+  if (!btn || !body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   applyLang();
   renderFaq();
+  initLotterySelect();
 
   // Check URL params for direct result share
   const p = new URLSearchParams(location.search);
