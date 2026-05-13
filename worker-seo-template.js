@@ -350,7 +350,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .lang-bar a{color:#a5b4fc;text-decoration:none;margin:0 5px;}
 .lang-bar a:hover{color:#fff;}
 .lang-bar a.active{color:#fbbf24;font-weight:700;}
-iframe{width:100%;border:none;display:block;min-height:100vh;}
+iframe{width:100%;border:none;display:block;min-height:900px;transition:height 0.2s ease;}
 .seo-section{background:#fff;border-top:1px solid #e7e5e4;padding:36px 20px;}
 .seo-section .inner{max-width:760px;margin:0 auto;}
 .seo-section h2{font-size:17px;font-weight:800;color:#1e1b4b;margin-bottom:20px;}
@@ -376,11 +376,22 @@ iframe{width:100%;border:none;display:block;min-height:100vh;}
   </div>
 </div>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.type==='lucky-resize'){
-    document.getElementById('lucky-frame').style.height=e.data.height+'px';
-  }
-});
+(function(){
+  var f = document.getElementById('lucky-frame');
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type === 'lucky-resize' && e.data.height > 200){
+      f.style.height = (e.data.height + 40) + 'px';
+    }
+  });
+  // Fallback: expand iframe after load if no message received
+  f.addEventListener('load', function(){
+    setTimeout(function(){
+      if(parseInt(f.style.height) < 600){
+        f.style.height = '1000px';
+      }
+    }, 1500);
+  });
+})();
 </script>
 </body>
 </html>`;

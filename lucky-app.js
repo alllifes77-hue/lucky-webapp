@@ -608,6 +608,10 @@ function applyLangToResults(data) {
 }
 
 // ── Init ──────────────────────────────────────────────────
+function sendHeight() {
+  window.parent.postMessage({ type: 'lucky-resize', height: document.body.scrollHeight }, '*');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   applyLang();
   renderFaq();
@@ -619,5 +623,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (year && month && day) {
       document.getElementById('birthday-input').value = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     }
+  }
+
+  // Send initial height to parent (Worker SSR iframe)
+  setTimeout(sendHeight, 300);
+  setTimeout(sendHeight, 800);
+
+  // Keep reporting height on any resize
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(document.body);
   }
 });
