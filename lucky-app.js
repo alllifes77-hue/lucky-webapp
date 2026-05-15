@@ -224,6 +224,8 @@ const UI_FALLBACKS = {
   whyTitle:           {ko:'왜 이 번호인가?',en:'Why these numbers?',ja:'なぜこの数字？',de:'Warum diese Zahlen?',fr:'Pourquoi ces numéros ?',es:'¿Por qué estos números?',pt:'Por que esses números?',it:'Perché questi numeri?',id:'Mengapa angka ini?'},
   birthEnergyLabel:   {ko:'생년 기운',en:'Birth Energy',ja:'生年の気',de:'Geburtsenergie',fr:'Énergie natale',es:'Energía natal',pt:'Energia natal',it:'Energia natale',id:'Energi Kelahiran'},
   drawEnergyLabel:    {ko:'추첨일 기운',en:'Draw Energy',ja:'抽選日の気',de:'Ziehungsenergie',fr:'Énergie du tirage',es:'Energía del sorteo',pt:'Energia do sorteio',it:"Energia estrazione",id:'Energi Undian'},
+  compatScoreLabel:   {ko:'호환도',en:'Compatibility',ja:'相性度',de:'Kompatibilität',fr:'Compatibilité',es:'Compatibilidad',pt:'Compatibilidade',it:'Compatibilità',id:'Kompatibilitas'},
+  upcomingLabel:      {ko:'최적 추첨일 TOP 3',en:'Best Draw Dates TOP 3',ja:'おすすめ抽選日 TOP 3',de:'Beste Ziehungstage TOP 3',fr:'Meilleures dates de tirage TOP 3',es:'Mejores fechas de sorteo TOP 3',pt:'Melhores datas de sorteio TOP 3',it:'Migliori date estrazione TOP 3',id:'Tanggal Undian Terbaik TOP 3'},
 };
 
 // ── Draw Date Energy Algorithms ───────────────────────────
@@ -276,6 +278,125 @@ function calcOhaengHarmony(birthEl, drawEl) {
   if (OHAENG_KE[birthEl]===drawEl)    return {...H.ke,     birthEl, drawEl};
   if (OHAENG_KE[drawEl]===birthEl)    return {...H.beKe,   birthEl, drawEl};
   return {...H.neutral, birthEl, drawEl};
+}
+
+// ── Compatibility Score Functions ─────────────────────────
+
+const OHAENG_COMPAT_SCORES = {same:100, sheng:85, recv:75, ke:42, beKe:38, neutral:60};
+function calcOhaengCompat(birthEl, drawEl) {
+  if (birthEl === drawEl)               return OHAENG_COMPAT_SCORES.same;
+  if (OHAENG_SHENG[birthEl] === drawEl) return OHAENG_COMPAT_SCORES.sheng;
+  if (OHAENG_SHENG[drawEl] === birthEl) return OHAENG_COMPAT_SCORES.recv;
+  if (OHAENG_KE[birthEl] === drawEl)    return OHAENG_COMPAT_SCORES.ke;
+  if (OHAENG_KE[drawEl] === birthEl)    return OHAENG_COMPAT_SCORES.beKe;
+  return OHAENG_COMPAT_SCORES.neutral;
+}
+
+function calcNumerologyCompat(lpn, udn) {
+  const norm = n => (n === 11 ? 2 : n === 22 ? 4 : n === 33 ? 6 : (n % 9 || 9));
+  const diff = Math.abs(norm(lpn) - norm(udn));
+  return [100, 85, 70, 55, 42, 35, 35, 35, 35][Math.min(diff, 8)];
+}
+
+const PASARAN_COMPAT_MATRIX = [
+  [100, 60, 75, 55, 85],
+  [ 60,100, 85, 75, 55],
+  [ 75, 85,100, 60, 70],
+  [ 55, 75, 60,100, 85],
+  [ 85, 55, 70, 85,100],
+];
+function calcPasaranCompat(birthP, drawP) {
+  return (PASARAN_COMPAT_MATRIX[birthP] || [])[drawP] ?? 60;
+}
+
+function scoreAllNumbers(min, max, birthNums, drawNums, birthW, drawW) {
+  const bSet = new Set(birthNums), dSet = new Set(drawNums);
+  const scores = {};
+  for (let n = min; n <= max; n++) {
+    let s = 1;
+    if (bSet.has(n)) s += birthW;
+    if (dSet.has(n)) s += drawW;
+    scores[n] = s;
+  }
+  return scores;
+}
+
+function pickWeighted(rng, min, max, count, scoreMap) {
+  const pool = [];
+  for (let n = min; n <= max; n++) {
+    const w = scoreMap[n] || 1;
+    for (let i = 0; i < w; i++) pool.push(n);
+  }
+  shuffle(pool, rng);
+  const seen = new Set(), result = [];
+  for (const n of pool) {
+    if (!seen.has(n)) { seen.add(n); result.push(n); }
+    if (result.length === count) break;
+  }
+  return result.sort((a, b) => a - b);
+}
+
+const DRAW_SCHEDULES = {
+  lotto645:[6], loto6:[1,4], loto7:[5], miniloto:[2],
+  numbers4:[0,1,2,3,4,5,6], numbers3:[0,1,2,3,4,5,6],
+  powerball:[1,3,6], megamillions:[2,5],
+  pick4:[0,1,2,3,4,5,6], pick3:[0,1,2,3,4,5,6],
+  euromillions:[2,5], eurojackpot:[2,5],
+  lotto649:[3,6], loto:[2,6],
+  primitiva:[4,6], bonoloto:[1,2,3,4,5],
+  megasena:[3,6], lotofacil:[1,2,3,4,5,6], quina:[1,2,3,4,5,6],
+  superenalotto:[2,4,6],
+  togel4d:[1,3,4,6,0], togel3d:[1,3,4,6,0], togel2d:[1,3,4,6,0],
+};
+
+const DAY_NAMES_SHORT = {
+  ko:['일','월','화','수','목','금','토'],
+  en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+  ja:['日','月','火','水','木','金','土'],
+  de:['So','Mo','Di','Mi','Do','Fr','Sa'],
+  fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+  es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
+  pt:['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+  it:['Dom','Lun','Mar','Mer','Gio','Ven','Sab'],
+  id:['Min','Sen','Sel','Rab','Kam','Jum','Sab'],
+};
+
+function findNextDrawDates(year, month, day, cultural, systemKey, lang, lotteryId, maxN) {
+  maxN = maxN || 3;
+  const sched = DRAW_SCHEDULES[lotteryId];
+  if (!sched || !sched.length) return [];
+  const today = new Date();
+  const found = [];
+  for (let i = 0; i < 90 && found.length < maxN * 4; i++) {
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    const dow = d.getDay();
+    if (!sched.includes(dow)) continue;
+    const dy = d.getFullYear(), dm = d.getMonth() + 1, dd = d.getDate();
+    let score, rel = '';
+    if (systemKey === 'saju') {
+      const drawEl = ELEMENTS[calcDayStemIdx(dy, dm, dd)];
+      score = calcOhaengCompat(cultural.element, drawEl);
+      const h = calcOhaengHarmony(cultural.element, drawEl);
+      rel = h.rel + ' ' + h.emoji;
+    } else if (systemKey === 'kyusei') {
+      const drawStar = calcDayKyusei(dy, dm, dd);
+      const drawEl = KYUSEI_ELEMENTS[drawStar] || cultural.element;
+      score = calcOhaengCompat(cultural.element, drawEl);
+      const h = calcOhaengHarmony(cultural.element, drawEl);
+      rel = (KYUSEI_NAMES[drawStar] || drawStar) + ' ' + h.emoji;
+    } else if (systemKey === 'jawanese') {
+      const drawPas = calcDrawPasaran(dy, dm, dd);
+      score = calcPasaranCompat(cultural.pasaranIdx, drawPas);
+      rel = PASARAN[drawPas];
+    } else {
+      const udn = calcUDN(dy, dm, dd);
+      score = calcNumerologyCompat(cultural.lpn, udn);
+      rel = 'UDN ' + udn;
+    }
+    found.push({ date: `${dy}-${String(dm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`, score, rel, dow });
+  }
+  found.sort((a, b) => b.score - a.score);
+  return found.slice(0, maxN);
 }
 
 // ── Ball color by range ───────────────────────────────────
@@ -337,9 +458,6 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
       const drawEl = ELEMENTS[dsi];
       const harmony = calcOhaengHarmony(s.element, drawEl);
       drawEnergy = { type:'saju', birthEl:s.element, drawEl, dayStemIdx:dsi, harmony };
-      // Combine: birth lucky at harmony.weight[0]x, draw lucky at harmony.weight[1]x
-      const birthPool = s.lucky.flatMap(n => Array(harmony.weight[0]).fill(n));
-      const drawPool  = ELEMENT_LUCKY[drawEl].flatMap(n => Array(harmony.weight[1]).fill(n));
       luckyBase = [...new Set([...s.lucky, ...ELEMENT_LUCKY[drawEl]])];
       seed = seed + dy * 10000 + dm * 100 + dd;
     } else {
@@ -390,6 +508,42 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
     }
   }
 
+  // Compute compat score + weighted scoreMap when draw date is provided
+  let compatScore = null, scoreMap = null;
+  if (drawEnergy && fmt.main) {
+    if (systemKey === 'saju') {
+      compatScore = calcOhaengCompat(cultural.element, drawEnergy.drawEl);
+      scoreMap = scoreAllNumbers(fmt.main.min, fmt.main.max,
+        cultural.lucky, ELEMENT_LUCKY[drawEnergy.drawEl]||[],
+        drawEnergy.harmony.weight[0], drawEnergy.harmony.weight[1]);
+      drawEnergy.birthNums = cultural.lucky;
+      drawEnergy.drawNums  = ELEMENT_LUCKY[drawEnergy.drawEl]||[];
+    } else if (systemKey === 'kyusei') {
+      compatScore = calcOhaengCompat(cultural.element, drawEnergy.drawEl);
+      scoreMap = scoreAllNumbers(fmt.main.min, fmt.main.max,
+        cultural.lucky, KYUSEI_LUCKY[drawEnergy.drawStar]||[],
+        drawEnergy.harmony.weight[0], drawEnergy.harmony.weight[1]);
+      drawEnergy.birthNums = cultural.lucky;
+      drawEnergy.drawNums  = KYUSEI_LUCKY[drawEnergy.drawStar]||[];
+    } else if (systemKey === 'jawanese') {
+      compatScore = calcPasaranCompat(cultural.pasaranIdx, drawEnergy.drawPas);
+      scoreMap = scoreAllNumbers(fmt.main.min, fmt.main.max,
+        PASARAN_LUCKY[cultural.pasaranIdx]||[], PASARAN_LUCKY[drawEnergy.drawPas]||[], 6, 4);
+      drawEnergy.birthNums = PASARAN_LUCKY[cultural.pasaranIdx]||[];
+      drawEnergy.drawNums  = PASARAN_LUCKY[drawEnergy.drawPas]||[];
+    } else {
+      compatScore = calcNumerologyCompat(cultural.lpn, drawEnergy.udn);
+      const udnL = LIFE_PATH_LUCKY_BASE[drawEnergy.udn]||[];
+      scoreMap = scoreAllNumbers(fmt.main.min, fmt.main.max, cultural.lucky, udnL, 6, 4);
+      drawEnergy.birthNums = cultural.lucky;
+      drawEnergy.drawNums  = udnL;
+    }
+    drawEnergy.compatScore = compatScore;
+  }
+  const upcomingDates = !setIdx
+    ? findNextDrawDates(year, month, day, cultural, systemKey, lang, lotteryId||(LOTTERY_OPTIONS[lang]?.[0]?.id))
+    : null;
+
   if (setIdx) seed = ((seed >>> 0) + setIdx * 999983) >>> 0;
   const rng = mkRng(seed);
   let mainNums, bonusNums = null;
@@ -398,13 +552,15 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
     mainNums = [];
     for (let i = 0; i < fmt.digits; i++) mainNums.push(Math.floor(rng() * 10));
   } else {
-    mainNums = pickBiased(rng, fmt.main.min, fmt.main.max, fmt.main.count, luckyBase);
+    mainNums = scoreMap
+      ? pickWeighted(rng, fmt.main.min, fmt.main.max, fmt.main.count, scoreMap)
+      : pickBiased(rng, fmt.main.min, fmt.main.max, fmt.main.count, luckyBase);
     if (fmt.bonus) {
       bonusNums = pickBiased(rng, fmt.bonus.min, fmt.bonus.max, fmt.bonus.count, luckyBase);
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -555,13 +711,28 @@ function renderDrawEnergyPanel(data) {
 
   if (data.drawEnergy) {
     const de = data.drawEnergy;
+    const compat = de.compatScore || 0;
+    const filled = Math.round(compat / 10);
+    const bar = '█'.repeat(filled) + '░'.repeat(10 - filled);
+    const gColor = compat >= 80 ? '#16a34a' : compat >= 60 ? '#d97706' : '#dc2626';
 
+    // ── Compatibility Score Gauge ──────────────────────────
+    html += `
+      <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px;border:1px solid #bbf7d0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:12px;font-weight:700;color:#374151;">${fb('compatScoreLabel')||'Compatibility'}</div>
+          <div style="font-size:26px;font-weight:900;color:${gColor};">${compat}%</div>
+        </div>
+        <div style="font-family:monospace;font-size:18px;color:${gColor};letter-spacing:3px;margin-bottom:4px;">${bar}</div>
+      </div>`;
+
+    // ── Energy Comparison ─────────────────────────────────
     if (de.type === 'saju') {
       const h = de.harmony;
       const birthElName = ELEMENT_KO_NAME[de.birthEl]||de.birthEl;
       const drawElName  = ELEMENT_KO_NAME[de.drawEl]||de.drawEl;
       html += `
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')}</div>
             <div style="font-size:22px;">${de.birthEl}</div>
@@ -574,13 +745,13 @@ function renderDrawEnergyPanel(data) {
             <div style="font-size:12px;font-weight:700;color:#1c1917;">${drawElName}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
-          <strong>${h.rel} (${h.emoji})</strong> — ${h[lang]||h.en}
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+          <strong>${h.rel} ${h.emoji}</strong> — ${h[lang]||h.en}
         </div>`;
     } else if (de.type === 'kyusei') {
       const h = de.harmony;
       html += `
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')||'本命星'}</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.birthStar]||de.birthStar}</div>
@@ -591,12 +762,21 @@ function renderDrawEnergyPanel(data) {
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.drawStar]||de.drawStar}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
-          ${h.ja||h.en}
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+          ${h[lang === 'ja' ? 'ja' : 'en']||h.en}
         </div>`;
     } else if (de.type === 'numerology') {
+      const compatTxt = {
+        en:`Life Path ${de.lpn} × Universal Day ${de.udn} resonance: ${compat}% — numbers biased toward combined frequency`,
+        ko:`생명 경로 수 ${de.lpn} × 추첨일 에너지(UDN) ${de.udn} 공명 점수 ${compat}% — 두 에너지의 교점 숫자를 우선 선택`,
+        de:`Lebenspfad ${de.lpn} × Universeller Tag ${de.udn} Resonanz ${compat}% — Zahlen auf kombinierte Frequenz gewichtet`,
+        fr:`Chemin de Vie ${de.lpn} × Numéro Universel du jour ${de.udn} résonance ${compat}%`,
+        es:`Camino de Vida ${de.lpn} × Día Universal ${de.udn} resonancia ${compat}%`,
+        pt:`Caminho de Vida ${de.lpn} × Dia Universal ${de.udn} ressonância ${compat}%`,
+        it:`Percorso di Vita ${de.lpn} × Giorno Universale ${de.udn} risonanza ${compat}%`,
+      };
       html += `
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')||'Life Path'}</div>
             <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.lpn}</div>
@@ -607,28 +787,62 @@ function renderDrawEnergyPanel(data) {
             <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.udn}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
-          Life Path ${de.lpn} × Universal Day ${de.udn} — resonance applied to number selection
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+          ${compatTxt[lang]||compatTxt.en}
         </div>`;
     } else if (de.type === 'jawanese') {
       html += `
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px;">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Weton Lahir</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${de.birthName}</div>
           </div>
           <div style="font-size:24px;text-align:center;">+</div>
           <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
-            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Pasaran Togel</div>
+            <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Pasaran Undian</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${de.drawName}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;">
-          Kombinasi Weton lahir (${de.birthName}) dan pasaran hari pengundian (${de.drawName}) diterapkan pada pemilihan angka.
+        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+          Kompatibilitas Weton ${de.birthName} × Pasaran undian ${de.drawName}: ${compat}%
         </div>`;
     }
+
+    // ── Number Energy Heatmap ─────────────────────────────
+    const mainNums = data.mainNums || [];
+    const birthSet = new Set(de.birthNums || []);
+    const drawSet  = new Set(de.drawNums || []);
+    const numsHtml = mainNums.map(n => {
+      const inB = birthSet.has(n), inD = drawSet.has(n);
+      let bg, icon;
+      if (inB && inD)  { bg='#fef08a'; icon='⭐'; }
+      else if (inB)    { bg='#bbf7d0'; icon='🌱'; }
+      else if (inD)    { bg='#bae6fd'; icon='💧'; }
+      else             { bg='#f5f5f4'; icon=''; }
+      return `<div style="display:inline-flex;flex-direction:column;align-items:center;gap:2px;margin:3px;">
+        <div style="background:${bg};border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:2px solid rgba(0,0,0,.08);">${n}</div>
+        <div style="font-size:10px;line-height:1;">${icon}</div>
+      </div>`;
+    }).join('');
+
+    const heatmapTitle = {ko:'번호별 에너지 구성',en:'Number Energy Breakdown',ja:'数字エネルギー内訳',de:'Energie der Zahlen',fr:'Composition énergétique',es:'Composición energética',pt:'Composição de energia',it:'Composizione energetica',id:'Komposisi Energi Angka'};
+    const legBoth  = {ko:'⭐ 최고 호환',en:'⭐ Best Match',ja:'⭐ 最高相性',de:'⭐ Beste',fr:'⭐ Meilleur',es:'⭐ Mejor',pt:'⭐ Melhor',it:'⭐ Migliore',id:'⭐ Terbaik'};
+    const legBirth = {ko:'🌱 생년 기운',en:'🌱 Birth Energy',ja:'🌱 生年',de:'🌱 Geburt',fr:'🌱 Naissance',es:'🌱 Nacimiento',pt:'🌱 Nascimento',it:'🌱 Nascita',id:'🌱 Lahir'};
+    const legDraw  = {ko:'💧 추첨일 기운',en:'💧 Draw Energy',ja:'💧 抽選日',de:'💧 Ziehung',fr:'💧 Tirage',es:'💧 Sorteo',pt:'💧 Sorteio',it:'💧 Estrazione',id:'💧 Undian'};
+
+    html += `
+      <div style="background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #e5e7eb;">
+        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:8px;">${heatmapTitle[lang]||heatmapTitle.en}</div>
+        <div style="display:flex;flex-wrap:wrap;">${numsHtml}</div>
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
+          <span style="font-size:10px;color:#374151;">${legBoth[lang]||legBoth.en}</span>
+          <span style="font-size:10px;color:#374151;">${legBirth[lang]||legBirth.en}</span>
+          <span style="font-size:10px;color:#374151;">${legDraw[lang]||legDraw.en}</span>
+        </div>
+      </div>`;
+
   } else {
-    // No draw date — show base explanation
+    // No draw date — base explanation
     const baseExplain = {
       saju:      { ko:'연주(年柱) 천간에서 오행을 산출해 전통 행운 숫자에 4배 가중치를 적용했습니다. 추첨일을 입력하면 일진(日辰) 에너지까지 결합해 더 정밀한 번호가 생성됩니다.', en:'Birth year element analyzed via Four Pillars. Add draw date for enhanced precision.', ja:'生年の天干から五行を算出し、伝統的な吉数に4倍の重みを適用しました。' },
       kyusei:    { ko:'본명성(本命星)으로 오행을 산출하고 행운 숫자에 가중치를 부여했습니다. 추첨일을 입력하면 일성(日星)과의 상호작용이 반영됩니다.', en:'Nine Star Ki birth star analyzed. Add draw date to incorporate day star interaction.', ja:'本命星の五行から吉数を算出しました。日付を追加すると日星との相互作用が反映されます。' },
@@ -636,7 +850,35 @@ function renderDrawEnergyPanel(data) {
       jawanese:  { ko:'생년월일의 파사란(Pasaran)을 산출하고 전통 행운 숫자에 가중치를 적용했습니다. 추첨일을 입력하면 당일 파사란이 결합됩니다.', en:'Birth date Pasaran (Weton) calculated. Add draw date to combine draw day Pasaran.', id:'Pasaran hari lahir dihitung. Tambahkan tanggal undian untuk kombinasi Pasaran hari undian.' },
     };
     const txt = baseExplain[data.systemKey]?.[lang] || baseExplain[data.systemKey]?.en || '';
-    html += `<div style="font-size:13px;color:#166534;line-height:1.7;">${txt}</div>`;
+    html += `<div style="font-size:13px;color:#166534;line-height:1.7;margin-bottom:14px;">${txt}</div>`;
+  }
+
+  // ── Upcoming Best Draw Dates ──────────────────────────────
+  const upcoming = data.upcomingDates;
+  if (upcoming && upcoming.length > 0) {
+    const upLabel = (UI_FALLBACKS.upcomingLabel||{})[lang] || 'Best Draw Dates TOP 3';
+    const dayNames = DAY_NAMES_SHORT[lang] || DAY_NAMES_SHORT.en;
+    html += `
+      <div style="background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #e5e7eb;margin-top:14px;">
+        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:10px;">📅 ${upLabel}</div>`;
+    upcoming.forEach((ud, i) => {
+      const rankEmoji = ['🥇','🥈','🥉'][i] || '▸';
+      const sc = ud.score || 0;
+      const bar2 = '█'.repeat(Math.round(sc/10)) + '░'.repeat(10-Math.round(sc/10));
+      const barColor = sc >= 80 ? '#16a34a' : sc >= 60 ? '#d97706' : '#6b7280';
+      const [uy, um, udd] = ud.date.split('-');
+      const dateStr = lang === 'ko' ? `${uy}.${um}.${udd}` : lang === 'ja' ? `${uy}/${um}/${udd}` : `${udd}/${um}/${uy}`;
+      html += `
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 0;${i < upcoming.length-1 ? 'border-bottom:1px solid #f3f4f6;' : ''}">
+          <div style="font-size:15px;min-width:20px;">${rankEmoji}</div>
+          <div style="min-width:78px;font-size:12px;font-weight:700;color:#111827;">${dateStr}</div>
+          <div style="min-width:18px;font-size:11px;color:#6b7280;">${dayNames[ud.dow]||''}</div>
+          <div style="flex:1;font-family:monospace;font-size:11px;color:${barColor};overflow:hidden;">${bar2}</div>
+          <div style="font-size:11px;font-weight:700;color:${barColor};min-width:30px;text-align:right;">${sc}%</div>
+          <div style="font-size:10px;color:#6b7280;max-width:60px;text-align:right;overflow:hidden;white-space:nowrap;">${ud.rel||''}</div>
+        </div>`;
+    });
+    html += `</div>`;
   }
 
   panel.innerHTML = html;
