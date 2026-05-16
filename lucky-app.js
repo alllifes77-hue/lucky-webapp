@@ -1471,12 +1471,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // When embedded in an iframe, min-height:100vh creates a feedback loop:
+  // iframe grows → 100vh inside grows → body.scrollHeight grows → iframe grows again.
+  // Fix: strip min-height from body and all screens when running inside an iframe.
+  if (window.self !== window.top) {
+    document.body.style.minHeight = '0';
+    ['s-home', 's-gen', 's-result'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.style.minHeight = '0';
+    });
+  }
+
   // Send initial height to parent (Worker SSR iframe)
   setTimeout(sendHeight, 300);
   setTimeout(sendHeight, 800);
 
-  // Keep reporting height on any resize
-  if (window.ResizeObserver) {
-    new ResizeObserver(sendHeight).observe(document.body);
+  // Keep reporting height on any resize (debounced to avoid rapid-fire)
+  if (window.ResizeObserver && window.self !== window.top) {
+    var _rTimer;
+    new ResizeObserver(function() {
+      clearTimeout(_rTimer);
+      _rTimer = setTimeout(sendHeight, 150);
+    }).observe(document.body);
   }
 });
