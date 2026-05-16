@@ -1329,20 +1329,24 @@ function applyLang() {
 
   document.documentElement.lang = L.htmlLang || lang;
   const BDAY_PH = {
+    year:  {ko:'예) 1985',en:'e.g. 1985',ja:'例) 1985',de:'z.B. 1985',fr:'ex. 1985',es:'ej. 1985',pt:'ex. 1985',it:'es. 1985',id:'cth. 1985'},
+    month: {ko:'10',en:'10',ja:'10',de:'10',fr:'10',es:'10',pt:'10',it:'10',id:'10'},
+    day:   {ko:'15',en:'15',ja:'15',de:'15',fr:'15',es:'15',pt:'15',it:'15',id:'15'},
+  };
+  const DRAW_PH = {
     year:  {ko:'연도',en:'Year', ja:'年', de:'Jahr',  fr:'Année',es:'Año', pt:'Ano', it:'Anno',  id:'Tahun'},
     month: {ko:'월',  en:'Month',ja:'月', de:'Monat', fr:'Mois', es:'Mes', pt:'Mês', it:'Mese',  id:'Bulan'},
     day:   {ko:'일',  en:'Day',  ja:'日', de:'Tag',   fr:'Jour', es:'Día', pt:'Dia', it:'Giorno',id:'Tgl'},
   };
   const setph = (id, ph) => { const el = document.getElementById(id); if (el) el.placeholder = ph; };
-  setph('bday-year',  BDAY_PH.year[lang]  || 'Year');
-  setph('bday-month', BDAY_PH.month[lang] || 'Month');
-  setph('bday-day',   BDAY_PH.day[lang]   || 'Day');
-  setph('draw-year',  BDAY_PH.year[lang]  || 'Year');
-  setph('draw-month', BDAY_PH.month[lang] || 'Month');
-  setph('draw-day',   BDAY_PH.day[lang]   || 'Day');
-  const HINT_PREFIX = {ko:'예)',en:'e.g.',ja:'例)',de:'z.B.',fr:'ex.',es:'ej.',pt:'ex.',it:'es.',id:'cth.'};
+  setph('bday-year',  BDAY_PH.year[lang]  || 'e.g. 1985');
+  setph('bday-month', BDAY_PH.month[lang] || '10');
+  setph('bday-day',   BDAY_PH.day[lang]   || '15');
+  setph('draw-year',  DRAW_PH.year[lang]  || 'Year');
+  setph('draw-month', DRAW_PH.month[lang] || 'Month');
+  setph('draw-day',   DRAW_PH.day[lang]   || 'Day');
   const hintEl = document.getElementById('date-hint');
-  if (hintEl) hintEl.textContent = `${HINT_PREFIX[lang]||'e.g.'} 1985 · 10 · 15`;
+  if (hintEl) hintEl.style.display = 'none';
   if (L.docTitle) document.title = L.docTitle;
 
   const url = lang === 'ko' ? 'https://lucky.all-lifes.com/' : `https://lucky.all-lifes.com/?lang=${lang}`;
