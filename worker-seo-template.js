@@ -559,7 +559,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .lang-bar a{color:#a5b4fc;text-decoration:none;margin:0 6px;}
 .lang-bar a:hover{color:#fff;}
 .lang-bar a.active{color:#fbbf24;font-weight:700;}
-iframe{width:100%;border:none;display:block;min-height:900px;transition:height .2s ease;}
+iframe{width:100%;border:none;display:block;height:560px;min-height:0;transition:height .25s ease;}
 .seo-section{background:#fff;border-top:1px solid #e7e5e4;padding:40px 20px 48px;}
 .seo-section .inner{max-width:780px;margin:0 auto;}
 .seo-intro{font-size:14px;color:#44403c;line-height:1.85;margin-bottom:32px;padding:22px 24px;background:#fffbeb;border-left:4px solid #d97706;border-radius:0 12px 12px 0;}
@@ -602,13 +602,22 @@ iframe{width:100%;border:none;display:block;min-height:900px;transition:height .
 <script>
 (function(){
   var f = document.getElementById('lucky-frame');
+  var lastH = 560;
   window.addEventListener('message', function(e){
-    if(e.data && e.data.type === 'lucky-resize' && e.data.height > 200){
-      f.style.height = (e.data.height + 40) + 'px';
+    if(e.data && e.data.type === 'lucky-resize' && e.data.height > 100){
+      var h = Math.ceil(e.data.height) + 24;
+      if(Math.abs(h - lastH) > 4){ lastH = h; f.style.height = h + 'px'; }
     }
   });
+  // Fallback: if no resize message within 2s, check actual content height via CSS
   f.addEventListener('load', function(){
-    setTimeout(function(){ if(parseInt(f.style.height) < 600) f.style.height = '1000px'; }, 1500);
+    setTimeout(function(){
+      try {
+        var inner = f.contentDocument || f.contentWindow.document;
+        var bh = inner && inner.body ? inner.body.scrollHeight : 0;
+        if(bh > 100){ var h2 = bh + 24; lastH = h2; f.style.height = h2 + 'px'; }
+      } catch(ex){}
+    }, 800);
   });
 })();
 </script>
