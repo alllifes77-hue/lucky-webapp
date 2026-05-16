@@ -199,6 +199,26 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
   .ball{width:48px;height:48px;font-size:16px;}
   .fortune-grid{grid-template-columns:repeat(3,1fr);}
 }
+/* Fortune category cards */
+.fortune-cat-card{background:var(--card);border-left:4px solid var(--cat-color,var(--gold));border-radius:16px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow);}
+.fortune-cat-header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.fortune-cat-icon{font-size:28px;flex-shrink:0;}
+.fortune-cat-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.fortune-cat-score-bar{height:6px;background:var(--border);border-radius:3px;width:140px;overflow:hidden;}
+.fortune-cat-score-fill{height:100%;background:var(--cat-color,var(--gold));border-radius:3px;transition:width .6s ease;}
+.fortune-cat-score-text{font-size:11px;color:var(--text2);margin-top:3px;font-weight:600;}
+.fortune-cat-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px;}
+.fortune-cat-advice{background:rgba(0,0,0,.03);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
+.fortune-cat-lucky{font-size:12px;color:var(--text3);}
+/* Fortune summary mini grid */
+.fortune-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px auto 0;max-width:360px;}
+.fsg-item{text-align:center;}
+.fsg-circle{width:44px;height:44px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;}
+.fsg-label{font-size:9px;color:rgba(255,255,255,.7);font-weight:600;}
+/* Lucky tips (비책) section */
+.tips-section{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac;border-radius:20px;padding:20px 22px;margin-bottom:20px;}
+.tips-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+.tips-num{background:#16a34a;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;min-width:22px;}
 </style>
 </head>
 <body>
@@ -258,6 +278,19 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           </div>
         </div>
 
+        <div class="draw-date-wrap" id="birth-time-wrap">
+          <button type="button" class="draw-date-toggle" id="birth-time-toggle" onclick="toggleBirthTime()">
+            <span class="toggle-icon">▶</span>
+            <span id="txt-birth-time-label">태어난 시간 (선택) — 더 정밀한 분석</span>
+          </button>
+          <div class="draw-date-body" id="birth-time-body" style="display:none">
+            <select id="birth-hour" class="lottery-select" style="margin-bottom:0;width:100%">
+              <option value="">시간 선택 안함</option>
+            </select>
+            <p class="draw-date-note" id="txt-birth-time-note">시주(時柱) 계산으로 더 정밀한 사주 분석을 제공합니다.</p>
+          </div>
+        </div>
+
         <button class="btn-lucky" onclick="startGenerate()">
           <span class="btn-icon">🍀</span>
           <span id="txt-btn-generate">행운의 번호 뽑기</span>
@@ -300,6 +333,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
     <div class="result-badge" id="result-badge">🍀 오늘의 행운</div>
     <h2 id="txt-result-title">행운의 번호</h2>
     <div class="cultural-info" id="cultural-info"></div>
+    <div class="fortune-summary-grid" id="fortune-summary-grid"></div>
   </div>
 
   <div class="result-content">
@@ -344,6 +378,6 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
   </div>
 </div>
 
-<script src="lucky-app.js?v=20260516"></script>
+<script src="lucky-app.js?v=20260517"></script>
 </body>
 </html>

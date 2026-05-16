@@ -258,6 +258,166 @@ function calcDrawPasaran(year, month, day) {
   return ((jd % 5) + 5) % 5;
 }
 
+// ── Extended Cultural Algorithms ──────────────────────────
+
+// 사주: Month pillar (월주)
+const MONTH_BRANCHES = [2,3,4,5,6,7,8,9,10,11,0,1]; // 寅(2)=Jan ... 丑(1)=Dec
+function calcMonthPillar(yearStemIdx, month) {
+  const branchIdx = MONTH_BRANCHES[month - 1];
+  const startStems = [2,4,6,8,0]; // 甲己→丙(2), 乙庚→戊(4), 丙辛→庚(6), 丁壬→壬(8), 戊癸→甲(0)
+  const stemIdx = (startStems[yearStemIdx % 5] + (branchIdx - 2 + 12) % 12) % 10;
+  return { stemIdx, branchIdx, element: ELEMENTS[stemIdx] };
+}
+
+// 사주: Day branch (일지)
+function calcDayBranch(year, month, day) {
+  const m2 = month < 3 ? month + 13 : month + 1;
+  const y2 = month < 3 ? year + 4715 : year + 4716;
+  const jd = Math.floor(365.25 * y2) + Math.floor(30.6001 * m2) + day - 1524;
+  return ((jd - 2451545 + 3) % 12 + 12) % 12;
+}
+
+// 사주: Hour branch and pillar (시주)
+function calcHourBranch(hour) {
+  if (hour === 23 || hour === 0) return 0;
+  return Math.floor((hour + 1) / 2);
+}
+function calcHourPillar(dayStemIdx, hour) {
+  const branchIdx = calcHourBranch(hour);
+  const startStems = [0,2,4,6,8]; // 甲己日→甲子, 乙庚→丙子, 丙辛→戊子, 丁壬→庚子, 戊癸→壬子
+  const stemIdx = (startStems[dayStemIdx % 5] + branchIdx) % 10;
+  return { stemIdx, branchIdx, element: ELEMENTS[stemIdx] };
+}
+
+// 사주: Five-element balance analysis (오행 강약)
+function calcOhaengBalance(elements) {
+  const counts = {'木':0,'火':0,'土':0,'金':0,'水':0};
+  elements.filter(Boolean).forEach(el => { if (el in counts) counts[el]++; });
+  let minEl = '木', minCnt = Infinity;
+  for (const [el, cnt] of Object.entries(counts)) {
+    if (cnt < minCnt) { minCnt = cnt; minEl = el; }
+  }
+  const SHENG_PARENT = {'火':'木','土':'火','金':'土','水':'金','木':'水'};
+  const yongsin = minCnt === 0 ? SHENG_PARENT[minEl] : minEl;
+  return { counts, yongsin, weakElements: Object.entries(counts).filter(([,c]) => c === minCnt).map(([e]) => e) };
+}
+
+// 사주: Ten Gods relationship type (십신)
+function calcSipsinType(dayStemIdx, otherStemIdx) {
+  const NAMES = ['비겁','식상','재성','관성','인성'];
+  const diff = (Math.floor(otherStemIdx / 2) - Math.floor(dayStemIdx / 2) + 5) % 5;
+  return NAMES[diff];
+}
+
+// Western Astrology: Sun Sign
+const ZODIAC_SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo',
+                      'Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+
+function getSunSign(month, day) {
+  const n = month * 100 + day;
+  if (n>=321&&n<=419) return 0;  if (n>=420&&n<=520) return 1;
+  if (n>=521&&n<=620) return 2;  if (n>=621&&n<=722) return 3;
+  if (n>=723&&n<=822) return 4;  if (n>=823&&n<=922) return 5;
+  if (n>=923&&n<=1022) return 6; if (n>=1023&&n<=1121) return 7;
+  if (n>=1122&&n<=1221) return 8;
+  return (n>=1222 || n<=119) ? 9 : (n<=218 ? 10 : 11);
+}
+
+// Western Astrology: Moon Sign (astronomical approximation ~1-2° accuracy)
+function getMoonSign(year, month, day) {
+  const m2 = month < 3 ? month + 13 : month + 1;
+  const y2 = month < 3 ? year + 4715 : year + 4716;
+  const jd = Math.floor(365.25 * y2) + Math.floor(30.6001 * m2) + day - 1524.5;
+  const d = jd - 2451545.0;
+  const toR = x => x * Math.PI / 180;
+  const L  = (218.3164477 + 13.17639501 * d) % 360;
+  const M  = (134.9634114 + 13.06499295 * d) % 360;
+  const F  = (93.2720950  + 13.22935024 * d) % 360;
+  const MS = (357.5291    +  0.98560028 * d) % 360;
+  const dL = 6.289 * Math.sin(toR(M))
+           - 1.274 * Math.sin(toR(2*F - M))
+           + 0.658 * Math.sin(toR(2*F))
+           - 0.214 * Math.sin(toR(2*M))
+           - 0.186 * Math.sin(toR(MS));
+  return Math.floor(((L + dL) % 360 + 360) % 360 / 30);
+}
+
+// 九星気学: Month Star (月命星)
+const KYUSEI_MONTH_BASE = {1:8,2:5,3:2,4:8,5:5,6:2,7:8,8:5,9:2};
+function calcMonthKyusei(yearStar, month) {
+  const base = KYUSEI_MONTH_BASE[yearStar] || 8;
+  return ((base - (month - 1) - 1 + 99) % 9) + 1;
+}
+
+// Fortune score calculation (deterministic from birth seed)
+function calcFortuneScores(systemKey, cultural, opts) {
+  const { fullSaju, sunSign, moonSign, monthStar, birthHour, seed } = opts;
+  let love=50, money=50, career=50, achievement=50;
+
+  if (systemKey === 'saju' && fullSaju) {
+    const sc = fullSaju.sipsin || {};
+    money       = [40,65,80,92][Math.min(sc['재성']||0, 3)];
+    career      = [35,60,78,92][Math.min(sc['관성']||0, 3)];
+    achievement = [38,65,83,94][Math.min(sc['인성']||0, 3)];
+    const DOHWA = new Set([0,3,6,9]); // 子卯午酉 → 도화살
+    const hasDohwa = DOHWA.has(opts.dayBranch || 0) ||
+                     (birthHour !== null && DOHWA.has(opts.hourBranch || 0));
+    love = Math.min(95, 45 + (hasDohwa ? 22 : 0) +
+                    (Object.values(fullSaju.counts || {}).filter(v => v >= 2).length * 5));
+
+  } else if (systemKey === 'kyusei') {
+    const ST = {
+      1:{love:72,money:55,career:60,achievement:58},2:{love:52,money:78,career:62,achievement:65},
+      3:{love:60,money:60,career:68,achievement:80},4:{love:65,money:62,career:65,achievement:85},
+      5:{love:50,money:70,career:72,achievement:60},6:{love:55,money:65,career:82,achievement:70},
+      7:{love:75,money:70,career:60,achievement:60},8:{love:55,money:82,career:65,achievement:68},
+      9:{love:68,money:60,career:85,achievement:72},
+    };
+    const t = ST[cultural.star] || ST[5];
+    const m = ST[monthStar || 5] || ST[5];
+    love        = Math.round((t.love        + m.love)        / 2);
+    money       = Math.round((t.money       + m.money)       / 2);
+    career      = Math.round((t.career      + m.career)      / 2);
+    achievement = Math.round((t.achievement + m.achievement)  / 2);
+
+  } else if (systemKey === 'numerology' && sunSign !== null) {
+    const LB=[5,10,0,8,5,0,15,12,5,3,8,10];
+    const MB=[5,15,3,5,8,12,5,8,3,15,5,5];
+    const CB=[12,5,8,5,15,10,8,5,8,15,10,5];
+    const AB=[10,5,12,8,15,10,8,12,5,12,15,8];
+    love        = 50 + Math.round((LB[sunSign] + LB[moonSign||0]) / 2);
+    money       = 50 + Math.round((MB[sunSign] + MB[moonSign||0]) / 2);
+    career      = 50 + Math.round((CB[sunSign] + CB[moonSign||0]) / 2);
+    achievement = 50 + Math.round((AB[sunSign] + AB[moonSign||0]) / 2);
+
+  } else if (systemKey === 'jawanese') {
+    const PT = [
+      {love:65,money:70,career:60,achievement:68},{love:55,money:65,career:75,achievement:65},
+      {love:70,money:60,career:65,achievement:72},{love:60,money:72,career:68,achievement:60},
+      {love:75,money:65,career:70,achievement:75},
+    ];
+    const t = PT[cultural.pasaranIdx] || PT[0];
+    love=t.love; money=t.money; career=t.career; achievement=t.achievement;
+  }
+
+  const mkV = offset => {
+    const r = mkRng((seed ^ (offset * 0x9e3779b9)) >>> 0);
+    return Math.floor(r() * 11) - 5;
+  };
+  const clamp = v => Math.min(97, Math.max(20, v));
+  const lv = s => s >= 73 ? 'high' : s >= 47 ? 'mid' : 'low';
+  const ls = clamp(love + mkV(1));
+  const ms = clamp(money + mkV(2));
+  const cs = clamp(career + mkV(3));
+  const as = clamp(achievement + mkV(4));
+  return {
+    love:        { score: ls, level: lv(ls) },
+    money:       { score: ms, level: lv(ms) },
+    career:      { score: cs, level: lv(cs) },
+    achievement: { score: as, level: lv(as) },
+  };
+}
+
 // Five-element harmony (五行相生相克)
 const OHAENG_SHENG = {'木':'火','火':'土','土':'金','金':'水','水':'木'};
 const OHAENG_KE    = {'木':'土','土':'水','水':'火','火':'金','金':'木'};
@@ -434,7 +594,7 @@ function ballClass(n, format) {
 // ── Main Generate Function ────────────────────────────────
 let lastResult = null;
 
-function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
+function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, birthHour) {
   // Resolve lottery format
   const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
   const lotto = (lotteryId ? opts.find(l => l.id === lotteryId) : null) || opts[0];
@@ -544,6 +704,38 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
     ? findNextDrawDates(year, month, day, cultural, systemKey, lang, lotteryId||(LOTTERY_OPTIONS[lang]?.[0]?.id))
     : null;
 
+  // ── Fortune category calculation ─────────────────────────
+  let fullSaju = null, sunSign = null, moonSign = null, monthKyusei = null;
+  if (systemKey === 'saju') {
+    const dayStemIdx = calcDayStemIdx(year, month, day);
+    const monthPillar = calcMonthPillar(cultural.stemIdx, month);
+    const dayBranch = calcDayBranch(year, month, day);
+    const hourPillar = (birthHour !== null && birthHour !== undefined)
+      ? calcHourPillar(dayStemIdx, birthHour) : null;
+    const balance = calcOhaengBalance([
+      cultural.element, monthPillar.element, ELEMENTS[dayStemIdx], hourPillar ? hourPillar.element : null
+    ]);
+    const stems = [cultural.stemIdx, monthPillar.stemIdx, dayStemIdx];
+    if (hourPillar) stems.push(hourPillar.stemIdx);
+    const sipsin = {};
+    stems.slice(1).forEach(si => { const r = calcSipsinType(dayStemIdx, si); sipsin[r] = (sipsin[r] || 0) + 1; });
+    fullSaju = { ...balance, sipsin, monthPillar, dayBranch, hourPillar };
+  } else if (systemKey === 'kyusei') {
+    monthKyusei = calcMonthKyusei(cultural.star, month);
+  } else if (systemKey === 'numerology') {
+    sunSign = getSunSign(month, day);
+    moonSign = getMoonSign(year, month, day);
+  }
+
+  const fortuneScores = !setIdx ? calcFortuneScores(systemKey, cultural, {
+    fullSaju, sunSign, moonSign,
+    monthStar: monthKyusei,
+    dayBranch: fullSaju ? fullSaju.dayBranch : null,
+    hourBranch: fullSaju && fullSaju.hourPillar ? fullSaju.hourPillar.branchIdx : null,
+    birthHour: (birthHour !== null && birthHour !== undefined) ? birthHour : null,
+    seed,
+  }) : null;
+
   if (setIdx) seed = ((seed >>> 0) + setIdx * 999983) >>> 0;
   const rng = mkRng(seed);
   let mainNums, bonusNums = null;
@@ -560,7 +752,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx) {
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -622,12 +814,21 @@ function renderResults(data) {
     </div>
   `;
 
+  // Fortune summary mini circles
+  renderFortuneSummaryGrid(data);
+
   // Fortune message
   const fortunes = L.fortunes;
   if (fortunes && fortunes.length) {
     const msgIdx = Math.floor(mkRng(data.seed + 999)() * fortunes.length);
     document.getElementById('fortune-msg').textContent = fortunes[msgIdx];
   }
+
+  // Fortune category cards + tips (remove previous if re-rendering)
+  const prevCats = document.getElementById('fortune-cats-section');
+  if (prevCats) prevCats.remove();
+  renderFortuneCategories(data);
+  renderLuckyTips(data);
 
   // Personal reading: what this means for YOU
   renderInterpretation(data);
@@ -1137,6 +1338,136 @@ function getSytemName(key, lang) {
   return map[lang] || map.en;
 }
 
+// ── Fortune Summary Grid (4 mini circles) ─────────────────
+function renderFortuneSummaryGrid(data) {
+  const el = document.getElementById('fortune-summary-grid');
+  if (!el || !data.fortuneScores) return;
+  const L = window.LUCKY_LANG || {};
+  const S = data.fortuneScores;
+  const cats = [
+    { key:'love',        icon: L.catLoveIcon||'💝',        label: L.catLove||'연애운',   color:'#ec4899' },
+    { key:'money',       icon: L.catMoneyIcon||'💰',       label: L.catMoney||'금전운',  color:'#d97706' },
+    { key:'career',      icon: L.catCareerIcon||'💼',      label: L.catCareer||'직업운', color:'#4338ca' },
+    { key:'achievement', icon: L.catAchievementIcon||'🏆', label: L.catAchievement||'성취운', color:'#7c3aed' },
+  ];
+  el.innerHTML = cats.map(c => {
+    const s = S[c.key] || {};
+    return `<div class="fsg-item">
+      <div class="fsg-circle" style="background:${c.color}">${s.score||'—'}</div>
+      <div class="fsg-label">${c.icon} ${c.label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Fortune Category Cards ─────────────────────────────────
+function renderFortuneCategories(data) {
+  if (!data.fortuneScores) return;
+  const L = window.LUCKY_LANG || {};
+  const S = data.fortuneScores;
+  const lang = data.lang;
+  const seed = data.seed;
+  const pick = arr => arr && arr.length ? arr[seed % arr.length] : '';
+
+  const cats = [
+    {
+      key:'love', icon: L.catLoveIcon||'💝', title: L.catLove||'연애운', color:'#ec4899',
+      textPool: L.fortuneLove, advicePool: L.fortuneLoveAdvice, luckyPool: L.fortuneLoveLucky,
+    },
+    {
+      key:'money', icon: L.catMoneyIcon||'💰', title: L.catMoney||'금전운', color:'#d97706',
+      textPool: L.fortuneMoney, advicePool: L.fortuneMoneyAdvice, luckyPool: L.fortuneMoneyLucky,
+    },
+    {
+      key:'career', icon: L.catCareerIcon||'💼', title: L.catCareer||'직업운', color:'#4338ca',
+      textPool: L.fortuneCareer, advicePool: L.fortuneCareerAdvice, luckyPool: L.fortuneCareerLucky,
+    },
+    {
+      key:'achievement', icon: L.catAchievementIcon||'🏆', title: L.catAchievement||'성취운', color:'#7c3aed',
+      textPool: L.fortuneAchievement, advicePool: L.fortuneAchievementAdvice, luckyPool: L.fortuneAchievementLucky,
+    },
+  ];
+
+  const scoreLabel = L.scoreLabel || '점';
+  const advLabel   = L.adviceLabel || '💡 조언';
+  const luckyLabel = L.luckyElementLabel || '🎯 행운 요소';
+
+  let html = `<div style="margin-bottom:6px;margin-top:4px;">`;
+  cats.forEach(c => {
+    const s = S[c.key] || { score: 50, level: 'mid' };
+    const textArr = c.textPool ? (c.textPool[s.level] || c.textPool.mid || []) : [];
+    const advArr  = c.advicePool ? (c.advicePool[s.level] || c.advicePool.mid || []) : [];
+    const luckArr = c.luckyPool ? (c.luckyPool[s.level] || c.luckyPool.mid || []) : [];
+    const desc   = pick(textArr) || '';
+    const advice = pick(advArr)  || '';
+    const lucky  = pick(luckArr) || '';
+    const lvLabel = s.level === 'high' ? (L.scoreHigh||'좋음') : s.level === 'mid' ? (L.scoreMid||'보통') : (L.scoreLow||'주의');
+    html += `<div class="fortune-cat-card" style="--cat-color:${c.color}">
+      <div class="fortune-cat-header">
+        <div class="fortune-cat-icon">${c.icon}</div>
+        <div>
+          <div class="fortune-cat-title">${c.title}</div>
+          <div class="fortune-cat-score-bar"><div class="fortune-cat-score-fill" style="width:${s.score}%"></div></div>
+          <div class="fortune-cat-score-text">${s.score}${scoreLabel} · ${lvLabel}</div>
+        </div>
+      </div>
+      ${desc ? `<div class="fortune-cat-desc">${desc}</div>` : ''}
+      ${advice ? `<div class="fortune-cat-advice">${advLabel}: ${advice}</div>` : ''}
+      ${lucky ? `<div class="fortune-cat-lucky">${luckyLabel}: ${lucky}</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  const shareSection = document.querySelector('.share-section');
+  if (!shareSection) return;
+  const wrap = document.createElement('div');
+  wrap.id = 'fortune-cats-section';
+  wrap.innerHTML = html;
+  shareSection.before(wrap);
+}
+
+// ── Lucky Tips (비책) ─────────────────────────────────────
+function renderLuckyTips(data) {
+  if (!data.fortuneScores) return;
+  const L = window.LUCKY_LANG || {};
+  const seed = data.seed;
+
+  let tips = [];
+  if (data.systemKey === 'saju' && data.fullSaju && L.tipsByElement) {
+    const yong = data.fullSaju.yongsin || '木';
+    const pool = L.tipsByElement[yong] || L.tipsByElement['木'] || [];
+    tips = pool.slice(0, 5);
+  } else if (data.systemKey === 'numerology' && data.sunSign !== null && L.tipsBySign) {
+    const pool = L.tipsBySign[data.sunSign] || L.tipsBySign[0] || [];
+    tips = pool.slice(0, 5);
+  } else if (data.systemKey === 'jawanese' && L.tipsByPasaran) {
+    const idx = data.cultural && data.cultural.pasaranIdx != null ? data.cultural.pasaranIdx : 0;
+    const pool = L.tipsByPasaran[idx] || L.tipsByPasaran[0] || [];
+    tips = pool.slice(0, 5);
+  } else if (data.systemKey === 'kyusei' && L.tipsByKyusei) {
+    const star = data.cultural ? data.cultural.star : 5;
+    const pool = L.tipsByKyusei[star] || L.tipsByKyusei[5] || [];
+    tips = pool.slice(0, 5);
+  }
+
+  if (!tips.length) return;
+
+  const title = L.catTips || '운을 높이는 비책';
+  const itemsHtml = tips.map((t, i) =>
+    `<div class="tips-item"><div class="tips-num">${i+1}</div><div style="font-size:13px;color:#166534;line-height:1.65;">${t}</div></div>`
+  ).join('');
+
+  const div = document.createElement('div');
+  div.className = 'tips-section';
+  div.innerHTML = `<div style="font-size:14px;font-weight:800;color:#166534;margin-bottom:14px;">✨ ${title}</div>${itemsHtml}`;
+
+  const catSection = document.getElementById('fortune-cats-section');
+  if (catSection) catSection.appendChild(div);
+  else {
+    const shareSection = document.querySelector('.share-section');
+    if (shareSection) shareSection.before(div);
+  }
+}
+
 // ── Share Buttons ─────────────────────────────────────────
 const SHARE_PLATFORMS = {
   ko: [{id:'kakao',label:'카카오톡'},{id:'band',label:'Band'},{id:'twitter',label:'X (Twitter)'},{id:'copy'}],
@@ -1302,13 +1633,15 @@ function startGenerate() {
   const drawDateStr = (drawYear && drawMonth && drawDay)
     ? `${drawYear}-${String(drawMonth).padStart(2,'0')}-${String(drawDay).padStart(2,'0')}`
     : null;
+  const birthHourRaw = (document.getElementById('birth-hour') || {}).value || '';
+  const birthHour = birthHourRaw !== '' ? parseInt(birthHourRaw) : null;
   const setsCount   = parseInt((document.querySelector('.sets-btn.active') || {}).dataset?.sets || '1');
   showScreen('s-gen');
   setTimeout(() => {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
     const sets = [];
     for (let i = 0; i < setsCount; i++) {
-      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i));
+      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i, birthHour));
     }
     lastResult = { ...sets[0], sets };
     applyLangToResults(lastResult);
@@ -1319,6 +1652,15 @@ function startGenerate() {
 
 function resetApp() {
   showScreen('s-home');
+}
+
+function toggleBirthTime() {
+  const body = document.getElementById('birth-time-body');
+  const icon = document.querySelector('#birth-time-toggle .toggle-icon');
+  if (!body) return;
+  const open = body.style.display !== 'none' && body.style.display !== '';
+  body.style.display = open ? 'none' : 'block';
+  if (icon) icon.textContent = open ? '▶' : '▼';
 }
 
 // ── applyLang (static text updates) ──────────────────────
@@ -1347,6 +1689,53 @@ function applyLang() {
   setph('draw-day',   DRAW_PH.day[lang]   || 'Day');
   const hintEl = document.getElementById('date-hint');
   if (hintEl) hintEl.style.display = 'none';
+
+  // Birth time toggle label/note
+  const btLabel = document.getElementById('txt-birth-time-label');
+  if (btLabel) btLabel.textContent = L.birthTimeLabel || 'Birth Time (optional)';
+  const btNote = document.getElementById('txt-birth-time-note');
+  if (btNote) btNote.textContent = L.birthTimeNote || '';
+
+  // Populate birth-hour select
+  const hourSel = document.getElementById('birth-hour');
+  if (hourSel) {
+    const placeholder = L.hourSelectPlaceholder || 'No time selected';
+    const useKoJizhi = lang === 'ko' || lang === 'ja';
+    const KO_JIZHI = ['자시(子)','축시(丑)','인시(寅)','묘시(卯)','진시(辰)','사시(巳)',
+                       '오시(午)','미시(未)','신시(申)','유시(酉)','술시(戌)','해시(亥)'];
+    const JA_JIZHI = ['子の刻(23-1時)','丑の刻(1-3時)','寅の刻(3-5時)','卯の刻(5-7時)',
+                       '辰の刻(7-9時)','巳の刻(9-11時)','午の刻(11-13時)','未の刻(13-15時)',
+                       '申の刻(15-17時)','酉の刻(17-19時)','戌の刻(19-21時)','亥の刻(21-23時)'];
+    const currentVal = hourSel.value;
+    hourSel.innerHTML = `<option value="">${placeholder}</option>`;
+    if (lang === 'ko') {
+      // 12 시진 (子時=23/0, 丑時=1, ...) mapped to representative hour
+      const jizhiHours = [23,1,3,5,7,9,11,13,15,17,19,21];
+      KO_JIZHI.forEach((label, i) => {
+        const opt = document.createElement('option');
+        opt.value = jizhiHours[i];
+        opt.textContent = label;
+        hourSel.appendChild(opt);
+      });
+    } else if (lang === 'ja') {
+      const jizhiHours = [23,1,3,5,7,9,11,13,15,17,19,21];
+      JA_JIZHI.forEach((label, i) => {
+        const opt = document.createElement('option');
+        opt.value = jizhiHours[i];
+        opt.textContent = label;
+        hourSel.appendChild(opt);
+      });
+    } else {
+      for (let h = 0; h < 24; h++) {
+        const opt = document.createElement('option');
+        opt.value = h;
+        opt.textContent = `${String(h).padStart(2,'0')}:00`;
+        hourSel.appendChild(opt);
+      }
+    }
+    if (currentVal !== '') hourSel.value = currentVal;
+  }
+
   if (L.docTitle) document.title = L.docTitle;
 
   const url = lang === 'ko' ? 'https://lucky.all-lifes.com/' : `https://lucky.all-lifes.com/?lang=${lang}`;

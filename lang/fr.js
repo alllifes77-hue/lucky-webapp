@@ -56,6 +56,67 @@ window.LUCKY_LANG = {
 
   shareText: '🍀 Mes numéros chanceux (numérologie) : {numbers}\nEssayez gratuitement →',
 
+  birthTimeLabel: 'Heure de naissance (optionnel) — analyse plus précise',
+  birthTimeNote: 'Votre heure de naissance permet une analyse astrologique plus détaillée.',
+  hourSelectPlaceholder: 'Aucune heure sélectionnée',
+  catLove:'Chance en amour', catMoney:'Chance financière', catCareer:'Carrière & Succès',
+  catAchievement:'Réussite', catTips:'Conseils porte-bonheur',
+  catLoveIcon:'💝', catMoneyIcon:'💰', catCareerIcon:'💼', catAchievementIcon:'🏆',
+  scoreHigh:'Favorable', scoreMid:'Moyen', scoreLow:'Prudence', scoreLabel:'pts',
+  adviceLabel:'💡 Conseil', luckyElementLabel:'🎯 Élément chanceux',
+  zodiacNames:['Bélier','Taureau','Gémeaux','Cancer','Lion','Vierge','Balance','Scorpion','Sagittaire','Capricorne','Verseau','Poissons'],
+  sunSignLabel:'Signe solaire', moonSignLabel:'Signe lunaire',
+
+  fortuneLove:{
+    high:['Vos astres favorisent fortement les rencontres amoureuses. Faites le premier pas.',
+          'L\'énergie de Vénus amplifie votre charme — idéal pour les déclarations.',
+          'Une harmonie rare entre Soleil et Lune ouvre les portes aux relations profondes.',
+          'L\'intuition émotionnelle est exacerbée — exprimez vos sentiments librement.'],
+    mid:['L\'énergie amoureuse est stable. Nourrissez ce que vous avez.','La patience et l\'écoute sincère renforceront vos relations.','Une approche calme et constante donnera les meilleurs résultats.','Accordez du temps de qualité à ceux qui comptent.'],
+    low:['Les malentendus surviennent facilement. Choisissez vos mots avec soin.','Donnez-vous de l\'espace — la distance crée la clarté.','Cette période favorise la réflexion intérieure.','Évitez les grandes décisions sentimentales jusqu\'au retour de la clarté.'],
+  },
+  fortuneLoveAdvice:{high:['Planifiez un rendez-vous mémorable.','Envoyez un message sincère.','Portez la couleur de votre signe.','Participez à des événements sociaux.'],mid:['Posez des questions ouvertes.','Les petites attentions parlent fort.','Prévoyez du temps sans écrans.','Notez ce que vous valorisez.'],low:['Attendez 24h avant d\'envoyer des messages impulsifs.','Prenez soin de vous en priorité.','Tenez un journal.','Parlez à un ami de confiance.']},
+  fortuneLoveLucky:{high:['Accessoires rosés','Dîner aux chandelles','Fleurs ou parfum'],mid:['Tisane chaude','Notes manuscrites','Promenades nature'],low:['Méditation solo','Playlist préférée','Journal intime']},
+
+  fortuneMoney:{
+    high:['Votre vibration numérologique favorise les gains financiers. Agissez maintenant.','C\'est un excellent moment pour des investissements ou des négociations.','Des opportunités de profit se profilent — saisissez-les avec discernement.','La chance financière est à son apogée.'],
+    mid:['Les finances coulent régulièrement. Maintenez des habitudes disciplinées.','Consolidez ce que vous avez avant de chercher de nouvelles opportunités.','Examinez votre budget attentivement.','Une approche modérée et constante vous servira bien.'],
+    low:['Soyez prudent avec les grandes dépenses.','Des coûts inattendus peuvent survenir — gardez une réserve d\'urgence.','Évitez de cautionner des prêts.','Concentrez-vous sur la protection des actifs actuels.'],
+  },
+  fortuneMoneyAdvice:{high:['Recherchez un nouveau produit d\'investissement.','Automatisez 20–30% en épargne.','Réseautez avec des pairs réussis.','Lancez un projet annexe.'],mid:['Suivez chaque dépense une semaine.','Ouvrez un compte épargne dédié.','Lisez un livre de finances.','Révisez les abonnements inutiles.'],low:['Constituez un fonds d\'urgence.','Appliquez la règle des 24h.','Consultez un conseiller financier.','Soldez les petites dettes.']},
+  fortuneMoneyLucky:{high:['Portefeuille or','Coffre orienté nord','Secteur finance'],mid:['Accessoires argent','Habitude de tirelire','App de budget'],low:['Trier les reçus','Vérifier abonnements','Lire un blog financier']},
+
+  fortuneCareer:{
+    high:['La reconnaissance professionnelle approche. Rendez vos contributions visibles.','C\'est le bon moment pour des idées audacieuses ou une promotion.','L\'énergie de leadership est forte — avancez avec confiance.','Une nouvelle voie de carrière peut s\'ouvrir.'],
+    mid:['La progression de carrière est régulière. Approfondissez votre expertise.','Un travail fiable est votre meilleur atout.','Investissez dans une nouvelle compétence.','La collaboration prime sur la compétition.'],
+    low:['Soyez prudent dans les conflits au travail.','Reportez les mouvements de carrière risqués.','Concentrez-vous à exceller dans votre rôle actuel.','Documentez vos réalisations.'],
+  },
+  fortuneCareerAdvice:{high:['Programmez une réunion avec votre responsable.','Portez-vous volontaire pour des projets visibles.','Participez à un événement de réseautage.','Mettez à jour votre profil LinkedIn.'],mid:['Identifiez une lacune de compétences.','Renforcez les relations clés.','Créez un plan de développement sur 90 jours.','Cherchez des retours constructifs.'],low:['Restez à l\'écart de la politique de bureau.','Gardez un enregistrement de vos contributions.','Donnez la priorité au bien-être mental.','Explorez de nouvelles compétences.']},
+  fortuneCareerLucky:{high:['Tenue sombre pour réunions','Bureau orienté est','Cartes de visite actualisées'],mid:['Espace de travail propre','Nouveau cahier','Plante sur le bureau'],low:['Ranger le bureau','Musique de concentration','Pause pleine conscience']},
+
+  fortuneAchievement:{
+    high:['Vos pouvoirs cognitifs sont à leur apogée. Attaquez vos plus grands objectifs.','L\'apprentissage vient facilement — montez en compétences.','Des percées dans les projets personnels sont très probables.','La reconnaissance de vos efforts peut arriver.'],
+    mid:['Les progrès s\'accumulent régulièrement. Faites confiance au processus.','La profondeur plutôt que la largeur apportera une satisfaction durable.','La collaboration peut multiplier vos réalisations.','Terminer les projets existants vaut mieux que d\'en commencer de nouveaux.'],
+    low:['Supprimez les obstacles avant de vous fixer de nouveaux objectifs.','Révisez et apprenez de vos efforts passés.','Demandez de l\'aide — c\'est un signe de sagesse.','De petites tâches accomplies rebâtissent la confiance.'],
+  },
+  fortuneAchievementAdvice:{high:['Décomposez votre objectif en micro-tâches.','Tenez un journal de réussites.','Trouvez un expert à qui apprendre.','Enseignez ce que vous savez.'],mid:['Adoptez une habitude de lecture de 30 min.','Utilisez la technique Pomodoro.','Passez en revue les jalons accomplis.','Rejoignez un groupe d\'étude.'],low:['Accomplissez une petite tâche aujourd\'hui.','Réduisez le temps d\'écran.','Dormez 7–8 heures.','Considérez les échecs comme des données.']},
+  fortuneAchievementLucky:{high:['Environnement bleu-vert','Sessions matinales','Livres de développement'],mid:['Coin lecture calme','Tableau de vision','Planificateur d\'études'],low:['Méditation de 5 min','Détox numérique','Nouveau passe-temps']},
+
+  tipsBySign:[
+    ['Canalisez votre esprit pionnier — commencez quelque chose de nouveau.','Le rouge renforce l\'énergie du Bélier.','Le matin est votre moment de puissance.'],
+    ['Ralentissez et appréciez les plaisirs sensoriels.','Les tons terreux rechargent le Taureau.','Planification financière le vendredi.'],
+    ['Engagez votre curiosité — lisez ou discutez.','Le jaune soutient les Gémeaux.','Les événements de réseautage multiplient la chance.'],
+    ['Honorez votre intuition et créez un espace nourrissant.','L\'argent amplifie l\'intuition du Cancer.','Les lundis soirs sont propices à la réflexion.'],
+    ['Entrez sous les projecteurs — votre rayonnement attire les opportunités.','L\'or amplifie la confiance du Lion.','Activités créatives le dimanche.'],
+    ['Précision et diligence sont vos super-pouvoirs.','Le vert terreux ancre la Vierge.','Les routines matinales donnent le ton.'],
+    ['Cherchez l\'équilibre et la beauté.','Les bleus pastels renforcent la Balance.','La diplomatie ouvre des portes.'],
+    ['Plongez dans ce qui compte vraiment. Votre intensité est un don.','Le rouge profond canalise le Scorpion.','Les sessions nocturnes correspondent à votre énergie.'],
+    ['Élargissez vos horizons — voyagez, étudiez.','Le violet élève le Sagittaire.','Le jeudi est votre jour de chance.'],
+    ['Construisez stratégiquement et patiemment.','Le vert foncé renforce le Capricorne.','Le samedi est idéal pour la planification.'],
+    ['Innovez et connectez-vous avec des visionnaires.','Le bleu électrique stimule le Verseau.','Les projets collaboratifs bénéficient de votre perspective.'],
+    ['Faites confiance à votre imagination et votre intuition.','Le vert mer approfondit les dons des Poissons.','Activités créatives le jeudi.'],
+  ],
+
   faqItems: [
     {
       q: 'Comment la numérologie génère-t-elle des numéros chanceux ?',
