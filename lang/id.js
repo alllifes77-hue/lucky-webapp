@@ -62,6 +62,9 @@ window.LUCKY_LANG = {
   catLove:'Keberuntungan Cinta', catMoney:'Keberuntungan Keuangan', catCareer:'Karier & Sukses',
   catAchievement:'Pencapaian', catTips:'Tips Meningkatkan Hoki',
   catLoveIcon:'💝', catMoneyIcon:'💰', catCareerIcon:'💼', catAchievementIcon:'🏆',
+  catSelectLabel:'Pilih Kategori',
+  catNames:['Angka Hoki','Weton','Cinta','Keuangan','Karier','Prestasi'],
+  catDetailTitle:'Analisis Detail Saya',
   scoreHigh:'Bagus', scoreMid:'Sedang', scoreLow:'Waspada', scoreLabel:'poin',
   adviceLabel:'💡 Saran', luckyElementLabel:'🎯 Elemen Keberuntungan',
 

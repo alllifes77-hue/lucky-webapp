@@ -153,6 +153,17 @@ function calcJawanese(year, month, day) {
   return { pasaranIdx, lucky: PASARAN_LUCKY[pasaranIdx], seed };
 }
 
+// Weton Neptu values (traditional Javanese birth numerology)
+const WETON_DAY_NEPTU = [5, 4, 3, 7, 8, 6, 9]; // Sun=5, Mon=4, Tue=3, Wed=7, Thu=8, Fri=6, Sat=9
+const WETON_PAS_NEPTU = [5, 9, 7, 4, 8];        // Legi=5, Pahing=9, Pon=7, Wage=4, Kliwon=8
+
+function calcWetonNeptu(year, month, day) {
+  const dow = new Date(year, month - 1, day).getDay();
+  const jd = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month < 3 ? month + 13 : month + 1)) + day - 1524;
+  const pasIdx = ((jd % 5) + 5) % 5;
+  return { neptu: WETON_DAY_NEPTU[dow] + WETON_PAS_NEPTU[pasIdx], dow, pasIdx };
+}
+
 // ── Lottery Formats (default per lang) ───────────────────
 const FORMATS = {
   ko: { name:'로또 6/45',    main:{min:1,max:45,count:6}, bonus:null },
@@ -262,8 +273,8 @@ function calcDrawPasaran(year, month, day) {
 
 // 사주: Month pillar (월주)
 const MONTH_BRANCHES = [2,3,4,5,6,7,8,9,10,11,0,1]; // 寅(2)=Jan ... 丑(1)=Dec
-function calcMonthPillar(yearStemIdx, month) {
-  const branchIdx = MONTH_BRANCHES[month - 1];
+function calcMonthPillar(yearStemIdx, month, branchOverride) {
+  const branchIdx = branchOverride != null ? branchOverride : MONTH_BRANCHES[month - 1];
   const startStems = [2,4,6,8,0]; // 甲己→丙(2), 乙庚→戊(4), 丙辛→庚(6), 丁壬→壬(8), 戊癸→甲(0)
   const stemIdx = (startStems[yearStemIdx % 5] + (branchIdx - 2 + 12) % 12) % 10;
   return { stemIdx, branchIdx, element: ELEMENTS[stemIdx] };
@@ -340,6 +351,68 @@ function getMoonSign(year, month, day) {
            - 0.214 * Math.sin(toR(2*M))
            - 0.186 * Math.sin(toR(MS));
   return Math.floor(((L + dL) % 360 + 360) % 360 / 30);
+}
+
+// ── Astronomy-engine precise calculations (fallback to approx if not loaded) ──
+
+function getMoonSignPrecise(year, month, day, hour) {
+  if (window.Astronomy) {
+    try {
+      const date = new Date(Date.UTC(year, month - 1, day, hour != null ? hour : 12, 0, 0));
+      const moonVec = Astronomy.GeoMoon(date);
+      const ecl = Astronomy.Ecliptic(moonVec);
+      const lon = ((ecl.elon % 360) + 360) % 360;
+      return Math.floor(lon / 30);
+    } catch(e) {}
+  }
+  return getMoonSign(year, month, day);
+}
+
+function getSunSignPrecise(year, month, day) {
+  if (window.Astronomy) {
+    try {
+      const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+      const sun = Astronomy.SunPosition(date);
+      const lon = ((sun.elon % 360) + 360) % 360;
+      return Math.floor(lon / 30);
+    } catch(e) {}
+  }
+  return getSunSign(month, day);
+}
+
+// 節 (Jié) — 12 solar terms defining month pillar boundaries in saju
+const JIEQI_DATA = [
+  {lon:285, branch:1}, // 소한 → 丑月
+  {lon:315, branch:2}, // 입춘 → 寅月
+  {lon:345, branch:3}, // 경칩 → 卯月
+  {lon:15,  branch:4}, // 청명 → 辰月
+  {lon:45,  branch:5}, // 입하 → 巳月
+  {lon:75,  branch:6}, // 망종 → 午月
+  {lon:105, branch:7}, // 소서 → 未月
+  {lon:135, branch:8}, // 입추 → 申月
+  {lon:165, branch:9}, // 백로 → 酉月
+  {lon:195, branch:10},// 한로 → 戌月
+  {lon:225, branch:11},// 입동 → 亥月
+  {lon:255, branch:0}, // 대설 → 子月
+];
+
+function calcMonthBranchByJieqi(year, month, day, birthHour) {
+  if (!window.Astronomy) return MONTH_BRANCHES[month - 1];
+  try {
+    const h = birthHour != null ? birthHour : 12;
+    const birthMs = Date.UTC(year, month - 1, day, h, 0, 0);
+    let bestBranch = MONTH_BRANCHES[month - 1], bestMs = -Infinity;
+    for (const jq of JIEQI_DATA) {
+      for (let y = year - 1; y <= year; y++) {
+        const start = new Date(Date.UTC(y, 0, 1));
+        const found = Astronomy.SearchSunLongitude(jq.lon, start, 366);
+        if (!found) continue;
+        const t = found.date.getTime();
+        if (t <= birthMs && t > bestMs) { bestMs = t; bestBranch = jq.branch; }
+      }
+    }
+    return bestBranch;
+  } catch(e) { return MONTH_BRANCHES[month - 1]; }
 }
 
 // 九星気学: Month Star (月命星)
@@ -708,7 +781,8 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
   let fullSaju = null, sunSign = null, moonSign = null, monthKyusei = null;
   if (systemKey === 'saju') {
     const dayStemIdx = calcDayStemIdx(year, month, day);
-    const monthPillar = calcMonthPillar(cultural.stemIdx, month);
+    const monthBranch = calcMonthBranchByJieqi(year, month, day, birthHour);
+    const monthPillar = calcMonthPillar(cultural.stemIdx, month, monthBranch);
     const dayBranch = calcDayBranch(year, month, day);
     const hourPillar = (birthHour !== null && birthHour !== undefined)
       ? calcHourPillar(dayStemIdx, birthHour) : null;
@@ -723,8 +797,8 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
   } else if (systemKey === 'kyusei') {
     monthKyusei = calcMonthKyusei(cultural.star, month);
   } else if (systemKey === 'numerology') {
-    sunSign = getSunSign(month, day);
-    moonSign = getMoonSign(year, month, day);
+    sunSign = getSunSignPrecise(year, month, day);
+    moonSign = getMoonSignPrecise(year, month, day, birthHour);
   }
 
   const fortuneScores = !setIdx ? calcFortuneScores(systemKey, cultural, {
@@ -824,10 +898,18 @@ function renderResults(data) {
     document.getElementById('fortune-msg').textContent = fortunes[msgIdx];
   }
 
+  // Detailed reading panel for 'saju' category selection
+  const prevPanel = document.getElementById('detailed-reading-panel');
+  if (prevPanel) prevPanel.remove();
+  const selCat = window.LUCKY_SELECTED_CAT || 'lucky';
+  if (selCat === 'saju') {
+    renderDetailedReadingPanel(data);
+  }
+
   // Fortune category cards + tips (remove previous if re-rendering)
   const prevCats = document.getElementById('fortune-cats-section');
   if (prevCats) prevCats.remove();
-  renderFortuneCategories(data);
+  renderFortuneCategories(data, selCat);
   renderLuckyTips(data);
 
   // Personal reading: what this means for YOU
@@ -1327,6 +1409,243 @@ function renderAlgorithmPanel(data) {
   if (shareSection) shareSection.before(panel);
 }
 
+// ── Detailed Reading Panel (정통 사주 / 命盤 / Birth Chart / Weton) ──────────
+
+function renderDetailedReadingPanel(data) {
+  const existing = document.getElementById('detailed-reading-panel');
+  if (existing) existing.remove();
+
+  const L = window.LUCKY_LANG || {};
+  const lang = data.lang;
+
+  const TITLE = {
+    ko:'나의 사주 상세 분석', en:'My Detailed Fortune Reading', ja:'私の詳細鑑定',
+    de:'Meine detaillierte Analyse', fr:'Mon analyse détaillée', es:'Mi análisis detallado',
+    pt:'Minha análise detalhada', it:'La mia analisi dettagliata', id:'Analisis Detail Saya',
+  };
+  const title = L.catDetailTitle || TITLE[lang] || TITLE.en;
+
+  let html = `<div style="font-size:14px;font-weight:800;color:#fbbf24;letter-spacing:.5px;margin-bottom:16px;">🔮 ${title}</div>`;
+
+  if (data.systemKey === 'saju' && data.fullSaju) {
+    html += buildSajuDetailHTML(data, lang, L);
+  } else if (data.systemKey === 'kyusei') {
+    html += buildKyuseiDetailHTML(data, lang, L);
+  } else if (data.systemKey === 'numerology') {
+    html += buildNumerologyDetailHTML(data, lang, L);
+  } else if (data.systemKey === 'jawanese') {
+    html += buildJawaneseDetailHTML(data, lang, L);
+  }
+
+  const panel = document.createElement('div');
+  panel.id = 'detailed-reading-panel';
+  panel.style.cssText = 'background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;border-radius:20px;padding:22px;margin-bottom:20px;border:1px solid rgba(255,255,255,.1);';
+  panel.innerHTML = html;
+
+  const lotterySection = document.getElementById('lottery-section');
+  if (lotterySection) lotterySection.before(panel);
+}
+
+function buildSajuDetailHTML(data, lang, L) {
+  const s = data.cultural;
+  const fj = data.fullSaju;
+  const dsi = calcDayStemIdx(data.year, data.month, data.day);
+  const hp = fj.hourPillar;
+  const mp = fj.monthPillar;
+
+  const cell = 'background:rgba(255,255,255,.08);border-radius:8px;padding:10px;text-align:center;';
+  const lbl  = 'font-size:9px;color:#c4b5fd;font-weight:600;letter-spacing:.5px;margin-bottom:4px;';
+  const main = 'font-size:16px;font-weight:800;color:#fbbf24;';
+  const sub  = 'font-size:10px;color:#a5b4fc;margin-top:2px;';
+  const PILLAR_LABELS = {ko:['연주(年柱)','월주(月柱)','일주(日柱)','시주(時柱)'], ja:['年柱','月柱','日柱','時柱'], en:['Year','Month','Day','Hour']};
+  const pl = PILLAR_LABELS[lang] || PILLAR_LABELS.en;
+  const cols = hp ? 4 : 3;
+
+  let html = `<div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:6px;margin-bottom:14px;">`;
+  // 연주
+  html += `<div style="${cell}"><div style="${lbl}">${pl[0]}</div><div style="${main}">${STEMS[s.stemIdx]}${BRANCHES[s.branchIdx]}</div><div style="${sub}">${STEM_KO[s.stemIdx]}${BRANCH_KO[s.branchIdx]}</div><div style="${sub}">${s.element}</div></div>`;
+  // 월주
+  html += `<div style="${cell}"><div style="${lbl}">${pl[1]}</div><div style="${main}">${STEMS[mp.stemIdx]}${BRANCHES[mp.branchIdx]}</div><div style="${sub}">${STEM_KO[mp.stemIdx]}${BRANCH_KO[mp.branchIdx]}</div><div style="${sub}">${mp.element}</div></div>`;
+  // 일주
+  html += `<div style="${cell}"><div style="${lbl}">${pl[2]}</div><div style="${main}">${STEMS[dsi]}${BRANCHES[fj.dayBranch]}</div><div style="${sub}">${STEM_KO[dsi]}${BRANCH_KO[fj.dayBranch]}</div><div style="${sub}">${ELEMENTS[dsi]}</div></div>`;
+  // 시주
+  if (hp) html += `<div style="${cell}"><div style="${lbl}">${pl[3]}</div><div style="${main}">${STEMS[hp.stemIdx]}${BRANCHES[hp.branchIdx]}</div><div style="${sub}">${STEM_KO[hp.stemIdx]}${BRANCH_KO[hp.branchIdx]}</div><div style="${sub}">${hp.element}</div></div>`;
+  html += '</div>';
+
+  // 오행 분포
+  const cnts = fj.counts || {};
+  const EC = {'木':'#4ade80','火':'#f87171','土':'#fbbf24','金':'#94a3b8','水':'#60a5fa'};
+  const EL = lang === 'ja' ? {'木':'木','火':'火','土':'土','金':'金','水':'水'} : {'木':'목(木)','火':'화(火)','土':'토(土)','金':'금(金)','水':'수(水)'};
+  const maxC = Math.max(...['木','火','土','金','水'].map(e => cnts[e] || 0), 1);
+  const ohaengTitle = lang === 'ko' ? '오행 분포' : lang === 'ja' ? '五行バランス' : 'Five Elements';
+  html += `<div style="margin-bottom:14px;"><div style="font-size:10px;font-weight:700;color:#c4b5fd;margin-bottom:8px;letter-spacing:.5px;">${ohaengTitle}</div>`;
+  ['木','火','土','金','水'].forEach(el => {
+    const c = cnts[el] || 0;
+    html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+      <div style="min-width:52px;font-size:11px;color:${EC[el]};font-weight:700;">${EL[el]}</div>
+      <div style="flex:1;background:rgba(255,255,255,.1);border-radius:3px;height:6px;">
+        <div style="background:${EC[el]};width:${Math.round(c/maxC*100)}%;height:100%;border-radius:3px;"></div>
+      </div>
+      <div style="font-size:11px;color:#e0e7ff;min-width:14px;text-align:right;">${c}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // 용신 / balancing element
+  const ys = fj.yongsin;
+  const YONGSIN = {
+    '木':{ko:'나무 기운 보강 — 초록 계열, 동쪽 방향, 목요일이 오늘의 힘을 키웁니다. 새로운 시작과 성장에 집중하세요.',en:'Boost Wood energy — green tones, east direction, Thursdays. Focus on growth and new beginnings.',ja:'木気を補う — 緑系、東向き、木曜日。成長と新しいスタートに集中しましょう.'},
+    '火':{ko:'불 기운 보강 — 빨강·오렌지 계열, 남쪽 방향, 화요일이 길합니다. 자신감과 소통을 늘리세요.',en:'Boost Fire energy — red/orange, south direction, Tuesdays. Build confidence and communicate more.',ja:'火気を補う — 赤・オレンジ、南向き、火曜日。自信と表現力を高めましょう。'},
+    '土':{ko:'흙 기운 보강 — 노랑·황토색, 중앙, 토요일이 안정을 줍니다. 꾸준함과 재정 관리가 핵심입니다.',en:'Boost Earth energy — yellow/brown, center, Saturdays. Build consistency and manage finances.',ja:'土気を補う — 黄・土色、中央、土曜日。地道な積み重ねと財務管理が鍵。'},
+    '金':{ko:'금 기운 보강 — 흰색·회색, 서쪽 방향, 금요일이 결단력을 높입니다. 분석과 정리에 집중하세요.',en:'Boost Metal energy — white/grey, west direction, Fridays. Sharpen analysis and decision-making.',ja:'金気を補う — 白・グレー、西向き、金曜日。決断力と精度を高めましょう。'},
+    '水':{ko:'물 기운 보강 — 검정·파랑 계열, 북쪽 방향, 수요일이 직관을 깨웁니다. 유연한 사고를 연습하세요.',en:'Boost Water energy — black/blue, north direction, Wednesdays. Practice flexible, intuitive thinking.',ja:'水気を補う — 黒・青系、北向き、水曜日。直感と柔軟な思考を育てましょう。'},
+  };
+  const ysText = (YONGSIN[ys]||{})[lang] || (YONGSIN[ys]||{}).en || '';
+  const ysLabel = lang === 'ko' ? '용신 (내게 필요한 에너지)' : lang === 'ja' ? '用神（必要な五行）' : 'Balancing Element';
+  html += `<div style="background:rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;">
+    <div style="font-size:10px;font-weight:700;color:#c4b5fd;letter-spacing:.5px;margin-bottom:8px;">${ysLabel}</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;border-radius:50%;background:${EC[ys]||'#fbbf24'};display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;">${ys}</div>
+      <div style="font-size:12px;color:#e0e7ff;line-height:1.65;">${ysText}</div>
+    </div>
+  </div>`;
+
+  return html;
+}
+
+function buildKyuseiDetailHTML(data, lang, L) {
+  const s = data.cultural;
+  const mstar = data.monthKyusei || 5;
+  const TRAITS = {
+    1:{ja:'分析・哲学・独創性',en:'Analysis, philosophy, originality'},
+    2:{ja:'安定・実直・包容力',en:'Stability, sincerity, nurturing'},
+    3:{ja:'行動・革新・情熱',en:'Action, innovation, passion'},
+    4:{ja:'柔軟・社交・誠実',en:'Flexibility, sociability, sincerity'},
+    5:{ja:'カリスマ・変革・中心',en:'Charisma, transformation, center'},
+    6:{ja:'リーダーシップ・責任・明晰',en:'Leadership, responsibility, clarity'},
+    7:{ja:'魅力・コミュニケーション・楽観',en:'Charm, communication, optimism'},
+    8:{ja:'勤勉・忍耐・信頼',en:'Diligence, patience, trust'},
+    9:{ja:'知性・創造・表現力',en:'Intellect, creativity, expression'},
+  };
+  const cell = 'background:rgba(255,255,255,.08);border-radius:10px;padding:12px;text-align:center;';
+  const bTrait = TRAITS[s.star]||TRAITS[5];
+  const mTrait = TRAITS[mstar]||TRAITS[5];
+  const tl = lang === 'ja';
+
+  let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+    <div style="${cell}">
+      <div style="font-size:9px;color:#c4b5fd;font-weight:700;margin-bottom:6px;">${tl?'本命星':'Life Star'}</div>
+      <div style="font-size:17px;font-weight:800;color:#fbbf24;">${KYUSEI_NAMES[s.star]}</div>
+      <div style="font-size:11px;color:#a5b4fc;margin-top:4px;">${KYUSEI_ELEMENTS[s.star]}行</div>
+      <div style="font-size:10px;color:#e0e7ff;margin-top:5px;line-height:1.4;">${bTrait[tl?'ja':'en']}</div>
+    </div>
+    <div style="${cell}">
+      <div style="font-size:9px;color:#c4b5fd;font-weight:700;margin-bottom:6px;">${tl?'月命星':'Month Star'}</div>
+      <div style="font-size:17px;font-weight:800;color:#60a5fa;">${KYUSEI_NAMES[mstar]}</div>
+      <div style="font-size:11px;color:#a5b4fc;margin-top:4px;">${KYUSEI_ELEMENTS[mstar]}行</div>
+      <div style="font-size:10px;color:#e0e7ff;margin-top:5px;line-height:1.4;">${mTrait[tl?'ja':'en']}</div>
+    </div>
+  </div>`;
+
+  const h = calcOhaengHarmony(KYUSEI_ELEMENTS[s.star], KYUSEI_ELEMENTS[mstar]);
+  html += `<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-size:12px;color:#e0e7ff;line-height:1.7;">
+    <strong style="color:#fbbf24;">${KYUSEI_ELEMENTS[s.star]} × ${KYUSEI_ELEMENTS[mstar]} ${h.emoji}</strong>
+    — ${h[tl?'ja':'en']||h.en}
+  </div>`;
+  return html;
+}
+
+function buildNumerologyDetailHTML(data, lang, L) {
+  const lpn = data.cultural.lpn;
+  const sunSign = data.sunSign;
+  const moonSign = data.moonSign;
+  const LP_TRAITS = {
+    1:{en:'The Leader — independent, driven, pioneering. You thrive when blazing your own trail.',de:'Der Anführer — unabhängig, entschlossen, bahnbrechend.',fr:'Le Leader — indépendant, déterminé, pionnier.',es:'El Líder — independiente, decidido, pionero.',pt:'O Líder — independente, determinado, pioneiro.',it:'Il Leader — indipendente, deciso, pioniere.'},
+    2:{en:'The Diplomat — sensitive, cooperative, intuitive. You excel in partnerships and mediation.',de:'Der Diplomat — sensibel, kooperativ, intuitiv. Exzellent in Partnerschaften.',fr:'Le Diplomate — sensible, coopératif, intuitif.',es:'El Diplomático — sensible, cooperativo, intuitivo.',pt:'O Diplomata — sensível, cooperativo, intuitivo.',it:'Il Diplomatico — sensibile, cooperativo, intuitivo.'},
+    3:{en:'The Creative — expressive, joyful, artistic. You inspire others through communication.',de:'Der Kreative — ausdrucksstark, fröhlich, künstlerisch.',fr:'Le Créatif — expressif, joyeux, artistique.',es:'El Creativo — expresivo, alegre, artístico.',pt:'O Criativo — expressivo, alegre, artístico.',it:'Il Creativo — espressivo, gioioso, artistico.'},
+    4:{en:'The Builder — practical, disciplined, methodical. You create lasting systems.',de:'Der Erbauer — praktisch, diszipliniert, methodisch.',fr:'Le Bâtisseur — pratique, discipliné, méthodique.',es:'El Constructor — práctico, disciplinado, metódico.',pt:'O Construtor — prático, disciplinado, metódico.',it:'Il Costruttore — pratico, disciplinato, metodico.'},
+    5:{en:'The Freedom Seeker — adventurous, versatile, progressive. Variety fuels you.',de:'Der Freiheitssucher — abenteuerlustig, vielseitig, fortschrittlich.',fr:'Le Chercheur de Liberté — aventurier, polyvalent, progressif.',es:'El Buscador de Libertad — aventurero, versátil, progresivo.',pt:'O Buscador — aventureiro, versátil, progressivo.',it:'Il Cercatore di Libertà — avventuroso, versatile, progressivo.'},
+    6:{en:'The Nurturer — caring, responsible, harmonious. You bring healing and balance.',de:'Der Fürsorger — fürsorglich, verantwortungsbewusst, harmonisch.',fr:'Le Soignant — attentionné, responsable, harmonieux.',es:'El Cuidador — compasivo, responsable, armonioso.',pt:'O Cuidador — carinhoso, responsável, harmonioso.',it:'Il Curatore — premuroso, responsabile, armonioso.'},
+    7:{en:'The Seeker — analytical, introspective, spiritual. You uncover deep truths through reflection.',de:'Der Sucher — analytisch, introspektiv, spirituell.',fr:'Le Chercheur — analytique, introspectif, spirituel.',es:'El Buscador — analítico, introspectivo, espiritual.',pt:'O Buscador — analítico, introspectivo, espiritual.',it:'Il Cercatore — analitico, introspettivo, spirituale.'},
+    8:{en:'The Powerhouse — ambitious, strategic, authoritative. Built for leadership and achievement.',de:'Der Machtmensch — ehrgeizig, strategisch, autoritär.',fr:'Le Puissant — ambitieux, stratégique, autoritaire.',es:'El Poderoso — ambicioso, estratégico, autoritario.',pt:'O Poderoso — ambicioso, estratégico, autoritário.',it:'Il Potente — ambizioso, strategico, autorevole.'},
+    9:{en:'The Humanitarian — compassionate, wise, idealistic. Here to serve the greater good.',de:'Der Humanist — mitfühlend, weise, idealistisch.',fr:'L\'Humaniste — compatissant, sage, idéaliste.',es:'El Humanitario — compasivo, sabio, idealista.',pt:'O Humanitário — compassivo, sábio, idealista.',it:'L\'Umanista — compassionevole, saggio, idealista.'},
+    11:{en:'Intuitive Master — visionary, inspirational, highly sensitive. You illuminate others.',de:'Intuitiver Meister — visionär, inspirierend, hochsensibel.',fr:'Maître Intuitif — visionnaire, inspirant, très sensible.',es:'Maestro Intuitivo — visionario, inspirador, muy sensible.',pt:'Mestre Intuitivo — visionário, inspirador, altamente sensível.',it:'Maestro Intuitivo — visionario, ispirante, molto sensibile.'},
+    22:{en:'Master Builder — practical visionary, disciplined creator. You manifest grand visions.',de:'Meisterbauer — praktischer Visionär, disziplinierter Schöpfer.',fr:'Grand Bâtisseur — visionnaire pratique, créateur discipliné.',es:'Gran Constructor — visionario práctico, creador disciplinado.',pt:'Grande Construtor — visionário prático, criador disciplinado.',it:'Grande Costruttore — visionario pratico, creatore disciplinato.'},
+    33:{en:'Master Teacher — selfless, compassionate, creative. You elevate humanity.',de:'Meisterlehrer — selbstlos, mitfühlend, kreativ.',fr:'Maître Enseignant — altruiste, compatissant, créatif.',es:'Maestro Enseñante — altruista, compasivo, creativo.',pt:'Mestre Professor — altruísta, compassivo, criativo.',it:'Maestro Insegnante — altruistico, compassionevole, creativo.'},
+  };
+
+  const trait = (LP_TRAITS[lpn]||LP_TRAITS[9])[lang] || (LP_TRAITS[lpn]||LP_TRAITS[9]).en;
+  const zodiacSymbols = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+  const zodiacNames = (L.zodiacNames)||['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  const sunLbl = L.sunSignLabel || 'Sun Sign';
+  const moonLbl = L.moonSignLabel || 'Moon Sign';
+
+  let html = `<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+    <div style="font-size:11px;font-weight:700;color:#c4b5fd;margin-bottom:6px;letter-spacing:.5px;">Life Path ${lpn}</div>
+    <div style="font-size:13px;color:#e0e7ff;line-height:1.65;">${trait}</div>
+  </div>`;
+
+  if (sunSign !== null) {
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;text-align:center;">
+        <div style="font-size:10px;color:#c4b5fd;font-weight:700;margin-bottom:4px;">${sunLbl}</div>
+        <div style="font-size:26px;">${zodiacSymbols[sunSign]}</div>
+        <div style="font-size:12px;color:#fbbf24;font-weight:700;">${zodiacNames[sunSign]||''}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;text-align:center;">
+        <div style="font-size:10px;color:#c4b5fd;font-weight:700;margin-bottom:4px;">${moonLbl}</div>
+        <div style="font-size:26px;">${moonSign !== null ? zodiacSymbols[moonSign] : '🌙'}</div>
+        <div style="font-size:12px;color:#60a5fa;font-weight:700;">${moonSign !== null ? (zodiacNames[moonSign]||'') : '—'}</div>
+      </div>
+    </div>`;
+  }
+  return html;
+}
+
+function buildJawaneseDetailHTML(data, lang, L) {
+  const s = data.cultural;
+  const wn = calcWetonNeptu(data.year, data.month, data.day);
+  const ID_DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const dayName = ID_DAYS[wn.dow];
+  const pasName = PASARAN[wn.pasIdx];
+  const totN = wn.neptu;
+  const dayN = WETON_DAY_NEPTU[wn.dow];
+  const pasN = WETON_PAS_NEPTU[wn.pasIdx];
+
+  const PAS_TRAIT = {
+    0:{id:'Legi — aura kemakmuran dan keberuntungan alami. Anda memiliki daya tarik yang mengundang rezeki.',en:'Legi — prosperity aura and natural luck. You carry an energy that attracts abundance.'},
+    1:{id:'Pahing — kekuatan dan tekad tanpa henti. Semangat juang yang tinggi menjadi keunggulan Anda.',en:'Pahing — strength and relentless determination. Your fighting spirit is your biggest advantage.'},
+    2:{id:'Pon — ketenangan dan kebijaksanaan mendalam. Anda pemikir strategis dengan intuisi yang kuat.',en:'Pon — calm and deep wisdom. You are a strategic thinker with sharp intuition.'},
+    3:{id:'Wage — kreativitas dan jiwa bebas. Anda penuh ide segar dan selalu mencari pengalaman baru.',en:'Wage — creativity and free spirit. You are full of fresh ideas and always seek new experiences.'},
+    4:{id:'Kliwon — kepekaan spiritual yang tinggi. Anda memiliki intuisi batin dan kemampuan membaca situasi.',en:'Kliwon — high spiritual sensitivity. You possess strong inner knowing and read situations well.'},
+  };
+  const NEPTU_LVL = totN >= 15 ? {id:'Pemimpin alami dengan pengaruh kuat.',en:'Natural leader with strong influence.'} :
+                   totN >= 12 ? {id:'Berenergi tinggi dan ambisius.',en:'High energy and ambitious.'} :
+                   totN >= 9  ? {id:'Seimbang dan mudah beradaptasi.',en:'Balanced and adaptable.'} :
+                                {id:'Intuitif dan sensitif terhadap lingkungan.',en:'Intuitive and sensitive to your environment.'};
+
+  const pasTrait = (PAS_TRAIT[wn.pasIdx]||PAS_TRAIT[0])[lang==='id'?'id':'en'];
+  const neptuMean = NEPTU_LVL[lang==='id'?'id':'en'];
+  const wetonLbl = lang === 'id' ? 'Weton Lahir' : 'Birth Weton';
+  const neptuLbl = lang === 'id' ? 'Jumlah Neptu' : 'Neptu Score';
+
+  return `<div style="background:rgba(255,255,255,.08);border-radius:10px;padding:14px;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div>
+        <div style="font-size:10px;color:#c4b5fd;font-weight:700;margin-bottom:3px;">${wetonLbl}</div>
+        <div style="font-size:20px;font-weight:800;color:#fbbf24;">${dayName} ${pasName}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px;color:#c4b5fd;font-weight:700;margin-bottom:2px;">${neptuLbl}</div>
+        <div style="font-size:28px;font-weight:900;color:#4ade80;">${totN}</div>
+        <div style="font-size:10px;color:#a5b4fc;">(${dayN} + ${pasN})</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:#e0e7ff;line-height:1.65;margin-bottom:6px;">${pasTrait}</div>
+    <div style="font-size:11px;color:#a5b4fc;font-style:italic;">${neptuMean}</div>
+  </div>`;
+}
+
 function getSytemName(key, lang) {
   const names = {
     saju:      {ko:'사주팔자',ja:'四柱推命',en:'Four Pillars',de:'Vier Säulen',fr:'Quatre Piliers',es:'Cuatro Pilares',pt:'Quatro Pilares',it:'Quattro Pilastri',id:'Empat Pilar'},
@@ -1360,13 +1679,14 @@ function renderFortuneSummaryGrid(data) {
 }
 
 // ── Fortune Category Cards ─────────────────────────────────
-function renderFortuneCategories(data) {
+function renderFortuneCategories(data, selectedCat) {
   if (!data.fortuneScores) return;
   const L = window.LUCKY_LANG || {};
   const S = data.fortuneScores;
   const lang = data.lang;
   const seed = data.seed;
   const pick = arr => arr && arr.length ? arr[seed % arr.length] : '';
+  const activeCat = selectedCat || window.LUCKY_SELECTED_CAT || 'lucky';
 
   const cats = [
     {
@@ -1391,6 +1711,9 @@ function renderFortuneCategories(data) {
   const advLabel   = L.adviceLabel || '💡 조언';
   const luckyLabel = L.luckyElementLabel || '🎯 행운 요소';
 
+  const catKeys = ['love','money','career','achievement'];
+  const isFortuneSelected = catKeys.includes(activeCat);
+
   let html = `<div style="margin-bottom:6px;margin-top:4px;">`;
   cats.forEach(c => {
     const s = S[c.key] || { score: 50, level: 'mid' };
@@ -1401,11 +1724,14 @@ function renderFortuneCategories(data) {
     const advice = pick(advArr)  || '';
     const lucky  = pick(luckArr) || '';
     const lvLabel = s.level === 'high' ? (L.scoreHigh||'좋음') : s.level === 'mid' ? (L.scoreMid||'보통') : (L.scoreLow||'주의');
-    html += `<div class="fortune-cat-card" style="--cat-color:${c.color}">
+    const isActive = activeCat === c.key;
+    const selectedStyle = isActive ? `box-shadow:0 0 0 3px ${c.color},var(--shadow);transform:translateY(-2px);` : '';
+    const dataId = `cat-card-${c.key}`;
+    html += `<div id="${dataId}" class="fortune-cat-card${isActive ? ' fortune-cat-selected' : ''}" style="--cat-color:${c.color};${selectedStyle}">
       <div class="fortune-cat-header">
         <div class="fortune-cat-icon">${c.icon}</div>
         <div>
-          <div class="fortune-cat-title">${c.title}</div>
+          <div class="fortune-cat-title">${c.title}${isActive ? ' ✓' : ''}</div>
           <div class="fortune-cat-score-bar"><div class="fortune-cat-score-fill" style="width:${s.score}%"></div></div>
           <div class="fortune-cat-score-text">${s.score}${scoreLabel} · ${lvLabel}</div>
         </div>
@@ -1423,6 +1749,12 @@ function renderFortuneCategories(data) {
   wrap.id = 'fortune-cats-section';
   wrap.innerHTML = html;
   shareSection.before(wrap);
+
+  // Scroll to selected category card
+  if (isFortuneSelected) {
+    const targetCard = document.getElementById(`cat-card-${activeCat}`);
+    if (targetCard) setTimeout(() => targetCard.scrollIntoView({ behavior:'smooth', block:'center' }), 300);
+  }
 }
 
 // ── Lucky Tips (비책) ─────────────────────────────────────
@@ -1612,6 +1944,15 @@ function selectSets(btn) {
   btn.classList.add('active');
 }
 
+window.LUCKY_SELECTED_CAT = 'lucky';
+
+function selectCategory(cat) {
+  window.LUCKY_SELECTED_CAT = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cat === cat);
+  });
+}
+
 function startGenerate() {
   const yearEl  = document.getElementById('bday-year');
   const monthEl = document.getElementById('bday-month');
@@ -1775,6 +2116,15 @@ function applyLang() {
   setTxt('txt-draw-date-label', getLbl('drawDateLabel'));
   setTxt('txt-draw-date-note', L.drawDateNote);
   setTxt('txt-sets-label', getLbl('setsLabel'));
+
+  // Category selection buttons
+  const catSelectLabelEl = document.getElementById('txt-cat-select-label');
+  if (catSelectLabelEl && L.catSelectLabel) catSelectLabelEl.textContent = L.catSelectLabel;
+  if (L.catNames && Array.isArray(L.catNames)) {
+    document.querySelectorAll('.cat-btn-label').forEach((el, i) => {
+      if (L.catNames[i]) el.textContent = L.catNames[i];
+    });
+  }
 
   // Trust chips
   if (L.trustChips) {
