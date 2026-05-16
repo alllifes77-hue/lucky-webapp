@@ -833,98 +833,88 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
 function renderResults(data) {
   const L = window.LUCKY_LANG || {};
   const lang = data.lang;
+  const cat = window.LUCKY_SELECTED_CAT || 'lucky';
+  const CAT_IDX = {lucky:0, saju:1, love:2, money:3, career:4, achievement:5};
+  const CAT_ICONS = {lucky:'🍀', saju:'🔮', love:'💝', money:'💰', career:'💼', achievement:'🏆'};
+  const catNames = L.catNames || ['행운 번호','정통 사주','연애운','금전운','직업운','성취운'];
+  const catLabel = catNames[CAT_IDX[cat]] || catNames[0];
 
-  // Cultural info in hero
+  // ── Hero: badge + title ───────────────────────────────────
+  const badgeEl = document.getElementById('result-badge');
+  const titleEl = document.getElementById('txt-result-title');
+  if (badgeEl) badgeEl.textContent = `${CAT_ICONS[cat]||'🍀'} ${catLabel}`;
+  if (titleEl) titleEl.textContent = catLabel;
+
+  // ── Cultural info pills ───────────────────────────────────
   let culturalHtml = '';
   if (data.systemKey === 'saju') {
-    const s = data.cultural;
-    const si = s.stemIdx, bi = s.branchIdx;
-    culturalHtml = `
-      <span class="cultural-pill">${STEMS[si]}${BRANCHES[bi]}(${STEM_KO[si]}${BRANCH_KO[bi]})년생</span>
-      <span class="cultural-pill">${ZODIAC_KO[bi]}띠</span>
-      <span class="cultural-pill">오행: ${s.element}(${ELEMENT_KO[si]})</span>
-    `;
+    const s = data.cultural, si = s.stemIdx, bi = s.branchIdx;
+    culturalHtml = `<span class="cultural-pill">${STEMS[si]}${BRANCHES[bi]}(${STEM_KO[si]}${BRANCH_KO[bi]})년생</span><span class="cultural-pill">${ZODIAC_KO[bi]}띠</span><span class="cultural-pill">오행: ${s.element}(${ELEMENT_KO[si]})</span>`;
   } else if (data.systemKey === 'kyusei') {
     const s = data.cultural;
-    culturalHtml = `<span class="cultural-pill">本命星: ${KYUSEI_NAMES[s.star]}</span>
-      <span class="cultural-pill">属性: ${KYUSEI_ELEMENTS[s.star]}</span>`;
+    culturalHtml = `<span class="cultural-pill">本命星: ${KYUSEI_NAMES[s.star]}</span><span class="cultural-pill">属性: ${KYUSEI_ELEMENTS[s.star]}</span>`;
   } else if (data.systemKey === 'jawanese') {
-    const s = data.cultural;
-    culturalHtml = `<span class="cultural-pill">Weton: ${PASARAN[s.pasaranIdx]}</span>`;
+    culturalHtml = `<span class="cultural-pill">Weton: ${PASARAN[data.cultural.pasaranIdx]}</span>`;
   } else {
-    const s = data.cultural;
-    culturalHtml = `<span class="cultural-pill">Life Path: ${s.lpn}</span>`;
+    culturalHtml = `<span class="cultural-pill">Life Path: ${data.cultural.lpn}</span>`;
   }
   document.getElementById('cultural-info').innerHTML = culturalHtml;
 
-  // All sets rendering
-  renderLotterySets(data.sets || [data], L, lang);
+  // ── Clean previous dynamic sections ──────────────────────
+  ['detailed-reading-panel','fortune-cats-section','single-fortune-section'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
 
-  // Fortune grid
-  const dayName = data.dayData ? (data.dayData[lang] || data.dayData.en || '—') : '—';
-  const colorName = L.colorNames ? (L.colorNames[data.colorData.en] || data.colorData.en) : data.colorData.en;
+  const lotterySection = document.getElementById('lottery-section');
+  const fortuneCard    = document.querySelector('.fortune-card');
+  const fsg            = document.getElementById('fortune-summary-grid');
 
-  const gridEl = document.getElementById('fortune-grid');
-  const luckyColorLabel = L.luckyColorLabel || 'Lucky Color';
-  const luckyDayLabel   = L.luckyDayLabel   || 'Lucky Day';
-  const systemLabel     = L.systemLabel     || 'System';
-  const systemName      = L.systemName      || getSytemName(data.systemKey, lang);
+  // ══ LUCKY: 행운 번호 전용 ════════════════════════════════
+  if (cat === 'lucky') {
+    if (lotterySection) lotterySection.style.display = '';
+    if (fortuneCard)    fortuneCard.style.display    = '';
+    if (fsg)            fsg.innerHTML = ''; // no fortune scores in hero for lucky mode
 
-  gridEl.innerHTML = `
-    <div class="fortune-item">
-      <div class="fortune-item-icon" style="color:${data.colorData.hex}">⬤</div>
-      <div class="fortune-item-label">${luckyColorLabel}</div>
-      <div class="fortune-item-value" style="color:${data.colorData.hex}">${colorName}</div>
-    </div>
-    <div class="fortune-item">
-      <div class="fortune-item-icon">📅</div>
-      <div class="fortune-item-label">${luckyDayLabel}</div>
-      <div class="fortune-item-value">${dayName}</div>
-    </div>
-    <div class="fortune-item">
-      <div class="fortune-item-icon">🔮</div>
-      <div class="fortune-item-label">${systemLabel}</div>
-      <div class="fortune-item-value" style="font-size:12px">${systemName}</div>
-    </div>
-  `;
+    renderLotterySets(data.sets || [data], L, lang);
 
-  // Fortune summary mini circles
-  renderFortuneSummaryGrid(data);
+    const dayName   = data.dayData ? (data.dayData[lang] || data.dayData.en || '—') : '—';
+    const colorName = L.colorNames ? (L.colorNames[data.colorData.en] || data.colorData.en) : data.colorData.en;
+    document.getElementById('fortune-grid').innerHTML = `
+      <div class="fortune-item"><div class="fortune-item-icon" style="color:${data.colorData.hex}">⬤</div><div class="fortune-item-label">${L.luckyColorLabel||'Lucky Color'}</div><div class="fortune-item-value" style="color:${data.colorData.hex}">${colorName}</div></div>
+      <div class="fortune-item"><div class="fortune-item-icon">📅</div><div class="fortune-item-label">${L.luckyDayLabel||'Lucky Day'}</div><div class="fortune-item-value">${dayName}</div></div>
+      <div class="fortune-item"><div class="fortune-item-icon">🔮</div><div class="fortune-item-label">${L.systemLabel||'System'}</div><div class="fortune-item-value" style="font-size:12px">${getSytemName(data.systemKey, lang)}</div></div>`;
 
-  // Fortune message
-  const fortunes = L.fortunes;
-  if (fortunes && fortunes.length) {
-    const msgIdx = Math.floor(mkRng(data.seed + 999)() * fortunes.length);
-    document.getElementById('fortune-msg').textContent = fortunes[msgIdx];
+    const fortunes = L.fortunes;
+    if (fortunes && fortunes.length) {
+      document.getElementById('fortune-msg').textContent = fortunes[Math.floor(mkRng(data.seed+999)()*fortunes.length)];
+    }
+
+    renderInterpretation(data);
+    renderDrawEnergyPanel(data);
+    renderAlgorithmPanel(data);
+
+  // ══ SAJU: 정통 사주 전용 ═════════════════════════════════
+  } else if (cat === 'saju') {
+    if (lotterySection) lotterySection.style.display = 'none';
+    if (fortuneCard)    fortuneCard.style.display    = 'none';
+
+    renderFortuneSummaryGrid(data); // 4-score overview in hero
+    renderDetailedReadingPanel(data); // 4-pillar table + ohaeng + yongsin
+    renderFortuneCategories(data, 'saju'); // all 4 fortune cards (none highlighted)
+    renderLuckyTips(data); // yongsin-based tips
+
+  // ══ FORTUNE: 연애/금전/직업/성취운 전용 ══════════════════
+  } else {
+    if (lotterySection) lotterySection.style.display = 'none';
+    if (fortuneCard)    fortuneCard.style.display    = 'none';
+
+    renderFortuneSummaryGrid(data); // all 4 scores for context, selected highlighted
+    renderSingleFortuneCatCard(data, cat, L); // full single-cat reading
+    renderLuckyTips(data); // category-specific tips
   }
 
-  // Detailed reading panel for 'saju' category selection
-  const prevPanel = document.getElementById('detailed-reading-panel');
-  if (prevPanel) prevPanel.remove();
-  const selCat = window.LUCKY_SELECTED_CAT || 'lucky';
-  if (selCat === 'saju') {
-    renderDetailedReadingPanel(data);
-  }
-
-  // Fortune category cards + tips (remove previous if re-rendering)
-  const prevCats = document.getElementById('fortune-cats-section');
-  if (prevCats) prevCats.remove();
-  renderFortuneCategories(data, selCat);
-  renderLuckyTips(data);
-
-  // Personal reading: what this means for YOU
-  renderInterpretation(data);
-
-  // "Why these numbers?" insight panel
-  renderDrawEnergyPanel(data);
-
-  // Algorithm / science explanation panel
-  renderAlgorithmPanel(data);
-
-  // Share buttons
   renderShareBtns(data);
-
-  // FAQ
   renderFaq();
 }
 
@@ -1663,6 +1653,7 @@ function renderFortuneSummaryGrid(data) {
   if (!el || !data.fortuneScores) return;
   const L = window.LUCKY_LANG || {};
   const S = data.fortuneScores;
+  const activeCat = window.LUCKY_SELECTED_CAT || 'lucky';
   const cats = [
     { key:'love',        icon: L.catLoveIcon||'💝',        label: L.catLove||'연애운',   color:'#ec4899' },
     { key:'money',       icon: L.catMoneyIcon||'💰',       label: L.catMoney||'금전운',  color:'#d97706' },
@@ -1671,14 +1662,88 @@ function renderFortuneSummaryGrid(data) {
   ];
   el.innerHTML = cats.map(c => {
     const s = S[c.key] || {};
+    const isActive = activeCat === c.key;
+    const ring = isActive ? `box-shadow:0 0 0 3px #fff,0 0 0 5px ${c.color};transform:scale(1.12);` : '';
     return `<div class="fsg-item">
-      <div class="fsg-circle" style="background:${c.color}">${s.score||'—'}</div>
-      <div class="fsg-label">${c.icon} ${c.label}</div>
+      <div class="fsg-circle" style="background:${c.color};${ring}">${s.score||'—'}</div>
+      <div class="fsg-label" style="${isActive?'color:#fff;font-weight:800;':''}">${c.icon} ${c.label}</div>
     </div>`;
   }).join('');
 }
 
 // ── Fortune Category Cards ─────────────────────────────────
+// ── Single focused fortune card (for love/money/career/achievement mode) ─
+function renderSingleFortuneCatCard(data, cat, L) {
+  if (!data.fortuneScores) return;
+  const S = data.fortuneScores;
+  const seed = data.seed;
+
+  const CAT_MAP = {
+    love:        { icon: L.catLoveIcon||'💝',        title: L.catLove||'연애운',   color:'#ec4899', textPool: L.fortuneLove, advicePool: L.fortuneLoveAdvice, luckyPool: L.fortuneLoveLucky },
+    money:       { icon: L.catMoneyIcon||'💰',       title: L.catMoney||'금전운',  color:'#d97706', textPool: L.fortuneMoney, advicePool: L.fortuneMoneyAdvice, luckyPool: L.fortuneMoneyLucky },
+    career:      { icon: L.catCareerIcon||'💼',      title: L.catCareer||'직업운', color:'#4338ca', textPool: L.fortuneCareer, advicePool: L.fortuneCareerAdvice, luckyPool: L.fortuneCareerLucky },
+    achievement: { icon: L.catAchievementIcon||'🏆', title: L.catAchievement||'성취운', color:'#7c3aed', textPool: L.fortuneAchievement, advicePool: L.fortuneAchievementAdvice, luckyPool: L.fortuneAchievementLucky },
+  };
+
+  const c = CAT_MAP[cat];
+  if (!c) return;
+
+  const s = S[cat] || { score: 50, level: 'mid' };
+  const textArr = c.textPool ? (c.textPool[s.level] || c.textPool.mid || []) : [];
+  const advArr  = c.advicePool ? (c.advicePool[s.level] || c.advicePool.mid || []) : [];
+  const luckArr = c.luckyPool ? (c.luckyPool[s.level] || c.luckyPool.mid || []) : [];
+  const lvLabel = s.level==='high'?(L.scoreHigh||'좋음'):s.level==='mid'?(L.scoreMid||'보통'):(L.scoreLow||'주의');
+  const scoreLabel = L.scoreLabel || '점';
+  const advLabel   = L.adviceLabel || '💡 조언';
+  const luckyLabel = L.luckyElementLabel || '🎯 행운 요소';
+
+  const textHtml = textArr.map(t =>
+    `<p style="font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:12px;">${t}</p>`
+  ).join('');
+
+  const advHtml = advArr.map(a =>
+    `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">
+       <span style="color:${c.color};font-size:16px;flex-shrink:0;">›</span>
+       <span style="font-size:13px;color:var(--text2);line-height:1.7;">${a}</span>
+     </div>`
+  ).join('');
+
+  const luckHtml = luckArr.map(lk =>
+    `<span style="background:${c.color}1a;color:${c.color};padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;margin:3px;display:inline-block;">${lk}</span>`
+  ).join('');
+
+  const html = `<div style="margin-bottom:16px;">
+    <div style="background:linear-gradient(135deg,${c.color}14,${c.color}05);border:2px solid ${c.color}35;border-radius:20px;padding:24px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+        <div style="font-size:52px;line-height:1;">${c.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:21px;font-weight:900;color:var(--text);">${c.title}</div>
+          <div style="font-size:13px;color:${c.color};font-weight:700;margin-top:4px;">${lvLabel}</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:70px;height:70px;border-radius:50%;background:${c.color};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;box-shadow:0 8px 22px ${c.color}55;">${s.score}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px;font-weight:600;">${scoreLabel}</div>
+        </div>
+      </div>
+      <div style="height:10px;background:rgba(0,0,0,.08);border-radius:5px;overflow:hidden;margin-bottom:20px;">
+        <div style="height:100%;width:${s.score}%;background:linear-gradient(90deg,${c.color}bb,${c.color});border-radius:5px;"></div>
+      </div>
+      ${textHtml}
+    </div>
+    ${advArr.length ? `<div style="background:var(--card);border-radius:16px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow);">
+      <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px;">${advLabel}</div>${advHtml}</div>` : ''}
+    ${luckArr.length ? `<div style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow);">
+      <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px;">${luckyLabel}</div>
+      <div style="display:flex;flex-wrap:wrap;">${luckHtml}</div></div>` : ''}
+  </div>`;
+
+  const wrap = document.createElement('div');
+  wrap.id = 'single-fortune-section';
+  wrap.innerHTML = html;
+  const shareSection = document.querySelector('.share-section');
+  if (shareSection) shareSection.before(wrap);
+}
+
 function renderFortuneCategories(data, selectedCat) {
   if (!data.fortuneScores) return;
   const L = window.LUCKY_LANG || {};
@@ -1946,11 +2011,72 @@ function selectSets(btn) {
 
 window.LUCKY_SELECTED_CAT = 'lucky';
 
+function adaptInputForm(cat) {
+  const isLucky = cat === 'lucky';
+  const L = window.LUCKY_LANG || {};
+  const lang = window.LUCKY_CURRENT_LANG || 'ko';
+
+  // Show/hide lottery-only sections
+  ['lottery-wrap', 'sets-wrap', 'draw-date-section'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isLucky ? '' : 'none';
+  });
+
+  // Birth time: always visible; auto-expand for non-lucky
+  const btwrap = document.getElementById('birth-time-wrap');
+  if (btwrap) btwrap.style.display = '';
+  if (!isLucky) {
+    const body = document.getElementById('birth-time-body');
+    if (body && body.style.display === 'none') {
+      body.style.display = 'block';
+      const icon = document.querySelector('#birth-time-toggle .toggle-icon');
+      if (icon) icon.textContent = '▼';
+    }
+  }
+
+  // Generate button text
+  const btn = document.getElementById('txt-btn-generate');
+  if (btn) {
+    if (isLucky) {
+      btn.textContent = L.btnGenerate || 'Generate';
+    } else {
+      const IDX = {saju:1, love:2, money:3, career:4, achievement:5};
+      const catLabel = ((L.catNames || [])[IDX[cat]]) || cat;
+      const SUFFIX = {ko:'보기', en:'View', ja:'を見る', de:'Anzeigen', fr:'Voir', es:'Ver', pt:'Ver', it:'Vedere', id:'Lihat'};
+      btn.textContent = catLabel + ' ' + (SUFFIX[lang] || '→');
+    }
+  }
+
+  // Input note text
+  const note = document.getElementById('txt-input-note');
+  if (note) {
+    if (isLucky) {
+      note.textContent = L.inputNote || '';
+    } else {
+      const IDX = {saju:1, love:2, money:3, career:4, achievement:5};
+      const catLabel = ((L.catNames || [])[IDX[cat]]) || cat;
+      const SFXS = {
+        ko:' 분석을 위해 생년월일을 입력하세요. 태어난 시간 추가 시 더 정확합니다.',
+        en:' analysis. Enter birthdate. Adding birth hour improves accuracy.',
+        ja:'の分析のため生年月日を入力してください。時刻を入力するとより精密です。',
+        de:'-Analyse. Geburtsdatum eingeben. Geburtszeit verbessert die Genauigkeit.',
+        fr:' — analyse. Entrez votre date de naissance. L\'heure améliore la précision.',
+        es:' análisis. Ingresa tu fecha de nacimiento. La hora mejora la precisión.',
+        pt:' análise. Informe a data de nascimento. A hora melhora a precisão.',
+        it:' analisi. Inserisci la data di nascita. L\'ora migliora la precisione.',
+        id:' analisis. Masukkan tanggal lahir. Jam lahir meningkatkan akurasi.',
+      };
+      note.textContent = catLabel + (SFXS[lang] || ' analysis.');
+    }
+  }
+}
+
 function selectCategory(cat) {
   window.LUCKY_SELECTED_CAT = cat;
   document.querySelectorAll('.cat-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.cat === cat);
   });
+  adaptInputForm(cat);
 }
 
 function startGenerate() {
@@ -1977,6 +2103,25 @@ function startGenerate() {
   const birthHourRaw = (document.getElementById('birth-hour') || {}).value || '';
   const birthHour = birthHourRaw !== '' ? parseInt(birthHourRaw) : null;
   const setsCount   = parseInt((document.querySelector('.sets-btn.active') || {}).dataset?.sets || '1');
+
+  // Update loading screen text per category
+  const loadCat = window.LUCKY_SELECTED_CAT || 'lucky';
+  const loadL = window.LUCKY_LANG || {};
+  const loadLang = window.LUCKY_CURRENT_LANG || 'ko';
+  const loadGenSub = document.getElementById('txt-gen-sub');
+  if (loadGenSub) {
+    if (loadCat !== 'lucky') {
+      const IDX = {saju:1, love:2, money:3, career:4, achievement:5};
+      const catLabel = ((loadL.catNames||[])[IDX[loadCat]]) || loadCat;
+      const SFXA = {ko:'를 분석하고 있습니다…', en:' analysis in progress…', ja:'を分析しています…',
+        de:' wird analysiert…', fr:' en cours d\'analyse…', es:' analizando…',
+        pt:' sendo analisado…', it:' in corso di analisi…', id:' sedang dianalisis…'};
+      loadGenSub.textContent = catLabel + (SFXA[loadLang] || '…');
+    } else {
+      loadGenSub.textContent = loadL.genSub || loadGenSub.textContent;
+    }
+  }
+
   showScreen('s-gen');
   setTimeout(() => {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
@@ -2139,6 +2284,9 @@ function applyLang() {
     const bds = document.querySelectorAll('#method-badges .method-badge');
     L.methodBadges.forEach((t, i) => { if(bds[i]) bds[i].textContent = t; });
   }
+
+  // Adapt input form for current category selection
+  adaptInputForm(window.LUCKY_SELECTED_CAT || 'lucky');
 }
 
 function applyLangToResults(data) {

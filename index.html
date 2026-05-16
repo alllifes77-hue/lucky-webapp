@@ -283,16 +283,20 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
         </div>
 
         <!-- 복권 선택 -->
-        <div class="input-label" id="txt-lottery-select-label">복권 선택</div>
-        <select id="lottery-select" class="lottery-select"></select>
+        <div id="lottery-wrap">
+          <div class="input-label" id="txt-lottery-select-label">복권 선택</div>
+          <select id="lottery-select" class="lottery-select"></select>
+        </div>
 
         <!-- 세트 수 선택 -->
-        <div class="input-label" id="txt-sets-label">추천 세트 수</div>
-        <div class="sets-select-wrap">
-          <button class="sets-btn active" data-sets="1" onclick="selectSets(this)">1</button>
-          <button class="sets-btn" data-sets="3" onclick="selectSets(this)">3</button>
-          <button class="sets-btn" data-sets="5" onclick="selectSets(this)">5</button>
-          <button class="sets-btn" data-sets="10" onclick="selectSets(this)">10</button>
+        <div id="sets-wrap">
+          <div class="input-label" id="txt-sets-label">추천 세트 수</div>
+          <div class="sets-select-wrap">
+            <button class="sets-btn active" data-sets="1" onclick="selectSets(this)">1</button>
+            <button class="sets-btn" data-sets="3" onclick="selectSets(this)">3</button>
+            <button class="sets-btn" data-sets="5" onclick="selectSets(this)">5</button>
+            <button class="sets-btn" data-sets="10" onclick="selectSets(this)">10</button>
+          </div>
         </div>
 
         <!-- 생년월일 -->
@@ -305,7 +309,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
         <div class="date-hint" id="date-hint">예) 1985 · 10 · 15</div>
 
         <!-- 추첨일 (선택) -->
-        <div class="draw-date-wrap">
+        <div class="draw-date-wrap" id="draw-date-section">
           <button type="button" class="draw-date-toggle" id="draw-date-toggle" onclick="toggleDrawDate()">
             <span class="toggle-icon">▶</span>
             <span id="txt-draw-date-label">추첨일 입력 (선택) — 더 정밀한 분석</span>
@@ -421,6 +425,6 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/source/js/astronomy.js"></script>
-<script src="lucky-app.js?v=20260518"></script>
+<script src="lucky-app.js?v=20260519"></script>
 </body>
 </html>
