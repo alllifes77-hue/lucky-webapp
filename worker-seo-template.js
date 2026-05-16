@@ -27,6 +27,7 @@ const LANGS = {
       title:'How It Works',
       steps:[
         'Enter your date of birth (year, month, day) in the form.',
+        'Choose your focus category: Lucky Numbers, Birth Chart, Love Fortune, Money Fortune, Career, or Achievement.',
         'Select your lottery format: Powerball, Mega Millions, Pick 4, or Pick 3.',
         'Choose how many sets of lucky numbers you want: 1, 3, 5, or 10.',
         'Click "Generate My Lucky Numbers" — receive your personalized results instantly.',
@@ -41,6 +42,7 @@ const LANGS = {
       {q:'What does entering a draw date do?',a:'Entering a draw date unlocks three advanced features. ① Compatibility Score (0–100%): The Universal Day Number (UDN) of the draw date is compared against your Life Path Number — same number = 100%, difference of 1 = 85%, down to 35% for high divergence. The score is shown as a visual gauge (e.g., ████████░░ 85%). ② Number Energy Heatmap: Each drawn number is color-coded — ⭐ gold for numbers resonating with both your birth and draw energies (best match), 🌱 green for birth-energy numbers, 💧 blue for draw-energy numbers. ③ Top 3 Best Draw Dates: The app automatically scans the next 90 days of Powerball and Mega Millions draw days and ranks the top 3 by compatibility score, so you always know the most auspicious upcoming draw day.'},
       {q:'What is the difference between Pythagorean and Chaldean numerology?',a:'Pythagorean numerology assigns numbers 1–9 to the letters A–Z sequentially and is the most widely used Western system. Chaldean numerology, originating in ancient Babylon, assigns numbers 1–8 differently and treats 9 as sacred. This generator uses the Pythagorean system, which is the standard for Life Path Number calculations worldwide.'},
       {q:'Does this guarantee winning the lottery?',a:'No. Lottery draws are completely random events and no system can guarantee a win. This app provides entertainment and cultural insight through the lens of Pythagorean numerology. Please play responsibly and within your means.'},
+      {q:'Does entering my birth hour improve the reading?',a:'Yes. When you enter your birth hour, the Moon Sign is calculated using precise astronomical data — the actual ecliptic longitude of the Moon at your exact birth time via astronomy-engine — rather than an approximation. This is especially important if you were born near a sign boundary. The birth hour is optional; without it, the app uses noon (12:00) as the default for Moon Sign calculation.'},
       {q:'What fortune categories are included?',a:'Four fortune categories are provided: Love Fortune, Money Fortune, Career &amp; Success, and Achievement. Each shows a 0–100 score, a detailed personal reading, practical advice, and lucky elements based on your Sun Sign and Moon Sign. Bonus: 5 personalized luck-boosting tips are generated from your zodiac profile. All scores are fully deterministic — the same birthday always produces the same results.'},
     ],
     faqH2:'Frequently Asked Questions',
@@ -64,6 +66,7 @@ const LANGS = {
       title:'So funktioniert es',
       steps:[
         'Geben Sie Ihr Geburtsdatum ein (Jahr, Monat, Tag).',
+        'Wählen Sie Ihre Kategorie: Glückszahlen, Horoskop, Liebesglück, Geldglück, Karriere oder Leistungsglück.',
         'Wählen Sie Ihre Lotterie: EuroMillions, EuroJackpot oder Lotto 6aus49.',
         'Wählen Sie 1, 3, 5 oder 10 Tipp-Sets.',
         'Klicken Sie auf "Glückszahlen generieren" — sofortige persönliche Ergebnisse.',
@@ -77,6 +80,7 @@ const LANGS = {
       {q:'Was ist der Unterschied zwischen Lebenspfadzahl und Schicksalszahl?',a:'Die Lebenspfadzahl ergibt sich aus dem vollständigen Geburtsdatum (Tag + Monat + Jahr) und beschreibt Ihren Lebensweg und Ihre Kernfrequenz. Die Schicksalszahl (auch Ausdruckszahl) wird aus den Buchstabenwerten Ihres vollständigen Namens berechnet und beschreibt Ihre Talente. Für Glückszahlen im Lotto wird primär die Lebenspfadzahl verwendet, da sie unveränderlich ist.'},
       {q:'Was bringt die Eingabe eines Ziehungsdatums?',a:'Die Eingabe des Ziehungsdatums schaltet drei Funktionen frei: ① Kompatibilitätsscore (0–100%): Die Universelle Tageszahl (UTZ) des Ziehungstages wird mit Ihrer Lebenspfadzahl verglichen — gleiche Zahl = 100%, 1 Schritt Differenz = 85%, bis zu 35% bei starker Abweichung. Die Anzeige erfolgt als Balken (z. B. ████████░░ 85%). ② Zahlen-Energie-Heatmap: Jede generierte Zahl erhält eine Farbe — ⭐ Gold (beide Energien), 🌱 Grün (Geburtsenergie), 💧 Blau (Ziehungsenergie). ③ Top 3 beste Ziehungstage: Die App scannt automatisch die nächsten 90 Tage aller EuroMillions/EuroJackpot/Lotto-Ziehungen und empfiehlt die 3 Tage mit dem höchsten Kompatibilitätsscore für Ihre persönliche Frequenz.'},
       {q:'Garantiert das einen Lottogewinn?',a:'Nein. Lottoziehungen sind vollständig zufällig, und kein System kann einen Gewinn garantieren. Diese App bietet Unterhaltung und kulturellen Einblick durch die Linse der pythagoräischen Numerologie. Bitte spielen Sie verantwortungsvoll.'},
+      {q:'Was ändert sich, wenn ich meine Geburtszeit eingebe?',a:'Mit Eingabe der Geburtszeit wird Ihr Mondzeichen anhand präziser astronomischer Daten berechnet — der tatsächlichen ekliptikalen Länge des Mondes zum genauen Geburtszeitpunkt (via astronomy-engine) — statt als Näherungswert. Dies ist besonders wichtig für Personen, die nahe einem Zeichenwechsel geboren wurden. Die Geburtszeit ist optional; ohne Angabe verwendet die App 12:00 Uhr als Standardzeit.'},
       {q:'Welche Glückskategorien sind enthalten?',a:'Vier Kategorien: Liebesglück, Geldglück, Karriere &amp; Erfolg und Leistungsglück. Jede zeigt einen 0–100-Score, eine detaillierte Deutung, praktische Ratschläge und Glückselemente basierend auf Ihrem Sonnen- und Mondzeichen. Bonus: 5 personalisierte Glückstipps nach Ihrem Sternzeichen-Profil. Alle Scores sind vollständig deterministisch — dasselbe Geburtsdatum liefert immer dieselben Ergebnisse.'},
     ],
     faqH2:'Häufig gestellte Fragen',
@@ -100,6 +104,7 @@ const LANGS = {
       title:'使い方',
       steps:[
         '生年月日（年・月・日）を入力してください。',
+        'カテゴリを選択してください：ラッキーナンバー・命盤鑑定・恋愛運・金運・仕事運・達成運。',
         '宝くじの種類を選択：ロト6、ロト7、ミニロト、ナンバーズ4など。',
         '生成セット数を選択：1、3、5、または10セット。',
         '「ラッキーナンバーを引く」をクリック — 本命星に基づく番号が即座に表示されます。',
@@ -113,6 +118,7 @@ const LANGS = {
       {q:'九星気学の本命星は生涯変わりませんか？',a:'はい。本命星は生まれ年によって固定され、生涯変わりません。ただし「月命星」（生まれ月で決まる）や「日命星」（生まれ日で決まる）もあり、それらは追加的な影響を持つとされています。このアプリは最も重要な本命星を使用します。'},
       {q:'抽選日を入力するとどう変わりますか？',a:'抽選日を入力すると3つの機能が追加されます。① 相性度スコア（0〜100%）: 本命星の五行と抽選日の日星を比較。同気＝100%、相生＝85%、受生＝75%、相克＝42%、被克＝38%で定量化し、バー表示（例: ████████░░ 85%）します。② 数字エネルギー内訳: 生成された各数字の由来を色分け — ⭐ 金（生年・抽選日の両方から共鳴）、🌱 緑（生年エネルギー）、💧 青（抽選日エネルギー）。③ おすすめ抽選日 TOP 3: 今後90日間のロト6・ロト7抽選日を自動スキャンし、あなたの本命星との相性スコアが最も高い3日を推薦します。特定の抽選回を狙う際に大変有効です。'},
       {q:'当選を保証しますか？',a:'保証はできません。宝くじは完全な無作為抽選であり、どんなシステムも当選を保証することはできません。このアプリは九星気学の文化的知恵に基づいたエンターテインメントです。責任ある範囲でお楽しみください。'},
+      {q:'生まれた時刻を入力すると何が変わりますか？',a:'時刻（0〜23時）を入力すると、月命星が精密な天文計算（astronomy-engineによる実際の月の黄道経度）で算出されます。また月柱は節気（小寒・立春・啓蟄など）の正確な太陽黄道経度に基づいて決定されるため、従来の簡易テーブルより精度が大幅に向上します。時刻は任意入力で、未入力の場合は正午（12時）を基準に計算されます。'},
       {q:'どのような運勢カテゴリがありますか？',a:'恋愛運・金運・仕事運・達成運の4カテゴリを提供しています。本命星と月命星の組み合わせから0〜100点のスコア、詳細な解説、アドバイス、行運要素を算出します。さらに九星別の運気アップ秘策を5つご提供します。同じ生年月日なら常に同じスコアが出る完全決定論的アルゴリズムです。'},
     ],
     faqH2:'よくある質問',
@@ -136,6 +142,7 @@ const LANGS = {
       title:'Comment ça marche',
       steps:[
         'Saisissez votre date de naissance (année, mois, jour).',
+        'Choisissez votre catégorie : Numéros chanceux, Horoscope, Amour, Argent, Carrière ou Réussite.',
         'Choisissez votre loterie : EuroMillions, Loto ou EuroJackpot.',
         'Sélectionnez 1, 3, 5 ou 10 grilles de numéros.',
         'Cliquez sur "Générer mes numéros chanceux" — résultats instantanés basés sur votre Chemin de Vie.',
@@ -149,6 +156,7 @@ const LANGS = {
       {q:'Quelle est la différence entre numérologie pythagoricienne et chaldéenne ?',a:'La numérologie pythagoricienne attribue les chiffres 1–9 aux lettres A–Z de façon séquentielle et calcule le Chemin de Vie à partir du jour, mois et année de naissance. La numérologie chaldéenne, plus ancienne, utilise une attribution différente et traite le 9 comme sacré. Ce générateur utilise le système pythagoricien, référence mondiale pour le calcul du Chemin de Vie.'},
       {q:'Que change l\'ajout d\'une date de tirage ?',a:'Ajouter la date du tirage déverrouille trois fonctionnalités avancées. ① Score de compatibilité (0–100%) : Le Nombre Universel du Jour (NUJ) du tirage est comparé à votre Chemin de Vie — même nombre = 100%, écart de 1 = 85%, jusqu\'à 35% pour un grand écart. L\'affichage en jauge (ex. ████████░░ 85%) rend la comparaison immédiatement lisible. ② Carte thermique d\'énergie : Chaque numéro tiré est coloré — ⭐ or (résonance des deux énergies), 🌱 vert (énergie natale seule), 💧 bleu (énergie du tirage seule). ③ Top 3 des meilleures dates : L\'application scanne automatiquement les 90 prochains jours de tirages EuroMillions/Loto et recommande les 3 dates avec le score de compatibilité le plus élevé pour votre profil.'},
       {q:'Cela garantit-il un gain à la loterie ?',a:'Non. Les tirages de loterie sont des événements entièrement aléatoires et aucun système ne peut garantir un gain. Cette application offre un divertissement basé sur la numérologie pythagoricienne. Jouez de manière responsable.'},
+      {q:'Qu\'apporte l\'ajout de l\'heure de naissance ?',a:'En ajoutant votre heure de naissance, le Signe Lunaire est calculé avec des données astronomiques précises — la longitude écliptique réelle de la Lune à votre heure exacte (via astronomy-engine) — plutôt qu\'une approximation. Cela est particulièrement utile si vous êtes né(e) près d\'un changement de signe. L\'heure est facultative ; sans elle, l\'application utilise 12h00 par défaut.'},
       {q:'Quelles catégories de fortune sont incluses ?',a:'Quatre catégories : Chance en amour, Chance financière, Carrière &amp; Succès, et Réussite. Chacune affiche un score 0–100, une lecture détaillée, des conseils pratiques et des éléments porte-bonheur basés sur votre Signe Solaire et Signe Lunaire. En bonus : 5 conseils porte-bonheur personnalisés selon votre profil zodiacal. Tous les scores sont entièrement déterministes — la même date de naissance produit toujours les mêmes résultats.'},
     ],
     faqH2:'Questions Fréquentes',
@@ -172,6 +180,7 @@ const LANGS = {
       title:'Cómo funciona',
       steps:[
         'Introduce tu fecha de nacimiento (año, mes, día).',
+        'Elige tu categoría: Números, Horóscopo, Amor, Dinero, Carrera o Logros.',
         'Elige tu lotería: EuroMillions, La Primitiva o BonoLoto.',
         'Selecciona 1, 3, 5 o 10 combinaciones de números.',
         'Haz clic en "Generar mis números de la suerte" — resultados instantáneos basados en tu Camino de Vida.',
@@ -185,6 +194,7 @@ const LANGS = {
       {q:'¿Cuál es la diferencia entre numerología pitagórica y caldea?',a:'La numerología pitagórica asigna números del 1 al 9 a las letras A–Z de forma secuencial y es el sistema occidental más extendido. La numerología caldea, originaria del antiguo Babilonia, usa una asignación diferente y considera el 9 como sagrado. Este generador usa el sistema pitagórico, estándar mundial para el cálculo del Camino de Vida.'},
       {q:'¿Qué aporta agregar una fecha de sorteo?',a:'Agregar la fecha del sorteo activa tres funciones avanzadas. ① Puntuación de compatibilidad (0–100%): El Número Universal del Día (NUD) del sorteo se compara con tu Camino de Vida — mismo número = 100%, diferencia de 1 = 85%, hasta 35% para gran divergencia. La puntuación se muestra como barra visual (ej. ████████░░ 85%). ② Mapa de energía por número: Cada número generado muestra un color — ⭐ dorado (ambas energías resuenan), 🌱 verde (sólo energía natal), 💧 azul (sólo energía del sorteo). ③ Top 3 mejores fechas: La app escanea automáticamente los próximos 90 días de sorteos EuroMillions/La Primitiva y recomienda las 3 fechas con mayor puntuación de compatibilidad para tu perfil personal.'},
       {q:'¿Garantiza ganar la lotería?',a:'No. Los sorteos de lotería son eventos completamente aleatorios y ningún sistema puede garantizar un premio. Esta aplicación ofrece entretenimiento e información cultural a través de la numerología pitagórica. Juega de forma responsable.'},
+      {q:'¿Qué cambia si introduzco mi hora de nacimiento?',a:'Al introducir tu hora de nacimiento, el Signo Lunar se calcula con datos astronómicos precisos — la longitud eclíptica real de la Luna en tu hora exacta (via astronomy-engine) — en lugar de una aproximación. Esto es especialmente relevante si naciste cerca de un cambio de signo. La hora es opcional; sin ella, la app utiliza las 12:00 como valor predeterminado.'},
       {q:'¿Qué categorías de fortuna se incluyen?',a:'Cuatro categorías: Suerte en amor, Suerte financiera, Carrera &amp; Éxito y Logros. Cada una muestra una puntuación 0–100, lectura detallada, consejos prácticos y elementos de suerte basados en tu Signo Solar y Signo Lunar. Bonus: 5 consejos personalizados de mejora de suerte según tu perfil zodiacal. Todos los resultados son completamente deterministas — la misma fecha de nacimiento siempre produce los mismos resultados.'},
     ],
     faqH2:'Preguntas Frecuentes',
@@ -208,6 +218,7 @@ const LANGS = {
       title:'Como funciona',
       steps:[
         'Insira sua data de nascimento (ano, mês, dia).',
+        'Escolha sua categoria: Números, Horóscopo, Amor, Dinheiro, Carreira ou Conquistas.',
         'Escolha sua loteria: Mega-Sena, Lotofácil ou Quina.',
         'Selecione 1, 3, 5 ou 10 jogos de números.',
         'Clique em "Gerar meus números da sorte" — resultados instantâneos baseados no seu Caminho de Vida.',
@@ -221,6 +232,7 @@ const LANGS = {
       {q:'Qual é a diferença entre numerologia pitagórica e caldeia?',a:'A numerologia pitagórica atribui números de 1 a 9 às letras A–Z sequencialmente e é o sistema ocidental mais utilizado. A numerologia caldeia, originária da antiga Babilônia, usa uma atribuição diferente e considera o 9 sagrado. Este gerador usa o sistema pitagórico, padrão mundial para o cálculo do Caminho de Vida.'},
       {q:'O que muda ao adicionar uma data de sorteio?',a:'Adicionar a data do sorteio ativa três funcionalidades avançadas. ① Pontuação de compatibilidade (0–100%): O Número Universal do Dia (NUD) do sorteio é comparado ao seu Caminho de Vida — mesmo número = 100%, diferença de 1 = 85%, até 35% para grande divergência. A pontuação é mostrada como barra visual (ex. ████████░░ 85%). ② Mapa de energia por número: Cada número gerado recebe uma cor — ⭐ dourado (ambas as energias ressoam), 🌱 verde (energia natal), 💧 azul (energia do sorteio). ③ Top 3 melhores datas: O app escaneia automaticamente os próximos 90 dias de sorteios Mega-Sena/Lotofácil e recomenda as 3 datas com maior pontuação de compatibilidade para seu perfil pessoal.'},
       {q:'Isso garante ganhar na loteria?',a:'Não. Os sorteios de loteria são eventos completamente aleatórios e nenhum sistema pode garantir um prêmio. Este aplicativo oferece entretenimento e insights culturais através da numerologia pitagórica. Jogue com responsabilidade.'},
+      {q:'O que muda ao inserir minha hora de nascimento?',a:'Ao inserir sua hora de nascimento, o Signo Lunar é calculado com dados astronômicos precisos — a longitude eclíptica real da Lua no seu momento exato de nascimento (via astronomy-engine) — em vez de uma aproximação. Isso é especialmente importante se você nasceu perto de uma mudança de signo. A hora é opcional; sem ela, o app usa o meio-dia (12:00) como padrão.'},
       {q:'Quais categorias de fortuna estão incluídas?',a:'Quatro categorias: Sorte no amor, Sorte financeira, Carreira &amp; Sucesso e Conquistas. Cada uma exibe uma pontuação 0–100, leitura detalhada, conselhos práticos e elementos de sorte baseados no seu Signo Solar e Signo Lunar. Bônus: 5 dicas personalizadas para aumentar a sorte com base no seu perfil zodiacal. Todos os resultados são completamente deterministas — a mesma data de nascimento sempre produz os mesmos resultados.'},
     ],
     faqH2:'Perguntas Frequentes',
@@ -244,6 +256,7 @@ const LANGS = {
       title:'Come funziona',
       steps:[
         'Inserisci la tua data di nascita (anno, mese, giorno).',
+        'Scegli la tua categoria: Numeri, Oroscopo, Amore, Denaro, Carriera o Successo.',
         'Scegli la tua lotteria: SuperEnalotto, EuroMillions o EuroJackpot.',
         'Seleziona 1, 3, 5 o 10 giocate di numeri.',
         'Clicca su "Genera i miei numeri fortunati" — risultati istantanei basati sul tuo Percorso di Vita.',
@@ -257,6 +270,7 @@ const LANGS = {
       {q:'Qual è la differenza tra numerologia pitagorica e caldea?',a:'La numerologia pitagorica assegna i numeri 1–9 alle lettere A–Z in modo sequenziale ed è il sistema occidentale più diffuso. La numerologia caldea, originaria dell\'antica Babilonia, usa un\'assegnazione diversa e tratta il 9 come sacro. Questo generatore usa il sistema pitagorico, standard mondiale per il calcolo del Percorso di Vita.'},
       {q:'Cosa cambia aggiungendo una data di estrazione?',a:'Aggiungere la data dell\'estrazione sblocca tre funzioni avanzate. ① Punteggio di compatibilità (0–100%): Il Numero Universale del Giorno (NUG) dell\'estrazione viene confrontato con il tuo Percorso di Vita — stesso numero = 100%, differenza di 1 = 85%, fino a 35% per grande divergenza. Il punteggio è visualizzato come barra (es. ████████░░ 85%). ② Heatmap energetica: Ogni numero generato riceve un colore — ⭐ oro (entrambe le energie risuonano), 🌱 verde (energia natale), 💧 blu (energia estrazione). ③ Top 3 date migliori: L\'app scansiona automaticamente i prossimi 90 giorni di estrazioni SuperEnalotto/EuroMillions e consiglia le 3 date con il punteggio di compatibilità più alto per il tuo profilo.'},
       {q:'Garantisce una vincita alla lotteria?',a:'No. Le estrazioni della lotteria sono eventi completamente casuali e nessun sistema può garantire una vincita. Questa app offre intrattenimento e approfondimenti culturali attraverso la numerologia pitagorica. Gioca responsabilmente.'},
+      {q:'Cosa cambia inserendo l\'ora di nascita?',a:'Inserendo l\'ora di nascita, il Segno Lunare viene calcolato con dati astronomici precisi — la longitudine eclittica reale della Luna al momento esatto della nascita (via astronomy-engine) — invece di un\'approssimazione. Questo è particolarmente rilevante per chi è nato vicino a un cambio di segno. L\'ora è facoltativa; senza di essa, l\'app utilizza le 12:00 come valore predefinito.'},
       {q:'Quali categorie di fortuna sono incluse?',a:'Quattro categorie: Fortuna in amore, Fortuna finanziaria, Carriera &amp; Successo e Realizzazioni. Ognuna mostra un punteggio 0–100, lettura dettagliata, consigli pratici e elementi fortunati basati sul tuo Segno Solare e Segno Lunare. Bonus: 5 consigli personalizzati per migliorare la fortuna in base al tuo profilo zodiacale. Tutti i punteggi sono completamente deterministici — la stessa data di nascita produce sempre gli stessi risultati.'},
     ],
     faqH2:'Domande Frequenti',
@@ -280,6 +294,7 @@ const LANGS = {
       title:'Cara Penggunaan',
       steps:[
         'Masukkan tanggal lahir Anda (tahun, bulan, hari).',
+        'Pilih kategori: Angka Hoki, Weton, Cinta, Keuangan, Karier, atau Prestasi.',
         'Pilih format Togel: Togel 4D, 3D, atau 2D.',
         'Pilih jumlah set angka: 1, 3, 5, atau 10 set.',
         'Klik "Cari Angka Hoki Saya" — angka berdasarkan Weton Anda muncul seketika.',
@@ -316,6 +331,7 @@ const LANGS = {
       title:'사용 방법',
       steps:[
         '생년월일(년·월·일)을 입력하세요.',
+        '원하는 카테고리를 선택하세요: 행운 번호·정통 사주·연애운·금전운·직업운·성취운.',
         '복권 형식을 선택하세요: 로또 6/45.',
         '생성할 번호 세트 수를 선택하세요: 1, 3, 5, 또는 10세트.',
         '"내 행운 번호 뽑기" 버튼을 클릭하면 사주팔자 기반 번호가 즉시 생성됩니다.',
