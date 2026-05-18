@@ -1522,6 +1522,8 @@ function buildSajuNarrativeHTML(data, lang, L) {
   const mv   = fs.money       || { score: 50, level: 'mid' };
   const cv   = fs.career      || { score: 50, level: 'mid' };
   const isKo = (lang === 'ko');
+  const seed = data.seed || 1;
+  const v    = seed % 4;
 
   const DOHWA = new Set([0, 3, 6, 9]);
   const hasDohwa = DOHWA.has(db) || (hp && DOHWA.has(hp.branchIdx));
@@ -1613,6 +1615,37 @@ function buildSajuNarrativeHTML(data, lang, L) {
   const p3 = isKo ? (DST_P3_KO[dsi]||DST_P3_KO[0]) : (DST_P3_EN[dsi]||DST_P3_EN[0]);
   const stemTag = isKo ? (STEM_TAGS_KO[dsi]||STEM_TAGS_KO[0]) : (STEM_TAGS_EN[dsi]||STEM_TAGS_EN[0]);
 
+  // ── Day Branch (일지) trait ─────────────────────────────────────────────────
+  const BRANCH_TRAIT_KO = [
+    '일지(日支)가 子水이어서 지혜롭고 분석적이며, 조용한 환경에서 놀라운 집중력을 발휘하는 기질이 있습니다. 야간이나 고요한 시간대에 창의적 에너지가 특히 활성화되며, 직관으로 상황을 빠르게 파악하는 능력이 돋보입니다.',
+    '일지(日支)가 丑土이어서 인내력이 강하고 신중하게 일을 추진하는 기질이 있습니다. 한번 결심한 것은 묵묵히 해내는 뚝심이 있어, 시간이 지날수록 진가를 인정받는 유형입니다.',
+    '일지(日支)가 寅木이어서 용감하고 진취적이며 새로운 도전을 두려워하지 않습니다. 행동력이 넘치고 선구자 기질이 강해, 남들이 가지 않은 길을 먼저 개척하는 것에 편안함을 느낍니다.',
+    '일지(日支)가 卯木이어서 친근하고 사교적이며 사람들과의 교류에서 활력을 얻습니다. 부드러운 인상 뒤에 날카로운 감각이 있어, 관계 속에서 핵심을 빠르게 파악하는 능력이 있습니다.',
+    '일지(日支)가 辰土이어서 포부가 크고 다재다능하며 변화에 잘 적응합니다. 이상이 높고 실행력도 갖추고 있어, 꿈을 현실로 만드는 추진력이 강점입니다.',
+    '일지(日支)가 巳火이어서 통찰력과 집중력이 탁월하며 한 분야에 깊이 몰입합니다. 표면보다 본질을 꿰뚫어 보는 시선으로, 복잡한 상황에서도 핵심을 발견하는 능력이 있습니다.',
+    '일지(日支)가 午火이어서 열정적이고 표현력이 강하며 사람들 앞에서 빛납니다. 에너지가 넘치고 존재감이 뚜렷해, 어떤 모임에서도 자연스럽게 분위기를 이끌게 됩니다.',
+    '일지(日支)가 未土이어서 따뜻한 공감 능력과 예술적 감각을 타고났습니다. 주변과의 조화를 중시하며, 분위기를 부드럽게 만드는 특유의 매력이 있습니다.',
+    '일지(日支)가 申金이어서 논리적이고 전략적이며 문제 해결에 뛰어납니다. 복잡한 상황을 빠르게 분석하고 최적의 해결책을 찾아내는 실용적인 사고가 강점입니다.',
+    '일지(日支)가 酉金이어서 심미안이 뛰어나고 완성도에 대한 기준이 높습니다. 세부 사항을 놓치지 않으며, 스스로의 기준을 높이 유지하는 것에 자부심을 갖는 타입입니다.',
+    '일지(日支)가 戌土이어서 의리가 깊고 원칙이 확고합니다. 한번 믿음을 준 사람에게는 끝까지 든든한 울타리가 되어주는 신뢰할 수 있는 성품의 소유자입니다.',
+    '일지(日支)가 亥水이어서 자유를 사랑하고 철학적 사유를 즐깁니다. 독립적인 사고 방식과 넓은 이상을 가지고 있어, 틀에 박힌 방식보다 자신만의 길을 개척하는 것을 선호합니다.',
+  ];
+  const BRANCH_TRAIT_EN = [
+    'Your day branch Zi (子) brings sharp intellect and analytical instincts. You thrive in calm environments and your creative energy peaks during quiet hours.',
+    'Your day branch Chou (丑) brings patient determination and methodical follow-through. You grow more impressive over time — a slow-burn, high-value type.',
+    'Your day branch Yin (寅) brings boldness and pioneering energy. You are energized by challenge and naturally comfortable at the frontier others hesitate to enter.',
+    'Your day branch Mao (卯) brings social warmth and perceptive sensitivity. Behind your approachable exterior lies a sharp instinct for reading people and situations.',
+    'Your day branch Chen (辰) brings broad ambition and versatile capability. High ideals backed by real drive make you someone who turns vision into reality.',
+    'Your day branch Si (巳) brings deep insight and intense focus. You see below the surface — a natural investigator and specialist in whatever you commit to.',
+    'Your day branch Wu (午) brings passionate expression and magnetic presence. You light up any environment and are energized most when performing, leading, or creating.',
+    'Your day branch Wei (未) brings warm empathy and artistic sensibility. Harmony matters deeply to you, and your gentle influence often holds groups together.',
+    'Your day branch Shen (申) brings sharp analytical thinking and strategic problem-solving. Complex situations are where you tend to shine most clearly.',
+    'Your day branch You (酉) brings refined taste and exacting standards. Your attention to detail and aesthetic precision elevate everything you touch.',
+    'Your day branch Xu (戌) brings deep loyalty and unshakeable principles. People who earn your trust gain a steadfast ally who never wavers.',
+    'Your day branch Hai (亥) brings philosophical independence and a free-spirited outlook. You prefer forging your own path over following well-worn routes.',
+  ];
+  const branchTrait = isKo ? (BRANCH_TRAIT_KO[db]||'') : (BRANCH_TRAIT_EN[db]||'');
+
   // ── Five Elements balance text ───────────────────────────────────────────────
   const OHAENG_KO = {
     '木':'木 기운이 강한 사주는 성장·개척·창조의 에너지가 넘칩니다. 새로운 시작과 비전 제시에 탁월하지만, 자기 주장이 강해질 수 있어 유연성과 협력을 의식적으로 연습할 필요가 있습니다.',
@@ -1647,52 +1680,160 @@ function buildSajuNarrativeHTML(data, lang, L) {
     ? (OHAENG_KO[domEl]||'') + (domEl !== ys ? ' ' + (WEAK_KO[ys]||'') : '')
     : (OHAENG_EN[domEl]||'') + (domEl !== ys ? ' ' + (WEAK_EN[ys]||'') : '');
 
-  // ── Love text ────────────────────────────────────────────────────────────────
+  // ── Love text (4 variants per level, v = seed%4) ─────────────────────────────
   const LOVE_KO = {
-    high: hasDohwa
-      ? '사주에 도화살(桃花殺)이 자리하고 있어 이성에게 자연스러운 매력을 발산하는 기운이 매우 강합니다. 연인이 있다면 관계의 깊이가 한층 더해지는 시기이며, 솔로라면 예상치 못한 인연이 찾아올 가능성이 높습니다. 외모와 분위기를 가꾸는 데 조금 더 신경을 쓰면 좋은 에너지를 끌어당기는 데 도움이 됩니다. 설레는 감정을 느꼈다면 망설이지 말고 행동으로 옮기세요.'
-      : '연애운이 전반적으로 좋은 흐름입니다. 감정 표현에 솔직해지고, 상대에게 마음을 적극적으로 전달해 보세요. 지금까지 망설였던 고백이나 프로포즈를 실행에 옮기기에 좋은 흐름입니다. 자신의 매력을 있는 그대로 드러내는 용기가 좋은 인연을 부릅니다.',
-    mid: '연애운이 평균적인 흐름입니다. 특별한 호기(好機)보다는 일상적인 관계를 충실히 이어가는 것이 중요합니다. 상대방의 말에 더 귀를 기울이고, 작은 배려를 꾸준히 실천하면 관계가 안정적으로 깊어집니다. 지금은 새로운 자극보다 내실 있는 신뢰 쌓기가 더 가치 있는 시기입니다.',
-    low: '연애 관계에서 약간의 마찰이나 거리감이 생길 수 있는 시기입니다. 감정적으로 반응하기보다 충분한 대화로 오해를 풀어가는 것이 중요합니다. 지금은 관계를 억지로 진전시키려 하기보다, 스스로의 내면을 충실히 돌보는 시간이 더 가치 있을 수 있습니다. 자신을 먼저 사랑할 때, 진정한 사랑도 자연스럽게 따라옵니다.',
+    high: [
+      hasDohwa ? '사주에 도화살(桃花殺)이 자리하고 있어 이성에게 자연스러운 매력을 발산하는 기운이 강합니다. 연인이 있다면 관계의 깊이가 한층 더해지는 시기이며, 솔로라면 예상치 못한 인연이 찾아올 가능성이 높습니다. 설레는 감정을 느꼈다면 망설이지 말고 행동으로 옮기세요.' : '감정 에너지를 관장하는 일지의 기운이 활성화되어 있어 이성과의 연결이 자연스럽게 이루어지는 시기입니다. 기존 관계는 더 깊어지고, 새로운 인연은 의미 있는 방식으로 다가옵니다. 자신을 있는 그대로 드러내는 것이 지금의 가장 강력한 매력입니다.',
+      hasDohwa ? '도화살 기운이 활성화되어 주변 사람들이 당신에게 더 많은 관심을 가지게 됩니다. 이 에너지를 잘 활용하면 오래 기다려왔던 인연을 만나거나 기존 관계를 더욱 깊게 발전시킬 수 있습니다. 진정성 있는 모습을 유지하세요.' : '연애 에너지가 상승하고 있습니다. 용신의 흐름이 감정 표현을 더 자연스럽게 만들어 주는 시기로, 오래 미뤄왔던 고백이나 감사의 표현을 지금 실행에 옮겨보세요.',
+      hasDohwa ? '사주 구조에서 매력 에너지가 강하게 발현되는 시기입니다. 두 사람이 함께 새로운 경험을 하는 것이 관계를 한 단계 발전시키는 열쇠입니다. 사람들이 모이는 곳에 적극적으로 나서보세요.' : '오행 에너지의 흐름이 관계 형성에 유리하게 작동하고 있습니다. 솔로라면 인맥을 적극적으로 넓히고, 연인이 있다면 함께하는 새로운 경험으로 더 깊은 유대를 쌓을 수 있는 최적의 시기입니다.',
+      hasDohwa ? '도화살과 활성화된 연애 에너지가 겹쳐 지금이 연애에 있어 중요한 전환점이 될 수 있습니다. 외모와 분위기를 가꾸는 데 조금 더 신경을 쓰면 이 에너지를 증폭시킬 수 있습니다.' : '사주 기둥의 조화가 감정적 연결을 강화하고 있습니다. 진심이 담긴 행동이 지금 가장 강력한 힘을 발휘하는 시기입니다. 관심 있는 상대에게 먼저 다가가는 용기가 좋은 인연을 만드는 첫 번째 조건입니다.',
+    ],
+    mid: [
+      '연애 에너지가 안정적인 흐름을 유지합니다. 거창한 변화보다 꾸준한 노력이 관계를 깊게 만드는 시기입니다. 상대방의 이야기를 더 많이 들어주고 작은 감사를 자주 표현하면 관계가 자연스럽게 성숙해집니다.',
+      '연애운이 평온한 수준입니다. 새로운 자극보다 현재 관계의 신뢰를 쌓는 것이 더 가치 있습니다. 일상 속 작은 이벤트나 따뜻한 메시지 하나가 상대에게 큰 의미로 전달될 수 있습니다.',
+      '관계 에너지가 고요하게 흐릅니다. 함께하는 일상의 질을 높이는 것에 집중하세요. 공통 관심사를 나누거나 함께 새로운 것을 배우는 경험이 관계에 새로운 활력을 불어넣습니다.',
+      '연애에서 큰 기복 없이 안정적인 흐름이 이어집니다. 솔로라면 자기 성장에 집중하는 것이 더 좋은 인연을 끌어당기는 방법입니다. 자신이 행복해질수록 매력도 자연스럽게 발산됩니다.',
+    ],
+    low: [
+      '연애 에너지가 다소 약한 시기입니다. 새로운 만남을 억지로 추진하기보다 자신의 내면을 충실히 돌보는 것이 더 현명합니다. 지금의 자기 충전이 미래에 더 건강한 관계를 맺는 기반이 됩니다.',
+      '오행 에너지의 흐름이 감정 영역을 약하게 만들 수 있는 시기입니다. 중요한 감정 표현은 충분히 생각한 후 진행하세요. 경청하는 것이 지금 관계에서 가장 강력한 언어입니다.',
+      '감정적으로 예민해지기 쉬운 시기라 사소한 것에 상처받거나 줄 수 있습니다. 충동적인 결정보다 한 발 물러서서 상황을 바라보는 여유가 필요합니다. 관계를 급격히 변화시키려 하기보다 자연스러운 흐름에 맡기세요.',
+      '연애 관계에 뜻하지 않은 거리감이 생길 수 있는 시기입니다. 이 간격은 일시적인 것으로, 서로에 대한 이해와 배려가 다시 관계를 가깝게 만들 것입니다. 지금은 인내하는 것이 사랑의 한 형태입니다.',
+    ],
   };
   const LOVE_EN = {
-    high: hasDohwa ? 'The Peach Blossom energy in your chart creates natural romantic magnetism. Existing relationships deepen; singles are likely to encounter unexpected, meaningful connections. Polish your presence and act on feelings that arise.' : 'Your love fortune is strongly favorable. Be open and expressive with your feelings — courage in matters of the heart brings the connections you deserve.',
-    mid: 'Love fortune is steady and reliable. Focus on consistent small acts of care and genuine listening. Depth built day by day outlasts any grand gesture.',
-    low: 'Some friction may arise in romantic relationships. Prioritize calm communication over reactive responses, and give yourself personal space to recharge. Self-love is always the foundation.',
+    high: [
+      hasDohwa ? 'Peach Blossom energy in your chart creates natural romantic magnetism. Existing bonds deepen; singles are positioned to meet meaningful connections. Act on feelings that arise — timing is in your favor.' : 'Your emotional energy is powerfully activated. Connections form naturally and existing bonds deepen. Showing up as your authentic self is your most compelling quality right now.',
+      hasDohwa ? 'Peach Blossom energy amplifies your natural attractiveness. Invest slightly more in your presence and make time for social environments where new connections can form.' : 'Love fortune is running high. Self-expression feels more natural than usual — act on feelings you have been hesitating to share.',
+      hasDohwa ? 'Your chart positions you as particularly magnetic. Shared new experiences will deepen existing bonds and create natural openings for new ones.' : 'Favorable energy flows through your relational sphere. For singles, expanding your social circle will yield results. For those partnered, shared new adventures strengthen the bond.',
+      hasDohwa ? 'Peach Blossom combined with high love fortune makes this a potential turning point. Put yourself in social environments and let your natural energy do the work.' : 'Genuine heartfelt action carries maximum power right now. Reaching out first or making a bold move carries a higher probability of positive outcomes.',
+    ],
+    mid: [
+      'Love fortune is steady. Consistent small acts of care and genuine listening build more depth than grand gestures. Show up reliably and the relationship grows naturally.',
+      'Romantic energy is calm. Focus on deepening trust rather than seeking new excitement. A thoughtful message or unexpected small kindness can mean more than you realize.',
+      'Relationship energy flows quietly. Sharing new learning experiences or a common interest adds fresh vitality to any connection.',
+      'No major love shifts, but steady ground is valuable. Personal growth during this period makes you more attractive — invest in becoming the person you want to be.',
+    ],
+    low: [
+      'Love energy is subdued. Nurturing yourself rather than forcing connections forward is the wiser path. Self-investment now becomes the foundation for healthier relationships ahead.',
+      'Emotional sensitivity may be higher. Think carefully before important conversations, and prioritize listening. Patience now prevents larger issues later.',
+      'Emotional reactivity is elevated. A pause before responding to relationship friction can prevent words that are hard to take back.',
+      'Some temporary distance may enter a relationship. Understanding and consistent small care will restore closeness more reliably than dramatic gestures.',
+    ],
   };
 
-  // ── Money text ───────────────────────────────────────────────────────────────
+  // ── Money text (4 variants per level) ────────────────────────────────────────
   const reiseiCnt = ss['재성'] || 0;
   const MONEY_KO = {
-    high: reiseiCnt > 1
-      ? '사주에 재성(財星)이 풍부하게 자리하고 있어 금전 감각과 재물을 끌어당기는 기운이 탁월합니다. 적극적인 투자나 새로운 수입원 개발에 좋은 타이밍이며, 직감이 오는 기회를 용감하게 포착하는 것이 중요합니다. 다만 재성이 강할수록 지출도 커질 수 있으니, 명확한 재정 목표와 예산 계획을 병행하는 지혜가 필요합니다.'
-      : '금전운이 좋은 흐름입니다. 꾸준한 노력이 금전적 결실로 이어지는 시기이며, 새로운 수입원에 도전해 볼 만한 에너지가 흐르고 있습니다. 재정적 결정을 내릴 때 직관과 데이터를 함께 활용하면 더 좋은 결과를 만들 수 있습니다.',
-    mid: '금전운이 안정적인 흐름입니다. 대박보다는 꾸준한 저축과 합리적 소비 관리가 재정 건강의 핵심입니다. 지금은 새로운 투자보다 기존 재원을 효율적으로 관리하고, 불필요한 지출을 점검하는 것이 더 현명합니다.',
-    low: '금전적으로 다소 조심스러운 시기입니다. 충동적인 소비나 투기성 투자를 피하고, 안정적인 저축과 지출 관리에 집중하세요. 이 시기를 재무 계획을 새롭게 점검하고 탄탄한 기초를 다지는 기회로 삼는다면, 다음 상승 국면을 훨씬 유리하게 맞이할 수 있습니다.',
+    high: [
+      reiseiCnt > 1 ? '재성(財星)이 사주에 풍부하게 자리하고 있어 금전을 끌어당기는 기운이 탁월합니다. 투자나 새로운 수입원 개발에 좋은 타이밍이며, 재성이 강할수록 지출도 커질 수 있으니 명확한 재정 목표와 예산 계획을 병행하는 지혜가 필요합니다.' : '재성(財星) 에너지가 사주에서 활성화되어 금전 흐름이 강해지는 시기입니다. 노력이 금전적 결실로 이어지며 새로운 수입원 개발에 좋은 타이밍입니다. 이 에너지를 잘 활용하면 재정적 도약의 발판을 만들 수 있습니다.',
+      '용신 에너지가 재물을 끌어당기는 흐름과 상생하고 있습니다. 평소보다 좋은 금전적 기회가 들어오거나 예상치 못한 수입이 생길 수 있는 시기입니다. 기회가 왔을 때 준비가 되어 있으면 훨씬 큰 결과를 만들 수 있으니, 지금 재정 계획을 미리 정비해두세요.',
+      '사주의 오행 에너지가 경제 활동에 유리하게 작용하는 시기입니다. 새로운 수입원을 개발하거나 투자 포트폴리오를 다각화하기에 좋은 때입니다. 단기 이익보다 3~5년의 장기 관점으로 재정 결정을 내리면 더 큰 성과를 얻을 수 있습니다.',
+      '재물 에너지가 강한 흐름 속에 있습니다. 자신의 능력을 인정받고 그에 맞는 보상을 받을 수 있는 시기이니, 연봉 협상이나 단가 조정 등 금전적 요청을 망설이지 마세요. 준비된 사람에게 기회가 옵니다.',
+    ],
+    mid: [
+      '금전운이 안정적인 흐름을 유지합니다. 대박보다 꾸준한 저축과 합리적 지출 관리가 재정 건강의 핵심입니다. 가계부나 지출 앱으로 돈의 흐름을 파악하면 어디에 낭비가 있는지 자연스럽게 드러납니다.',
+      '재물 에너지가 균형 잡힌 상태입니다. 극적인 변화보다 안정적인 축적이 올바른 전략입니다. 소액이라도 정기적금이나 인덱스 펀드를 시작하면 금액보다 습관이 10년 후 큰 차이를 만들어냅니다.',
+      '금전 에너지가 고요하게 흐릅니다. 기존 자원을 효율적으로 관리하는 데 집중하세요. 구독이나 정기 결제 서비스를 점검하고 쓰지 않는 것을 정리하는 것만으로도 한 달 지출이 눈에 띄게 줄어듭니다.',
+      '재물운이 평탄한 흐름 속에 있습니다. 소비 전에 필요한 것인지 원하는 것인지 한 번 더 생각하는 작은 습관이 충동 지출을 크게 줄이고 1년 후 재정을 완전히 다른 모습으로 만들어 줍니다.',
+    ],
+    low: [
+      '금전적으로 조심스러운 에너지가 흐릅니다. 무리한 투자나 대출, 보증은 특히 주의가 필요합니다. 비상금 3~6개월치를 확보하는 것을 최우선 목표로 삼으세요. 재정적 여유가 있어야 기회가 왔을 때 잡을 수 있습니다.',
+      '재물 에너지가 약한 시기이므로 신중한 금전 관리가 필요합니다. 예상치 못한 지출이 생길 수 있으니 여유 자금을 미리 확보하세요. 지금의 절제가 다음 상승 국면을 위한 종잣돈이 됩니다.',
+      '금전 에너지가 저조한 시기입니다. 새로운 투자보다 기존 자산을 지키는 데 집중하세요. 전문 재정 상담사와 상담하거나 재무 계획을 새롭게 점검하면 이 시기가 전화위복이 될 수 있습니다.',
+      '오행 에너지의 흐름이 재물 영역을 약하게 만드는 시기입니다. 타인에게 돈을 빌려주거나 보증을 서는 행위는 지금 특히 주의가 필요합니다. 소비 패턴을 점검하고 불필요한 지출을 먼저 줄이는 것이 현재 최선의 전략입니다.',
+    ],
   };
   const MONEY_EN = {
-    high: 'Your chart shows strong financial energy. This is a favorable time for investment and developing new income streams. Set clear financial goals to channel this energy productively — and watch your spending, as strong wealth energy can flow outward as easily as it flows in.',
-    mid: 'Financial fortune is stable. Consistent saving, rational spending, and efficient management of existing resources will serve you better than chasing windfalls right now.',
-    low: 'Exercise financial caution. Avoid impulsive spending and speculative investments. Use this period to review your financial plan and strengthen your foundations for the next growth cycle.',
+    high: [
+      reiseiCnt > 1 ? 'Multiple Wealth Stars are active in your chart, creating strong financial momentum. Investment and income expansion are favored — but be aware that strong earning energy can also amplify outflow, so set a clear budget alongside any new ventures.' : 'Wealth Star energy is activated, making effort convert to financial results more readily. Use this window to build foundations that outlast this favorable cycle.',
+      'Beneficial energy in your chart supports financial growth. Unexpected income or favorable opportunities may appear. Having a plan ready lets you capture what arrives rather than watching it pass by.',
+      'Five Elements energy flows in support of economic activity. Diversifying income or expanding investments fits this period well. Long-term decisions made now with a 3-5 year view tend to outperform short-term moves.',
+      'Financial energy is strong. Do not undersell your value — salary negotiations, rate increases, or partnership proposals all carry elevated success probability. Prepared confidence produces results.',
+    ],
+    mid: [
+      'Financial fortune is stable. Consistent saving and rational spending habits serve better than chasing windfalls. Tracking spending reveals leakage you did not know existed — that awareness alone changes behavior.',
+      'Wealth energy is balanced. Steady accumulation is the right strategy. Starting even a small recurring investment builds the habit that compounds significantly over a decade.',
+      'Financial energy flows quietly. Focus on efficiency with existing resources. Auditing subscriptions often surfaces surprising amounts of recoverable spending.',
+      'Money fortune is level. Asking yourself before each purchase whether it is a need or a want is the simplest and most effective filter against impulse spending.',
+    ],
+    low: [
+      'Financial energy is subdued. Aggressive investment, large loans, and guaranteeing others carry elevated risk. Building a 3-6 month emergency fund is the highest-priority move right now.',
+      'Wealth energy is weaker this period — careful management is essential. Unexpected expenses may arise, so holding liquid reserves matters. Today\'s discipline becomes tomorrow\'s capital.',
+      'Financial energy is low. Defense is better than offense: protect existing assets rather than seeking new gains. Professional financial guidance can turn this period into a genuine planning opportunity.',
+      'Energy challenges the financial sphere. Lending money to others or co-signing carries particular risk now. Auditing your spending patterns and cutting unnecessary outflows is the most available lever.',
+    ],
   };
 
-  // ── Career text ──────────────────────────────────────────────────────────────
+  // ── Career text (4 variants per level) ───────────────────────────────────────
   const kwanseongCnt = ss['관성'] || 0;
   const inseongCnt   = ss['인성'] || 0;
   const CAREER_KO = {
-    high: kwanseongCnt > 0
-      ? '관성(官星)이 사주에 자리하여 사회적 인정과 책임 있는 역할이 찾아오는 에너지가 강합니다. 승진·새로운 직책·중요한 프로젝트 리드 등의 기회에 자신감 있게 임하세요. 조직 내에서 당신의 역할과 영향력이 확장되는 흐름이며, 타인의 신뢰를 얻는 것이 곧 커리어의 날개가 됩니다.'
-      : '인성(印星)이 사주의 중심이 되어 배움·연구·전문성 개발에 탁월한 에너지가 흐릅니다. 새로운 기술을 습득하거나 전문 자격증을 취득하는 것이 직업운을 크게 향상시킵니다. 지식이 곧 당신의 가장 강력한 경쟁력이 되는 시기입니다.',
-    mid: '직업운이 안정적인 흐름 속에 있습니다. 현재 맡은 역할에서 성실함과 꾸준한 성과를 보여주는 것이 장기적인 커리어 발전의 토대가 됩니다. 지금은 화려한 변화보다 내실을 다지는 시기입니다.',
-    low: '직업적으로 다소 저조한 에너지의 시기입니다. 직장 내 관계나 상황에서 갈등이 생길 수 있으니, 불필요한 마찰을 피하고 맡은 일에 집중하는 것이 최선입니다. 이 시기를 역량 강화와 재충전의 시간으로 현명하게 활용하세요.',
+    high: [
+      kwanseongCnt > 0 ? '관성(官星)이 사주에 자리하여 사회적 인정과 책임 있는 역할이 찾아오는 에너지가 강합니다. 승진·새로운 직책·중요한 프로젝트 리드 등의 기회에 자신감 있게 임하세요. 자신의 성과를 적극적으로 알리는 것이 지금 시기에 특히 중요합니다.' : '인성(印星)이 사주의 중심이 되어 배움·연구·전문성 개발에 탁월한 에너지가 흐릅니다. 새로운 기술을 습득하거나 자격증을 취득하는 것이 직업운을 크게 향상시킵니다. 지식이 가장 강력한 경쟁력이 되는 시기입니다.',
+      kwanseongCnt > 0 ? '커리어 에너지가 상승 국면에 있습니다. 평소 도전하지 못했던 포지션이나 업무에 지원하기 좋은 타이밍입니다. 목표를 종이에 구체적으로 적고 실행 계획을 세우면 이 시기의 에너지를 훨씬 효율적으로 활용할 수 있습니다.' : '전문성을 키우는 데 최적화된 에너지 흐름입니다. 업계 트렌드를 공부하거나 새로운 도구와 기술을 익히는 것이 3년 후 커리어를 완전히 다른 레벨로 끌어올립니다.',
+      kwanseongCnt > 0 ? '직업 에너지가 강하게 흐릅니다. 노력이 눈에 보이는 성과로 이어지며 주변의 인정이 자연스럽게 따라옵니다. 네트워킹에 시간을 투자하면 이 시기에 만나는 사람들이 미래의 중요한 연결고리가 됩니다.' : '배움의 에너지가 강하게 흐릅니다. 멘토를 찾거나 업계 전문가와의 교류를 늘리는 것이 지금 가장 효과적인 투자입니다. 배운 것을 실제로 적용하는 것까지가 완성입니다.',
+      kwanseongCnt > 0 ? '사주의 성공 에너지가 직업 영역에서 발현되고 있습니다. 결단력 있게 행동할수록 더 좋은 결과가 따르며, 적절한 자기 홍보가 기회를 끌어당기는 핵심 열쇠입니다.' : '지식과 전문성이 무기가 되는 시기입니다. 자격증 취득, 강의 수강, 연구 등 전문성을 강화하는 데 투자하세요. 이 시기의 학습이 향후 협상력과 연봉에 직접적인 영향을 미칩니다.',
+    ],
+    mid: [
+      '직업 에너지가 안정적인 흐름 속에 있습니다. 현재 맡은 역할에서 꾸준한 성과를 보여주는 것이 장기적 커리어의 토대가 됩니다. 지금은 존재감을 높이기보다 신뢰를 쌓는 데 집중하는 것이 더 현명한 전략입니다.',
+      '커리어 에너지가 균형 잡힌 상태입니다. 기초 역량을 탄탄히 하고 전문성을 깊게 쌓는 것이 미래 도약을 위한 준비입니다. 매일 한 가지 새로운 것을 배우는 습관이 1년 후 큰 차이를 만듭니다.',
+      '직업운이 평탄하게 흐릅니다. 현재 위치에서 전문성을 깊게 쌓는 것이 이 시기에 올바른 방향입니다. 업계 트렌드를 꾸준히 모니터링하고 학습을 멈추지 마세요.',
+      '커리어 에너지가 고요한 성장의 국면에 있습니다. 화려한 도전보다 현재 업무의 완성도를 높이는 것이 더 의미 있습니다. 멘토와의 교류를 통해 다음 단계의 방향을 미리 설계하세요.',
+    ],
+    low: [
+      '직업 에너지가 다소 저조한 시기입니다. 새로운 도전보다 현재 위치를 지키는 것이 더 중요한 국면입니다. 직장 내 불필요한 갈등을 피하고 기본에 충실하세요. 신뢰를 잃지 않는 것이 지금 가장 중요한 커리어 자산입니다.',
+      '커리어 에너지가 약한 시기입니다. 무리한 이직이나 사업 전환보다 현재 역할에 집중하며 내실을 다지는 것이 현명합니다. 이 시기를 역량 강화의 기회로 삼으면 다음 성장 국면에 훨씬 유리한 위치에 서게 됩니다.',
+      '직업운이 도전적인 상황을 만들 수 있는 시기입니다. 감정을 조절하며 프로답게 대처하는 것이 최우선입니다. 어려운 상황에서도 전문성을 유지하는 태도가 결국 신뢰와 기회로 돌아옵니다.',
+      '커리어 에너지가 낮은 시기이므로 섣부른 직업 변경이나 큰 도전은 신중하게 고려하세요. 대신 자격증 취득이나 기술 강화에 투자하면 직업운이 회복될 때 경쟁력 있는 위치에 서게 됩니다.',
+    ],
   };
   const CAREER_EN = {
-    high: kwanseongCnt > 0
-      ? 'Official Star energy in your chart signals recognition, leadership opportunities, and career advancement. Approach new responsibilities with confidence — your reliability is exactly what people are looking for.'
-      : 'Intelligence Star energy supports learning, expertise, and professional development. Invest in acquiring new skills or certifications — knowledge is your strongest competitive advantage right now.',
-    mid: 'Career fortune is steady. Consistent performance and reliability are what build long-term professional reputation — focus on excellence in your current role.',
-    low: 'Career energy is lower now. Avoid unnecessary workplace friction and stay focused on delivering quality work. Build skills and recharge — the next growth window will reward your preparation.',
+    high: [
+      kwanseongCnt > 0 ? 'Official Star energy signals recognition and expanded responsibility. Leadership opportunities and high-visibility projects are in the flow. Make your contributions visible — this is not the time for quiet diligence alone.' : 'Intelligence Star energy powers learning and professional development. Investing in new skills or certifications delivers outsized returns now. Knowledge is your strongest competitive advantage.',
+      kwanseongCnt > 0 ? 'Career energy is ascending. Apply for the position or project you have been hesitating on — timing is favorable. Writing specific goals with an action plan lets you channel this energy far more effectively.' : 'Expertise development is your primary power source. Staying current with industry trends and acquiring new tools compounds your professional value significantly over a 3-year horizon.',
+      kwanseongCnt > 0 ? 'Strong career energy means effort converts to visible results. Networking and relationship-building during this period creates connections that may define future opportunities for years.' : 'Learning energy flows strongly. Finding a mentor or deepening exchanges with industry experts is the highest-ROI investment available right now.',
+      kwanseongCnt > 0 ? 'Success energy is expressing itself through your career. Decisive action produces better results, and strategic self-promotion done authentically attracts the right opportunities.' : 'Knowledge and expertise become your leverage point. Certifications and research that deepen your specialization now translate directly into negotiating power and earnings over time.',
+    ],
+    mid: [
+      'Career fortune is steady. Consistent performance and reliability build long-term professional reputation. Focus on being the person who delivers well.',
+      'Career energy is balanced. Building depth in your core competencies serves you better than pursuing dramatic change right now.',
+      'Steady career flow. Deepening your specialization and monitoring industry trends matters more than big moves. Continuous learning is the only sustainable career strategy.',
+      'Quiet professional growth mode. Elevating the quality of your current work matters most. A conversation with a mentor about the next chapter is well-timed.',
+    ],
+    low: [
+      'Career energy is lower. Protecting your current position matters more than expanding. Avoid unnecessary friction, focus on reliable delivery, and preserve the trust you have built.',
+      'Career energy is subdued. Forced job changes or major pivots carry higher risk. Focus on your current role and build capabilities — when growth energy returns, you will be better positioned.',
+      'Challenging career conditions are possible. Emotional regulation and professional conduct are your most valuable assets right now. Composure builds lasting trust.',
+      'Career energy is weak this period. Plan carefully before major moves. Instead, invest in certification or skill-building — when fortune turns, you will have a sharper edge.',
+    ],
   };
+
+  // ── Month pillar interaction ──────────────────────────────────────────────────
+  const SHENG_MAP = {'木':'火','火':'土','土':'金','金':'水','水':'木'};
+  const KE_MAP    = {'木':'土','火':'金','土':'水','金':'木','水':'火'};
+  const dayEl = ELEMENTS[dsi];
+  const mEl   = mp ? mp.element : null;
+  let mpInteract = '';
+  if (mEl) {
+    const rel = SHENG_MAP[mEl] === dayEl ? 'born' : SHENG_MAP[dayEl] === mEl ? 'gen'
+              : KE_MAP[mEl] === dayEl ? 'ke' : KE_MAP[dayEl] === mEl ? 'beKe' : 'same';
+    const MONTH_KO = {
+      born: `이달의 월주 오행(${mEl})이 일간(${dayEl})을 생(生)해주는 상생 구조입니다. 외부 환경이 당신의 성장을 돕는 흐름이므로, 새로운 시도와 도전에 좋은 에너지가 흐르는 달입니다. 평소보다 적극적으로 행동했을 때 좋은 결과가 따릅니다.`,
+      gen:  `이달에는 일간(${dayEl})이 월주 오행(${mEl})을 생(生)해주는 흐름입니다. 에너지를 아낌없이 쏟으면 좋은 결과가 따르지만, 과도한 소모를 피하기 위해 충분한 휴식도 함께 챙기세요. 베풀수록 돌아오는 것이 있는 달입니다.`,
+      ke:   `이달의 월주 오행(${mEl})이 일간(${dayEl})을 극(剋)하는 구조가 있습니다. 외부 압력이나 예상치 못한 도전이 있을 수 있으니, 평소보다 더 신중하게 결정하고 행동하는 것이 유리합니다. 성급한 결정보다 충분한 검토가 도움이 됩니다.`,
+      beKe: `이달에는 일간(${dayEl})이 월주 오행(${mEl})을 극(剋)하는 흐름입니다. 자신의 뜻을 강하게 관철시킬 수 있는 에너지가 있지만, 타인과의 불필요한 충돌을 피하는 부드러운 접근도 함께 유지하세요.`,
+      same: `이달의 월주와 일간이 같은 오행(${dayEl}) 계열의 에너지입니다. 자신의 본래 기질이 더욱 강하게 발현되는 달로, 강점이 극대화되는 한편 단점도 함께 증폭될 수 있으니 의식적인 균형 감각이 필요합니다.`,
+    };
+    const MONTH_EN = {
+      born: `This month, the month pillar element (${mEl}) generates your day stem (${dayEl}) — a supportive flow. External conditions work in your favor, and proactive action tends to be rewarded more than usual.`,
+      gen:  `This month, your day stem (${dayEl}) feeds the month pillar (${mEl}). Output flows freely, but ensure adequate rest to prevent depletion — giving generously tends to bring returns this month.`,
+      ke:   `This month carries some tension: the month pillar (${mEl}) challenges your day stem (${dayEl}). External pressures may arise — respond with extra deliberation rather than reactive speed.`,
+      beKe: `This month your day stem (${dayEl}) presses against the month pillar (${mEl}). You have strong drive to assert your direction — calibrate to avoid unnecessary friction with others.`,
+      same: `This month, the month pillar shares your day stem element (${dayEl}), amplifying your core nature. Strengths become more powerful and blind spots more visible — stay intentionally balanced.`,
+    };
+    mpInteract = isKo ? (MONTH_KO[rel]||'') : (MONTH_EN[rel]||'');
+  }
 
   // ── Yongsin extended practice ────────────────────────────────────────────────
   const YONGSIN_KO = {
@@ -1730,8 +1871,8 @@ function buildSajuNarrativeHTML(data, lang, L) {
   const PARA = (t) => `<p style="font-size:13px;color:#e0e7ff;line-height:1.88;margin:0 0 9px;">${t}</p>`;
 
   const LABELS = isKo
-    ? { stem:'✦ 일간(日干) 성격 분석', ohaeng:'✦ 오행 에너지 흐름', love:'✦ 연애운 심층 분석', money:'✦ 금전운 분석', career:'✦ 직업·성공운 분석', yongsin:'✦ 용신 활용 — 운을 높이는 실천법', hp:'✦ 시주(時柱) 추가 분석' }
-    : { stem:'✦ Day Stem Personality', ohaeng:'✦ Five Elements Balance', love:'✦ Love & Relationships', money:'✦ Wealth & Finance', career:'✦ Career & Success', yongsin:'✦ Balancing Element — Daily Practice', hp:'✦ Hour Pillar Insights' };
+    ? { stem:'✦ 일간(日干) 성격 분석', ohaeng:'✦ 오행 에너지 흐름', monthPillar:'✦ 이달의 에너지 흐름', love:'✦ 연애운 심층 분석', money:'✦ 금전운 분석', career:'✦ 직업·성공운 분석', yongsin:'✦ 용신 활용 — 운을 높이는 실천법', hp:'✦ 시주(時柱) 추가 분석' }
+    : { stem:'✦ Day Stem Personality', ohaeng:'✦ Five Elements Balance', monthPillar:"✦ This Month's Energy", love:'✦ Love & Relationships', money:'✦ Wealth & Finance', career:'✦ Career & Success', yongsin:'✦ Balancing Element — Daily Practice', hp:'✦ Hour Pillar Insights' };
 
   const loveLevel   = lv.level || 'mid';
   const moneyLevel  = mv.level || 'mid';
@@ -1748,24 +1889,32 @@ function buildSajuNarrativeHTML(data, lang, L) {
   // 1 · Day Stem
   html += `<div style="margin-bottom:18px;">${SLBL(LABELS.stem)}`;
   html += `<div style="display:inline-block;background:rgba(251,191,36,.13);border:1px solid rgba(251,191,36,.35);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:11px;">${stemTag}</div>`;
-  html += PARA(p1) + PARA(p2) + PARA(p3) + '</div>';
+  html += PARA(p1) + PARA(p2) + PARA(p3);
+  if (branchTrait) html += PARA(branchTrait);
+  html += '</div>';
 
   // 2 · Ohaeng
   html += SEP;
   html += `<div style="margin-bottom:18px;">${SLBL(LABELS.ohaeng)}${PARA(ohaengBody)}</div>`;
 
+  // 2b · Month pillar interaction
+  if (mpInteract) {
+    html += SEP;
+    html += `<div style="margin-bottom:18px;">${SLBL(LABELS.monthPillar)}${PARA(mpInteract)}</div>`;
+  }
+
   // 3 · Love
-  const loveTxt = isKo ? (LOVE_KO[loveLevel]||LOVE_KO.mid) : (LOVE_EN[loveLevel]||LOVE_EN.mid);
+  const loveTxt = isKo ? ((LOVE_KO[loveLevel]||LOVE_KO.mid)[v]||(LOVE_KO.mid)[0]) : ((LOVE_EN[loveLevel]||LOVE_EN.mid)[v]||(LOVE_EN.mid)[0]);
   html += SEP;
   html += `<div style="margin-bottom:18px;">${SLBL(LABELS.love + scorePill(lv.score||50,'#f472b6'))}${PARA(loveTxt)}</div>`;
 
   // 4 · Money
-  const moneyTxt = isKo ? (MONEY_KO[moneyLevel]||MONEY_KO.mid) : (MONEY_EN[moneyLevel]||MONEY_EN.mid);
+  const moneyTxt = isKo ? ((MONEY_KO[moneyLevel]||MONEY_KO.mid)[v]||(MONEY_KO.mid)[0]) : ((MONEY_EN[moneyLevel]||MONEY_EN.mid)[v]||(MONEY_EN.mid)[0]);
   html += SEP;
   html += `<div style="margin-bottom:18px;">${SLBL(LABELS.money + scorePill(mv.score||50,'#fbbf24'))}${PARA(moneyTxt)}</div>`;
 
   // 5 · Career
-  const careerTxt = isKo ? (CAREER_KO[careerLevel]||CAREER_KO.mid) : (CAREER_EN[careerLevel]||CAREER_EN.mid);
+  const careerTxt = isKo ? ((CAREER_KO[careerLevel]||CAREER_KO.mid)[v]||(CAREER_KO.mid)[0]) : ((CAREER_EN[careerLevel]||CAREER_EN.mid)[v]||(CAREER_EN.mid)[0]);
   html += SEP;
   html += `<div style="margin-bottom:18px;">${SLBL(LABELS.career + scorePill(cv.score||50,'#818cf8'))}${PARA(careerTxt)}</div>`;
 
