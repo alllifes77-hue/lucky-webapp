@@ -1500,6 +1500,288 @@ function buildSajuDetailHTML(data, lang, L) {
     </div>
   </div>`;
 
+  // Append flowing narrative analysis
+  html += buildSajuNarrativeHTML(data, lang, L);
+
+  return html;
+}
+
+// ── Saju Narrative — flowing modern analysis text ─────────────────────────────
+function buildSajuNarrativeHTML(data, lang, L) {
+  const fj = data.fullSaju;
+  const s  = data.cultural;
+  const dsi = calcDayStemIdx(data.year, data.month, data.day);
+  const db  = fj.dayBranch;
+  const mp  = fj.monthPillar;
+  const hp  = fj.hourPillar;
+  const cnts = fj.counts || {};
+  const ys   = fj.yongsin;
+  const ss   = fj.sipsin || {};
+  const fs   = data.fortuneScores || {};
+  const lv   = fs.love        || { score: 50, level: 'mid' };
+  const mv   = fs.money       || { score: 50, level: 'mid' };
+  const cv   = fs.career      || { score: 50, level: 'mid' };
+  const isKo = (lang === 'ko');
+
+  const DOHWA = new Set([0, 3, 6, 9]);
+  const hasDohwa = DOHWA.has(db) || (hp && DOHWA.has(hp.branchIdx));
+
+  // dominant element
+  let domEl = '木', domCnt = 0;
+  ['木','火','土','金','水'].forEach(el => { if ((cnts[el]||0) > domCnt) { domCnt = cnts[el]||0; domEl = el; } });
+
+  // ── Day Stem personality text ────────────────────────────────────────────────
+  const STEM_TAGS_KO  = ['甲木 — 하늘을 향해 뻗는 큰 나무','乙木 — 유연하게 흐르는 넝쿨','丙火 — 온 세상을 밝히는 태양','丁火 — 어둠을 밝히는 촛불','戊土 — 생명을 품는 큰 산','己土 — 생명을 키우는 비옥한 대지','庚金 — 날카롭게 벼려진 칼날','辛金 — 갈고닦아 빛나는 보석','壬水 — 막대한 잠재력의 큰 강','癸水 — 땅속 깊이 흐르는 지하수'];
+  const STEM_TAGS_EN  = ['Jia Wood — The Tall Oak','Yi Wood — The Graceful Vine','Bing Fire — The Radiant Sun','Ding Fire — The Steady Flame','Wu Earth — The Vast Mountain','Ji Earth — The Fertile Field','Geng Metal — The Sharp Blade','Xin Metal — The Polished Gem','Ren Water — The Mighty River','Gui Water — The Deep Spring'];
+
+  const DST_P1_KO = [
+    '일간이 甲木인 당신은 태어날 때부터 리더의 기질을 안고 온 분입니다. 큰 나무가 하늘을 향해 곧게 뻗듯, 목표를 향해 흔들림 없이 전진하는 강직한 의지가 특징입니다. 처음 만나는 사람에게도 믿음직하고 당당한 인상을 주며, 공동체 안에서 자연스럽게 구심점 역할을 하게 됩니다.',
+    '일간이 乙木인 당신은 놀라운 적응력과 사교적 감수성을 타고난 분입니다. 넝쿨이 주변 환경에 맞게 방향을 바꾸며 자라나듯, 어떤 상황에서도 최적의 방법을 찾아내는 유연한 사고력이 돋보입니다. 겉으로는 부드러워 보이지만, 내면의 목표 의식은 결코 흐릿하지 않습니다.',
+    '일간이 丙火인 당신은 어디서든 주목받는 태양 같은 에너지의 소유자입니다. 밝고 긍정적인 기운이 주변 사람들에게 전염되며, 모임의 분위기를 순식간에 환하게 바꾸는 타고난 재능이 있습니다. 표현력이 풍부하고 열정적이어서, 무언가를 알리거나 전달하는 역할에서 특히 탁월합니다.',
+    '일간이 丁火인 당신은 겉으로는 조용하고 차분해 보이지만, 내면에는 뜨거운 신념과 섬세한 감수성이 자리하고 있습니다. 촛불이 작지만 정확하게 어둠을 밝히듯, 집중하는 한 분야에서 보여주는 전문성과 깊이는 타의 추종을 불허합니다. 피상적인 넓이보다 진정한 깊이를 추구하는 분입니다.',
+    '일간이 戊土인 당신은 큰 산처럼 든든하고 신뢰감 넘치는 존재감을 가지고 있습니다. 쉽게 흔들리지 않는 안정감과 포용력으로 주변 사람들의 심리적 버팀목이 되는 경우가 많습니다. 어떤 어려운 상황에서도 쉽게 무너지지 않는 내면의 단단함이 가장 큰 자산입니다.',
+    '일간이 己土인 당신은 세심한 관찰력과 실용적 지혜를 가진 분입니다. 비옥한 논밭이 씨앗을 키우듯, 주변 사람들과 아이디어를 섬세하게 보살피며 결실로 이끄는 능력이 있습니다. 현실적이고 체계적인 접근 방식으로 계획을 세우고 실행하는 것에 뛰어납니다.',
+    '일간이 庚金인 당신은 명확한 분석력과 단호한 결단력을 타고난 분입니다. 날카로운 칼날처럼 핵심을 정확히 짚어내고, 불필요한 것을 과감히 제거하는 능력이 탁월합니다. 공정함과 정의를 강하게 추구하며, 원칙을 지키는 것에 높은 가치를 두는 성향입니다.',
+    '일간이 辛金인 당신은 아름다움, 완성도, 그리고 정교함에 대한 남다른 감각을 가진 분입니다. 보석이 오랜 세월 연마되어 빛을 발하듯, 자신을 끊임없이 갈고닦으며 완성도를 높이는 과정에서 삶의 의미를 찾습니다. 예리한 심미안과 디테일에 대한 집착이 특기입니다.',
+    '일간이 壬水인 당신은 끝없이 솟아나는 아이디어와 지칠 줄 모르는 호기심을 가진 창의적 탐험가입니다. 큰 강이 산과 들을 가로질러 흐르듯, 다양한 분야를 자유롭게 넘나들며 독특한 연결 고리를 발견하는 능력이 뛰어납니다. 정체된 환경보다 변화와 이동이 있는 상황에서 에너지가 살아납니다.',
+    '일간이 癸水인 당신은 보이지 않는 곳에서 깊고 조용히 흐르는 지하수처럼, 표면 아래의 진실을 꿰뚫어 보는 탁월한 직관력을 가진 분입니다. 심오한 사유와 철학적 성찰을 즐기며, 타인이 미처 보지 못한 패턴과 의미를 읽어내는 능력이 특출합니다.',
+  ];
+  const DST_P2_KO = [
+    '한번 방향을 정하면 끝까지 밀고 나가는 집요함이 최대 강점이지만, 때로는 이 강직함이 고집으로 비칠 수 있습니다. 타인의 의견을 들을 때 방어적으로 반응하는 경향을 스스로 인지하고, 유연성을 의도적으로 연습하면 더 큰 성취를 이룰 수 있습니다.',
+    '섬세한 공감 능력으로 상대방의 감정과 필요를 재빠르게 파악하는 탁월한 능력이 있습니다. 어떤 관계에서든 상대를 편안하게 만드는 묘한 매력을 발산하며, 특히 협상·상담·교육 분야에서 두드러진 성과를 냅니다. 다만 타인의 감정에 너무 영향받지 않도록 스스로를 보호하는 경계선이 필요합니다.',
+    '丙火의 에너지는 폭발적이고 집중적입니다. 흥미를 느끼는 일에는 모든 에너지를 쏟아붓지만, 관심이 식으면 동력이 급격히 떨어지는 경향이 있습니다. 장기 프로젝트를 지속하려면 작은 마일스톤을 설정하고 성취감을 중간중간 확인하는 습관이 중요합니다.',
+    '진심 어린 인간관계를 최우선 가치로 여기며, 한번 신뢰를 쌓은 사람에게는 끝까지 의리를 지킵니다. 이 충성심은 강점이지만, 배신이나 실망에 매우 민감하게 반응할 수 있다는 약점이기도 합니다. 관계에서 기대치를 명확히 소통하는 연습이 심리적 건강에 도움이 됩니다.',
+    '장기적 안목으로 큰 그림을 그리고, 묵묵히 실행해 나가는 능력이 탁월합니다. 화려한 결과보다 탄탄한 과정을 중시하는 성향 덕분에, 나이가 들수록 더 빛나는 후덕(厚德)형 인재입니다. 다만 변화가 빠른 환경에서는 의도적으로 새로운 정보를 습득하고 업데이트하는 노력이 필요합니다.',
+    '주변 사람들의 세세한 필요를 알아채고 조용히 도움을 주는 것에 깊은 보람을 느낍니다. 이 배려심은 강점이지만, 자신의 필요와 경계를 충분히 표현하지 않아 지치는 경우도 있으니, 자기 돌봄을 우선순위에 올려두는 연습이 필요합니다.',
+    '목표를 향해 직선으로 나아가는 추진력은 강점이지만, 때로는 이 직접적인 스타일이 주변 사람들에게 냉정하게 느껴질 수 있습니다. 결과에 집착하는 것에서 한 발 물러서, 과정에서 타인이 경험하는 감정에도 관심을 기울이면 리더십이 한층 성숙해질 것입니다.',
+    '높은 자기 기준으로 스스로에게 엄격하게 대하다 보니, 완벽하지 않다고 느낄 때 심한 자기 비판에 빠질 수 있습니다. "충분히 좋음(good enough)"도 훌륭한 결과라는 것을 기억하고, 완벽주의가 자신의 발목을 잡지 않도록 유연성을 키우는 것이 정신 건강의 핵심입니다.',
+    '壬水는 직관적이고 전략적인 사고를 동시에 갖추고 있습니다. 복잡한 문제를 큰 그림에서 바라보며 빠르게 핵심을 파악하는 능력과, 여러 가능성을 동시에 탐색하는 사고 방식이 특징입니다. 너무 많은 가능성 앞에서 결정을 미루는 경향도 있으니, 충분한 정보가 모이면 과감하게 실행하는 원칙이 도움이 됩니다.',
+    '풍부한 감수성과 깊은 공감 능력으로 타인의 고통과 기쁨을 자신의 것처럼 느낍니다. 이 능력은 치유자·예술가·연구자로서의 탁월한 자질이지만, 타인의 에너지에 쉽게 영향받아 소진될 수 있습니다. 정기적인 혼자만의 시간과 자연 속 충전이 필수입니다.',
+  ];
+  const DST_P3_KO = [
+    '甲木은 봄의 시작, 새로운 출발의 에너지를 상징합니다. 새로운 프로젝트를 개척하거나 팀을 이끄는 선구자 역할에서 진가를 발휘하며, 오랜 준비보다 "일단 시작하고 보완해가는" 방식이 오히려 잘 맞는 스타일입니다.',
+    '乙木은 변화하는 환경을 두려워하지 않고, 오히려 그 속에서 기회를 발굴합니다. 하나의 전문 분야보다 복수의 재능을 융합하는 "다재다능한 전문가"로서의 정체성이 적합하며, 빠르게 변화하는 시대일수록 乙木의 유연성은 더욱 빛을 발합니다.',
+    '다른 사람에게 영감을 주고 이끄는 역할, 즉 강연·방송·공연·마케팅·세일즈 등 무대 위에서 빛나는 분입니다. 혼자 묵묵히 하는 작업보다 사람들과 에너지를 주고받는 환경에서 최대 생산성이 나옵니다. 자신이 가진 빛을 세상에 나누는 것이 丙火의 삶의 목적입니다.',
+    '丁火는 창의적이고 직관적인 사유를 즐깁니다. 예술·글쓰기·심리상담·연구 등 깊은 집중과 내면 탐구가 필요한 분야에서 오래 지속할 수 있는 동력을 발견합니다. 세상에 빛을 전달하되, 자신만의 고요한 공간에서 충전하는 시간도 반드시 필요한 분입니다.',
+    '戊土는 부동산·금융·행정·의료·교육 등 안정성과 신뢰성이 핵심인 분야에서 탁월한 역량을 발휘합니다. 사람들이 기댈 수 있는 든든한 토대를 만드는 것, 그것이 戊土의 가장 값진 기여이며 삶의 자부심입니다.',
+    '己土는 세부 사항에 강하고, 완성도 높은 결과물을 만드는 것에 집중하는 유형입니다. 빠른 결과보다 탄탄한 완성도를 추구하며, 장기적인 관계와 프로젝트에서 진가를 발휘합니다. 꾸준함이 곧 최대의 무기인 분입니다.',
+    '庚金은 법률·경영·엔지니어링·데이터 분석 등 정확성과 원칙이 중요한 분야에서 두각을 나타냅니다. 스스로 기준을 높이 설정하고 그 기준에 맞게 갈고닦는 것에서 깊은 만족감을 얻는 분입니다.',
+    '辛金은 예술·패션·뷰티·정밀 과학·의학·글쓰기 등 세밀한 기술과 감각이 요구되는 분야에서 탁월합니다. 소수와 깊은 관계를 맺는 것을 선호하며, 자신만의 독특한 스타일을 발전시키는 것이 삶의 큰 즐거움입니다.',
+    '壬水는 기획·전략·연구·IT·미디어·여행·무역 등 광범위한 사고와 이동성이 필요한 분야에서 잠재력을 발휘합니다. 한 분야의 깊이보다 여러 분야의 융합에서 혁신을 만들어내는 유형이며, 국제적 감각이 남다릅니다.',
+    '癸水는 심리상담·의학·철학·음악·영성·데이터 과학 등 깊은 통찰력과 인내가 필요한 분야에서 오래 가는 동력을 발견합니다. 내면의 지혜를 믿고, 직관이 이끄는 방향으로 한 걸음씩 나아갈 때 가장 진정성 있는 삶을 살게 됩니다.',
+  ];
+
+  const DST_P1_EN = [
+    'Your Jia Wood day stem gives you natural leadership and unwavering determination. Like a towering tree reaching skyward, you set clear goals and pursue them with steady conviction. People trust your confident, reliable presence.',
+    'Your Yi Wood day stem grants exceptional adaptability and social intelligence. Like a vine finding the best path through any terrain, you discover opportunities that others miss and make people feel at ease.',
+    'Your Bing Fire day stem radiates warmth and positivity that lights up every room. You have a natural gift for inspiring others, and your expressive enthusiasm creates uplifting energy wherever you go.',
+    'Your Ding Fire day stem reveals deep inner conviction and quiet expertise. Like a candle that illuminates with precision, you bring focused brilliance to everything you deeply commit to.',
+    'Your Wu Earth day stem gives you remarkable stability and groundedness. Like a great mountain, you provide a reliable foundation that others naturally depend on in times of uncertainty.',
+    'Your Ji Earth day stem brings practical wisdom and meticulous care. Like fertile soil that nurtures growth, you have a gift for developing people and ideas into their fullest potential.',
+    'Your Geng Metal day stem gives you decisive analytical power and a strong sense of justice. Like a forged blade, you cut directly to the core of any situation with clarity.',
+    'Your Xin Metal day stem endows you with exquisite taste, precision, and a relentless drive for refinement. Like a precious gem that must be polished, you continuously elevate your craft.',
+    'Your Ren Water day stem gifts you with boundless creativity and intellectual curiosity. Like a great river flowing across vast landscapes, your mind naturally connects ideas across many domains.',
+    'Your Gui Water day stem gives you profound intuition and sensitivity. Like underground spring water, you perceive what lies beneath the surface — patterns, emotions, and hidden truths others miss.',
+  ];
+  const DST_P2_EN = [
+    'Your persistence is your greatest strength, but it can read as stubbornness. Intentionally practicing flexibility and truly hearing alternative viewpoints will amplify your impact significantly.',
+    'Your emotional intelligence makes you an excellent connector and communicator. Protect your energy by maintaining healthy boundaries — your empathy is a gift, not an obligation to absorb everyone\'s feelings.',
+    'Your enthusiasm is contagious but can burn in short bursts. Setting small milestones and celebrating incremental wins will help you sustain momentum on long-term projects.',
+    'You value loyalty and depth over breadth in relationships. Communicating your expectations clearly — before frustration builds — strengthens every connection you hold dear.',
+    'Your long-term vision and patient execution create lasting achievements. In fast-moving environments, intentionally seeking new information keeps your steady approach from becoming inertia.',
+    'Your attentiveness to others\' needs is a rare gift. Remember to set boundaries so your nurturing nature doesn\'t lead to burnout — caring for yourself is what keeps you able to care for others.',
+    'Your directness drives results, but it can feel cold to more emotionally oriented people. Pausing to acknowledge feelings in the process — not just outcomes — elevates your leadership.',
+    'Your high standards produce exceptional results. Be gentle with yourself — "good enough" is sometimes the wisest choice, and perfectionism unchecked becomes the enemy of progress.',
+    'Your strategic and intuitive thinking give you a unique advantage. Combat decision paralysis by committing to action once you have sufficient information — momentum beats perfection.',
+    'Your deep empathy and sensitivity are your superpowers. Protect your energy with regular solitude; you need quiet time to integrate what you absorb from the world around you.',
+  ];
+  const DST_P3_EN = [
+    'You excel at pioneering new paths, launching initiatives, and leading teams toward ambitious goals. Trust your instinct to start — refinement comes in motion.',
+    'You thrive in roles requiring versatility, people skills, and creative problem-solving. A multi-hyphenate identity suits you well; your adaptability is your edge in a fast-changing world.',
+    'You shine in performance, communication, marketing, and leadership roles where energy exchange is constant. Your purpose is to share your light — let people feel it.',
+    'You excel in creative, research, counseling, and artistic pursuits. Depth is your gift; protect the quiet spaces that allow your inner flame to stay bright.',
+    'You thrive in finance, real estate, administration, healthcare, and education — fields where reliability and long-term trust are the currency that matters most.',
+    'You excel in roles requiring thoroughness, steady execution, and interpersonal care. Consistency is your superpower — what you tend to, grows.',
+    'You excel in law, engineering, data analysis, management, and strategy. Your precision and principles create systems and outcomes others can genuinely rely on.',
+    'You shine in art, design, medicine, precision sciences, and any craft that rewards mastery. Your taste and dedication set your work apart from the merely competent.',
+    'You excel in strategy, research, technology, international affairs, and innovation — anywhere big-picture thinking meets cross-domain curiosity.',
+    'You excel in psychology, philosophy, music, spiritual work, and deep analytical roles. Trust the quiet knowing inside you — it sees what logic alone cannot.',
+  ];
+
+  const p1 = isKo ? (DST_P1_KO[dsi]||DST_P1_KO[0]) : (DST_P1_EN[dsi]||DST_P1_EN[0]);
+  const p2 = isKo ? (DST_P2_KO[dsi]||DST_P2_KO[0]) : (DST_P2_EN[dsi]||DST_P2_EN[0]);
+  const p3 = isKo ? (DST_P3_KO[dsi]||DST_P3_KO[0]) : (DST_P3_EN[dsi]||DST_P3_EN[0]);
+  const stemTag = isKo ? (STEM_TAGS_KO[dsi]||STEM_TAGS_KO[0]) : (STEM_TAGS_EN[dsi]||STEM_TAGS_EN[0]);
+
+  // ── Five Elements balance text ───────────────────────────────────────────────
+  const OHAENG_KO = {
+    '木':'木 기운이 강한 사주는 성장·개척·창조의 에너지가 넘칩니다. 새로운 시작과 비전 제시에 탁월하지만, 자기 주장이 강해질 수 있어 유연성과 협력을 의식적으로 연습할 필요가 있습니다.',
+    '火':'火 기운이 강한 사주는 열정·표현·카리스마의 에너지가 돋보입니다. 무대 위에서, 사람들 앞에서 빛나는 유형이며, 에너지 소진을 방지하려면 규칙적인 휴식으로 지속력을 보완해야 합니다.',
+    '土':'土 기운이 강한 사주는 안정·신뢰·실용의 에너지가 중심입니다. 든든한 토대를 쌓는 데 뛰어나고 장기적 성과를 만들어 내지만, 변화를 받아들이는 유연성을 키우는 것이 성장의 열쇠입니다.',
+    '金':'金 기운이 강한 사주는 분석·결단·정의의 에너지가 강합니다. 원칙을 중시하고 효율성이 높지만, 타인의 감정적 필요를 배려하는 소통 방식을 연습하면 관계의 폭이 넓어집니다.',
+    '水':'水 기운이 강한 사주는 직관·지혜·유연성의 에너지가 풍부합니다. 창의적이고 적응력이 뛰어나지만, 너무 많은 가능성을 동시에 추구하다 실행력이 흐트러지지 않도록 집중하는 연습이 필요합니다.',
+  };
+  const WEAK_KO = {
+    '木':'반면, 木 에너지가 부족한 부분이 있어 새로운 시작이나 성장 국면에서 에너지가 쉽게 고갈될 수 있습니다. 초록 계열의 환경, 나무와의 접촉, 새로운 도전을 의식적으로 늘리는 것이 균형을 맞추는 방법입니다.',
+    '火':'반면, 火 에너지가 약해 열정과 표현이 위축될 수 있는 부분이 있습니다. 빨강·오렌지 계열의 공간, 사람들과의 활발한 교류, 자신의 생각을 소리 내어 말하는 습관이 이 에너지를 보충합니다.',
+    '土':'반면, 土 에너지가 부족하여 불안정하거나 일관성이 떨어지는 국면이 생길 수 있습니다. 규칙적인 루틴, 재정 관리, 황토색 계열의 소품이 土의 안정 에너지를 보완합니다.',
+    '金':'반면, 金 에너지가 약해 결단력이나 논리적 정리가 어려운 순간이 있을 수 있습니다. 흰색·회색 계열의 공간 정리, 명확한 경계 설정 연습이 金의 날카로움을 보강합니다.',
+    '水':'반면, 水 에너지가 부족하여 직관이 흐려지거나 유연성이 떨어지는 상황이 생길 수 있습니다. 명상·일기쓰기·물 근처 산책이 水 에너지를 채우는 가장 좋은 방법입니다.',
+  };
+  const OHAENG_EN = {
+    '木':'Dominant Wood in your chart signals creative, growth-focused energy — pioneering and vision-driven. Balance this with flexibility and genuine openness to collaboration.',
+    '火':'Dominant Fire gives you charisma, passion, and expressive power. Guard against burnout by scheduling consistent recovery time between periods of high output.',
+    '土':'Dominant Earth brings stability, reliability, and practical wisdom. Your strength is building lasting foundations. Embrace change intentionally to keep evolving.',
+    '金':'Dominant Metal gives you analytical precision and strong principles. Your directness drives real results — soften it with empathy for deeper, more lasting connections.',
+    '水':'Dominant Water flows with intuition, creativity, and adaptability. Focus on converting your many ideas into committed action — breadth without depth diffuses your power.',
+  };
+  const WEAK_EN = {
+    '木':'Your chart needs more Wood energy — the force of new beginnings and growth. Surround yourself with green plants, engage in new challenges, and embrace fresh starts.',
+    '火':'Your chart needs more Fire energy — passion and expression. Use warm colors, spend time with energizing people, and practice voicing your ideas out loud.',
+    '土':'Your chart needs more Earth energy — stability and consistency. Build daily routines, manage finances carefully, and use grounding yellow and brown tones in your environment.',
+    '金':'Your chart needs more Metal energy — clarity and decisiveness. Declutter your space, practice setting clear boundaries, and use white and grey tones around you.',
+    '水':'Your chart needs more Water energy — intuition and flexibility. Meditate regularly, keep a journal, and spend time near water to restore this vital energy.',
+  };
+
+  const ohaengBody = isKo
+    ? (OHAENG_KO[domEl]||'') + (domEl !== ys ? ' ' + (WEAK_KO[ys]||'') : '')
+    : (OHAENG_EN[domEl]||'') + (domEl !== ys ? ' ' + (WEAK_EN[ys]||'') : '');
+
+  // ── Love text ────────────────────────────────────────────────────────────────
+  const LOVE_KO = {
+    high: hasDohwa
+      ? '사주에 도화살(桃花殺)이 자리하고 있어 이성에게 자연스러운 매력을 발산하는 기운이 매우 강합니다. 연인이 있다면 관계의 깊이가 한층 더해지는 시기이며, 솔로라면 예상치 못한 인연이 찾아올 가능성이 높습니다. 외모와 분위기를 가꾸는 데 조금 더 신경을 쓰면 좋은 에너지를 끌어당기는 데 도움이 됩니다. 설레는 감정을 느꼈다면 망설이지 말고 행동으로 옮기세요.'
+      : '연애운이 전반적으로 좋은 흐름입니다. 감정 표현에 솔직해지고, 상대에게 마음을 적극적으로 전달해 보세요. 지금까지 망설였던 고백이나 프로포즈를 실행에 옮기기에 좋은 흐름입니다. 자신의 매력을 있는 그대로 드러내는 용기가 좋은 인연을 부릅니다.',
+    mid: '연애운이 평균적인 흐름입니다. 특별한 호기(好機)보다는 일상적인 관계를 충실히 이어가는 것이 중요합니다. 상대방의 말에 더 귀를 기울이고, 작은 배려를 꾸준히 실천하면 관계가 안정적으로 깊어집니다. 지금은 새로운 자극보다 내실 있는 신뢰 쌓기가 더 가치 있는 시기입니다.',
+    low: '연애 관계에서 약간의 마찰이나 거리감이 생길 수 있는 시기입니다. 감정적으로 반응하기보다 충분한 대화로 오해를 풀어가는 것이 중요합니다. 지금은 관계를 억지로 진전시키려 하기보다, 스스로의 내면을 충실히 돌보는 시간이 더 가치 있을 수 있습니다. 자신을 먼저 사랑할 때, 진정한 사랑도 자연스럽게 따라옵니다.',
+  };
+  const LOVE_EN = {
+    high: hasDohwa ? 'The Peach Blossom energy in your chart creates natural romantic magnetism. Existing relationships deepen; singles are likely to encounter unexpected, meaningful connections. Polish your presence and act on feelings that arise.' : 'Your love fortune is strongly favorable. Be open and expressive with your feelings — courage in matters of the heart brings the connections you deserve.',
+    mid: 'Love fortune is steady and reliable. Focus on consistent small acts of care and genuine listening. Depth built day by day outlasts any grand gesture.',
+    low: 'Some friction may arise in romantic relationships. Prioritize calm communication over reactive responses, and give yourself personal space to recharge. Self-love is always the foundation.',
+  };
+
+  // ── Money text ───────────────────────────────────────────────────────────────
+  const reiseiCnt = ss['재성'] || 0;
+  const MONEY_KO = {
+    high: reiseiCnt > 1
+      ? '사주에 재성(財星)이 풍부하게 자리하고 있어 금전 감각과 재물을 끌어당기는 기운이 탁월합니다. 적극적인 투자나 새로운 수입원 개발에 좋은 타이밍이며, 직감이 오는 기회를 용감하게 포착하는 것이 중요합니다. 다만 재성이 강할수록 지출도 커질 수 있으니, 명확한 재정 목표와 예산 계획을 병행하는 지혜가 필요합니다.'
+      : '금전운이 좋은 흐름입니다. 꾸준한 노력이 금전적 결실로 이어지는 시기이며, 새로운 수입원에 도전해 볼 만한 에너지가 흐르고 있습니다. 재정적 결정을 내릴 때 직관과 데이터를 함께 활용하면 더 좋은 결과를 만들 수 있습니다.',
+    mid: '금전운이 안정적인 흐름입니다. 대박보다는 꾸준한 저축과 합리적 소비 관리가 재정 건강의 핵심입니다. 지금은 새로운 투자보다 기존 재원을 효율적으로 관리하고, 불필요한 지출을 점검하는 것이 더 현명합니다.',
+    low: '금전적으로 다소 조심스러운 시기입니다. 충동적인 소비나 투기성 투자를 피하고, 안정적인 저축과 지출 관리에 집중하세요. 이 시기를 재무 계획을 새롭게 점검하고 탄탄한 기초를 다지는 기회로 삼는다면, 다음 상승 국면을 훨씬 유리하게 맞이할 수 있습니다.',
+  };
+  const MONEY_EN = {
+    high: 'Your chart shows strong financial energy. This is a favorable time for investment and developing new income streams. Set clear financial goals to channel this energy productively — and watch your spending, as strong wealth energy can flow outward as easily as it flows in.',
+    mid: 'Financial fortune is stable. Consistent saving, rational spending, and efficient management of existing resources will serve you better than chasing windfalls right now.',
+    low: 'Exercise financial caution. Avoid impulsive spending and speculative investments. Use this period to review your financial plan and strengthen your foundations for the next growth cycle.',
+  };
+
+  // ── Career text ──────────────────────────────────────────────────────────────
+  const kwanseongCnt = ss['관성'] || 0;
+  const inseongCnt   = ss['인성'] || 0;
+  const CAREER_KO = {
+    high: kwanseongCnt > 0
+      ? '관성(官星)이 사주에 자리하여 사회적 인정과 책임 있는 역할이 찾아오는 에너지가 강합니다. 승진·새로운 직책·중요한 프로젝트 리드 등의 기회에 자신감 있게 임하세요. 조직 내에서 당신의 역할과 영향력이 확장되는 흐름이며, 타인의 신뢰를 얻는 것이 곧 커리어의 날개가 됩니다.'
+      : '인성(印星)이 사주의 중심이 되어 배움·연구·전문성 개발에 탁월한 에너지가 흐릅니다. 새로운 기술을 습득하거나 전문 자격증을 취득하는 것이 직업운을 크게 향상시킵니다. 지식이 곧 당신의 가장 강력한 경쟁력이 되는 시기입니다.',
+    mid: '직업운이 안정적인 흐름 속에 있습니다. 현재 맡은 역할에서 성실함과 꾸준한 성과를 보여주는 것이 장기적인 커리어 발전의 토대가 됩니다. 지금은 화려한 변화보다 내실을 다지는 시기입니다.',
+    low: '직업적으로 다소 저조한 에너지의 시기입니다. 직장 내 관계나 상황에서 갈등이 생길 수 있으니, 불필요한 마찰을 피하고 맡은 일에 집중하는 것이 최선입니다. 이 시기를 역량 강화와 재충전의 시간으로 현명하게 활용하세요.',
+  };
+  const CAREER_EN = {
+    high: kwanseongCnt > 0
+      ? 'Official Star energy in your chart signals recognition, leadership opportunities, and career advancement. Approach new responsibilities with confidence — your reliability is exactly what people are looking for.'
+      : 'Intelligence Star energy supports learning, expertise, and professional development. Invest in acquiring new skills or certifications — knowledge is your strongest competitive advantage right now.',
+    mid: 'Career fortune is steady. Consistent performance and reliability are what build long-term professional reputation — focus on excellence in your current role.',
+    low: 'Career energy is lower now. Avoid unnecessary workplace friction and stay focused on delivering quality work. Build skills and recharge — the next growth window will reward your preparation.',
+  };
+
+  // ── Yongsin extended practice ────────────────────────────────────────────────
+  const YONGSIN_KO = {
+    '木':'용신이 木인 당신은 성장과 창조의 에너지를 일상에 적극 도입해야 합니다. 초록 식물을 가까이 두거나, 동쪽 방향의 공간에서 집중 작업을 하는 것이 좋습니다. 목요일에 중요한 결정을 내리거나 새로운 일을 시작하면 흐름이 순조롭습니다. 새로운 것을 시작하는 행동 자체가 에너지를 충전하는 방법입니다.',
+    '火':'용신이 火인 당신은 열정·소통·표현의 에너지를 의도적으로 키워야 합니다. 빨강이나 오렌지 계열의 소품으로 공간에 활기를 더하고, 화요일에 사람들과의 만남이나 발표를 계획하면 좋습니다. 자신의 감정과 생각을 표현하는 습관, 특히 말하거나 쓰는 것이 에너지를 살립니다.',
+    '土':'용신이 土인 당신은 안정·루틴·실행의 에너지를 강화해야 합니다. 황토색이나 노란색 계열의 색상과 토요일의 재정 점검 루틴이 도움이 됩니다. 규칙적인 생활 패턴을 유지하고, 장기 계획을 문서화하여 꾸준히 실행하는 것이 행운의 토대가 됩니다.',
+    '金':'용신이 金인 당신은 명확함·원칙·결단의 에너지를 일상에 더해야 합니다. 흰색이나 회색 계열, 서쪽 방향의 공간 정리, 금요일에 중요한 계약이나 협상을 배치하는 것이 유리합니다. 불필요한 것을 비우고 공간과 생각을 정리하는 것 자체가 행운을 부르는 행동입니다.',
+    '水':'용신이 水인 당신은 직관·유연성·지혜의 에너지를 일상에 보충해야 합니다. 검정이나 짙은 파란 계열의 색상을 활용하고, 수요일에 중요한 결정이나 창의적 작업을 집중하면 좋습니다. 명상·일기쓰기·물 근처 산책이 내면의 소리를 듣게 해주고 직관을 깨웁니다.',
+  };
+  const YONGSIN_EN = {
+    '木':'Your balancing element is Wood. Surround yourself with green plants, orient your workspace eastward, and leverage Thursdays for new starts. Beginning new things is itself an act of energizing this element.',
+    '火':'Your balancing element is Fire. Use red or orange accents in your space, schedule key meetings and presentations on Tuesdays, and practice expressing your thoughts and feelings more openly.',
+    '土':'Your balancing element is Earth. Yellow and brown tones, a Saturday financial review routine, and consistent daily habits will anchor your fortune and provide a stable foundation.',
+    '金':'Your balancing element is Metal. Clear your space of clutter, use white or grey tones, and leverage Fridays for contracts, negotiations, and analytical decisions.',
+    '水':'Your balancing element is Water. Meditate regularly, keep a journal, spend time near water, and use Wednesdays for creative and intuitive work.',
+  };
+
+  // ── Hour pillar note ─────────────────────────────────────────────────────────
+  let hpSection = '';
+  if (hp) {
+    const hpEl = hp.element;
+    const hpChar = STEMS[hp.stemIdx] + BRANCHES[hp.branchIdx];
+    const hpKoName = STEM_KO[hp.stemIdx] + BRANCH_KO[hp.branchIdx];
+    const isYongsin = hpEl === ys;
+    if (isKo) {
+      hpSection = `시주(${hpChar}, ${hpKoName})가 사주에 추가되어 ${hp ? '4주(四柱)' : '3주(三柱)'} 완전 분석이 이루어졌습니다. 시주의 오행 <strong style="color:#fbbf24;">${hpEl}</strong>이(가) ${isYongsin ? '바로 용신 에너지와 일치하여, 타고난 사주가 스스로 균형을 보완하는 매우 길한 구조입니다. 이 에너지를 생활 속에서 적극 활용하세요.' : '사주 전체에 추가적인 에너지를 더합니다. 태어난 시간의 기운을 인식하고 일상에서 활용하면 삶의 방향이 더 명확해집니다.'}`;
+    } else {
+      hpSection = `Your hour pillar (${hpChar}) brings ${hpEl} element energy, ${isYongsin ? 'which directly reinforces your balancing element — a very favorable configuration that helps you find balance naturally.' : 'adding an extra layer of nuance to your chart. Awareness of this energy can clarify your daily direction.'}`;
+    }
+  }
+
+  // ── Assemble HTML ────────────────────────────────────────────────────────────
+  const SEP  = '<div style="height:1px;background:rgba(255,255,255,.1);margin:16px 0;"></div>';
+  const SLBL = (t) => `<div style="font-size:9px;font-weight:800;color:#c4b5fd;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">${t}</div>`;
+  const PARA = (t) => `<p style="font-size:13px;color:#e0e7ff;line-height:1.88;margin:0 0 9px;">${t}</p>`;
+
+  const LABELS = isKo
+    ? { stem:'✦ 일간(日干) 성격 분석', ohaeng:'✦ 오행 에너지 흐름', love:'✦ 연애운 심층 분석', money:'✦ 금전운 분석', career:'✦ 직업·성공운 분석', yongsin:'✦ 용신 활용 — 운을 높이는 실천법', hp:'✦ 시주(時柱) 추가 분석' }
+    : { stem:'✦ Day Stem Personality', ohaeng:'✦ Five Elements Balance', love:'✦ Love & Relationships', money:'✦ Wealth & Finance', career:'✦ Career & Success', yongsin:'✦ Balancing Element — Daily Practice', hp:'✦ Hour Pillar Insights' };
+
+  const loveLevel   = lv.level || 'mid';
+  const moneyLevel  = mv.level || 'mid';
+  const careerLevel = cv.level || 'mid';
+
+  const scorePill = (score, color) => {
+    const bg  = score >= 73 ? color + '33' : score >= 47 ? color + '22' : 'rgba(156,163,175,.15)';
+    const txt = score >= 73 ? color : score >= 47 ? color + 'cc' : '#9ca3af';
+    return `<span style="background:${bg};border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:${txt};margin-left:6px;">${score}${isKo ? '점' : ''}</span>`;
+  };
+
+  let html = SEP;
+
+  // 1 · Day Stem
+  html += `<div style="margin-bottom:18px;">${SLBL(LABELS.stem)}`;
+  html += `<div style="display:inline-block;background:rgba(251,191,36,.13);border:1px solid rgba(251,191,36,.35);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:800;color:#fbbf24;margin-bottom:11px;">${stemTag}</div>`;
+  html += PARA(p1) + PARA(p2) + PARA(p3) + '</div>';
+
+  // 2 · Ohaeng
+  html += SEP;
+  html += `<div style="margin-bottom:18px;">${SLBL(LABELS.ohaeng)}${PARA(ohaengBody)}</div>`;
+
+  // 3 · Love
+  const loveTxt = isKo ? (LOVE_KO[loveLevel]||LOVE_KO.mid) : (LOVE_EN[loveLevel]||LOVE_EN.mid);
+  html += SEP;
+  html += `<div style="margin-bottom:18px;">${SLBL(LABELS.love + scorePill(lv.score||50,'#f472b6'))}${PARA(loveTxt)}</div>`;
+
+  // 4 · Money
+  const moneyTxt = isKo ? (MONEY_KO[moneyLevel]||MONEY_KO.mid) : (MONEY_EN[moneyLevel]||MONEY_EN.mid);
+  html += SEP;
+  html += `<div style="margin-bottom:18px;">${SLBL(LABELS.money + scorePill(mv.score||50,'#fbbf24'))}${PARA(moneyTxt)}</div>`;
+
+  // 5 · Career
+  const careerTxt = isKo ? (CAREER_KO[careerLevel]||CAREER_KO.mid) : (CAREER_EN[careerLevel]||CAREER_EN.mid);
+  html += SEP;
+  html += `<div style="margin-bottom:18px;">${SLBL(LABELS.career + scorePill(cv.score||50,'#818cf8'))}${PARA(careerTxt)}</div>`;
+
+  // 6 · Yongsin
+  const ysTxt = isKo ? (YONGSIN_KO[ys]||'') : (YONGSIN_EN[ys]||'');
+  if (ysTxt) {
+    html += SEP;
+    html += `<div style="margin-bottom:18px;">${SLBL(LABELS.yongsin)}${PARA(ysTxt)}</div>`;
+  }
+
+  // 7 · Hour Pillar
+  if (hpSection) {
+    html += SEP;
+    html += `<div style="margin-bottom:4px;">${SLBL(LABELS.hp)}${PARA(hpSection)}</div>`;
+  }
+
   return html;
 }
 
@@ -2187,11 +2469,22 @@ function applyLang() {
   if (hourSel) {
     const placeholder = L.hourSelectPlaceholder || 'No time selected';
     const useKoJizhi = lang === 'ko' || lang === 'ja';
-    const KO_JIZHI = ['자시(子)','축시(丑)','인시(寅)','묘시(卯)','진시(辰)','사시(巳)',
-                       '오시(午)','미시(未)','신시(申)','유시(酉)','술시(戌)','해시(亥)'];
-    const JA_JIZHI = ['子の刻(23-1時)','丑の刻(1-3時)','寅の刻(3-5時)','卯の刻(5-7時)',
-                       '辰の刻(7-9時)','巳の刻(9-11時)','午の刻(11-13時)','未の刻(13-15時)',
-                       '申の刻(15-17時)','酉の刻(17-19時)','戌の刻(19-21時)','亥の刻(21-23時)'];
+    const KO_JIZHI = [
+      '자시(子時) — 23:00~01:00', '축시(丑時) — 01:00~03:00',
+      '인시(寅時) — 03:00~05:00', '묘시(卯時) — 05:00~07:00',
+      '진시(辰時) — 07:00~09:00', '사시(巳時) — 09:00~11:00',
+      '오시(午時) — 11:00~13:00', '미시(未時) — 13:00~15:00',
+      '신시(申時) — 15:00~17:00', '유시(酉時) — 17:00~19:00',
+      '술시(戌時) — 19:00~21:00', '해시(亥時) — 21:00~23:00',
+    ];
+    const JA_JIZHI = [
+      '子の刻 — 23:00~01:00', '丑の刻 — 01:00~03:00',
+      '寅の刻 — 03:00~05:00', '卯の刻 — 05:00~07:00',
+      '辰の刻 — 07:00~09:00', '巳の刻 — 09:00~11:00',
+      '午の刻 — 11:00~13:00', '未の刻 — 13:00~15:00',
+      '申の刻 — 15:00~17:00', '酉の刻 — 17:00~19:00',
+      '戌の刻 — 19:00~21:00', '亥の刻 — 21:00~23:00',
+    ];
     const currentVal = hourSel.value;
     hourSel.innerHTML = `<option value="">${placeholder}</option>`;
     if (lang === 'ko') {
@@ -2215,7 +2508,8 @@ function applyLang() {
       for (let h = 0; h < 24; h++) {
         const opt = document.createElement('option');
         opt.value = h;
-        opt.textContent = `${String(h).padStart(2,'0')}:00`;
+        const next = (h + 1) % 24;
+        opt.textContent = `${String(h).padStart(2,'0')}:00 ~ ${String(next).padStart(2,'0')}:00`;
         hourSel.appendChild(opt);
       }
     }
