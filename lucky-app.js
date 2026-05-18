@@ -241,12 +241,20 @@ const UI_FALLBACKS = {
 
 // ── Draw Date Energy Algorithms ───────────────────────────
 
-// Korean: Day Stem (日干) approximation via days from known 甲子日 reference
+// Gregorian Julian Day Number (integer noon) — corrects ~13-day Julian formula error.
+// Verified: gregJD(1900,2,20)=2415071=甲子日, gregJD(1989,10,28)=2447828=辛酉,
+//           gregJD(2000,1,1)=2451545=戊午
+function gregJD(year, month, day) {
+  const Y = month <= 2 ? year - 1 : year;
+  const M = month <= 2 ? month + 12 : month;
+  const A = Math.floor(Y / 100);
+  const B = 2 - A + Math.floor(A / 4); // Gregorian correction (B=-13 for 1900-2099)
+  return Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + day + B - 1524;
+}
+
+// 사주: Day Stem (日干) — Gregorian JD, reference JD 2415071 = 1900-02-20 = 甲子日
 function calcDayStemIdx(year, month, day) {
-  // Reference: Jan 20, 2020 ≈ 甲 day (stem 0) in Korean/Chinese day cycle
-  const ref = new Date(2020, 0, 20);
-  const diff = Math.round((new Date(year, month - 1, day) - ref) / 86400000);
-  return ((diff % 10) + 10) % 10;
+  return ((gregJD(year, month, day) - 2415071) % 10 + 10) % 10;
 }
 
 // Numerology: Universal Day Number
@@ -280,21 +288,20 @@ function calcMonthPillar(yearStemIdx, month, branchOverride) {
   return { stemIdx, branchIdx, element: ELEMENTS[stemIdx] };
 }
 
-// 사주: Day branch (일지)
+// 사주: Day Branch (日支) — same Gregorian JD reference as calcDayStemIdx
 function calcDayBranch(year, month, day) {
-  const m2 = month < 3 ? month + 13 : month + 1;
-  const y2 = month < 3 ? year + 4715 : year + 4716;
-  const jd = Math.floor(365.25 * y2) + Math.floor(30.6001 * m2) + day - 1524;
-  return ((jd - 2451545 + 3) % 12 + 12) % 12;
+  return ((gregJD(year, month, day) - 2415071) % 12 + 12) % 12;
 }
 
-// 사주: Hour branch and pillar (시주)
-function calcHourBranch(hour) {
-  if (hour === 23 || hour === 0) return 0;
-  return Math.floor((hour + 1) / 2);
+// 사주: Hour branch (시지) — supports exact time (hour, minute)
+// 자시(子) 23:00~01:00, 축시(丑) 01:00~03:00, ..., 해시(亥) 21:00~23:00
+function calcHourBranch(hour, minute) {
+  const totalMin = hour * 60 + (minute || 0);
+  if (totalMin >= 23 * 60 || totalMin < 60) return 0; // 子時
+  return Math.floor((totalMin - 60) / 120) + 1;
 }
-function calcHourPillar(dayStemIdx, hour) {
-  const branchIdx = calcHourBranch(hour);
+function calcHourPillar(dayStemIdx, hour, minute) {
+  const branchIdx = calcHourBranch(hour, minute || 0);
   const startStems = [0,2,4,6,8]; // 甲己日→甲子, 乙庚→丙子, 丙辛→戊子, 丁壬→庚子, 戊癸→壬子
   const stemIdx = (startStems[dayStemIdx % 5] + branchIdx) % 10;
   return { stemIdx, branchIdx, element: ELEMENTS[stemIdx] };
@@ -380,6 +387,20 @@ function getSunSignPrecise(year, month, day) {
   return getSunSign(month, day);
 }
 
+// Approximate sun ecliptic longitude (±1° accuracy) — fallback without Astronomy.js
+// Verified: approxSunLon(1989,10,28,11) ≈ 213.6° → 戌月(195°~225°) ✓
+function approxSunLon(year, month, day, hour) {
+  const h = (hour != null) ? hour : 12;
+  const jd = gregJD(year, month, day) + (h - 12) / 24;
+  const T = (jd - 2451545) / 36525;
+  const L0 = (280.46646 + 36000.76983 * T) % 360;
+  const M  = ((357.52911 + 35999.05029 * T) % 360 + 360) % 360;
+  const toR = x => x * Math.PI / 180;
+  const C = (1.914602 - 0.004817 * T) * Math.sin(toR(M))
+          + 0.019993 * Math.sin(toR(2 * M));
+  return ((L0 + C) % 360 + 360) % 360;
+}
+
 // 節 (Jié) — 12 solar terms defining month pillar boundaries in saju
 const JIEQI_DATA = [
   {lon:285, branch:1}, // 소한 → 丑月
@@ -396,12 +417,18 @@ const JIEQI_DATA = [
   {lon:255, branch:0}, // 대설 → 子月
 ];
 
+function _approxMonthBranch(year, month, day, birthHour) {
+  const lon = approxSunLon(year, month, day, birthHour);
+  const idx = Math.floor(((lon - 315 + 360) % 360) / 30);
+  return (idx + 2) % 12;
+}
+
 function calcMonthBranchByJieqi(year, month, day, birthHour) {
-  if (!window.Astronomy) return MONTH_BRANCHES[month - 1];
+  if (!window.Astronomy) return _approxMonthBranch(year, month, day, birthHour);
   try {
     const h = birthHour != null ? birthHour : 12;
     const birthMs = Date.UTC(year, month - 1, day, h, 0, 0);
-    let bestBranch = MONTH_BRANCHES[month - 1], bestMs = -Infinity;
+    let bestBranch = _approxMonthBranch(year, month, day, birthHour), bestMs = -Infinity;
     for (const jq of JIEQI_DATA) {
       for (let y = year - 1; y <= year; y++) {
         const start = new Date(Date.UTC(y, 0, 1));
@@ -412,7 +439,7 @@ function calcMonthBranchByJieqi(year, month, day, birthHour) {
       }
     }
     return bestBranch;
-  } catch(e) { return MONTH_BRANCHES[month - 1]; }
+  } catch(e) { return _approxMonthBranch(year, month, day, birthHour); }
 }
 
 // 九星気学: Month Star (月命星)
@@ -667,7 +694,7 @@ function ballClass(n, format) {
 // ── Main Generate Function ────────────────────────────────
 let lastResult = null;
 
-function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, birthHour) {
+function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, birthHour, birthMinute) {
   // Resolve lottery format
   const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
   const lotto = (lotteryId ? opts.find(l => l.id === lotteryId) : null) || opts[0];
@@ -777,15 +804,29 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     ? findNextDrawDates(year, month, day, cultural, systemKey, lang, lotteryId||(LOTTERY_OPTIONS[lang]?.[0]?.id))
     : null;
 
+  // ── LMT (진태양시) correction — applies only for languages with known correction ─
+  // Korea (ko): KST uses 135°E standard; Seoul is ~127°E → offset = (127-135)*4 = -32 min
+  const LMT_OFFSET_MIN = { ko: -32 };
+  const lmtOffset = LMT_OFFSET_MIN[lang] || 0;
+  let lmtHour = birthHour != null ? birthHour : null;
+  let lmtMin  = birthMinute || 0;
+  if (lmtHour !== null && lmtOffset !== 0) {
+    let totalMin = lmtHour * 60 + lmtMin + lmtOffset;
+    if (totalMin < 0) totalMin += 24 * 60;
+    if (totalMin >= 24 * 60) totalMin -= 24 * 60;
+    lmtHour = Math.floor(totalMin / 60);
+    lmtMin  = totalMin % 60;
+  }
+
   // ── Fortune category calculation ─────────────────────────
   let fullSaju = null, sunSign = null, moonSign = null, monthKyusei = null;
   if (systemKey === 'saju') {
     const dayStemIdx = calcDayStemIdx(year, month, day);
-    const monthBranch = calcMonthBranchByJieqi(year, month, day, birthHour);
+    const monthBranch = calcMonthBranchByJieqi(year, month, day, lmtHour != null ? lmtHour : birthHour);
     const monthPillar = calcMonthPillar(cultural.stemIdx, month, monthBranch);
     const dayBranch = calcDayBranch(year, month, day);
-    const hourPillar = (birthHour !== null && birthHour !== undefined)
-      ? calcHourPillar(dayStemIdx, birthHour) : null;
+    const hourPillar = (lmtHour !== null)
+      ? calcHourPillar(dayStemIdx, lmtHour, lmtMin) : null;
     const balance = calcOhaengBalance([
       cultural.element, monthPillar.element, ELEMENTS[dayStemIdx], hourPillar ? hourPillar.element : null
     ]);
@@ -793,7 +834,9 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     if (hourPillar) stems.push(hourPillar.stemIdx);
     const sipsin = {};
     stems.slice(1).forEach(si => { const r = calcSipsinType(dayStemIdx, si); sipsin[r] = (sipsin[r] || 0) + 1; });
-    fullSaju = { ...balance, sipsin, monthPillar, dayBranch, hourPillar };
+    fullSaju = { ...balance, sipsin, monthPillar, dayBranch, hourPillar,
+                 inputHour: birthHour, inputMin: birthMinute || 0,
+                 lmtHour, lmtMin, lmtOffset };
   } else if (systemKey === 'kyusei') {
     monthKyusei = calcMonthKyusei(cultural.star, month);
   } else if (systemKey === 'numerology') {
@@ -806,7 +849,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     monthStar: monthKyusei,
     dayBranch: fullSaju ? fullSaju.dayBranch : null,
     hourBranch: fullSaju && fullSaju.hourPillar ? fullSaju.hourPillar.branchIdx : null,
-    birthHour: (birthHour !== null && birthHour !== undefined) ? birthHour : null,
+    birthHour: lmtHour !== null ? lmtHour : null,
     seed,
   }) : null;
 
@@ -826,7 +869,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -1461,6 +1504,23 @@ function buildSajuDetailHTML(data, lang, L) {
   // 시주
   if (hp) html += `<div style="${cell}"><div style="${lbl}">${pl[3]}</div><div style="${main}">${STEMS[hp.stemIdx]}${BRANCHES[hp.branchIdx]}</div><div style="${sub}">${STEM_KO[hp.stemIdx]}${BRANCH_KO[hp.branchIdx]}</div><div style="${sub}">${hp.element}</div></div>`;
   html += '</div>';
+
+  // 진태양시 보정 안내
+  if (fj.lmtOffset && fj.inputHour != null) {
+    const KO_JIZHI_NAMES = ['자시(子時)','축시(丑時)','인시(寅時)','묘시(卯時)','진시(辰時)','사시(巳時)','오시(午時)','미시(未時)','신시(申時)','유시(酉時)','술시(戌時)','해시(亥時)'];
+    const EN_JIZHI_NAMES = ['Zi (子)','Chou (丑)','Yin (寅)','Mao (卯)','Chen (辰)','Si (巳)','Wu (午)','Wei (未)','Shen (申)','You (酉)','Xu (戌)','Hai (亥)'];
+    const branchNames = lang === 'ko' ? KO_JIZHI_NAMES : EN_JIZHI_NAMES;
+    const hpBranch = hp ? hp.branchIdx : null;
+    const inH = String(fj.inputHour).padStart(2,'0');
+    const inM = String(fj.inputMin || 0).padStart(2,'0');
+    const ltH = String(fj.lmtHour).padStart(2,'0');
+    const ltM = String(fj.lmtMin).padStart(2,'0');
+    const siMsg = hpBranch != null ? ` → ${branchNames[hpBranch]}` : '';
+    const noteText = lang === 'ko'
+      ? `⏱ 입력: ${inH}:${inM} KST → 진태양시 보정(${fj.lmtOffset}분): ${ltH}:${ltM}${siMsg}`
+      : `⏱ Input: ${inH}:${inM} → LMT correction (${fj.lmtOffset}min): ${ltH}:${ltM}${siMsg}`;
+    html += `<div style="background:rgba(167,139,250,.1);border-left:3px solid #a78bfa;border-radius:0 8px 8px 0;padding:8px 12px;font-size:11px;color:#c4b5fd;margin-bottom:14px;">${noteText}</div>`;
+  }
 
   // 오행 분포
   const cnts = fj.counts || {};
@@ -2531,8 +2591,10 @@ function startGenerate() {
   const drawDateStr = (drawYear && drawMonth && drawDay)
     ? `${drawYear}-${String(drawMonth).padStart(2,'0')}-${String(drawDay).padStart(2,'0')}`
     : null;
-  const birthHourRaw = (document.getElementById('birth-hour') || {}).value || '';
-  const birthHour = birthHourRaw !== '' ? parseInt(birthHourRaw) : null;
+  const birthHourRaw   = (document.getElementById('birth-hour')   || {}).value || '';
+  const birthHour      = birthHourRaw !== '' ? parseInt(birthHourRaw) : null;
+  const birthMinuteRaw = (document.getElementById('birth-minute') || {}).value || '';
+  const birthMinute    = birthMinuteRaw !== '' ? parseInt(birthMinuteRaw) : 0;
   const setsCount   = parseInt((document.querySelector('.sets-btn.active') || {}).dataset?.sets || '1');
 
   // Update loading screen text per category
@@ -2558,7 +2620,7 @@ function startGenerate() {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
     const sets = [];
     for (let i = 0; i < setsCount; i++) {
-      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i, birthHour));
+      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i, birthHour, birthMinute));
     }
     lastResult = { ...sets[0], sets };
     applyLangToResults(lastResult);
@@ -2613,6 +2675,17 @@ function applyLang() {
   const btNote = document.getElementById('txt-birth-time-note');
   if (btNote) btNote.textContent = L.birthTimeNote || '';
 
+  // Show 진태양시 hint for Korean saju
+  const lmtNoteEl = document.getElementById('txt-lmt-note');
+  if (lmtNoteEl) {
+    if (lang === 'ko') {
+      lmtNoteEl.textContent = '⚠ 진태양시(眞太陽時) 보정 자동 적용 — 서울 기준 -32분 (KST → 태양 실시각)';
+      lmtNoteEl.style.display = 'block';
+    } else {
+      lmtNoteEl.style.display = 'none';
+    }
+  }
+
   // Populate birth-hour select
   const hourSel = document.getElementById('birth-hour');
   if (hourSel) {
@@ -2636,33 +2709,28 @@ function applyLang() {
     ];
     const currentVal = hourSel.value;
     hourSel.innerHTML = `<option value="">${placeholder}</option>`;
-    if (lang === 'ko') {
-      // 12 시진 (子時=23/0, 丑時=1, ...) mapped to representative hour
-      const jizhiHours = [23,1,3,5,7,9,11,13,15,17,19,21];
-      KO_JIZHI.forEach((label, i) => {
-        const opt = document.createElement('option');
-        opt.value = jizhiHours[i];
-        opt.textContent = label;
-        hourSel.appendChild(opt);
-      });
-    } else if (lang === 'ja') {
-      const jizhiHours = [23,1,3,5,7,9,11,13,15,17,19,21];
-      JA_JIZHI.forEach((label, i) => {
-        const opt = document.createElement('option');
-        opt.value = jizhiHours[i];
-        opt.textContent = label;
-        hourSel.appendChild(opt);
-      });
-    } else {
-      for (let h = 0; h < 24; h++) {
-        const opt = document.createElement('option');
-        opt.value = h;
-        const next = (h + 1) % 24;
-        opt.textContent = `${String(h).padStart(2,'0')}:00 ~ ${String(next).padStart(2,'0')}:00`;
-        hourSel.appendChild(opt);
-      }
+    // All languages: 24-hour format (ko/ja previously used 시진 starts which caused confusion)
+    for (let h = 0; h < 24; h++) {
+      const opt = document.createElement('option');
+      opt.value = h;
+      opt.textContent = `${String(h).padStart(2,'0')}시`;
+      hourSel.appendChild(opt);
     }
     if (currentVal !== '') hourSel.value = currentVal;
+  }
+
+  // Populate minute select (0–59)
+  const minSel = document.getElementById('birth-minute');
+  if (minSel) {
+    const curMin = minSel.value;
+    minSel.innerHTML = `<option value="">00분</option>`;
+    for (let m = 1; m < 60; m++) {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = `${String(m).padStart(2,'0')}분`;
+      minSel.appendChild(opt);
+    }
+    if (curMin !== '') minSel.value = curMin;
   }
 
   if (L.docTitle) document.title = L.docTitle;

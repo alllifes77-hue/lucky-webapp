@@ -230,6 +230,11 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 .cat-btn-label{font-size:10px;font-weight:700;text-align:center;line-height:1.3;word-break:keep-all;}
 /* Detailed reading panel highlight */
 .fortune-cat-selected{box-shadow:0 0 0 3px var(--cat-color,var(--gold)),var(--shadow)!important;}
+/* Birth time picker */
+.birth-time-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.birth-time-sel{flex:1;margin-bottom:0!important;}
+.birth-time-colon{font-size:18px;font-weight:800;color:var(--text);line-height:1;}
+.lmt-note{font-size:11px!important;margin-top:2px!important;}
 </style>
 </head>
 <body>
@@ -330,10 +335,17 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
             <span id="txt-birth-time-label">태어난 시간 (선택) — 더 정밀한 분석</span>
           </button>
           <div class="draw-date-body" id="birth-time-body" style="display:none">
-            <select id="birth-hour" class="lottery-select" style="margin-bottom:0;width:100%">
-              <option value="">시간 선택 안함</option>
-            </select>
+            <div class="birth-time-row">
+              <select id="birth-hour" class="lottery-select birth-time-sel">
+                <option value="">시</option>
+              </select>
+              <span class="birth-time-colon">:</span>
+              <select id="birth-minute" class="lottery-select birth-time-sel">
+                <option value="">00분</option>
+              </select>
+            </div>
             <p class="draw-date-note" id="txt-birth-time-note">시주(時柱) 계산으로 더 정밀한 사주 분석을 제공합니다.</p>
+            <p class="draw-date-note lmt-note" id="txt-lmt-note" style="display:none;color:#a78bfa;"></p>
           </div>
         </div>
 
@@ -425,6 +437,6 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/source/js/astronomy.js"></script>
-<script src="lucky-app.js?v=20260521a"></script>
+<script src="lucky-app.js?v=20260521b"></script>
 </body>
 </html>
