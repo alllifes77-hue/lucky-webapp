@@ -2855,6 +2855,17 @@ function applyLang() {
   const btNote = document.getElementById('txt-birth-time-note');
   if (btNote) btNote.textContent = L.birthTimeNote || '';
 
+  // Gender section labels
+  const gLabelEl = document.getElementById('txt-gender-label');
+  if (gLabelEl && L.genderLabel) {
+    const noteSpan = gLabelEl.querySelector('span');
+    gLabelEl.innerHTML = L.genderLabel + (noteSpan ? ` <span style="font-size:11px;font-weight:400;color:var(--text3);">— ${L.genderNote||''}</span>` : '');
+  }
+  const gMaleEl = document.getElementById('txt-gender-male');
+  if (gMaleEl && L.genderMale) gMaleEl.textContent = L.genderMale;
+  const gFemEl = document.getElementById('txt-gender-female');
+  if (gFemEl && L.genderFemale) gFemEl.textContent = L.genderFemale;
+
   // Show 진태양시 hint for Korean saju
   const lmtNoteEl = document.getElementById('txt-lmt-note');
   if (lmtNoteEl) {

@@ -56,10 +56,12 @@ window.LUCKY_LANG = {
 
   shareText: '🍀 사주팔자로 뽑은 내 로또 번호: {numbers}\n내 번호 뽑아보기 →',
 
-  // 태어난 시간
+  // 태어난 시간 + 성별
   birthTimeLabel: '태어난 시간 (선택) — 더 정밀한 분석',
   birthTimeNote: '시주(時柱) 계산으로 더 정밀한 사주 분석을 제공합니다.',
   hourSelectPlaceholder: '시간 선택 안함',
+  genderLabel: '성별', genderMale: '👨 남성', genderFemale: '👩 여성',
+  genderNote: '대운(大運) 계산에 사용됩니다',
 
   // 카테고리
   catLove:'연애운', catMoney:'금전운', catCareer:'직업·성공운',
