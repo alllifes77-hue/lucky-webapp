@@ -63,7 +63,7 @@ window.LUCKY_LANG = {
   catAchievement:'Réussite', catTips:'Conseils porte-bonheur',
   catLoveIcon:'💝', catMoneyIcon:'💰', catCareerIcon:'💼', catAchievementIcon:'🏆',
   catSelectLabel:'Choisir',
-  catNames:['Numéros','Horoscope','Amour','Argent','Carrière','Réussite'],
+  catNames:['Numéros','Horoscope','Amour','Argent','Carrière','Réussite','Compatibilité'],
   catDetailTitle:'Mon analyse détaillée',
   scoreHigh:'Favorable', scoreMid:'Moyen', scoreLow:'Prudence', scoreLabel:'pts',
   adviceLabel:'💡 Conseil', luckyElementLabel:'🎯 Élément chanceux',

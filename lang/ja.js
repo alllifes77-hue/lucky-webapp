@@ -65,7 +65,7 @@ window.LUCKY_LANG = {
   catAchievement:'達成運', catTips:'運を上げる秘策',
   catLoveIcon:'💝', catMoneyIcon:'💰', catCareerIcon:'💼', catAchievementIcon:'🏆',
   catSelectLabel:'カテゴリ選択',
-  catNames:['ラッキー','命盤鑑定','恋愛運','金運','仕事運','達成運'],
+  catNames:['ラッキー','命盤鑑定','恋愛運','金運','仕事運','達成運','相性'],
   catDetailTitle:'私の詳細鑑定',
   scoreHigh:'良好', scoreMid:'普通', scoreLow:'注意',
   scoreLabel:'点',

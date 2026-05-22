@@ -289,6 +289,10 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
               <span class="cat-btn-icon">🏆</span>
               <span class="cat-btn-label" id="cat-name-5">성취운</span>
             </button>
+            <button class="cat-btn" data-cat="gunghap" onclick="selectCategory('gunghap')">
+              <span class="cat-btn-icon">💑</span>
+              <span class="cat-btn-label" id="cat-name-6">궁합</span>
+            </button>
           </div>
         </div>
 
@@ -360,6 +364,16 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           <div class="gender-wrap">
             <button class="gender-btn active" data-gender="male" onclick="selectGender('male')" id="txt-gender-male">👨 남성</button>
             <button class="gender-btn" data-gender="female" onclick="selectGender('female')" id="txt-gender-female">👩 여성</button>
+          </div>
+        </div>
+
+        <!-- 상대방 생년월일 (궁합 전용) -->
+        <div id="partner-section" style="display:none;">
+          <div class="input-label" id="txt-partner-label">💑 상대방 생년월일</div>
+          <div class="date-3-wrap">
+            <input type="number" id="partner-year"  class="date-input" placeholder="YYYY" min="1920" max="2009" inputmode="numeric">
+            <input type="number" id="partner-month" class="date-input" placeholder="MM"   min="1"    max="12"   inputmode="numeric">
+            <input type="number" id="partner-day"   class="date-input" placeholder="DD"   min="1"    max="31"   inputmode="numeric">
           </div>
         </div>
 

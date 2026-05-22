@@ -68,7 +68,7 @@ window.LUCKY_LANG = {
   catAchievement:'성취운', catTips:'운을 높이는 비책',
   catLoveIcon:'💝', catMoneyIcon:'💰', catCareerIcon:'💼', catAchievementIcon:'🏆',
   catSelectLabel:'카테고리 선택',
-  catNames:['행운 번호','정통 사주','연애운','금전운','직업운','성취운'],
+  catNames:['행운 번호','정통 사주','연애운','금전운','직업운','성취운','궁합'],
   catDetailTitle:'나의 운세 상세 분석',
 
   // 점수

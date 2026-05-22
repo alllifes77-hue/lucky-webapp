@@ -1,5 +1,5 @@
 // Lucky Numbers PWA Service Worker
-const CACHE_NAME = 'lucky-v3';
+const CACHE_NAME = 'lucky-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

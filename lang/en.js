@@ -66,7 +66,7 @@ window.LUCKY_LANG = {
   catAchievement:'Achievement', catTips:'Luck-Boosting Tips',
   catLoveIcon:'💝', catMoneyIcon:'💰', catCareerIcon:'💼', catAchievementIcon:'🏆',
   catSelectLabel:'Select Category',
-  catNames:['Lucky Nums','Birth Chart','Love','Money','Career','Achievement'],
+  catNames:['Lucky Nums','Birth Chart','Love','Money','Career','Achievement','Compatibility'],
   catDetailTitle:'My Detailed Fortune Reading',
   scoreHigh:'Good', scoreMid:'Average', scoreLow:'Caution',
   scoreLabel:'pts',

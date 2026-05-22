@@ -591,6 +591,182 @@ function calcShinsalData(d) {
   return { found, gmPair:gm.map(b=>BRANCHES[b]), gmInChart:gmInChart.map(b=>BRANCHES[b]), wongin, baekho };
 }
 
+// ── 십이운성(十二運星) — 12 Vitality Stages ──────────────────
+const SIPIUNSUNG_STAGES = ['長生','沐浴','冠帶','建祿','帝旺','衰','病','死','墓','絕','胎','養'];
+// 長生 branch for each stem: 甲=亥(11),乙=午(6),丙=寅(2),丁=酉(9),戊=寅(2),己=酉(9),庚=巳(5),辛=子(0),壬=申(8),癸=卯(3)
+const SIPIUNSUNG_START  = [11,6,2,9,2,9,5,0,8,3];
+const SIPIUNSUNG_META   = {
+  '長生':{icon:'🌱',lv:2,ko:'생명력이 넘치는 시작 에너지. 새 출발·성장에 최적.',              en:'Long Life — Vibrant start, full potential',      ja:'長生 — 活発な生命力。成長に最適'},
+  '沐浴':{icon:'💧',lv:1,ko:'순수·감수성 예민. 천부적 매력과 예술성이 뛰어남.',               en:'Bath — Pure, artistic, magnetic charm',          ja:'沐浴 — 純粋で感受性豊か。芸術・異性運'},
+  '冠帶':{icon:'👑',lv:2,ko:'능력을 인정받는 성장기. 사교성·야망·발전 에너지.',               en:'Crown — Ambitious, socially recognized',         ja:'冠帯 — 社交性・野心が強い成長期'},
+  '建祿':{icon:'💪',lv:3,ko:'자립·독립 에너지 최강. 전문성과 자존심이 탁월.',                en:'Prosperity — Peak independence & expertise',    ja:'建禄 — 自立・独立エネルギー最強'},
+  '帝旺':{icon:'👸',lv:3,ko:'생명력 절정. 지도력·권위·결단력이 탁월한 전성기.',              en:'Emperor — Peak vitality & leadership',           ja:'帝旺 — 生命力絶頂。権威・決断力最高'},
+  '衰':  {icon:'🍂',lv:1,ko:'원숙함과 지혜로 전환. 내면의 깊이와 사려 깊음.',                en:'Decline — Mature wisdom, thoughtful',            ja:'衰 — 円熟・知恵へ転換。思慮深さが特徴'},
+  '病':  {icon:'🌂',lv:0,ko:'예민한 감수성·예술성. 건강 관리와 신중한 판단이 중요.',          en:'Illness — Sensitive & artistic; care needed',   ja:'病 — 繊細な感受性。健康管理・慎重さ重要'},
+  '死':  {icon:'🌙',lv:0,ko:'철학·학문·신앙에서 탁월. 내면 집중과 정신적 깊이.',             en:'Death — Philosophical depth & inner focus',     ja:'死 — 哲学・学問に優れた内面集中'},
+  '墓':  {icon:'🗃',lv:1,ko:'깊은 통찰력과 축적 능력. 재물 관리가 뛰어나고 신중함.',          en:'Vault — Deep insight & good accumulation',      ja:'墓 — 深い洞察力・秘密主義。財の蓄積'},
+  '絕':  {icon:'🌌',lv:1,ko:'완전한 전환점. 과감한 변화와 혁신을 추구.',                     en:'Void — Radical transformation & innovation',    ja:'絶 — 完全な転換点。大胆な変化・革新'},
+  '胎':  {icon:'🥚',lv:1,ko:'새 생명 잉태. 창의적 잠재력과 무한한 가능성.',                  en:'Embryo — Boundless creative potential',         ja:'胎 — 創造的潜在力。無限の可能性'},
+  '養':  {icon:'🌺',lv:1,ko:'성장을 위한 준비기. 배움과 보살핌 속에 도약 준비.',              en:'Nourish — Learning & preparing for growth',     ja:'養 — 学び・育みの中で飛躍準備'},
+};
+
+// 양간 순행, 음간 역행 from their respective 長生 branches
+function calcSipiunsung(stemIdx, branchIdx) {
+  const start = SIPIUNSUNG_START[stemIdx];
+  const isYin = stemIdx % 2 === 1;
+  const stage = isYin ? (start - branchIdx + 12) % 12 : (branchIdx - start + 12) % 12;
+  return { stage, name: SIPIUNSUNG_STAGES[stage] };
+}
+
+function calcSipiunsungData(d) {
+  if (d.systemKey !== 'saju' || !d.fullSaju) return null;
+  const dsi = calcDayStemIdx(d.year, d.month, d.day);
+  const fj  = d.fullSaju;
+  const pillars = [
+    {lbl:'年', gz:STEMS[d.cultural.stemIdx]+BRANCHES[d.cultural.branchIdx], bi:d.cultural.branchIdx},
+    {lbl:'月', gz:STEMS[fj.monthPillar.stemIdx]+BRANCHES[fj.monthPillar.branchIdx], bi:fj.monthPillar.branchIdx},
+    {lbl:'日', gz:STEMS[dsi]+BRANCHES[fj.dayBranch], bi:fj.dayBranch, isDay:true},
+  ];
+  if (fj.hourPillar) pillars.push({lbl:'時', gz:STEMS[fj.hourPillar.stemIdx]+BRANCHES[fj.hourPillar.branchIdx], bi:fj.hourPillar.branchIdx});
+  return pillars.map(p => {
+    const siu = calcSipiunsung(dsi, p.bi);
+    return { ...p, siu, meta: SIPIUNSUNG_META[siu.name] || {} };
+  });
+}
+
+// ── 일주론(日柱論) — 60-pillar day-pillar archetypes ─────────
+// Format: [archetype, personality_ko (2 sentences), career_ko, love_ko]
+// Index = 60-cycle position (甲子=0 … 癸亥=59)
+const ILJURON_60 = [
+['甲子·沐浴','순수한 매력과 예민한 감수성. 이성을 끌어당기는 천부적 매력과 예술적 재능을 가진 자유로운 지식인.','문화·예술·방송·교육','자유롭고 매력적; 이성운 강함'],
+['乙丑·衰','안정을 추구하는 성숙한 현실형. 꾸준한 인내와 원숙한 지혜로 목표를 달성하는 신뢰형.','부동산·금융·농업·식품','신중하고 헌신적인 사랑'],
+['丙寅·長生','넘치는 생명력과 밝은 카리스마. 성장 지향적이고 사교성이 탁월한 자연 리더형.','교육·경영·연예·영업','열정적이고 솔직한 사랑'],
+['丁卯·病','예민한 감수성과 깊은 예술성. 섬세한 직관력을 가진 창의형; 병지로 건강 기복 주의.','예술·디자인·상담·연구','로맨틱하고 이상적인 사랑'],
+['戊辰·冠帶','성장하며 능력을 인정받는 대범한 실용가. 웅장한 스케일과 강한 책임감으로 큰 목표 전진.','건설·부동산·금융·정치','안정 지향적이고 믿음직한 사랑'],
+['己巳·帝旺','현실 에너지 절정의 온화한 강자. 봉사 정신과 포용력이 뛰어나며 실용적 지혜로 안정 성취.','교육·의료·서비스·행정','헌신적이고 가정적인 사랑'],
+['庚午·沐浴','강렬한 에너지와 이성을 끌어당기는 매력. 활동적이고 화려함 추구; 목욕지 이성운 강함.','연예·스포츠·군사·경영','열정적이고 강한 이성 매력'],
+['辛未·衰','세련된 감각과 원숙한 인내심. 꼼꼼하고 철저한 완벽주의자; 미적 안목이 탁월한 전략가.','패션·미용·예술·서비스','꼼꼼하고 배려 깊은 사랑'],
+['壬申·長生','생명력 넘치는 지적 탐구자. 빠른 판단과 실행력으로 새 분야를 개척하는 다재다능한 리더.','법조·IT·외교·미디어','자유롭고 지적인 사랑'],
+['癸酉·病','예리한 직관과 섬세한 분석력. 병지의 예민함으로 뛰어난 전문성 발휘; 깊은 사고형.','의학·분석·연구·금융','선택적이고 까다로운 사랑'],
+['甲戌·養','포용력과 실용성의 성장형 리더. 오랜 준비 끝에 큰 성취를 이루는 외유내강 인물.','경영·부동산·교육·종교','진지하고 현실적인 사랑'],
+['乙亥·死','자유로운 영혼과 깊은 철학성. 내면이 풍부하고 예술적 영감이 가득한 정신 깊이형.','예술·문학·종교·교육','매력적이고 자유로운 사랑'],
+['丙子·胎','무한한 창의적 잠재력. 새로운 아이디어와 비전이 넘치는 미래 지향적 도전형.','방송·IT·창업·문화','설레고 새로운 사랑'],
+['丁丑·墓','깊은 통찰력과 신중한 보수형. 묘지의 기운으로 재물 축적 능력 탁월; 내면이 깊고 풍부.','연구·금융·의료·종교','차분하고 성실한 사랑'],
+['戊寅·長生','강한 생명력과 넘치는 포부. 든든한 신뢰형 실행가; 장생의 에너지로 도전 정신이 강함.','정치·건설·기업·군사','열정적이고 주도적인 사랑'],
+['己卯·病','온화함 속의 내면 깊이. 병지의 섬세함으로 뛰어난 감수성과 공감 능력을 가진 인내형.','교육·심리·환경·식품','부드럽고 섬세한 사랑'],
+['庚辰·養','계획적 성장의 전략형 조직가. 양지의 준비성으로 강한 추진력과 체계적 목표 달성.','금융·행정·군사·건설','현실적이고 안정적인 사랑'],
+['辛巳·死','세련된 완벽주의와 내면의 깊이. 사지의 정신적 집중으로 전문 분야에서 독보적 성취.','금융·의학·법조·디자인','품위 있고 이상적인 사랑'],
+['壬午·胎','비전이 넘치는 창의적 개척형. 태지의 잠재력으로 새로운 세계를 만들어가는 상상력 소유자.','문화·예술·경영·방송','열정적이고 매력적인 사랑'],
+['癸未·墓','섬세한 감수성과 깊은 내공. 묘지의 특성으로 지속적 성장; 예술적 감각과 치유력 탁월.','심리·의료·예술·종교','따뜻하고 헌신적인 사랑'],
+['甲申·絕','기존 틀을 깨는 혁신적 도전자. 절지의 에너지로 과감한 변화 추구; 지적 호기심과 자유 기질.','연구·기술·창업·외교','자유롭고 독립적인 사랑'],
+['乙酉·絕','독특한 개성과 완벽주의 기질. 절지의 변화 에너지로 자신만의 스타일 구축; 날카로운 미적 감각.','예술·IT·패션·연구','선택적이고 독창적인 사랑'],
+['丙戌·墓','깊은 통찰력의 전략가. 묘지의 기운으로 축적된 지혜와 장기적 안목으로 표면 이면을 꿰뚫음.','전략·금융·종교·철학','신중하고 깊이 있는 사랑'],
+['丁亥·胎','신비로운 감수성과 창의적 잠재력. 태지의 새로운 시작 에너지로 정신 세계가 깊고 예술적.','예술·종교·의학·연구','깊고 신비로운 사랑'],
+['戊子·胎','강한 잠재력의 도전적 개척형. 태지의 무한한 가능성으로 새 분야를 끊임없이 탐색하는 성장형.','경영·IT·창업·건설','열정적이고 주도적인 사랑'],
+['己丑·墓','인내심 최강의 축적형 전략가. 묘지의 보수성으로 보이지 않는 곳에서 착실히 준비; 재물 관리 탁월.','금융·부동산·농업·행정','신중하고 책임감 있는 사랑'],
+['庚寅·絕','혁신적 도전 정신의 개혁 리더. 절지의 에너지로 기존 틀을 깨는 과감함; 강한 의지와 독립심.','정치·군사·창업·기술','자유롭고 주도적인 사랑'],
+['辛卯·絕','독보적 전문성의 독특한 완벽주의자. 절지로 자신만의 독자적 길 구축; 날카롭고 엘리트 의식 강함.','의학·법조·분석·예술','이상적이고 완벽한 사랑'],
+['壬辰·墓','깊은 내공의 전략적 비전가. 묘지의 축적력으로 넓은 세계관과 포용력; 장기 전략의 달인.','외교·경영·연구·문화','지적이고 포용적인 사랑'],
+['癸巳·胎','직관적 비전의 새로운 시작형. 태지의 에너지로 창의적 가능성이 넘침; 감수성과 변화에 강함.','창작·방송·심리·외교','감성적이고 직관적인 사랑'],
+['甲午·死','외강내유의 깊은 사색형. 사지의 정신적 깊이로 철학과 학문 탁월; 역경을 통해 더욱 빛나는 인물.','철학·정치·종교·교육','헌신적이나 이해받길 원함'],
+['乙未·養','온화하고 세련된 봉사형. 양지의 성장력으로 끊임없이 발전; 배려심과 인내심이 최강.','의료·복지·예술·서비스','따뜻하고 가정적인 사랑'],
+['丙申·病','화려하나 복잡한 내면. 병지의 예민한 감수성으로 창의적이고 변화 추구; 예상치 못한 발상으로 주목.','예술·미디어·IT·여행','자유롭고 변화 무쌍한 사랑'],
+['丁酉·長生','세련된 카리스마와 장생의 생명력. 강한 리더십과 예술적 감각의 완벽한 조화; 매력과 능력 동시 발휘.','예술·의학·금융·연구','품위 있고 당당한 사랑'],
+['戊戌·墓','깊은 내공의 실용적 현실형. 묘지의 풍부한 경험 축적으로 안정과 신뢰 구축; 신중하고 책임감 핵심.','경영·부동산·종교·행정','신중하고 깊이 있는 사랑'],
+['己亥·胎','창의적 잠재력의 온화한 봉사형. 태지의 무한 가능성으로 끊임없이 새로운 방향 탐색; 포용력 강함.','교육·복지·문화·환경','따뜻하고 포용적인 사랑'],
+['庚子·死','강철 의지와 깊은 철학. 사지의 정신적 깊이로 겉은 강하나 내면은 사색형; 독자적 철학을 가짐.','군사·정치·연구·법조','진지하고 독립적인 사랑'],
+['辛丑·養','완벽한 준비와 인내의 성장형. 양지의 착실한 성장으로 실력 축적; 신뢰와 완성도 추구.','금융·의학·행정·분석','성실하고 책임감 있는 사랑'],
+['壬寅·病','창의적 도전과 예민한 감수성. 병지의 내면 복잡성으로 깊은 창의력 발휘; 대담한 비전과 강인한 도전.','법조·외교·창업·IT','자유롭고 비전 있는 사랑'],
+['癸卯·長生','장생의 생명력과 자연스러운 친화력. 새 시작에 강하고 직관이 풍부; 탁월한 소통과 창의력.','창작·심리·의료·교육','자연스럽고 친화적인 사랑'],
+['甲辰·衰','원숙한 야망과 다양한 재능. 쇠지의 안정감으로 목표를 향해 균형 잡힌 전진; 사교성과 포용력.','경영·정치·교육·문화','진취적이고 균형 잡힌 사랑'],
+['乙巳·沐浴','화려한 매력과 창의적 표현력. 목욕지의 강한 이성 매력으로 대인관계가 풍부; 예술적 재능 탁월.','예술·방송·패션·교육','매력적이고 화려한 사랑'],
+['丙午·帝旺','카리스마와 지도력의 절정. 제왕지의 최강 에너지로 밝고 강렬하게 주변을 이끄는 중심 인물.','정치·경영·연예·교육','열정적이고 중심적인 사랑'],
+['丁未·冠帶','성장하는 따뜻한 예술형. 관대지의 사교성과 깊은 감수성으로 주변을 돌봄; 공감 능력이 탁월.','예술·상담·교육·의료','따뜻하고 공감적인 사랑'],
+['戊申·病','끊임없는 도전과 다재다능함. 병지의 변화 에너지로 새로운 분야를 계속 탐색하는 창의적 해결사.','건설·IT·경영·군사','활동적이고 자유로운 사랑'],
+['己酉·長生','장생의 활력과 세밀한 완벽주의. 현실 감각이 뛰어난 전문가형; 안정적 성취와 꾸준한 성장 추구.','행정·의료·금융·교육','섬세하고 신중한 사랑'],
+['庚戌·衰','원숙한 의지의 전략형 실행가. 쇠지의 안정적 에너지로 오랜 준비 끝에 큰 성취; 근면 성실한 강자.','군사·경영·건설·법조','진지하고 책임감 있는 사랑'],
+['辛亥·沐浴','섬세하고 독특한 감수성. 목욕지의 예민함으로 개성 강하고 이성 매력 탁월; 예상치 못한 변화에 강함.','연구·예술·의학·IT','자유롭고 독창적인 사랑'],
+['壬子·帝旺','지성과 통찰력의 절정. 제왕지의 최강 壬水로 깊은 기억력과 뛰어난 분석력; 비전이 남다른 지도자.','학문·외교·금융·IT','지적이고 깊이 있는 사랑'],
+['癸丑·冠帶','침착하고 성장하는 축적형. 관대지의 인정받는 에너지로 착실히 실력 축적; 인내심과 집중력 탁월.','학문·금융·부동산·행정','성실하고 꾸준한 사랑'],
+['甲寅·建祿','건록의 강한 독립심과 자존감. 자기 길을 스스로 개척하는 자립형 리더; 용기와 추진력의 소유자.','창업·정치·군사·스포츠','자유롭고 주도적인 사랑'],
+['乙卯·建祿','자연스러운 매력과 건록의 탁월한 에너지. 소통력이 풍부하고 예술성 뛰어남; 이상적인 인간관계 형성.','예술·외교·교육·방송','자연스럽고 매력적인 사랑'],
+['丙辰·冠帶','화려한 야망과 관대의 성장 에너지. 창의적이고 큰 무대를 지향하는 도전형; 사교성과 카리스마 겸비.','경영·정치·연예·문화','열정적이고 당당한 사랑'],
+['丁巳·帝旺','예술성과 전문성의 절정. 제왕지의 丁火로 독보적 전문성과 강한 자부심; 자기 분야에서 최고 달성.','의학·예술·금융·연구','까다롭지만 헌신적인 사랑'],
+['戊午·帝旺','중심을 잡는 넘치는 에너지. 제왕지의 강한 리더십과 실행력; 뜨거운 열정과 든든한 책임감의 소유자.','경영·정치·건설·교육','열정적이고 책임감 강한 사랑'],
+['己未·冠帶','원숙하고 포용력 있는 봉사형. 관대지의 에너지로 조용히 사람을 이끄는 성숙한 관리자형.','교육·복지·행정·종교','따뜻하고 성숙한 사랑'],
+['庚申·建祿','건록 최강의 독립심과 자존감. 타협 없는 완벽한 자기 실현 추구; 강렬하고 독보적인 강자 유형.','군사·경영·법조·스포츠','강인하고 자유로운 사랑'],
+['辛酉·建祿','예리한 완벽주의의 정점. 건록의 辛金으로 독보적 전문성 발휘; 세련되고 엄격한 기준의 소유자.','의학·금융·연구·예술','완벽하고 선택적인 사랑'],
+['壬戌·冠帶','깊은 내공의 전략적 성장형. 관대지의 壬水로 뛰어난 통찰력과 포용적 세계관; 장기 전략의 달인.','외교·전략·종교·금융','깊고 신중한 사랑'],
+['癸亥·帝旺','무한한 직관과 제왕의 포용력. 가장 깊고 넓은 내면 세계를 가진 영적 지도자형; 신비로운 카리스마.','종교·심리·예술·의학','깊고 신비로운 사랑'],
+];
+
+function calcIljuronData(d) {
+  if (d.systemKey !== 'saju' || !d.fullSaju) return null;
+  const dsi = calcDayStemIdx(d.year, d.month, d.day);
+  const dbi = d.fullSaju.dayBranch;
+  let cycleIdx = -1;
+  for (let n = 0; n < 60; n++) { if (n%10===dsi && n%12===dbi) { cycleIdx=n; break; } }
+  if (cycleIdx < 0) return null;
+  const e = ILJURON_60[cycleIdx];
+  if (!e) return null;
+  const siu = calcSipiunsung(dsi, dbi);
+  return { ganzhi:STEMS[dsi]+BRANCHES[dbi], dsi, dbi, cycleIdx, name:e[0], personality:e[1], career:e[2], love:e[3], sipiunsung:siu };
+}
+
+// ── 월운(月運) — Current Month Fortune ──────────────────────
+function calcWoluunData(d) {
+  if (d.systemKey !== 'saju' || !d.fullSaju) return null;
+  const now = new Date();
+  const cy = now.getFullYear(), cm = now.getMonth() + 1;
+  const yearSi = ((cy - 4) % 10 + 10) % 10;
+  const monthBranch = MONTH_BRANCHES[cm - 1];
+  const mp = calcMonthPillar(yearSi, cm, monthBranch);
+  const dsi = calcDayStemIdx(d.year, d.month, d.day);
+  const sipsin = calcSipsinType(dsi, mp.stemIdx);
+  const seunEl = mp.element;
+  const ys = d.fullSaju.yongsin;
+  const rel = seunEl===ys?'same':OHAENG_SHENG[seunEl]===ys?'sheng':OHAENG_SHENG[ys]===seunEl?'recv':OHAENG_KE[seunEl]===ys?'ke':OHAENG_KE[ys]===seunEl?'beKe':'neutral';
+  const allBi = [d.cultural.branchIdx, d.fullSaju.monthPillar.branchIdx, d.fullSaju.dayBranch];
+  if (d.fullSaju.hourPillar) allBi.push(d.fullSaju.hourPillar.branchIdx);
+  const LIUHAP = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+  const rels = [];
+  allBi.forEach((bi, i) => {
+    const lb = ['年','月','日','時'][i];
+    if ((monthBranch+6)%12===bi||(bi+6)%12===monthBranch) rels.push({type:'冲', label:lb, bi});
+    if (LIUHAP.some(lh=>(lh[0]===monthBranch&&lh[1]===bi)||(lh[1]===monthBranch&&lh[0]===bi))) rels.push({type:'合', label:lb, bi});
+  });
+  const hasChong = rels.some(r=>r.type==='冲');
+  const luck = (['same','recv'].includes(rel)&&!hasChong)?'good':(['ke','beKe'].includes(rel)&&hasChong)?'bad':hasChong?'caution':['ke','beKe'].includes(rel)?'caution':'neutral';
+  return { cy, cm, si:mp.stemIdx, bi:monthBranch, element:mp.element, sipsin, rel, rels, luck, ganzhi:STEMS[mp.stemIdx]+BRANCHES[monthBranch] };
+}
+
+// ── 궁합(相性) — Two-person Compatibility ────────────────────
+function calcGunghapData(dA, dB) {
+  if (!dA || !dB || dA.systemKey !== 'saju' || dB.systemKey !== 'saju') return null;
+  const el1 = dA.cultural.element, el2 = dB.cultural.element;
+  const yearElScore = calcOhaengCompat(el1, el2);
+  const db1 = dA.fullSaju ? dA.fullSaju.dayBranch : calcDayBranch(dA.year, dA.month, dA.day);
+  const db2 = dB.fullSaju ? dB.fullSaju.dayBranch : calcDayBranch(dB.year, dB.month, dB.day);
+  const ds1 = calcDayStemIdx(dA.year, dA.month, dA.day);
+  const ds2 = calcDayStemIdx(dB.year, dB.month, dB.day);
+  const de1 = ELEMENTS[ds1], de2 = ELEMENTS[ds2];
+  const dayElScore = calcOhaengCompat(de1, de2);
+  const LIUHAP6 = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+  const SANHE3  = [[8,0,4],[11,3,7],[2,6,10],[5,9,1]];
+  const STEM_HAP5 = [[0,5],[1,6],[2,7],[3,8],[4,9]];
+  let dayBiScore = 60, dayBiType = '';
+  if (LIUHAP6.some(p=>(p[0]===db1&&p[1]===db2)||(p[1]===db1&&p[0]===db2))) { dayBiScore=88; dayBiType='六合'; }
+  else if ((db1+6)%12===db2||(db2+6)%12===db1) { dayBiScore=30; dayBiType='六冲'; }
+  else if (SANHE3.some(g=>g.includes(db1)&&g.includes(db2))) { dayBiScore=82; dayBiType='三合'; }
+  const stemHap = STEM_HAP5.find(p=>(p[0]===ds1&&p[1]===ds2)||(p[1]===ds1&&p[0]===ds2));
+  const stemHapScore = stemHap ? 85 : 60;
+  const sipsinAtoB = calcSipsinType(ds1, dB.cultural.stemIdx);
+  const sipsinBtoA = calcSipsinType(ds2, dA.cultural.stemIdx);
+  const overall = Math.round(yearElScore*0.25 + dayElScore*0.30 + dayBiScore*0.30 + stemHapScore*0.15);
+  const compat = overall>=80?'great':overall>=65?'good':overall>=45?'fair':'challenging';
+  return { el1, el2, de1, de2, yearElScore, dayElScore, db1, db2, ds1, ds2, dayBiScore, dayBiType, stemHap, stemHapScore, sipsinAtoB, sipsinBtoA, overall, compat };
+}
+
 // Lucky direction per five-element
 const ELEMENT_DIRECTION = {
   '木': {ko:'동쪽·동남쪽', en:'East / SE', ja:'東・東南'},
@@ -1011,9 +1187,12 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
 
   // Partial data object used by the three new calc functions
   const _pd = { year, month, day, cultural, systemKey, fullSaju };
-  const seunData     = (systemKey === 'saju' && !setIdx) ? calcSeunData(_pd)     : null;
-  const hapChongData = (systemKey === 'saju' && !setIdx) ? calcHapChongData(_pd) : null;
-  const shinsalData  = (systemKey === 'saju' && !setIdx) ? calcShinsalData(_pd)  : null;
+  const seunData       = (systemKey === 'saju' && !setIdx) ? calcSeunData(_pd)       : null;
+  const hapChongData   = (systemKey === 'saju' && !setIdx) ? calcHapChongData(_pd)   : null;
+  const shinsalData    = (systemKey === 'saju' && !setIdx) ? calcShinsalData(_pd)    : null;
+  const sipiunsungData = (systemKey === 'saju' && !setIdx) ? calcSipiunsungData(_pd) : null;
+  const iljuronData    = (systemKey === 'saju' && !setIdx) ? calcIljuronData(_pd)    : null;
+  const woluunData     = (systemKey === 'saju' && !setIdx) ? calcWoluunData(_pd)     : null;
 
   const fortuneScores = !setIdx ? calcFortuneScores(systemKey, cultural, {
     fullSaju, sunSign, moonSign,
@@ -1040,7 +1219,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, seunData, hapChongData, shinsalData, gender: gender || null };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, seunData, hapChongData, shinsalData, sipiunsungData, iljuronData, woluunData, gunghapData: null, gender: gender || null };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -1048,9 +1227,9 @@ function renderResults(data) {
   const L = window.LUCKY_LANG || {};
   const lang = data.lang;
   const cat = window.LUCKY_SELECTED_CAT || 'lucky';
-  const CAT_IDX = {lucky:0, saju:1, love:2, money:3, career:4, achievement:5};
-  const CAT_ICONS = {lucky:'🍀', saju:'🔮', love:'💝', money:'💰', career:'💼', achievement:'🏆'};
-  const catNames = L.catNames || ['행운 번호','정통 사주','연애운','금전운','직업운','성취운'];
+  const CAT_IDX = {lucky:0, saju:1, love:2, money:3, career:4, achievement:5, gunghap:6};
+  const CAT_ICONS = {lucky:'🍀', saju:'🔮', love:'💝', money:'💰', career:'💼', achievement:'🏆', gunghap:'💑'};
+  const catNames = L.catNames || ['행운 번호','정통 사주','연애운','금전운','직업운','성취운','궁합'];
   const catLabel = catNames[CAT_IDX[cat]] || catNames[0];
 
   // ── Hero: badge + title ───────────────────────────────────
@@ -1075,8 +1254,9 @@ function renderResults(data) {
   document.getElementById('cultural-info').innerHTML = culturalHtml;
 
   // ── Clean previous dynamic sections ──────────────────────
-  ['detailed-reading-panel','seun-panel','hapchong-panel','shinsal-panel',
-   'today-ilchin-section','fortune-cats-section','single-fortune-section'].forEach(id => {
+  ['detailed-reading-panel','seun-panel','woluun-panel','hapchong-panel','shinsal-panel',
+   'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
+   'single-fortune-section','gunghap-section'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1114,14 +1294,23 @@ function renderResults(data) {
     if (lotterySection) lotterySection.style.display = 'none';
     if (fortuneCard)    fortuneCard.style.display    = 'none';
 
-    renderFortuneSummaryGrid(data); // 4-score overview in hero
-    renderDetailedReadingPanel(data); // 4-pillar table + ohaeng + yongsin + daeun
-    renderSeunPanel(data);        // annual fortune (세운)
-    renderHapChongPanel(data);    // pillar harmony & conflict (합충)
-    renderShinsalPanel(data);     // special stars (신살)
-    renderTodayIlchin(data); // today's day stem + interaction
-    renderFortuneCategories(data, 'saju'); // all 4 fortune cards (none highlighted)
-    renderLuckyTips(data); // yongsin-based tips
+    renderFortuneSummaryGrid(data);    // 4-score overview in hero
+    renderDetailedReadingPanel(data);  // 4-pillar table + ohaeng + yongsin + daeun
+    renderSeunPanel(data);             // annual fortune (세운)
+    renderWoluunPanel(data);           // monthly fortune (월운)
+    renderHapChongPanel(data);         // pillar harmony & conflict (합충)
+    renderShinsalPanel(data);          // special stars (신살)
+    renderSipiunsungPanel(data);       // 12-stage vitality (십이운성)
+    renderIljuronPanel(data);          // day-pillar archetype (일주론)
+    renderTodayIlchin(data);           // today's day stem + interaction
+    renderFortuneCategories(data, 'saju'); // all 4 fortune cards
+    renderLuckyTips(data);             // yongsin-based tips
+
+  // ══ GUNGHAP: 두 사람 궁합 전용 ═════════════════════════
+  } else if (cat === 'gunghap') {
+    if (lotterySection) lotterySection.style.display = 'none';
+    if (fortuneCard)    fortuneCard.style.display    = 'none';
+    renderGunghapPanel(data);
 
   // ══ FORTUNE: 연애/금전/직업/성취운 전용 ══════════════════
   } else {
@@ -1762,6 +1951,10 @@ function buildDaeunHTML(data, lang) {
   const nowLabel  = isKo ? '현재' : isJa ? '現在' : 'Now';
   const noGender  = isKo ? '※ 성별을 선택하면 대운이 표시됩니다.' : isJa ? '※ 性別を選択してください。' : '※ Select gender to show daeun.';
 
+  // current age for progress bar
+  const _now = new Date();
+  const _ageNow = _now.getFullYear() - data.year - ((_now.getMonth()+1 < data.month || (_now.getMonth()+1 === data.month && _now.getDate() < data.day)) ? 1 : 0);
+
   let cardsHtml = '';
   dd.periods.forEach(p => {
     const c = EC[p.element] || '#fbbf24';
@@ -1769,11 +1962,16 @@ function buildDaeunHTML(data, lang) {
     const ageTxt = `${p.periodStart}–${p.periodEnd}${isKo?'세':isJa?'歳':'y'}`;
     const isNow  = p.isCurrent;
     const nowBadge = isNow ? `<div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:${c};color:#000;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;white-space:nowrap;">${nowLabel}</div>` : '';
+    const progressPct = isNow ? Math.min(100, Math.max(0, Math.round((_ageNow - p.periodStart) / 10 * 100))) : 0;
+    const progressBar = isNow ? `<div style="margin-top:5px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;" title="${progressPct}%">
+      <div style="height:100%;width:${progressPct}%;background:${c};border-radius:2px;"></div>
+    </div>` : '';
     cardsHtml += `<div style="background:${isNow?`rgba(255,251,235,.18)`:'rgba(255,255,255,.06)'};border:2px solid ${isNow?c:'rgba(255,255,255,.14)'};${isNow?`box-shadow:0 0 14px ${c}50;`:''}border-radius:10px;padding:10px 7px;text-align:center;min-width:60px;flex-shrink:0;position:relative;">
       ${nowBadge}
       <div style="font-size:16px;font-weight:900;color:#fbbf24;letter-spacing:.5px;">${STEMS[p.stemIdx]}${BRANCHES[p.branchIdx]}</div>
       <div style="font-size:9px;font-weight:700;color:${c};margin-top:2px;">${elTxt}</div>
       <div style="font-size:9px;color:#c4b5fd;margin-top:3px;line-height:1.4;">${ageTxt}</div>
+      ${progressBar}
     </div>`;
   });
 
@@ -2800,6 +2998,334 @@ function renderShinsalPanel(data) {
   else if (detail) detail.after(div);
 }
 
+// ── 십이운성(十二運星) 패널 ──────────────────────────────
+function renderSipiunsungPanel(data) {
+  const siu = data.sipiunsungData;
+  if (!siu || !siu.length) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
+  const title = isKo ? '십이운성(十二運星) — 생명력 단계'
+              : isJa ? '十二運星 — 生命力ステージ'
+              : 'Twelve Energy Stages';
+
+  const STAGE_META = {
+    '長生':{icon:'🌱',ko:'장생 — 새로운 생명력, 밝고 순수한 시작의 에너지',en:'Birth — fresh vitality, pure beginning',ja:'長生 — 新しい生命力、純粋な始まり',lv:3},
+    '沐浴':{icon:'🚿',ko:'목욕 — 감수성이 예민하고 매력적이지만 변동이 잦음',en:'Bath — sensitive charm, frequent changes',ja:'沐浴 — 感受性豊か、変動が多い',lv:2},
+    '冠帶':{icon:'🎓',ko:'관대 — 사회에 첫발을 내딛는 야심과 성장의 에너지',en:'Crown — ambitious growth, social debut',ja:'冠帯 — 意欲的な成長、社会デビュー',lv:3},
+    '建祿':{icon:'🏢',ko:'건록 — 실력이 인정받고 자립하는 전성기 전 단계',en:'Establishment — skill recognized, independence',ja:'建禄 — 実力が認められ自立する段階',lv:3},
+    '帝旺':{icon:'👑',ko:'제왕 — 가장 강한 에너지, 카리스마와 지도력의 절정',en:'Emperor — peak power, charisma, leadership',ja:'帝旺 — 最強のエネルギー、カリスマと指導力',lv:3},
+    '衰':{icon:'🌅',ko:'쇠 — 에너지가 서서히 약해지는 노련한 원숙기',en:'Decline — mature wisdom, fading energy',ja:'衰 — ゆっくりと衰えゆく熟練の時期',lv:2},
+    '病':{icon:'🤒',ko:'병 — 신경이 예민하고 감수성이 강한 내면적 기질',en:'Sickness — sensitive, introspective nature',ja:'病 — 神経質で感受性の強い内省的気質',lv:1},
+    '死':{icon:'🌑',ko:'사 — 외유내강형, 집중력과 통찰력이 비범함',en:'Death — iron will beneath calm exterior',ja:'死 — 外柔内剛、集中力と洞察力が非凡',lv:2},
+    '墓':{icon:'⚱️',ko:'묘 — 내면에 모으는 힘, 재물과 집착의 에너지',en:'Tomb — accumulating power, attachment energy',ja:'墓 — 内に蓄える力、財と執着のエネルギー',lv:2},
+    '絕':{icon:'🌫️',ko:'절 — 이상주의적이고 상상력이 풍부한 영적 기운',en:'Void — idealistic, rich imagination',ja:'絶 — 理想主義的で想像力豊かな霊的気運',lv:1},
+    '胎':{icon:'🥚',ko:'태 — 순수하고 유연한 잠재력, 환경 영향을 잘 받음',en:'Conception — pure potential, highly adaptable',ja:'胎 — 純粋で柔軟な潜在力、環境影響を受けやすい',lv:2},
+    '養':{icon:'🌿',ko:'양 — 보호받으며 성장하는 온화하고 의존적 기운',en:'Nurture — gentle growth under protection',ja:'養 — 保護のもとで育つ穏やかな依存的気運',lv:2},
+  };
+  const LV_CLR = ['#9ca3af','#6b7280','#4f46e5','#7c3aed'];
+
+  const cards = siu.map(p => {
+    const meta = STAGE_META[p.siu.name] || {};
+    const icon = meta.icon || '○';
+    const desc = isKo ? (meta.ko||p.siu.name) : isJa ? (meta.ja||p.siu.name) : (meta.en||p.siu.name);
+    const lv   = meta.lv ?? 2;
+    const clr  = LV_CLR[lv] || '#4f46e5';
+    const border = p.isDay ? `border:2px solid ${clr};` : `border:1px solid ${clr}40;`;
+    return `<div style="background:#fff;${border}border-radius:14px;padding:12px 10px;text-align:center;flex:1;min-width:0;">
+      <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:4px;">${p.lbl}주</div>
+      <div style="font-size:13px;font-weight:800;color:#1e1b4b;margin-bottom:6px;">${p.gz}</div>
+      <div style="font-size:20px;margin-bottom:4px;">${icon}</div>
+      <div style="font-size:11px;font-weight:800;color:${clr};">${p.siu.name}</div>
+      <div style="font-size:9px;color:#6b7280;line-height:1.5;margin-top:4px;">${desc}</div>
+    </div>`;
+  }).join('');
+
+  const div = document.createElement('div');
+  div.id = 'sipiunsung-panel';
+  div.style.cssText = 'background:linear-gradient(135deg,#eef2ff,#e0e7ff);border:2px solid #a5b4fc;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `<div style="font-size:12px;font-weight:800;color:#3730a3;margin-bottom:14px;">🌀 ${title}</div>
+    <div style="display:flex;gap:8px;">${cards}</div>`;
+
+  const shinsal = document.getElementById('shinsal-panel');
+  const hap     = document.getElementById('hapchong-panel');
+  const seun    = document.getElementById('seun-panel');
+  const detail  = document.getElementById('detailed-reading-panel');
+  const anchor  = shinsal || hap || seun || detail;
+  if (anchor) anchor.after(div);
+}
+
+// ── 일주론(日柱論) 패널 ──────────────────────────────────
+function renderIljuronPanel(data) {
+  const ij = data.iljuronData;
+  if (!ij) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
+  const title = isKo ? `일주론 — ${ij.ganzhi}일주 분석`
+              : isJa ? `日柱論 — ${ij.ganzhi}日柱分析`
+              : `Day Pillar — ${ij.ganzhi} Archetype`;
+  const e = ILJURON_60[ij.cycleIdx];
+  if (!e) return;
+  const nameStr = isKo ? ij.name : ij.ganzhi;
+  const STAGE_META2 = {
+    '長生':{icon:'🌱',ko:'장생',en:'Birth',ja:'長生'},
+    '沐浴':{icon:'🚿',ko:'목욕',en:'Bath',ja:'沐浴'},
+    '冠帶':{icon:'🎓',ko:'관대',en:'Crown',ja:'冠帯'},
+    '建祿':{icon:'🏢',ko:'건록',en:'Establish',ja:'建禄'},
+    '帝旺':{icon:'👑',ko:'제왕',en:'Emperor',ja:'帝旺'},
+    '衰':{icon:'🌅',ko:'쇠',en:'Decline',ja:'衰'},
+    '病':{icon:'🤒',ko:'병',en:'Sick',ja:'病'},
+    '死':{icon:'🌑',ko:'사',en:'Still',ja:'死'},
+    '墓':{icon:'⚱️',ko:'묘',en:'Tomb',ja:'墓'},
+    '絕':{icon:'🌫️',ko:'절',en:'Void',ja:'絶'},
+    '胎':{icon:'🥚',ko:'태',en:'Seed',ja:'胎'},
+    '養':{icon:'🌿',ko:'양',en:'Nurture',ja:'養'},
+  };
+  const sm = STAGE_META2[ij.sipiunsung.name] || {};
+  const siuLabel = isKo ? `${ij.sipiunsung.name}(${sm.ko||''})` : isJa ? `${ij.sipiunsung.name}(${sm.ja||''})` : `${ij.sipiunsung.name} (${sm.en||''})`;
+  const personalityLbl = isKo?'성격·기질':isJa?'性格・気質':'Personality';
+  const careerLbl = isKo?'적합 직업':isJa?'適職':'Best Careers';
+  const loveLbl   = isKo?'연애 스타일':isJa?'恋愛スタイル':'Love Style';
+  const siuLbl    = isKo?'일주 십이운성':isJa?'日柱十二運星':'Day Pillar Stage';
+
+  const careerBadges = e[2].split('·').map(c =>
+    `<span style="background:#e0e7ff;color:#3730a3;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin:2px 2px;display:inline-block;">${c.trim()}</span>`
+  ).join('');
+
+  const div = document.createElement('div');
+  div.id = 'iljuron-panel';
+  div.style.cssText = 'background:#fff;border:2px solid #ddd6fe;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#5b21b6;margin-bottom:14px;">🧬 ${title}</div>
+    <div style="background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:14px;padding:14px 16px;margin-bottom:14px;color:#fff;">
+      <div style="font-size:10px;font-weight:600;opacity:.8;margin-bottom:4px;">${nameStr}</div>
+      <div style="font-size:13px;font-weight:800;line-height:1.6;">${e[1]}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div style="background:#f8fafc;border-radius:12px;padding:10px 12px;">
+        <div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:6px;">${careerLbl}</div>
+        <div>${careerBadges}</div>
+      </div>
+      <div style="background:#fdf4ff;border-radius:12px;padding:10px 12px;">
+        <div style="font-size:10px;font-weight:700;color:#a21caf;margin-bottom:6px;">${loveLbl}</div>
+        <div style="font-size:12px;color:#374151;line-height:1.6;">${e[3]}</div>
+      </div>
+    </div>
+    <div style="background:#f0fdf4;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:18px;">${sm.icon||'○'}</span>
+      <div><span style="font-size:10px;font-weight:700;color:#166534;">${siuLbl}: </span><span style="font-size:11px;color:#374151;font-weight:600;">${siuLabel}</span></div>
+    </div>`;
+
+  const siuPanel = document.getElementById('sipiunsung-panel');
+  const shinsal  = document.getElementById('shinsal-panel');
+  const hap      = document.getElementById('hapchong-panel');
+  const seun     = document.getElementById('seun-panel');
+  const detail   = document.getElementById('detailed-reading-panel');
+  const anchor   = siuPanel || shinsal || hap || seun || detail;
+  if (anchor) anchor.after(div);
+}
+
+// ── 월운(月運) 패널 ──────────────────────────────────────
+function renderWoluunPanel(data) {
+  const wu = data.woluunData;
+  if (!wu) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
+  const MONTH_KO = ['','1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const MONTH_JA = ['','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const monthStr = isKo ? `${wu.cy}년 ${MONTH_KO[wu.cm]}` : isJa ? `${wu.cy}年${MONTH_JA[wu.cm]}` : `${MONTH_KO[wu.cm]} ${wu.cy}`;
+  const title = isKo ? `월운(月運) — ${monthStr}` : isJa ? `月運 — ${monthStr}` : `Monthly Fortune — ${monthStr}`;
+
+  const SIPSIN_KO = {비겁:'비겁(比劫)',식상:'식상(食傷)',재성:'재성(財星)',관성:'관성(官星)',인성:'인성(印星)'};
+  const SIPSIN_EN = {비겁:'Sibling Star',식상:'Expression Star',재성:'Wealth Star',관성:'Authority Star',인성:'Intelligence Star'};
+  const SIPSIN_JA = {비겁:'比劫',식상:'食傷',재성:'財星',관성:'官星',인성:'印星'};
+  const sipsinLabel = isKo ? (SIPSIN_KO[wu.sipsin]||wu.sipsin) : isJa ? (SIPSIN_JA[wu.sipsin]||wu.sipsin) : (SIPSIN_EN[wu.sipsin]||wu.sipsin);
+
+  const REL_KO = {
+    same:'이달은 일간과 같은 오행입니다. 자신감과 독립심이 강해지는 달입니다.',
+    gen:'이달 기운이 일간을 생해줍니다. 지원과 기회가 많아집니다.',
+    ctrl:'이달 기운이 일간을 극합니다. 도전과 긴장이 높아지나 성취 기회도 있습니다.',
+    drain:'일간이 이달 기운을 설기합니다. 에너지 소모가 크니 페이스 조절이 필요합니다.',
+    dominate:'일간이 이달 기운을 극합니다. 의지와 목표 달성 능력이 돋보이는 달입니다.',
+  };
+  const REL_EN = {
+    same:'This month shares your day-element. Self-confidence and independence rise.',
+    gen:'This month\'s energy supports yours. Opportunities and support flow in.',
+    ctrl:'Month energy challenges yours. Tension rises but achievements are possible.',
+    drain:'Your energy feeds this month. Manage your pace carefully.',
+    dominate:'You dominate this month\'s energy. Your willpower and goal achievement shine.',
+  };
+  const REL_JA = {
+    same:'今月は日干と同じ五行。自信と独立心が高まる月。',
+    gen:'今月の気が日干を生じる。支援と機会が増える月。',
+    ctrl:'今月の気が日干を剋する。緊張は高まるが達成の機会もある。',
+    drain:'日干が今月の気を洩らす。ペース配分が重要。',
+    dominate:'日干が今月の気を剋する。意志力と目標達成能力が際立つ。',
+  };
+
+  const relKey = wu.rel;
+  const relTxt  = isKo ? (REL_KO[relKey]||'') : isJa ? (REL_JA[relKey]||'') : (REL_EN[relKey]||'');
+  const relsHtml = wu.rels && wu.rels.length ? wu.rels.map(r => {
+    const badge = r.type === 'hap' ? (isKo?'합':'合') : r.type === 'chong' ? (isKo?'충':'冲') : (isKo?'형':'刑');
+    const clr   = r.type === 'hap' ? '#16a34a' : r.type === 'chong' ? '#dc2626' : '#d97706';
+    const txt   = isKo ? `${r.branch1}${r.branch2} ${r.type==='hap'?'합':'충/형'}`
+                : isJa ? `${r.branch1}${r.branch2} ${r.type==='hap'?'合':'冲/刑'}`
+                : `${r.branch1}${r.branch2} ${r.type==='hap'?'Harmony':'Clash'}`;
+    return `<span style="background:${clr}18;color:${clr};border:1px solid ${clr}40;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin:2px;">${badge} ${txt}</span>`;
+  }).join('') : '';
+
+  const LUCK_KO = {good:'길(吉) — 좋은 달입니다',mid:'중길(中吉) — 무난한 달',low:'주의가 필요한 달'};
+  const LUCK_EN = {good:'Auspicious month',mid:'Neutral — steady month',low:'Caution advised'};
+  const LUCK_JA = {good:'吉 — 良い月',mid:'中吉 — 無難な月',low:'注意が必要な月'};
+  const luckStr = isKo ? LUCK_KO[wu.luck] : isJa ? LUCK_JA[wu.luck] : LUCK_EN[wu.luck];
+  const luckClr = wu.luck==='good' ? '#16a34a' : wu.luck==='mid' ? '#d97706' : '#dc2626';
+
+  const ganzhi_lbl = isKo ? '이달 간지' : isJa ? '今月の干支' : 'Month Ganzhi';
+  const sipsin_lbl = isKo ? '십신' : isJa ? '十神' : 'Ten Gods';
+  const rel_lbl    = isKo ? '오행 관계' : isJa ? '五行関係' : 'Element Relation';
+  const el_lbl     = isKo ? '이달 오행' : isJa ? '今月の五行' : 'Month Element';
+  const EC = {'木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#64748b','水':'#1d4ed8'};
+  const elClr = EC[wu.element] || '#4f46e5';
+
+  const div = document.createElement('div');
+  div.id = 'woluun-panel';
+  div.style.cssText = 'background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#1e40af;margin-bottom:14px;">📅 ${title}</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;">
+      <div style="background:rgba(255,255,255,.7);border-radius:12px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;color:#64748b;margin-bottom:4px;">${ganzhi_lbl}</div>
+        <div style="font-size:22px;font-weight:800;color:#1e1b4b;">${wu.ganzhi}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.7);border-radius:12px;padding:10px 12px;">
+        <div style="font-size:9px;font-weight:700;color:#64748b;margin-bottom:4px;">${el_lbl} / ${sipsin_lbl}</div>
+        <div style="font-size:14px;font-weight:800;color:${elClr};">${wu.element}</div>
+        <div style="font-size:11px;color:#374151;margin-top:2px;">${sipsinLabel}</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,.6);border-radius:12px;padding:10px 12px;margin-bottom:10px;">
+      <div style="font-size:9px;font-weight:700;color:#64748b;margin-bottom:4px;">${rel_lbl}</div>
+      <div style="font-size:12px;color:#374151;line-height:1.6;">${relTxt}</div>
+    </div>
+    ${relsHtml ? `<div style="margin-bottom:10px;">${relsHtml}</div>` : ''}
+    <div style="background:${luckClr}18;border:1px solid ${luckClr}40;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;color:${luckClr};">
+      ✦ ${luckStr}
+    </div>`;
+
+  const seun   = document.getElementById('seun-panel');
+  const detail = document.getElementById('detailed-reading-panel');
+  const anchor = seun || detail;
+  if (anchor) anchor.after(div);
+}
+
+// ── 궁합(相性) 패널 ──────────────────────────────────────
+function renderGunghapPanel(data) {
+  const gh = data.gunghapData;
+  const pb = data.partnerData;
+  if (!gh || !pb) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
+  const title = isKo ? '두 사람 궁합(相性) 분석' : isJa ? '二人の相性分析' : 'Compatibility Analysis';
+
+  const EC = {'木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#64748b','水':'#1d4ed8'};
+  const EKO = {'木':'목(木)','火':'화(火)','土':'토(土)','金':'금(金)','水':'수(水)'};
+  const e1Clr = EC[gh.el1] || '#4f46e5', e2Clr = EC[gh.el2] || '#ec4899';
+
+  const COMPAT_KO = {great:'천생연분 — 매우 좋은 궁합입니다 ♡',good:'좋은 인연 — 상호 보완적입니다',fair:'보통 — 노력으로 좋아집니다',challenging:'도전적 — 서로 이해와 배려가 필요합니다'};
+  const COMPAT_EN = {great:'Soulmates — exceptional match ♡',good:'Great match — complementary energies',fair:'Moderate — can improve with effort',challenging:'Challenging — needs mutual understanding'};
+  const COMPAT_JA = {great:'天生縁分 — 最高の相性 ♡',good:'良縁 — 相互補完的',fair:'普通 — 努力で良くなる',challenging:'挑戦的 — 理解と思いやりが必要'};
+  const compatStr = isKo ? COMPAT_KO[gh.compat] : isJa ? COMPAT_JA[gh.compat] : COMPAT_EN[gh.compat];
+  const compatClr = gh.compat==='great'?'#ec4899':gh.compat==='good'?'#16a34a':gh.compat==='fair'?'#d97706':'#dc2626';
+
+  // score ring SVG
+  const pct = gh.overall / 100;
+  const r = 36, circ = 2 * Math.PI * r;
+  const dash = pct * circ, gap = circ - dash;
+  const ringColor = gh.overall>=80?'#ec4899':gh.overall>=65?'#16a34a':gh.overall>=45?'#d97706':'#dc2626';
+  const ringHTML = `<svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg);">
+    <circle cx="50" cy="50" r="${r}" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+    <circle cx="50" cy="50" r="${r}" fill="none" stroke="${ringColor}" stroke-width="10"
+      stroke-dasharray="${dash.toFixed(1)} ${gap.toFixed(1)}" stroke-linecap="round"/>
+  </svg>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+    <div style="font-size:20px;font-weight:900;color:${ringColor};">${gh.overall}</div>
+    <div style="font-size:9px;color:#6b7280;font-weight:600;">${isKo?'점':isJa?'点':'pts'}</div>
+  </div>`;
+
+  // breakdown bars
+  const BARS = [
+    {lbl:isKo?'연간 오행':isJa?'年干五行':'Year Element', score:gh.yearElScore, w:25},
+    {lbl:isKo?'일간 오행':isJa?'日干五行':'Day Element',  score:gh.dayElScore,  w:30},
+    {lbl:isKo?'일지 합충':isJa?'日支合冲':'Day Branch',   score:gh.dayBiScore,  w:30},
+    {lbl:isKo?'천간 합':isJa?'天干合':'Stem Harmony',    score:gh.stemHapScore,w:15},
+  ];
+  const barsHTML = BARS.map(b => {
+    const clr = b.score>=80?'#16a34a':b.score>=60?'#4f46e5':'#dc2626';
+    return `<div style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:10px;color:#64748b;font-weight:600;">${b.lbl}</span>
+        <span style="font-size:10px;font-weight:800;color:${clr};">${b.score}${isKo?'점':isJa?'点':'pts'}</span>
+      </div>
+      <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${b.score}%;background:${clr};border-radius:3px;transition:width .6s;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // person cards
+  const dA = data, dB = pb;
+  const yA = `${dA.year}-${String(dA.month).padStart(2,'0')}-${String(dA.day).padStart(2,'0')}`;
+  const yB = `${dB.year}-${String(dB.month).padStart(2,'0')}-${String(dB.day).padStart(2,'0')}`;
+  const elA = isKo ? (EKO[gh.el1]||gh.el1) : gh.el1;
+  const elB = isKo ? (EKO[gh.el2]||gh.el2) : gh.el2;
+
+  // sipsin A→B and B→A
+  const SIPSIN_EN2 = {비겁:'Sibling',식상:'Expression',재성:'Wealth',관성:'Authority',인성:'Intelligence'};
+  const SIPSIN_JA2 = {비겁:'比劫',식상:'食傷',재성:'財星',관성:'官星',인성:'印星'};
+  const s1 = isKo ? (gh.sipsinAtoB||'') : isJa ? (SIPSIN_JA2[gh.sipsinAtoB]||gh.sipsinAtoB||'') : (SIPSIN_EN2[gh.sipsinAtoB]||gh.sipsinAtoB||'');
+  const s2 = isKo ? (gh.sipsinBtoA||'') : isJa ? (SIPSIN_JA2[gh.sipsinBtoA]||gh.sipsinBtoA||'') : (SIPSIN_EN2[gh.sipsinBtoA]||gh.sipsinBtoA||'');
+  const arrowLbl = isKo?'십신 관계':isJa?'十神関係':'Ten Gods';
+  const vsHtml = (s1&&s2) ? `<div style="text-align:center;margin-top:10px;font-size:11px;color:#374151;">
+    <span style="font-weight:700;color:#4f46e5;">${s1}</span> ↔ <span style="font-weight:700;color:#ec4899;">${s2}</span>
+    <div style="font-size:9px;color:#9ca3af;margin-top:2px;">${arrowLbl}</div>
+  </div>` : '';
+
+  const dayBiLbl = gh.dayBiType ? (isKo ? `일지 ${gh.dayBiType}` : isJa ? `日支${gh.dayBiType}` : `Branch ${gh.dayBiType}`) : '';
+
+  const div = document.createElement('div');
+  div.id = 'gunghap-section';
+  div.style.cssText = 'background:#fff;border:2px solid #fbcfe8;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#9d174d;margin-bottom:14px;">💑 ${title}</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;">
+      <div style="flex:1;background:${e1Clr}10;border:2px solid ${e1Clr}40;border-radius:14px;padding:10px 12px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">👤</div>
+        <div style="font-size:11px;font-weight:700;color:#374151;">${yA}</div>
+        <div style="font-size:12px;font-weight:800;color:${e1Clr};">${dA.cultural ? STEMS[dA.cultural.stemIdx]+BRANCHES[dA.cultural.branchIdx] : ''}</div>
+        <div style="font-size:10px;color:#64748b;margin-top:2px;">${elA}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;">💞</div>
+      <div style="flex:1;background:${e2Clr}10;border:2px solid ${e2Clr}40;border-radius:14px;padding:10px 12px;text-align:center;">
+        <div style="font-size:20px;margin-bottom:4px;">👤</div>
+        <div style="font-size:11px;font-weight:700;color:#374151;">${yB}</div>
+        <div style="font-size:12px;font-weight:800;color:${e2Clr};">${dB.cultural ? STEMS[dB.cultural.stemIdx]+BRANCHES[dB.cultural.branchIdx] : ''}</div>
+        <div style="font-size:10px;color:#64748b;margin-top:2px;">${elB}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;">
+      <div style="position:relative;flex-shrink:0;">${ringHTML}</div>
+      <div style="flex:1;">${barsHTML}</div>
+    </div>
+    ${dayBiLbl ? `<div style="text-align:center;margin-bottom:8px;"><span style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;color:#9d174d;">${dayBiLbl}</span></div>` : ''}
+    ${vsHtml}
+    <div style="margin-top:12px;text-align:center;background:${compatClr}10;border:1px solid ${compatClr}40;border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;color:${compatClr};">${compatStr}</div>`;
+
+  const fortuneCats = document.querySelector('.fortune-cats-section');
+  const singleFort  = document.querySelector('.single-fortune-section');
+  const shareSection = document.querySelector('.share-section');
+  const anchor = fortuneCats || singleFort || shareSection;
+  if (anchor) anchor.before(div);
+  else {
+    const results = document.getElementById('results');
+    if (results) results.appendChild(div);
+  }
+}
+
 // ── 오늘의 일진(日辰) — daily energy reading ──────────────
 function renderTodayIlchin(data) {
   if (data.systemKey !== 'saju') return;
@@ -3020,6 +3546,7 @@ window.LUCKY_SELECTED_CAT = 'lucky';
 
 function adaptInputForm(cat) {
   const isLucky = cat === 'lucky';
+  const isGunghap = cat === 'gunghap';
   const L = window.LUCKY_LANG || {};
   const lang = window.LUCKY_CURRENT_LANG || 'ko';
 
@@ -3029,7 +3556,11 @@ function adaptInputForm(cat) {
     if (el) el.style.display = isLucky ? '' : 'none';
   });
 
-  // Gender section: only for saju (ko) system
+  // Partner section: only for gunghap
+  const partnerSection = document.getElementById('partner-section');
+  if (partnerSection) partnerSection.style.display = isGunghap ? '' : 'none';
+
+  // Gender section: only for saju/gunghap with ko lang
   const genderSection = document.getElementById('gender-section');
   if (genderSection) genderSection.style.display = (lang === 'ko') ? '' : 'none';
 
@@ -3050,6 +3581,9 @@ function adaptInputForm(cat) {
   if (btn) {
     if (isLucky) {
       btn.textContent = L.btnGenerate || 'Generate';
+    } else if (isGunghap) {
+      const GUNGHAP_BTN = {ko:'궁합 보기', en:'Check Compatibility', ja:'相性を見る', de:'Kompatibilität', fr:'Compatibilité', es:'Compatibilidad', pt:'Compatibilidade', it:'Compatibilità', id:'Cek Kecocokan'};
+      btn.textContent = GUNGHAP_BTN[lang] || 'Check Compatibility';
     } else {
       const IDX = {saju:1, love:2, money:3, career:4, achievement:5};
       const catLabel = ((L.catNames || [])[IDX[cat]]) || cat;
@@ -3063,6 +3597,19 @@ function adaptInputForm(cat) {
   if (note) {
     if (isLucky) {
       note.textContent = L.inputNote || '';
+    } else if (isGunghap) {
+      const GUNGHAP_NOTE = {
+        ko:'두 사람의 생년월일을 입력하면 사주팔자 기반 궁합을 분석합니다.',
+        en:'Enter both birthdates to analyze compatibility via the Four Pillars system.',
+        ja:'二人の生年月日を入力して四柱推命で相性を分析します。',
+        de:'Gib beide Geburtsdaten ein, um die Kompatibilität zu analysieren.',
+        fr:'Entrez deux dates de naissance pour analyser la compatibilité.',
+        es:'Ingresa dos fechas de nacimiento para analizar la compatibilidad.',
+        pt:'Informe dois aniversários para analisar a compatibilidade.',
+        it:'Inserisci due date di nascita per analizzare la compatibilità.',
+        id:'Masukkan dua tanggal lahir untuk menganalisis kecocokan.',
+      };
+      note.textContent = GUNGHAP_NOTE[lang] || GUNGHAP_NOTE.en;
     } else {
       const IDX = {saju:1, love:2, money:3, career:4, achievement:5};
       const catLabel = ((L.catNames || [])[IDX[cat]]) || cat;
@@ -3125,7 +3672,7 @@ function startGenerate() {
   const loadGenSub = document.getElementById('txt-gen-sub');
   if (loadGenSub) {
     if (loadCat !== 'lucky') {
-      const IDX = {saju:1, love:2, money:3, career:4, achievement:5};
+      const IDX = {saju:1, love:2, money:3, career:4, achievement:5, gunghap:6};
       const catLabel = ((loadL.catNames||[])[IDX[loadCat]]) || loadCat;
       const SFXA = {ko:'를 분석하고 있습니다…', en:' analysis in progress…', ja:'を分析しています…',
         de:' wird analysiert…', fr:' en cours d\'analyse…', es:' analizando…',
@@ -3139,6 +3686,36 @@ function startGenerate() {
   showScreen('s-gen');
   setTimeout(() => {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
+    const cat  = window.LUCKY_SELECTED_CAT || 'lucky';
+
+    if (cat === 'gunghap') {
+      const pyEl = document.getElementById('partner-year');
+      const pmEl = document.getElementById('partner-month');
+      const pdEl = document.getElementById('partner-day');
+      const py = parseInt((pyEl||{}).value) || 0;
+      const pm = parseInt((pmEl||{}).value) || 0;
+      const pd = parseInt((pdEl||{}).value) || 0;
+      if (!py || !pm || !pd || py < 1920 || py > 2009) {
+        [pyEl, pmEl, pdEl].forEach(el => {
+          if (el && !el.value) { el.classList.add('err'); setTimeout(() => el.classList.remove('err'), 1500); }
+        });
+        if (pyEl) pyEl.focus();
+        showScreen('s-home');
+        return;
+      }
+      const dataA = generateLucky(year, month, day, lang, null, null, 0, birthHour, birthMinute, gender);
+      const dataB = generateLucky(py, pm, pd, lang, null, null, 0, null, 0, null);
+      const gunghapData = calcGunghapData(dataA, dataB);
+      dataA.gunghapData  = gunghapData;
+      dataA.partnerData  = dataB;
+      dataA.sets = [dataA];
+      lastResult = dataA;
+      applyLangToResults(lastResult);
+      renderResults(lastResult);
+      showScreen('s-result');
+      return;
+    }
+
     const sets = [];
     for (let i = 0; i < setsCount; i++) {
       sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i, birthHour, birthMinute, gender));
@@ -3199,6 +3776,16 @@ function applyLang() {
   if (btLabel) btLabel.textContent = L.birthTimeLabel || 'Birth Time (optional)';
   const btNote = document.getElementById('txt-birth-time-note');
   if (btNote) btNote.textContent = L.birthTimeNote || '';
+
+  // Partner section label (gunghap)
+  const partnerLabelEl = document.getElementById('txt-partner-label');
+  if (partnerLabelEl) {
+    const PARTNER_LBL = {ko:'💑 상대방 생년월일', en:'💑 Partner\'s Birthday', ja:'💑 お相手の生年月日',
+      de:'💑 Geburtstag der Partnerin', fr:'💑 Date de naissance du partenaire',
+      es:'💑 Fecha de nacimiento del compañero', pt:'💑 Aniversário do parceiro',
+      it:'💑 Data di nascita del partner', id:'💑 Tanggal Lahir Pasangan'};
+    partnerLabelEl.textContent = PARTNER_LBL[lang] || PARTNER_LBL.en;
+  }
 
   // Gender section labels
   const gLabelEl = document.getElementById('txt-gender-label');
