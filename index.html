@@ -235,6 +235,11 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 .birth-time-sel{flex:1;margin-bottom:0!important;}
 .birth-time-colon{font-size:18px;font-weight:800;color:var(--text);line-height:1;}
 .lmt-note{font-size:11px!important;margin-top:2px!important;}
+/* Gender select (for 大運 calculation) */
+.gender-wrap{display:flex;gap:8px;margin-bottom:14px;}
+.gender-btn{flex:1;padding:9px 6px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--border2);background:#fff;color:var(--text2);transition:all .2s;}
+.gender-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+.gender-btn.active{border-color:var(--indigo);background:#eef2ff;color:var(--indigo);}
 </style>
 </head>
 <body>
@@ -349,6 +354,15 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           </div>
         </div>
 
+        <!-- 성별 선택 (대운 계산용) -->
+        <div id="gender-section">
+          <div class="input-label" id="txt-gender-label">성별 <span style="font-size:11px;font-weight:400;color:var(--text3);">— 대운(大運) 계산에 사용</span></div>
+          <div class="gender-wrap">
+            <button class="gender-btn active" data-gender="male" onclick="selectGender('male')" id="txt-gender-male">👨 남성</button>
+            <button class="gender-btn" data-gender="female" onclick="selectGender('female')" id="txt-gender-female">👩 여성</button>
+          </div>
+        </div>
+
         <button class="btn-lucky" onclick="startGenerate()">
           <span class="btn-icon">🍀</span>
           <span id="txt-btn-generate">행운의 번호 뽑기</span>
@@ -437,6 +451,13 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/source/js/astronomy.js"></script>
-<script src="lucky-app.js?v=20260521b"></script>
+<script src="lucky-app.js?v=20260522a"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () =>
+    navigator.serviceWorker.register('/service-worker.js').catch(() => {})
+  );
+}
+</script>
 </body>
 </html>

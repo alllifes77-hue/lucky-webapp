@@ -442,6 +442,62 @@ function calcMonthBranchByJieqi(year, month, day, birthHour) {
   } catch(e) { return _approxMonthBranch(year, month, day, birthHour); }
 }
 
+// ── 大運 (Daeun) — 10-year fortune cycles ─────────────────
+// Computes angular distance (in days) from birth to the nearest jieqi
+// forward=true → days to NEXT jieqi (순행); false → days since PREV jieqi (역행)
+function daysToJieqiForDaeun(year, month, day, birthHour, goForward) {
+  const h = birthHour != null ? birthHour : 12;
+  const birthLon = approxSunLon(year, month, day, h);
+  const currentBranch = _approxMonthBranch(year, month, day, h);
+  const jqIdx = JIEQI_DATA.findIndex(j => j.branch === currentBranch);
+  if (jqIdx < 0) return 90;
+  const currentJq = JIEQI_DATA[jqIdx];
+  const nextJq    = JIEQI_DATA[(jqIdx + 1) % 12];
+  const DAYS_PER_DEG = 365.25 / 360;
+  if (goForward) {
+    return ((nextJq.lon - birthLon + 360) % 360) * DAYS_PER_DEG;
+  } else {
+    return ((birthLon - currentJq.lon + 360) % 360) * DAYS_PER_DEG;
+  }
+}
+
+// 陽年男·陰年女 → 순행(forward); 陰年男·陽年女 → 역행
+function calcDaeunData(year, month, day, birthHour, gender, yearStemIdx) {
+  if (!gender) return null;
+  const yearStemYin = yearStemIdx % 2 === 1;  // 乙丁己辛癸 = yin (odd index)
+  const forward     = (gender === 'male') ? !yearStemYin : yearStemYin;
+  const monthBranch = _approxMonthBranch(year, month, day, birthHour);
+  const mp          = calcMonthPillar(yearStemIdx, month, monthBranch);
+  const days        = daysToJieqiForDaeun(year, month, day, birthHour, forward);
+  const totalYears  = days / 3;
+  const startAge    = Math.floor(totalYears);
+  const startMonths = Math.round((totalYears - startAge) * 12);
+  const ageNow      = new Date().getFullYear() - year;
+  const periods     = [];
+  for (let i = 1; i <= 8; i++) {
+    const offset = forward ? i : -i;
+    const si = ((mp.stemIdx   + offset) % 10 + 10) % 10;
+    const bi = ((mp.branchIdx + offset) % 12 + 12) % 12;
+    const ps = startAge + (i - 1) * 10;
+    const pe = startAge +  i      * 10 - 1;
+    periods.push({ stemIdx: si, branchIdx: bi, element: ELEMENTS[si],
+                   periodStart: ps, periodEnd: pe, isCurrent: ageNow >= ps && ageNow <= pe });
+  }
+  return { forward, startAge, startMonths, periods, yearStemYin, gender };
+}
+
+// Lucky direction per five-element
+const ELEMENT_DIRECTION = {
+  '木': {ko:'동쪽·동남쪽', en:'East / SE', ja:'東・東南'},
+  '火': {ko:'남쪽',        en:'South',     ja:'南'},
+  '土': {ko:'중앙·남서',   en:'Center / SW',ja:'中央・南西'},
+  '金': {ko:'서쪽·북서',   en:'West / NW', ja:'西・北西'},
+  '水': {ko:'북쪽',        en:'North',     ja:'北'},
+};
+function getDirectionByElement(el, lang) {
+  return (ELEMENT_DIRECTION[el] || {})[lang] || (ELEMENT_DIRECTION[el] || {}).en || '—';
+}
+
 // 九星気学: Month Star (月命星)
 const KYUSEI_MONTH_BASE = {1:8,2:5,3:2,4:8,5:5,6:2,7:8,8:5,9:2};
 function calcMonthKyusei(yearStar, month) {
@@ -694,7 +750,7 @@ function ballClass(n, format) {
 // ── Main Generate Function ────────────────────────────────
 let lastResult = null;
 
-function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, birthHour, birthMinute) {
+function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, birthHour, birthMinute, gender) {
   // Resolve lottery format
   const opts = LOTTERY_OPTIONS[lang] || LOTTERY_OPTIONS.en;
   const lotto = (lotteryId ? opts.find(l => l.id === lotteryId) : null) || opts[0];
@@ -844,6 +900,10 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     moonSign = getMoonSignPrecise(year, month, day, birthHour);
   }
 
+  const daeunData = (systemKey === 'saju' && !setIdx)
+    ? calcDaeunData(year, month, day, lmtHour, gender, cultural.stemIdx)
+    : null;
+
   const fortuneScores = !setIdx ? calcFortuneScores(systemKey, cultural, {
     fullSaju, sunSign, moonSign,
     monthStar: monthKyusei,
@@ -869,7 +929,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, gender: gender || null };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -943,7 +1003,8 @@ function renderResults(data) {
     if (fortuneCard)    fortuneCard.style.display    = 'none';
 
     renderFortuneSummaryGrid(data); // 4-score overview in hero
-    renderDetailedReadingPanel(data); // 4-pillar table + ohaeng + yongsin
+    renderDetailedReadingPanel(data); // 4-pillar table + ohaeng + yongsin + daeun
+    renderTodayIlchin(data); // today's day stem + interaction
     renderFortuneCategories(data, 'saju'); // all 4 fortune cards (none highlighted)
     renderLuckyTips(data); // yongsin-based tips
 
@@ -953,6 +1014,7 @@ function renderResults(data) {
     if (fortuneCard)    fortuneCard.style.display    = 'none';
 
     renderFortuneSummaryGrid(data); // all 4 scores for context, selected highlighted
+    renderTodayIlchin(data); // today's day stem + interaction
     renderSingleFortuneCatCard(data, cat, L); // full single-cat reading
     renderLuckyTips(data); // category-specific tips
   }
@@ -1560,10 +1622,51 @@ function buildSajuDetailHTML(data, lang, L) {
     </div>
   </div>`;
 
+  // 大運 timeline
+  if (data.daeunData) html += buildDaeunHTML(data, lang);
+
   // Append flowing narrative analysis
   html += buildSajuNarrativeHTML(data, lang, L);
 
   return html;
+}
+
+// ── 大運 (Daeun) HTML builder ──────────────────────────────────────────────────
+function buildDaeunHTML(data, lang) {
+  const dd = data.daeunData;
+  if (!dd) return '';
+  const isKo = lang === 'ko', isJa = lang === 'ja';
+  const EC = {'木':'#4ade80','火':'#f87171','土':'#fbbf24','金':'#94a3b8','水':'#60a5fa'};
+  const EKO = {'木':'목','火':'화','土':'토','金':'금','水':'수'};
+  const title     = isKo ? '대운(大運) 타임라인' : isJa ? '大運タイムライン' : '10-Year Fortune Cycles (大運)';
+  const dirText   = dd.forward
+    ? (isKo ? '순행(順行) — 양년남·음년녀' : isJa ? '順行' : 'Forward (陽M · 陰F)')
+    : (isKo ? '역행(逆行) — 음년남·양년녀' : isJa ? '逆行' : 'Reverse (陰M · 陽F)');
+  const startLabel = isKo ? `대운 시작 ${dd.startAge}세${dd.startMonths > 0 ? ` ${dd.startMonths}개월` : ''}`
+                   : isJa ? `大運起: ${dd.startAge}歳` : `Starts: age ${dd.startAge}`;
+  const nowLabel  = isKo ? '현재' : isJa ? '現在' : 'Now';
+  const noGender  = isKo ? '※ 성별을 선택하면 대운이 표시됩니다.' : isJa ? '※ 性別を選択してください。' : '※ Select gender to show daeun.';
+
+  let cardsHtml = '';
+  dd.periods.forEach(p => {
+    const c = EC[p.element] || '#fbbf24';
+    const elTxt = isKo ? `${EKO[p.element]}(${p.element})` : p.element;
+    const ageTxt = `${p.periodStart}–${p.periodEnd}${isKo?'세':isJa?'歳':'y'}`;
+    const isNow  = p.isCurrent;
+    const nowBadge = isNow ? `<div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:${c};color:#000;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;white-space:nowrap;">${nowLabel}</div>` : '';
+    cardsHtml += `<div style="background:${isNow?`rgba(255,251,235,.18)`:'rgba(255,255,255,.06)'};border:2px solid ${isNow?c:'rgba(255,255,255,.14)'};${isNow?`box-shadow:0 0 14px ${c}50;`:''}border-radius:10px;padding:10px 7px;text-align:center;min-width:60px;flex-shrink:0;position:relative;">
+      ${nowBadge}
+      <div style="font-size:16px;font-weight:900;color:#fbbf24;letter-spacing:.5px;">${STEMS[p.stemIdx]}${BRANCHES[p.branchIdx]}</div>
+      <div style="font-size:9px;font-weight:700;color:${c};margin-top:2px;">${elTxt}</div>
+      <div style="font-size:9px;color:#c4b5fd;margin-top:3px;line-height:1.4;">${ageTxt}</div>
+    </div>`;
+  });
+
+  return `<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);">
+    <div style="font-size:10px;font-weight:700;color:#c4b5fd;letter-spacing:.5px;margin-bottom:6px;">🔄 ${title}</div>
+    <div style="font-size:10px;color:#a5b4fc;margin-bottom:10px;">${dirText} · ${startLabel}</div>
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;">${cardsHtml}</div>
+  </div>`;
 }
 
 // ── Saju Narrative — flowing modern analysis text ─────────────────────────────
@@ -2356,6 +2459,74 @@ function renderLuckyTips(data) {
   }
 }
 
+// ── 오늘의 일진(日辰) — daily energy reading ──────────────
+function renderTodayIlchin(data) {
+  if (data.systemKey !== 'saju') return;
+  const today = new Date();
+  const ty = today.getFullYear(), tm = today.getMonth() + 1, td = today.getDate();
+  const todayStemIdx   = calcDayStemIdx(ty, tm, td);
+  const todayBranchIdx = calcDayBranch(ty, tm, td);
+  const todayEl  = ELEMENTS[todayStemIdx];
+  const birthEl  = data.cultural.element;
+  const harmony  = calcOhaengHarmony(birthEl, todayEl);
+  const L   = window.LUCKY_LANG || {};
+  const lang = data.lang;
+  const isKo = lang === 'ko', isJa = lang === 'ja';
+
+  const EC    = {'木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#64748b','水':'#1d4ed8'};
+  const EKO   = {'木':'목(木)','火':'화(火)','土':'토(土)','金':'금(金)','水':'수(水)'};
+  const color  = EC[todayEl] || '#d97706';
+  const today_str = isKo ? `${ty}년 ${tm}월 ${td}일` : isJa ? `${ty}年${tm}月${td}日` : `${tm}/${td}/${ty}`;
+  const title  = isKo ? `오늘(${today_str})의 일진` : isJa ? `今日(${today_str})の日辰` : `Today's Energy (${today_str})`;
+  const todayGanzhi  = `${STEMS[todayStemIdx]}${BRANCHES[todayBranchIdx]}`;
+  const todayReading = isKo ? `${STEM_KO[todayStemIdx]}${BRANCH_KO[todayBranchIdx]}일 — ${EKO[todayEl]}`
+                     : isJa ? `${todayGanzhi}日 — ${todayEl}気`
+                     : `${todayGanzhi} Day — ${todayEl} Energy`;
+
+  const harmonyKey =
+    birthEl === todayEl             ? 'same'   :
+    OHAENG_SHENG[birthEl]===todayEl ? 'sheng'  :
+    OHAENG_SHENG[todayEl]===birthEl ? 'recv'   :
+    OHAENG_KE[birthEl]   ===todayEl ? 'ke'     :
+    OHAENG_KE[todayEl]   ===birthEl ? 'beKe'   : 'neutral';
+  const compatScore = OHAENG_COMPAT_SCORES[harmonyKey] || 60;
+  const harmonyMsg  = isKo ? harmony.ko : isJa ? (harmony.ja || harmony.en) : harmony.en;
+  const scoreLvl =
+    compatScore >= 75 ? (isKo ? '✨ 오늘은 길한 날' : isJa ? '✨ 吉日です' : '✨ Lucky day') :
+    compatScore >= 55 ? (isKo ? '⚖️ 평온한 하루'   : isJa ? '⚖️ 普通の日' : '⚖️ Neutral day') :
+                        (isKo ? '⚠️ 신중한 하루'    : isJa ? '⚠️ 慎重に' :  '⚠️ Cautious day');
+
+  const tipLine = isKo
+    ? `💡 오늘의 행운 방위: <strong>${getDirectionByElement(todayEl,'ko')}</strong> · 행운 색상: <strong style="color:${color}">${ELEMENT_COLOR[todayEl]?.name||'—'}</strong>`
+    : isJa
+    ? `💡 今日のラッキー方位: <strong>${getDirectionByElement(todayEl,'ja')}</strong> · カラー: <strong style="color:${color}">${ELEMENT_COLOR[todayEl]?.en||'—'}</strong>`
+    : `💡 Lucky direction: <strong>${getDirectionByElement(todayEl,'en')}</strong> · Color: <strong style="color:${color}">${ELEMENT_COLOR[todayEl]?.en||'—'}</strong>`;
+
+  const div = document.createElement('div');
+  div.id = 'today-ilchin-section';
+  div.style.cssText = 'background:linear-gradient(135deg,#fffbeb,#fef9e7);border:2px solid #fbbf24;border-radius:20px;padding:18px 20px;margin-bottom:20px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#92400e;margin-bottom:12px;letter-spacing:.3px;">📅 ${title}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+      <div style="background:${color};border-radius:12px;padding:10px 14px;text-align:center;flex-shrink:0;">
+        <div style="font-size:24px;font-weight:900;color:#fff;">${todayGanzhi}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.85);font-weight:600;margin-top:2px;">${todayReading}</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#78350f;margin-bottom:5px;">${scoreLvl}</div>
+        <div style="font-size:12px;color:#92400e;line-height:1.65;">${harmony.emoji} ${harmonyMsg}</div>
+      </div>
+    </div>
+    <div style="background:rgba(180,83,9,.06);border-radius:8px;padding:8px 12px;font-size:11px;color:#78350f;line-height:1.6;">${tipLine}</div>`;
+
+  const detailPanel = document.getElementById('detailed-reading-panel');
+  const catSection  = document.getElementById('fortune-cats-section');
+  const shareSection = document.querySelector('.share-section');
+  if (detailPanel) detailPanel.after(div);
+  else if (catSection) catSection.before(div);
+  else if (shareSection) shareSection.before(div);
+}
+
 // ── Share Buttons ─────────────────────────────────────────
 const SHARE_PLATFORMS = {
   ko: [{id:'kakao',label:'카카오톡'},{id:'band',label:'Band'},{id:'twitter',label:'X (Twitter)'},{id:'copy'}],
@@ -2513,6 +2684,10 @@ function adaptInputForm(cat) {
     if (el) el.style.display = isLucky ? '' : 'none';
   });
 
+  // Gender section: only for saju (ko) system
+  const genderSection = document.getElementById('gender-section');
+  if (genderSection) genderSection.style.display = (lang === 'ko') ? '' : 'none';
+
   // Birth time: always visible; auto-expand for non-lucky
   const btwrap = document.getElementById('birth-time-wrap');
   if (btwrap) btwrap.style.display = '';
@@ -2595,6 +2770,7 @@ function startGenerate() {
   const birthHour      = birthHourRaw !== '' ? parseInt(birthHourRaw) : null;
   const birthMinuteRaw = (document.getElementById('birth-minute') || {}).value || '';
   const birthMinute    = birthMinuteRaw !== '' ? parseInt(birthMinuteRaw) : 0;
+  const gender         = (document.querySelector('.gender-btn.active') || {}).dataset?.gender || null;
   const setsCount   = parseInt((document.querySelector('.sets-btn.active') || {}).dataset?.sets || '1');
 
   // Update loading screen text per category
@@ -2620,7 +2796,7 @@ function startGenerate() {
     const lang = window.LUCKY_CURRENT_LANG || 'ko';
     const sets = [];
     for (let i = 0; i < setsCount; i++) {
-      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i, birthHour, birthMinute));
+      sets.push(generateLucky(year, month, day, lang, lotteryId, drawDateStr, i, birthHour, birthMinute, gender));
     }
     lastResult = { ...sets[0], sets };
     applyLangToResults(lastResult);
@@ -2631,6 +2807,10 @@ function startGenerate() {
 
 function resetApp() {
   showScreen('s-home');
+}
+
+function selectGender(g) {
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.toggle('active', b.dataset.gender === g));
 }
 
 function toggleBirthTime() {
