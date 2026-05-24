@@ -537,8 +537,8 @@ export default {
         { lang:'ja', loc:`${SITE_URL}/ja/today/`, priority:'0.8' },
         // Compat pages
         ...Object.entries(COMPAT_PATHS_SM).map(([l,slug])=>({ lang:l, loc:`${SITE_URL}/${l}/${slug}/`, priority:'0.7' })),
-        // Category pages (9 langs × 6 cats = 54 URLs)
-        ...ALL_LANGS.filter(l=>CAT_SLUGS[l]).flatMap(l=>Object.entries(CAT_SLUGS[l]).map(([cat,slug])=>({lang:l,loc:`${SITE_URL}/${l}/${slug}/`,priority:'0.85'}))),
+        // Category pages (9 langs × 6 cats = 54 URLs) — ko는 루트 레벨
+        ...ALL_LANGS.filter(l=>CAT_SLUGS[l]).flatMap(l=>Object.entries(CAT_SLUGS[l]).map(([cat,slug])=>({lang:l,loc:l==='ko'?`${SITE_URL}/${slug}/`:`${SITE_URL}/${l}/${slug}/`,priority:'0.85'}))),
         // Zodiac pages
         ...Object.entries(ZODIAC_SLUGS_SM).flatMap(([l,slugs])=>slugs.map(s=>({ lang:l, loc:`${SITE_URL}/${l}/${s}/`, priority:'0.7' }))),
       ];
@@ -569,20 +569,38 @@ ${urlsXml}
       });
     }
 
-    // ── Category pages (/{lang}/{cat-slug}/) ─────────────────────────────
+    // ── Category pages: /{lang}/{cat-slug}/ + ko root-level /{cat-slug}/ ──
     {
+      // ko는 /ko/ 없이 루트 레벨: /saju/, /love-fortune/ 등
+      // 다른 언어: /en/love-fortune/, /ja/kyusei/ 등
+      let catLang = null, catSlug = null;
       const catM = path.match(/^\/([a-z]{2,3})\/([a-z][a-z-]*)\/?$/);
       if (catM) {
-        const catLang = catM[1], catSlug = catM[2];
-        const catKey  = slugToCat(catLang, catSlug);
+        catLang = catM[1]; catSlug = catM[2];
+        // /ko/saju/ → 301 redirect to /saju/
+        if (catLang === 'ko' && slugToCat('ko', catSlug)) {
+          return Response.redirect(`${SITE_URL}/${catSlug}/`, 301);
+        }
+      } else {
+        const rootM = path.match(/^\/([a-z][a-z-]+)\/?$/);
+        if (rootM && slugToCat('ko', rootM[1])) { catLang = 'ko'; catSlug = rootM[1]; }
+      }
+      if (catLang && catSlug) {
+        const catKey = slugToCat(catLang, catSlug);
         if (catKey && CAT_META[catLang] && CAT_META[catLang][catKey] && LANGS[catLang]) {
           const CM = CAT_META[catLang][catKey];
           const LL = LANGS[catLang];
-          const catCanonical = `${SITE_URL}/${catLang}/${catSlug}/`;
-          const catHreflangs = ALL_LANGS.filter(l=>CAT_SLUGS[l]&&CAT_SLUGS[l][catKey]).map(l=>{
-            const sl=CAT_SLUGS[l][catKey];
-            return `<link rel="alternate" hreflang="${l}" href="${SITE_URL}/${l}/${sl}/">`;
-          }).join('\n');
+          // ko는 루트 레벨 canonical
+          const catCanonical = catLang === 'ko'
+            ? `${SITE_URL}/${catSlug}/`
+            : `${SITE_URL}/${catLang}/${catSlug}/`;
+          const _catHref = (l) => {
+            const sl = CAT_SLUGS[l][catKey];
+            return l === 'ko' ? `${SITE_URL}/${sl}/` : `${SITE_URL}/${l}/${sl}/`;
+          };
+          const catHreflangs = ALL_LANGS.filter(l=>CAT_SLUGS[l]&&CAT_SLUGS[l][catKey]).map(l=>
+            `<link rel="alternate" hreflang="${l}" href="${_catHref(l)}">`
+          ).join('\n');
           let catIframeSrc = `${APP_URL}/?lang=${catLang}&cat=${catKey}`;
           if (catKey==='gunghap') {
             const cp2=url.searchParams;
@@ -596,7 +614,7 @@ ${urlsXml}
           const catFaqHtml=(CM.faq||[]).map((f,i)=>`<details class="faq-item"${i===0?' open':''}><summary class="faq-q">${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
           const CAT_GRAD={saju:'linear-gradient(135deg,#1e1b4b,#312e81)',love:'linear-gradient(135deg,#831843,#be185d)',money:'linear-gradient(135deg,#064e3b,#059669)',career:'linear-gradient(135deg,#1e3a5f,#1d4ed8)',achievement:'linear-gradient(135deg,#451a03,#d97706)',gunghap:'linear-gradient(135deg,#4c1d95,#7c3aed)'};
           const catGrad=CAT_GRAD[catKey]||CAT_GRAD.saju;
-          const langBarHtmlCat=ALL_LANGS.filter(l=>CAT_SLUGS[l]&&CAT_SLUGS[l][catKey]).map(l=>{const sl=CAT_SLUGS[l][catKey];const nm=l==='ko'?'한국어':(LANGS[l]?LANGS[l].name:l.toUpperCase());return `<a href="${SITE_URL}/${l}/${sl}/"${l===catLang?' class="active"':''}>${nm}</a>`;}).join('');
+          const langBarHtmlCat=ALL_LANGS.filter(l=>CAT_SLUGS[l]&&CAT_SLUGS[l][catKey]).map(l=>{const nm=l==='ko'?'한국어':(LANGS[l]?LANGS[l].name:l.toUpperCase());return `<a href="${_catHref(l)}"${l===catLang?' class="active"':''}>${nm}</a>`;}).join('');
           const catHtml=`<!DOCTYPE html>
 <html lang="${catLang}">
 <head>
