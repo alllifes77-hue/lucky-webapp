@@ -222,4 +222,13 @@ window.LUCKY_LANG = {
       a: 'No. Lottery draws are random events, and no system can guarantee a win. This app provides entertainment and cultural insight through numerology. Always play responsibly and within your means.',
     },
   ],
+
+  nameInputLabel: 'Enter Name (optional) — Numerology Analysis',
+  nameInputNote: 'Analyzes the numerological meaning of your name.',
+  nameDestiny: 'Destiny Number', nameSoul: 'Soul Urge', namePersonality: 'Personality',
+  btnCopyLink: 'Copy Link', btnCopied: 'Copied!',
+  btnSaveImage: 'Save Image',
+  annualCalendarTitle: 'Annual Fortune Forecast',
+  auspiciousTitle: 'Auspicious Days This Month',
+  auspiciousGreat: 'Great', auspiciousGood: 'Good', auspiciousBad: 'Unfavorable',
 };

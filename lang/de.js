@@ -196,4 +196,13 @@ window.LUCKY_LANG = {
       a: 'Nein. Lotterieziehungen sind Zufallsereignisse, und kein System kann einen Gewinn garantieren. Diese App bietet Unterhaltung und kulturellen Einblick durch Numerologie.',
     },
   ],
+
+  nameInputLabel: 'Name eingeben (optional) — Numerologie-Analyse',
+  nameInputNote: 'Analysiert die numerologische Bedeutung Ihres Namens.',
+  nameDestiny: 'Schicksalszahl', nameSoul: 'Seelenzahl', namePersonality: 'Persönlichkeitszahl',
+  btnCopyLink: 'Link kopieren', btnCopied: 'Kopiert!',
+  btnSaveImage: 'Bild speichern',
+  annualCalendarTitle: 'Jahreshoroskop-Übersicht',
+  auspiciousTitle: 'Günstige Tage diesen Monat',
+  auspiciousGreat: 'Sehr gut', auspiciousGood: 'Gut', auspiciousBad: 'Ungünstig',
 };

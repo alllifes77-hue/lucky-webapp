@@ -135,4 +135,13 @@ window.LUCKY_LANG = {
       a: 'No. Los sorteos de lotería son eventos aleatorios y ningún sistema puede garantizar un premio. Esta aplicación proporciona entretenimiento e información cultural a través de la numerología.',
     },
   ],
+
+  nameInputLabel: 'Ingresar nombre (opcional) — Análisis numerológico',
+  nameInputNote: 'Analiza el significado numerológico de tu nombre.',
+  nameDestiny: 'Número del destino', nameSoul: 'Número del alma', namePersonality: 'Número de personalidad',
+  btnCopyLink: 'Copiar enlace', btnCopied: '¡Copiado!',
+  btnSaveImage: 'Guardar imagen',
+  annualCalendarTitle: 'Pronóstico anual',
+  auspiciousTitle: 'Días auspiciosos este mes',
+  auspiciousGreat: 'Excelente', auspiciousGood: 'Favorable', auspiciousBad: 'Desfavorable',
 };

@@ -138,4 +138,13 @@ window.LUCKY_LANG = {
       a: "Non. Les tirages de loterie sont des événements aléatoires et aucun système ne peut garantir un gain. Cette application offre du divertissement et un aperçu culturel à travers la numérologie.",
     },
   ],
+
+  nameInputLabel: 'Entrer le nom (optionnel) — Analyse numérologique',
+  nameInputNote: 'Analyse la signification numérologique de votre nom.',
+  nameDestiny: 'Nombre de destin', nameSoul: 'Nombre de l\'âme', namePersonality: 'Nombre de personnalité',
+  btnCopyLink: 'Copier le lien', btnCopied: 'Copié !',
+  btnSaveImage: 'Enregistrer l\'image',
+  annualCalendarTitle: 'Prévisions annuelles',
+  auspiciousTitle: 'Jours fastes ce mois-ci',
+  auspiciousGreat: 'Excellent', auspiciousGood: 'Favorable', auspiciousBad: 'Défavorable',
 };

@@ -135,4 +135,13 @@ window.LUCKY_LANG = {
       a: 'No. I sorteggi della lotteria sono eventi casuali e nessun sistema può garantire una vincita. Questa app offre intrattenimento e insight culturale attraverso la numerologia.',
     },
   ],
+
+  nameInputLabel: 'Inserisci nome (opzionale) — Analisi numerologica',
+  nameInputNote: 'Analizza il significato numerologico del tuo nome.',
+  nameDestiny: 'Numero del destino', nameSoul: 'Numero dell\'anima', namePersonality: 'Numero della personalità',
+  btnCopyLink: 'Copia link', btnCopied: 'Copiato!',
+  btnSaveImage: 'Salva immagine',
+  annualCalendarTitle: 'Previsione annuale della fortuna',
+  auspiciousTitle: 'Giorni propizi questo mese',
+  auspiciousGreat: 'Eccellente', auspiciousGood: 'Favorevole', auspiciousBad: 'Sfavorevole',
 };

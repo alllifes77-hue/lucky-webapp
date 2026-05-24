@@ -427,20 +427,35 @@ export default {
 
     // ── Sitemap ──────────────────────────────────────────
     if (path === '/lucky-sitemap.xml') {
-      const lastmod = '2026-05-15';
+      const lastmod = '2026-05-24';
+      const ZODIAC_SLUGS_SM = {
+        en:['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'],
+        de:['widder','stier','zwillinge','krebs','loewe','jungfrau','waage','skorpion','schuetze','steinbock','wassermann','fische'],
+        fr:['belier','taureau','gemeaux','cancer','lion','vierge','balance','scorpion','sagittaire','capricorne','verseau','poissons'],
+        es:['aries','tauro','geminis','cancer','leo','virgo','libra','escorpio','sagitario','capricornio','acuario','piscis'],
+        pt:['aries','touro','gemeos','cancer','leao','virgem','libra','escorpiao','sagitario','capricornio','aquario','peixes'],
+        it:['ariete','toro','gemelli','cancro','leone','vergine','bilancia','scorpione','sagittario','capricorno','acquario','pesci'],
+      };
+      const COMPAT_PATHS_SM = {ko:'gunghap',en:'compatibility',ja:'compatibility',de:'partnerschaft',fr:'compatibilite',es:'compatibilidad',pt:'compatibilidade',it:'compatibilita',id:'kecocokan'};
       const locs = [
-        { lang:'ko', loc:`${SITE_URL}/lucky/` },
-        ...['en','ja','de','fr','es','pt','it','id'].map(l => ({ lang:l, loc:`${SITE_URL}/${l}/lucky/` })),
+        { lang:'ko', loc:`${SITE_URL}/lucky/`, priority:'1.0' },
+        ...['en','ja','de','fr','es','pt','it','id'].map(l => ({ lang:l, loc:`${SITE_URL}/${l}/lucky/`, priority:'0.9' })),
+        // Today pages
+        { lang:'ko', loc:`${SITE_URL}/ko/today/`, priority:'0.8' },
+        { lang:'ja', loc:`${SITE_URL}/ja/today/`, priority:'0.8' },
+        // Compat pages
+        ...Object.entries(COMPAT_PATHS_SM).map(([l,slug])=>({ lang:l, loc:`${SITE_URL}/${l}/${slug}/`, priority:'0.7' })),
+        // Zodiac pages
+        ...Object.entries(ZODIAC_SLUGS_SM).flatMap(([l,slugs])=>slugs.map(s=>({ lang:l, loc:`${SITE_URL}/${l}/${s}/`, priority:'0.7' }))),
       ];
       const alts = locs.map(l =>
         `    <xhtml:link rel="alternate" hreflang="${l.lang}" href="${l.loc}"/>`
       ).join('\n') + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/en/lucky/"/>`;
 
-      const urlsXml = locs.map((l, i) => `  <url>
+      const urlsXml = locs.map((l) => `  <url>
     <loc>${l.loc}</loc>
-${alts}
     <changefreq>weekly</changefreq>
-    <priority>${i === 0 ? '1.0' : '0.9'}</priority>
+    <priority>${l.priority || '0.7'}</priority>
     <lastmod>${lastmod}</lastmod>
   </url>`).join('\n');
 
@@ -458,6 +473,148 @@ ${urlsXml}
       return new Response(svg, {
         headers: { 'Content-Type':'image/svg+xml', 'Cache-Control':'public,max-age=3600', 'Access-Control-Allow-Origin':'*' }
       });
+    }
+
+    // ── Zodiac sign pages (/en/aries/, /de/widder/, etc.) ───
+    const ZODIAC_SLUGS = {
+      en:['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'],
+      de:['widder','stier','zwillinge','krebs','loewe','jungfrau','waage','skorpion','schuetze','steinbock','wassermann','fische'],
+      fr:['belier','taureau','gemeaux','cancer','lion','vierge','balance','scorpion','sagittaire','capricorne','verseau','poissons'],
+      es:['aries','tauro','geminis','cancer','leo','virgo','libra','escorpio','sagitario','capricornio','acuario','piscis'],
+      pt:['aries','touro','gemeos','cancer','leao','virgem','libra','escorpiao','sagitario','capricornio','aquario','peixes'],
+      it:['ariete','toro','gemelli','cancro','leone','vergine','bilancia','scorpione','sagittario','capricorno','acquario','pesci'],
+    };
+    const ZODIAC_NAMES = {
+      en:['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'],
+      de:['Widder','Stier','Zwillinge','Krebs','Löwe','Jungfrau','Waage','Skorpion','Schütze','Steinbock','Wassermann','Fische'],
+      fr:['Bélier','Taureau','Gémeaux','Cancer','Lion','Vierge','Balance','Scorpion','Sagittaire','Capricorne','Verseau','Poissons'],
+      es:['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'],
+      pt:['Áries','Touro','Gêmeos','Câncer','Leão','Virgem','Libra','Escorpião','Sagitário','Capricórnio','Aquário','Peixes'],
+      it:['Ariete','Toro','Gemelli','Cancro','Leone','Vergine','Bilancia','Scorpione','Sagittario','Capricorno','Acquario','Pesci'],
+    };
+    const zodiacMatch = path.match(/^\/([a-z]{2,3})\/([a-z]+)\/?$/);
+    if (zodiacMatch && zodiacMatch[2] !== 'lucky' && zodiacMatch[2] !== 'today' && zodiacMatch[2] !== 'compatibility' && zodiacMatch[2] !== 'gunghap') {
+      const zLang = zodiacMatch[1], zSlug = zodiacMatch[2];
+      const slugMap = ZODIAC_SLUGS[zLang];
+      if (slugMap) {
+        const signIdx = slugMap.indexOf(zSlug);
+        if (signIdx >= 0 && LANGS[zLang]) {
+          const ZL = LANGS[zLang];
+          const signName = (ZODIAC_NAMES[zLang] || ZODIAC_NAMES.en)[signIdx];
+          const zCanonical = `${SITE_URL}/${zLang}/${zSlug}/`;
+          const zTitle = `${signName} Lucky Numbers – ${ZL.h1}`;
+          const zDesc  = `Generate lucky numbers for ${signName}. ${ZL.desc}`;
+          const zIframe = `${APP_URL}/?lang=${zLang}`;
+          const zHref = ALL_LANGS.filter(l=>ZODIAC_SLUGS[l]).map(l=>{
+            const s=(ZODIAC_SLUGS[l]||[])[signIdx];
+            return s?`<link rel="alternate" hreflang="${l}" href="${SITE_URL}/${l}/${s}/">`:'';
+          }).filter(Boolean).join('\n    ');
+          const zHtml = `<!DOCTYPE html><html lang="${zLang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(zTitle)}</title>
+<meta name="description" content="${esc(zDesc)}">
+<link rel="canonical" href="${esc(zCanonical)}">
+${zHref}
+<meta property="og:title" content="${esc(zTitle)}">
+<meta property="og:description" content="${esc(zDesc)}">
+<meta property="og:url" content="${esc(zCanonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${zLang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#4c1d95);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#c4b5fd;max-width:520px;margin:0 auto;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
+iframe{width:100%;border:none;display:block;height:560px;}</style>
+</head><body>
+<div class="hero"><h1>${esc(signName)} — ${esc(ZL.h1)}</h1><p>${esc(ZL.body)}</p><a class="start-btn" href="#lucky-frame">${esc(ZL.start)}</a></div>
+<iframe id="lucky-frame" src="${esc(zIframe)}" scrolling="no" title="${esc(signName)} lucky numbers" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+</body></html>`;
+          return new Response(zHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600'}});
+        }
+      }
+    }
+
+    // ── Today's fortune pages (/ko/today/, /ja/today/) ──────
+    const todayMatch = path.match(/^\/(ko|ja)\/today\/?$/);
+    if (todayMatch) {
+      const tLang = todayMatch[1];
+      const TL = LANGS[tLang] || LANGS.en;
+      const today = new Date().toISOString().slice(0,10);
+      const tCanonical = `${SITE_URL}/${tLang}/today/`;
+      const tTitle = tLang==='ko' ? `오늘의 운세 — ${TL.h1}` : `今日の運勢 — ${TL.h1}`;
+      const tDesc  = tLang==='ko' ? `오늘 날짜(${today}) 기반 운세. ${TL.desc}` : `本日(${today})の運勢。${TL.desc}`;
+      const tIframe = `${APP_URL}/?lang=${tLang}`;
+      const tHtml = `<!DOCTYPE html><html lang="${tLang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(tTitle)}</title>
+<meta name="description" content="${esc(tDesc)}">
+<link rel="canonical" href="${esc(tCanonical)}">
+<meta property="og:title" content="${esc(tTitle)}">
+<meta property="og:description" content="${esc(tDesc)}">
+<meta property="og:url" content="${esc(tCanonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${tLang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#c4b5fd;max-width:520px;margin:0 auto;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
+iframe{width:100%;border:none;display:block;height:560px;}</style>
+</head><body>
+<div class="hero"><h1>${esc(tTitle)}</h1><p>${esc(tDesc)}</p><a class="start-btn" href="#lucky-frame">${tLang==='ko'?'운세 보기':'運勢を見る'}</a></div>
+<iframe id="lucky-frame" src="${esc(tIframe)}" scrolling="no" title="${esc(tTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+</body></html>`;
+      return new Response(tHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=1800'}});
+    }
+
+    // ── Compatibility share pages (/ko/gunghap/, /en/compatibility/, etc.) ─
+    const compatPaths = {ko:'gunghap',en:'compatibility',ja:'compatibility',de:'partnerschaft',fr:'compatibilite',es:'compatibilidad',pt:'compatibilidade',it:'compatibilita',id:'kecocokan'};
+    const compatMatch = path.match(/^\/([a-z]{2})\/([a-z]+)\/?$/);
+    if (compatMatch) {
+      const cLang = compatMatch[1], cSlug = compatMatch[2];
+      if (compatPaths[cLang] === cSlug && LANGS[cLang]) {
+        const CL = LANGS[cLang];
+        const cp = url.searchParams;
+        const bd1 = cp.get('bd') || '', bd2 = cp.get('bd2') || '';
+        const cCanonical = `${SITE_URL}/${cLang}/${cSlug}/`;
+        const cTitle = cLang==='ko'?`궁합 — ${CL.h1}`:cLang==='ja'?`相性 — ${CL.h1}`:`Compatibility — ${CL.h1}`;
+        const cDesc = CL.desc;
+        let cIframe = `${APP_URL}/?lang=${cLang}&cat=gunghap`;
+        if (bd1) cIframe += `&bd=${bd1}`;
+        if (bd2) cIframe += `&bd2=${bd2}`;
+        let ogT = cTitle, ogD = cDesc;
+        if (bd1 && bd2) {
+          ogT = (cLang==='ko')?`${bd1.slice(0,4)}년생 × ${bd2.slice(0,4)}년생 궁합 결과`:`Compatibility: ${bd1.slice(0,4)} × ${bd2.slice(0,4)}`;
+          ogD = (cLang==='ko')?'사주팔자 궁합 분석 결과를 확인하세요.':CL.desc;
+        }
+        const cHtml = `<!DOCTYPE html><html lang="${cLang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(ogT)}</title>
+<meta name="description" content="${esc(ogD)}">
+<link rel="canonical" href="${esc(cCanonical)}">
+<meta property="og:title" content="${esc(ogT)}">
+<meta property="og:description" content="${esc(ogD)}">
+<meta property="og:url" content="${esc(cCanonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${cLang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:8px;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
+iframe{width:100%;border:none;display:block;height:560px;}</style>
+</head><body>
+<div class="hero"><h1>💑 ${esc(ogT)}</h1><a class="start-btn" href="#lucky-frame">${cLang==='ko'?'궁합 보기':cLang==='ja'?'相性を見る':'Check Compatibility'}</a></div>
+<iframe id="lucky-frame" src="${esc(cIframe)}" scrolling="no" title="${esc(cTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+</body></html>`;
+        return new Response(cHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control': bd1&&bd2?'public,max-age=300':'public,max-age=3600'}});
+      }
     }
 
     // ── Language lucky pages (/lucky/, /en/lucky/, /ja/lucky/, etc.) ─

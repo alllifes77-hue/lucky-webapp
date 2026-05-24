@@ -767,6 +767,296 @@ function calcGunghapData(dA, dB) {
   return { el1, el2, de1, de2, yearElScore, dayElScore, db1, db2, ds1, ds2, dayBiScore, dayBiType, stemHap, stemHapScore, sipsinAtoB, sipsinBtoA, overall, compat };
 }
 
+// ── 六曜 (Rokuyo) ── 음력 근사 계산, ja 専用 ──────────────
+const LUNAR_EPOCH_JD = 2451563; // 2000-02-05 = 음력 正月初一
+const SYNODIC_MONTH  = 29.530588853;
+
+function getLunarApprox(y, m, d) {
+  const jd = gregJD(y, m, d);
+  const elapsed = jd - LUNAR_EPOCH_JD;
+  const monthsElapsed = Math.floor(elapsed / SYNODIC_MONTH);
+  const lunarDay = Math.floor(elapsed - monthsElapsed * SYNODIC_MONTH) + 1;
+  const lunarMonth = ((monthsElapsed % 12) + 12) % 12 + 1;
+  return { lunarMonth, lunarDay };
+}
+// 0=先勝 1=友引 2=先負 3=仏滅 4=大安 5=赤口
+function getRokuyo(y, m, d) {
+  const { lunarMonth, lunarDay } = getLunarApprox(y, m, d);
+  return (lunarMonth + lunarDay) % 6;
+}
+
+// ── ko 格局(格局) 판단 ────────────────────────────────────
+function calcGeokkuk(data) {
+  if (data.systemKey !== 'saju' || !data.fullSaju) return null;
+  const fj  = data.fullSaju;
+  const dsi = calcDayStemIdx(data.year, data.month, data.day);
+  const ss  = fj.sipsin || {};
+  const supportCount  = (ss['비겁']||0) + (ss['인성']||0);
+  const pressureCount = (ss['재성']||0) + (ss['관성']||0) + (ss['식상']||0);
+  const monthEl = fj.monthPillar.element;
+  const dayEl   = ELEMENTS[dsi];
+  const sheng   = {'木':'水','火':'木','土':'火','金':'土','水':'金'};
+  const monthBoost = sheng[dayEl] === monthEl ? 1 : 0;
+  const isStrong = (supportCount + monthBoost) >= pressureCount;
+  const msi = fj.monthPillar.stemIdx;
+  const sipsin = calcSipsinType(dsi, msi);
+  const GEOKKUK_MAP = {
+    비겁: isStrong ? {name:'양인격(羊刃格)', icon:'⚔️', en:'Yang Blade Pattern', ja:'羊刃格'} : {name:'건록격(建祿格)', icon:'🏛️', en:'Established Prosperity', ja:'建禄格'},
+    식상: {name:'식상격(食傷格)', icon:'🎨', en:'Expression Pattern', ja:'食傷格'},
+    재성: {name:'재성격(財星格)', icon:'💰', en:'Wealth Pattern', ja:'財星格'},
+    관성: {name:'관성격(官星格)', icon:'⚖️', en:'Authority Pattern', ja:'官星格'},
+    인성: {name:'인성격(印星格)', icon:'📚', en:'Intelligence Pattern', ja:'印星格'},
+  };
+  const gk = GEOKKUK_MAP[sipsin] || {name:'잡기격(雜氣格)', icon:'✨', en:'Mixed Pattern', ja:'雑気格'};
+  const STRATEGY_KO = {
+    strong: '신강 사주는 재성(財星)과 관성(官星)이 용신입니다. 도전적이고 외향적인 활동에서 능력을 발휘하세요. 재물과 명예를 적극적으로 추구하는 것이 유리합니다.',
+    weak:   '신약 사주는 인성(印星)과 비겁(比劫)이 용신입니다. 학문, 자기계발, 동료와의 협력에서 힘을 얻으세요. 무리한 확장보다 내실을 다지는 것이 유리합니다.',
+  };
+  const STRATEGY_EN = {
+    strong: 'Strong chart: Wealth and Authority stars are favorable. Channel energy into assertive, outward pursuits. Actively seek recognition and material gain.',
+    weak:   'Weak chart: Intelligence and Sibling stars support you. Gain strength through study, self-development, and collaboration. Consolidate before expanding.',
+  };
+  const STRATEGY_JA = {
+    strong: '身強の命式：財星・官星が用神。積極的な外向き活動で才能を発揮。財・名誉を積極的に追求することが有利。',
+    weak:   '身弱の命式：印星・比劫が用神。学問・自己成長・仲間との協力で力を得る。拡大より充実が有利。',
+  };
+  return { isStrong, sipsin, geokkukName:gk.name, geokkukNameEn:gk.en, geokkukNameJa:gk.ja,
+           geokkukIcon:gk.icon, supportCount:supportCount+monthBoost, pressureCount,
+           strategyKo:STRATEGY_KO[isStrong?'strong':'weak'],
+           strategyEn:STRATEGY_EN[isStrong?'strong':'weak'],
+           strategyJa:STRATEGY_JA[isStrong?'strong':'weak'] };
+}
+
+// ── ja 九星三星 (年/月/日命星) + 방위 길흉 ───────────────
+const KYUSEI_DIRECTION_TABLE = {
+  1: {best:['北','南東'],  good:['東','西'],       caution:['南西'],     bad:['南']},
+  2: {best:['南西','北東'],good:['北西','西'],      caution:['東'],       bad:['南東']},
+  3: {best:['東','南東'],  good:['北','南'],        caution:['北西'],     bad:['西']},
+  4: {best:['南東','東'],  good:['南','北'],        caution:['西'],       bad:['北西']},
+  5: {best:['北東','南西'],good:['中央'],           caution:['東','西'],  bad:['南','北']},
+  6: {best:['北西','西'],  good:['南西','北東'],    caution:['南'],       bad:['東']},
+  7: {best:['西','北西'],  good:['北東','南西'],    caution:['南東'],     bad:['東']},
+  8: {best:['北東','南西'],good:['西','北西'],      caution:['東'],       bad:['南']},
+  9: {best:['南','東'],    good:['南東'],           caution:['北'],       bad:['北東']},
+};
+const KYUSEI_STAR_NAMES_JA = ['','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+const KYUSEI_STAR_NAMES_KO = ['','일백수성','이흑토성','삼벽목성','사록목성','오황토성','육백금성','칠적금성','팔백토성','구자화성'];
+const KYUSEI_STAR_DESC_JA  = ['',
+  '知性・癒しの星。水の気を持ち、柔軟で洞察力豊か。',
+  '勤勉・誠実の星。土の気で安定と忍耐を象徴。',
+  '活動・創造の星。木の気で行動力と革新性を持つ。',
+  '調和・成長の星。木の気で協調性と信頼を象徴。',
+  '変化・中心の星。土の気で強大な変容力を持つ。',
+  '権威・天の恵みの星。金の気で決断力と指導力。',
+  '喜び・豊かさの星。金の気で社交性と財運を持つ。',
+  '山・安定の星。土の気で誠実さと家族運を象徴。',
+  '情熱・直感の星。火の気でカリスマと先見性を持つ。',
+];
+
+function calcKyuseiSanseiData(data) {
+  if (data.systemKey !== 'kyusei' || !data.cultural) return null;
+  const yearStar  = data.cultural.star;
+  const monthStar = data.monthKyusei || calcMonthKyusei(yearStar, new Date().getMonth()+1);
+  const jd        = gregJD(data.year, data.month, data.day);
+  const dayStar   = (((Math.floor(jd - 2451549)) % 9) + 9) % 9 || 9;
+  const dirTable  = KYUSEI_DIRECTION_TABLE[yearStar] || KYUSEI_DIRECTION_TABLE[5];
+  return { yearStar, monthStar, dayStar, dirTable };
+}
+
+// ── id Hari Baik 달력 (30일) ─────────────────────────────
+function calcHariBaikCalendar(data, numDays) {
+  numDays = numDays || 30;
+  if (data.systemKey !== 'jawanese') return null;
+  const birthNeptu = (data.cultural && data.cultural.neptu) ? data.cultural.neptu : 10;
+  const today = new Date();
+  const days  = [];
+  for (let i = 0; i < numDays; i++) {
+    const d  = new Date(today); d.setDate(today.getDate() + i);
+    const y  = d.getFullYear(), m = d.getMonth()+1, dd = d.getDate();
+    const jd = gregJD(y, m, dd);
+    const pasaranIdx = ((jd - 2451551) % 5 + 5) % 5;
+    const dayNeptu   = WETON_DAY_NEPTU[d.getDay()];
+    const pasNeptu   = WETON_PAS_NEPTU[pasaranIdx];
+    const total      = dayNeptu + pasNeptu;
+    const combined   = birthNeptu + total;
+    const lv = combined >= 25 ? 'great' : combined >= 20 ? 'good' : 'neutral';
+    days.push({ y, m, dd, dow:d.getDay(), pasaranIdx, total, combined, lv });
+  }
+  return days;
+}
+
+// ── 연간 운세 달력 (12개월) ──────────────────────────────
+function calcAnnualFortune(data) {
+  if (data.systemKey !== 'saju' && data.systemKey !== 'kyusei') return null;
+  const cy    = new Date().getFullYear();
+  const yearSi = ((cy - 4) % 10 + 10) % 10;
+  const CHONG_PAIRS = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
+  const scores = [];
+  for (let cm = 1; cm <= 12; cm++) {
+    const monthBranch = MONTH_BRANCHES[cm - 1];
+    const mp  = calcMonthPillar(yearSi, cm, monthBranch);
+    let score = 55;
+    if (data.systemKey === 'saju' && data.fullSaju) {
+      const dsi = calcDayStemIdx(data.year, data.month, data.day);
+      const sipsin = calcSipsinType(dsi, mp.stemIdx);
+      const SIPSIN_SCORE = {'비겁':55,'식상':62,'재성':72,'관성':67,'인성':74};
+      score = SIPSIN_SCORE[sipsin] || 55;
+      const monthB = mp.branchIdx;
+      const dayB   = data.fullSaju.dayBranch;
+      const yearB  = data.cultural.branchIdx;
+      const hasChong = CHONG_PAIRS.some(([a,b])=>
+        (monthB===a&&(dayB===b||yearB===b))||(monthB===b&&(dayB===a||yearB===a)));
+      if (hasChong) score = Math.max(30, score - 18);
+    } else if (data.systemKey === 'kyusei') {
+      const ST = {1:55,2:60,3:65,4:70,5:50,6:68,7:72,8:62,9:75};
+      const base = ST[data.cultural.star] || 55;
+      score = base + ((cm % 3 === 0) ? 5 : (cm % 3 === 1) ? -3 : 0);
+    }
+    scores.push({ month:cm, score:Math.min(95,Math.max(25,score)), element:mp.element, stemIdx:mp.stemIdx });
+  }
+  return scores;
+}
+
+// ── 좋은 날 달력 (시스템별, 30일) ───────────────────────
+function calcAuspiciousDates(data, numDays) {
+  numDays = numDays || 30;
+  const CHONG = {0:6,1:7,2:8,3:9,4:10,5:11,6:0,7:1,8:2,9:3,10:4,11:5};
+  const sheng = {'木':'水','火':'木','土':'火','金':'土','水':'金'};
+  const today = new Date();
+  const days  = [];
+  for (let i = 0; i < numDays; i++) {
+    const d  = new Date(today); d.setDate(today.getDate() + i);
+    const y  = d.getFullYear(), m = d.getMonth()+1, dd = d.getDate();
+    const jd = gregJD(y, m, dd);
+    if (data.systemKey === 'saju') {
+      const daySi      = calcDayStemIdx(y, m, dd);
+      const dayEl      = ELEMENTS[daySi];
+      const yongsin    = (data.fullSaju && data.fullSaju.yongsin) || data.cultural.element;
+      const dayBranch  = calcDayBranch(y, m, dd);
+      const birthDayBr = data.fullSaju ? data.fullSaju.dayBranch : null;
+      const hasChong   = birthDayBr !== null && CHONG[dayBranch] === birthDayBr;
+      const isGood     = (dayEl === yongsin || sheng[yongsin] === dayEl) && !hasChong;
+      days.push({y,m,dd,dow:d.getDay(),lv:isGood?'good':'neutral',detail:STEMS[daySi]+BRANCHES[dayBranch]});
+    } else if (data.systemKey === 'kyusei') {
+      const rokuyo = getRokuyo(y, m, dd);
+      const lv = rokuyo===4?'great':rokuyo===0||rokuyo===1?'good':rokuyo===3?'bad':'neutral';
+      const ROKUYO = ['先勝','友引','先負','仏滅','大安','赤口'];
+      days.push({y,m,dd,dow:d.getDay(),lv,detail:ROKUYO[rokuyo]});
+    } else if (data.systemKey === 'jawanese') {
+      const pasaranIdx = ((jd - 2451551) % 5 + 5) % 5;
+      const birthNeptu = (data.cultural && data.cultural.neptu) ? data.cultural.neptu : 10;
+      const dayNeptu   = WETON_DAY_NEPTU[d.getDay()];
+      const pasNeptu   = WETON_PAS_NEPTU[pasaranIdx];
+      const combined   = birthNeptu + dayNeptu + pasNeptu;
+      const lv = combined>=25?'great':combined>=20?'good':'neutral';
+      days.push({y,m,dd,dow:d.getDay(),lv,detail:PASARAN[pasaranIdx]});
+    } else {
+      const udn = calcUDN(y, m, dd);
+      const lp  = (data.cultural && data.cultural.lifePathNum) ? data.cultural.lifePathNum : 1;
+      const lvN = (udn===lp||udn===(lp===9?1:lp+1)||udn===(lp===1?9:lp-1))?'good':'neutral';
+      days.push({y,m,dd,dow:d.getDay(),lv:lvN,detail:`${udn}`});
+    }
+  }
+  return days;
+}
+
+// ── 이름 수리 분석 (Pythagorean) ─────────────────────────
+const PYTHAGOREAN_TABLE = {a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8,i:9,j:1,k:2,l:3,m:4,n:5,o:6,p:7,q:8,r:9,s:1,t:2,u:3,v:4,w:5,x:6,y:7,z:8};
+const PYTHAGOREAN_VOWELS = new Set(['a','e','i','o','u']);
+
+function reduceToMaster(n) {
+  while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
+    n = String(n).split('').reduce((a,c)=>a+parseInt(c),0);
+  }
+  return n;
+}
+
+function calcNameNumerology(name) {
+  if (!name || !name.trim()) return null;
+  const letters = name.toLowerCase().replace(/[^a-z]/g,'').split('');
+  if (!letters.length) return null;
+  const destinyNum  = reduceToMaster(letters.reduce((a,c)=>a+(PYTHAGOREAN_TABLE[c]||0),0));
+  const soulUrge    = reduceToMaster(letters.filter(c=>PYTHAGOREAN_VOWELS.has(c)).reduce((a,c)=>a+(PYTHAGOREAN_TABLE[c]||0),0)||1);
+  const personality = reduceToMaster(letters.filter(c=>!PYTHAGOREAN_VOWELS.has(c)).reduce((a,c)=>a+(PYTHAGOREAN_TABLE[c]||0),0)||1);
+  return { name:name.trim(), destinyNum, soulUrge, personality };
+}
+
+// getShareUrl은 아래 line ~3759에서 업그레이드됨 (중복 제거)
+
+let _urlParamsFilled = false;
+function readUrlParamsAndAutoFill() {
+  if (_urlParamsFilled) return;
+  _urlParamsFilled = true;
+  const p  = new URLSearchParams(location.search);
+  const bd = p.get('bd');
+  let y, m, d;
+  if (bd && bd.length === 8) {
+    y = parseInt(bd.slice(0,4)); m = parseInt(bd.slice(4,6)); d = parseInt(bd.slice(6,8));
+  } else {
+    // legacy params from worker OG links
+    y = parseInt(p.get('y')||0); m = parseInt(p.get('m')||0); d = parseInt(p.get('dy')||0);
+  }
+  if (!y || !m || !d) return;
+  const yEl = document.getElementById('bday-year');
+  const mEl = document.getElementById('bday-month');
+  const dEl = document.getElementById('bday-day');
+  if (yEl) yEl.value = y;
+  if (mEl) mEl.value = m;
+  if (dEl) dEl.value = d;
+  const cat = p.get('cat');
+  if (cat) selectCategory(cat);
+  const gender = p.get('gender');
+  if (gender) selectGender(gender);
+  const bh = p.get('bh');
+  if (bh !== null && bh !== '') {
+    const bhEl = document.getElementById('birth-hour');
+    if (bhEl) bhEl.value = bh;
+  }
+  const bd2 = p.get('bd2');
+  if (bd2 && bd2.length === 8) {
+    const py = parseInt(bd2.slice(0,4)), pm = parseInt(bd2.slice(4,6)), pd = parseInt(bd2.slice(6,8));
+    const pyEl = document.getElementById('partner-year');
+    const pmEl = document.getElementById('partner-month');
+    const pdEl = document.getElementById('partner-day');
+    if (pyEl) pyEl.value = py;
+    if (pmEl) pmEl.value = pm;
+    if (pdEl) pdEl.value = pd;
+  }
+  // URL 파라미터가 있으면 자동 계산 실행
+  setTimeout(() => { if (document.getElementById('s-home')?.classList.contains('active')) startGenerate(); }, 500);
+}
+
+// ── 이미지 저장 (html2canvas lazy load) ──────────────────
+function saveResultAsImage() {
+  const panel = document.getElementById('s-result');
+  if (!panel) return;
+  const L = window.LUCKY_LANG || {};
+  const lang = window.LUCKY_CURRENT_LANG || 'ko';
+  const savingMsg = {ko:'저장 중…', en:'Saving…', ja:'保存中…', de:'Speichern…', fr:'Enregistrement…', es:'Guardando…', pt:'Salvando…', it:'Salvataggio…', id:'Menyimpan…'};
+  const btn = document.getElementById('btn-save-image');
+  if (btn) { btn.textContent = savingMsg[lang] || 'Saving…'; btn.disabled = true; }
+  function _doCapture() {
+    window.html2canvas(panel, {scale:2, useCORS:true, backgroundColor:'#f5f5f4', logging:false}).then(canvas => {
+      const a = document.createElement('a');
+      a.download = 'lucky-fortune.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      if (btn) { btn.textContent = L.btnSaveImage || '🖼️'; btn.disabled = false; }
+    }).catch(() => {
+      if (btn) { btn.textContent = L.btnSaveImage || '🖼️'; btn.disabled = false; }
+    });
+  }
+  if (window.html2canvas) {
+    _doCapture();
+  } else {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = _doCapture;
+    s.onerror = () => { if (btn) { btn.textContent = L.btnSaveImage||'🖼️'; btn.disabled=false; } };
+    document.head.appendChild(s);
+  }
+}
+
 // Lucky direction per five-element
 const ELEMENT_DIRECTION = {
   '木': {ko:'동쪽·동남쪽', en:'East / SE', ja:'東・東南'},
@@ -1089,6 +1379,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     } else {
       luckyBase = s.lucky;
     }
+    cultural.neptu = calcWetonNeptu(year, month, day).neptu;
   } else {
     const s = calcNumerology(year, month, day);
     cultural = s; seed = s.seed; systemKey = 'numerology';
@@ -1186,13 +1477,18 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     : null;
 
   // Partial data object used by the three new calc functions
-  const _pd = { year, month, day, cultural, systemKey, fullSaju };
+  const _pd = { year, month, day, cultural, systemKey, fullSaju, monthKyusei };
   const seunData       = (systemKey === 'saju' && !setIdx) ? calcSeunData(_pd)       : null;
   const hapChongData   = (systemKey === 'saju' && !setIdx) ? calcHapChongData(_pd)   : null;
   const shinsalData    = (systemKey === 'saju' && !setIdx) ? calcShinsalData(_pd)    : null;
   const sipiunsungData = (systemKey === 'saju' && !setIdx) ? calcSipiunsungData(_pd) : null;
   const iljuronData    = (systemKey === 'saju' && !setIdx) ? calcIljuronData(_pd)    : null;
   const woluunData     = (systemKey === 'saju' && !setIdx) ? calcWoluunData(_pd)     : null;
+
+  const geokkukData      = (systemKey === 'saju' && !setIdx)    ? calcGeokkuk(_pd)           : null;
+  const kyuseiSanseiData = (systemKey === 'kyusei' && !setIdx)  ? calcKyuseiSanseiData(_pd)  : null;
+  const annualFortune    = !setIdx                               ? calcAnnualFortune(_pd)     : null;
+  const auspiciousDates  = !setIdx                               ? calcAuspiciousDates(_pd)   : null;
 
   const fortuneScores = !setIdx ? calcFortuneScores(systemKey, cultural, {
     fullSaju, sunSign, moonSign,
@@ -1219,7 +1515,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, seunData, hapChongData, shinsalData, sipiunsungData, iljuronData, woluunData, gunghapData: null, gender: gender || null };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, seunData, hapChongData, shinsalData, sipiunsungData, iljuronData, woluunData, gunghapData: null, gender: gender || null, geokkukData, kyuseiSanseiData, annualFortune, auspiciousDates };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -1256,7 +1552,8 @@ function renderResults(data) {
   // ── Clean previous dynamic sections ──────────────────────
   ['detailed-reading-panel','seun-panel','woluun-panel','hapchong-panel','shinsal-panel',
    'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
-   'single-fortune-section','gunghap-section'].forEach(id => {
+   'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
+   'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1288,6 +1585,7 @@ function renderResults(data) {
     renderInterpretation(data);
     renderDrawEnergyPanel(data);
     renderAlgorithmPanel(data);
+    if (data.systemKey === 'jawanese') renderHariBaikPanel(data);
 
   // ══ SAJU: 정통 사주 전용 ═════════════════════════════════
   } else if (cat === 'saju') {
@@ -1305,6 +1603,9 @@ function renderResults(data) {
     renderTodayIlchin(data);           // today's day stem + interaction
     renderFortuneCategories(data, 'saju'); // all 4 fortune cards
     renderLuckyTips(data);             // yongsin-based tips
+    if (data.systemKey === 'saju') renderGeokkukPanel(data);
+    if (data.systemKey === 'kyusei') renderKyuseiSanseiPanel(data);
+    if (data.systemKey === 'saju' || data.systemKey === 'kyusei') renderAnnualCalendarPanel(data);
 
   // ══ GUNGHAP: 두 사람 궁합 전용 ═════════════════════════
   } else if (cat === 'gunghap') {
@@ -1323,6 +1624,9 @@ function renderResults(data) {
     renderLuckyTips(data); // category-specific tips
   }
 
+  renderAuspiciousCalendarPanel(data);
+  const personName = ((document.getElementById('person-name') || {}).value || '').trim();
+  if (personName) renderNamePanel(calcNameNumerology(personName));
   renderShareBtns(data);
   renderFaq();
 }
@@ -3326,6 +3630,302 @@ function renderGunghapPanel(data) {
   }
 }
 
+// ── ko 格局 판단 패널 ────────────────────────────────────
+function renderGeokkukPanel(data) {
+  const gk = data.geokkukData;
+  if (!gk) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
+  const title = isKo?'격국(格局) 분석':isJa?'格局分析':'Pattern Analysis';
+  const strongLabel = isKo?'신강(身强)':isJa?'身強':'Strong Day Master';
+  const weakLabel   = isKo?'신약(身弱)':isJa?'身弱':'Weak Day Master';
+  const gkName = isKo ? gk.geokkukName : isJa ? gk.geokkukNameJa : gk.geokkukNameEn;
+  const strategy = isKo ? gk.strategyKo : isJa ? gk.strategyJa : gk.strategyEn;
+  const strengthLabel = gk.isStrong ? strongLabel : weakLabel;
+  const strengthIcon  = gk.isStrong ? '🌟' : '🌙';
+  const strengthClr   = gk.isStrong ? '#d97706' : '#7c3aed';
+
+  const barW = Math.min(100, Math.round(gk.supportCount / Math.max(1, gk.supportCount + gk.pressureCount) * 100));
+  const supportLbl = isKo?`지지(비겁+인성): ${gk.supportCount}`:isJa?`支持(比劫+印星): ${gk.supportCount}`:`Support: ${gk.supportCount}`;
+  const pressLbl   = isKo?`극화(재관식): ${gk.pressureCount}`:isJa?`剋化(財官食): ${gk.pressureCount}`:`Pressure: ${gk.pressureCount}`;
+
+  const div = document.createElement('div');
+  div.id = 'geokkuk-panel';
+  div.style.cssText = 'background:linear-gradient(135deg,#fef9c3,#fef3c7);border:2px solid #fde68a;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#92400e;margin-bottom:14px;">⚜️ ${title}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+      <div style="background:${strengthClr}18;border:2px solid ${strengthClr}40;border-radius:14px;padding:12px 16px;text-align:center;flex-shrink:0;">
+        <div style="font-size:26px;">${strengthIcon}</div>
+        <div style="font-size:11px;font-weight:800;color:${strengthClr};margin-top:4px;">${strengthLabel}</div>
+      </div>
+      <div>
+        <div style="font-size:18px;font-weight:900;color:#1e1b4b;margin-bottom:4px;">${gk.geokkukIcon} ${gkName}</div>
+        <div style="font-size:10px;color:#64748b;margin-bottom:6px;">${supportLbl} &nbsp;|&nbsp; ${pressLbl}</div>
+        <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;width:140px;">
+          <div style="height:100%;width:${barW}%;background:${strengthClr};border-radius:3px;"></div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,.65);border-radius:12px;padding:10px 14px;font-size:12px;color:#374151;line-height:1.7;">${strategy}</div>`;
+
+  const siuPanel = document.getElementById('sipiunsung-panel');
+  const shinsal  = document.getElementById('shinsal-panel');
+  const hap      = document.getElementById('hapchong-panel');
+  const seun     = document.getElementById('seun-panel');
+  const detail   = document.getElementById('detailed-reading-panel');
+  const anchor   = siuPanel || shinsal || hap || seun || detail;
+  if (anchor) anchor.after(div);
+}
+
+// ── ja 九星三星 + 방위 길흉 패널 ────────────────────────
+function renderKyuseiSanseiPanel(data) {
+  const ks = data.kyuseiSanseiData;
+  if (!ks) return;
+  const lang = data.lang, isJa = lang==='ja', isKo = lang==='ko';
+  const title = isJa?'三星分析・方位吉凶':isKo?'삼성 분석 + 방위 길흉':'Three Stars & Direction Fortune';
+
+  const starNames = KYUSEI_STAR_NAMES_JA;
+  const starDescs = KYUSEI_STAR_DESC_JA;
+  const EC = {'木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#64748b','水':'#1d4ed8'};
+  const STAR_EL = {1:'水',2:'土',3:'木',4:'木',5:'土',6:'金',7:'金',8:'土',9:'火'};
+  const mkCard = (star, lbl) => {
+    const el  = STAR_EL[star] || '土';
+    const clr = EC[el] || '#d97706';
+    const nm  = starNames[star] || `${star}`;
+    const ds  = starDescs[star] || '';
+    return `<div style="flex:1;background:rgba(255,255,255,.8);border:2px solid ${clr}30;border-radius:12px;padding:10px 10px;text-align:center;">
+      <div style="font-size:9px;font-weight:700;color:#64748b;margin-bottom:4px;">${lbl}</div>
+      <div style="font-size:24px;font-weight:900;color:${clr};">${star}</div>
+      <div style="font-size:10px;font-weight:700;color:${clr};margin-bottom:4px;">${nm}</div>
+      <div style="font-size:9px;color:#6b7280;line-height:1.5;">${ds}</div>
+    </div>`;
+  };
+  const yearLbl  = isJa?'年命星':isKo?'년명성':'Year';
+  const monthLbl = isJa?'月命星':isKo?'월명성':'Month';
+  const dayLbl   = isJa?'日命星':isKo?'일명성':'Day';
+  const starsHtml = `<div style="display:flex;gap:8px;margin-bottom:14px;">
+    ${mkCard(ks.yearStar, yearLbl)}
+    ${mkCard(ks.monthStar||5, monthLbl)}
+    ${mkCard(ks.dayStar||5, dayLbl)}
+  </div>`;
+
+  // 방위 길흉
+  const DIR_COMPASS = {'北':'N↑','南':'S↓','東':'E→','西':'W←','北東':'NE↗','南東':'SE↘','南西':'SW↙','北西':'NW↖','中央':'◎'};
+  const mkDirs = (arr, clr, icon) => arr.map(d =>
+    `<span style="background:${clr}18;color:${clr};border:1px solid ${clr}40;border-radius:16px;padding:3px 10px;font-size:11px;font-weight:700;margin:2px 2px;display:inline-block;">${icon} ${d} (${DIR_COMPASS[d]||d})</span>`
+  ).join('');
+  const bestLbl    = isJa?'大吉方位':isKo?'대길 방위':'Best Direction';
+  const goodLbl    = isJa?'吉方位':isKo?'길 방위':'Good Direction';
+  const cautionLbl = isJa?'注意方位':isKo?'주의 방위':'Caution';
+  const badLbl     = isJa?'凶方位':isKo?'흉 방위':'Avoid';
+  const houiHtml = `
+    <div style="font-size:10px;font-weight:700;color:#166534;margin-bottom:6px;">🧭 ${isJa?'方位吉凶':isKo?'방위 길흉':'Direction Fortune'}</div>
+    <div style="margin-bottom:5px;"><span style="font-size:9px;font-weight:600;color:#64748b;">${bestLbl}: </span>${mkDirs(ks.dirTable.best,'#16a34a','★')}</div>
+    <div style="margin-bottom:5px;"><span style="font-size:9px;font-weight:600;color:#64748b;">${goodLbl}: </span>${mkDirs(ks.dirTable.good,'#4f46e5','●')}</div>
+    <div style="margin-bottom:5px;"><span style="font-size:9px;font-weight:600;color:#64748b;">${cautionLbl}: </span>${mkDirs(ks.dirTable.caution,'#d97706','▲')}</div>
+    <div><span style="font-size:9px;font-weight:600;color:#64748b;">${badLbl}: </span>${mkDirs(ks.dirTable.bad,'#dc2626','✕')}</div>`;
+
+  const div = document.createElement('div');
+  div.id = 'kyusei-sansei-panel';
+  div.style.cssText = 'background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:2px solid #6ee7b7;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#065f46;margin-bottom:14px;">⭐ ${title}</div>
+    ${starsHtml}
+    <div style="background:rgba(255,255,255,.65);border-radius:12px;padding:12px 14px;">${houiHtml}</div>`;
+
+  const fortCats = document.querySelector('.fortune-cats-section');
+  const share    = document.querySelector('.share-section');
+  const anchor   = fortCats || share;
+  if (anchor) anchor.before(div);
+}
+
+// ── id Hari Baik 달력 패널 ──────────────────────────────
+function renderHariBaikPanel(data) {
+  const days = calcHariBaikCalendar(data, 30);
+  if (!days) return;
+  const lang = data.lang;
+  const title = 'Hari Baik — Kalender Weton 30 Hari';
+  const GREAT_CLR='#16a34a', GOOD_CLR='#d97706', NEU_CLR='#9ca3af';
+  const DOW_ID = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  const MONTH_ID = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+  const cells = days.map(day => {
+    const clr  = day.lv==='great'?GREAT_CLR:day.lv==='good'?GOOD_CLR:NEU_CLR;
+    const bg   = day.lv==='great'?'#dcfce7':day.lv==='good'?'#fef9c3':'#f3f4f6';
+    const pasNm = PASARAN[day.pasaranIdx] || '';
+    return `<div style="background:${bg};border-radius:8px;padding:5px 3px;text-align:center;min-width:0;">
+      <div style="font-size:9px;color:#9ca3af;">${DOW_ID[day.dow]}</div>
+      <div style="font-size:13px;font-weight:800;color:${clr};">${day.dd}</div>
+      <div style="font-size:7px;color:${clr};font-weight:600;line-height:1.2;">${pasNm}</div>
+    </div>`;
+  }).join('');
+
+  const today = new Date();
+  const monthStr = `${MONTH_ID[today.getMonth()+1]} ${today.getFullYear()}`;
+  const legend = `<div style="display:flex;gap:10px;margin-bottom:10px;font-size:10px;font-weight:600;">
+    <span style="color:${GREAT_CLR};">● Sangat Baik</span>
+    <span style="color:${GOOD_CLR};">● Baik</span>
+    <span style="color:${NEU_CLR};">● Biasa</span>
+  </div>`;
+
+  const div = document.createElement('div');
+  div.id = 'hari-baik-panel';
+  div.style.cssText = 'background:#fff;border:2px solid #dc2626;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#dc2626;margin-bottom:12px;">🗓️ ${title}</div>
+    ${legend}
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>`;
+
+  const fortCats = document.querySelector('.fortune-cats-section');
+  const share    = document.querySelector('.share-section');
+  const anchor   = fortCats || share;
+  if (anchor) anchor.before(div);
+}
+
+// ── 연간 운세 달력 패널 (12개월 바 차트) ─────────────────
+function renderAnnualCalendarPanel(data) {
+  const scores = data.annualFortune;
+  if (!scores || !scores.length) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
+  const title = isKo?`${new Date().getFullYear()}년 월별 운세`:isJa?`${new Date().getFullYear()}年 月別運勢`:`${new Date().getFullYear()} Monthly Fortune`;
+  const EC = {'木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#64748b','水':'#1d4ed8'};
+  const MONTH_KO = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const MONTH_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthLabels = isKo ? MONTH_KO : isJa ? MONTH_JA : MONTH_EN;
+  const nowM = new Date().getMonth() + 1;
+  const maxScore = Math.max(...scores.map(s => s.score));
+
+  const bars = scores.map(s => {
+    const clr    = EC[s.element] || '#4f46e5';
+    const pct    = Math.round(s.score / maxScore * 100);
+    const isCurr = s.month === nowM;
+    const border = isCurr ? `border:2px solid ${clr};` : '';
+    const lbl    = monthLabels[s.month-1];
+    return `<div style="flex:1;text-align:center;">
+      <div style="font-size:9px;color:#64748b;margin-bottom:3px;font-weight:${isCurr?'800':'400'};">${s.score}</div>
+      <div style="background:${isCurr?clr:clr+'60'};height:${pct}%;min-height:8px;border-radius:3px 3px 0 0;${border}transition:height .4s;"></div>
+      <div style="font-size:8px;color:${isCurr?clr:'#9ca3af'};margin-top:3px;font-weight:${isCurr?'800':'400'};">${lbl}</div>
+    </div>`;
+  }).join('');
+
+  const div = document.createElement('div');
+  div.id = 'annual-calendar-panel';
+  div.style.cssText = 'background:#fff;border:2px solid #e5e7eb;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:14px;">📊 ${title}</div>
+    <div style="display:flex;gap:3px;align-items:flex-end;height:90px;">${bars}</div>`;
+
+  const fortCats = document.querySelector('.fortune-cats-section');
+  const share    = document.querySelector('.share-section');
+  const anchor   = fortCats || share;
+  if (anchor) anchor.before(div);
+}
+
+// ── 좋은 날 달력 패널 (30일) ────────────────────────────
+function renderAuspiciousCalendarPanel(data) {
+  const days = data.auspiciousDates;
+  if (!days || !days.length) return;
+  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja', isId = lang==='id';
+  const title = isKo?'이달의 좋은 날':isJa?'今月の吉日':isId?'Hari Baik Bulan Ini':'Auspicious Days';
+  const DOW_KO = ['일','월','화','수','목','금','토'];
+  const DOW_JA = ['日','月','火','水','木','金','土'];
+  const DOW_EN = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const dowLabels = isKo?DOW_KO:isJa?DOW_JA:DOW_EN;
+
+  const cells = days.slice(0,28).map(day => {
+    const clr = day.lv==='great'?'#166534':day.lv==='good'?'#92400e':day.lv==='bad'?'#991b1b':'#6b7280';
+    const bg  = day.lv==='great'?'#dcfce7':day.lv==='good'?'#fef9c3':day.lv==='bad'?'#fee2e2':'#f3f4f6';
+    const detail = day.detail ? `<div style="font-size:7px;color:${clr};line-height:1.2;">${day.detail}</div>` : '';
+    return `<div style="background:${bg};border-radius:8px;padding:4px 2px;text-align:center;">
+      <div style="font-size:8px;color:#9ca3af;">${dowLabels[day.dow]}</div>
+      <div style="font-size:13px;font-weight:800;color:${clr};">${day.dd}</div>
+      ${detail}
+    </div>`;
+  }).join('');
+
+  // legend
+  const greatLbl = isKo?'대길':isJa?'大吉':isId?'Sangat Baik':'Great';
+  const goodLbl  = isKo?'길':isJa?'吉':isId?'Baik':'Good';
+  const badLbl   = isKo?'흉':isJa?'凶':'Bad';
+  const legendHtml = `<div style="display:flex;gap:8px;margin-bottom:10px;font-size:10px;font-weight:600;">
+    <span style="color:#166534;">● ${greatLbl}</span>
+    <span style="color:#92400e;">● ${goodLbl}</span>
+    ${(!isId)?`<span style="color:#991b1b;">● ${badLbl}</span>`:''}
+  </div>`;
+
+  const div = document.createElement('div');
+  div.id = 'auspicious-calendar-panel';
+  div.style.cssText = 'background:#fff;border:2px solid #e5e7eb;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:10px;">📅 ${title}</div>
+    ${legendHtml}
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>`;
+
+  const share = document.querySelector('.share-section');
+  if (share) share.before(div);
+}
+
+// ── 이름 수리 패널 (동적 렌더) ──────────────────────────
+function renderNamePanel(nameResult) {
+  // 기존 패널 제거
+  const existing = document.getElementById('name-panel');
+  if (existing) existing.remove();
+  if (!nameResult) return;
+
+  const lang  = window.LUCKY_CURRENT_LANG || 'ko';
+  const isKo  = lang==='ko', isJa=lang==='ja';
+  const L     = window.LUCKY_LANG || {};
+  const title = isKo?`"${nameResult.name}" 수리(數理) 분석`:isJa?`"${nameResult.name}" 数理分析`:`Name Numerology: "${nameResult.name}"`;
+
+  const NUM_DESC_KO = {
+    1:'독립심·개척자·강한 의지력',2:'협동·외교·감수성',3:'창의성·표현력·낙천주의',
+    4:'인내·실용·책임감',5:'자유·변화·모험',6:'조화·봉사·가족애',
+    7:'탐구·지성·신비',8:'야망·성취·물질적 성공',9:'박애·봉사·완성',
+    11:'직관·영감·이상주의',22:'대건설자·실용적 이상',33:'마스터 교사·자비'
+  };
+  const NUM_DESC_EN = {
+    1:'Independence, leadership, willpower',2:'Cooperation, diplomacy, sensitivity',
+    3:'Creativity, expression, optimism',4:'Patience, practicality, responsibility',
+    5:'Freedom, change, adventure',6:'Harmony, service, family',
+    7:'Inquiry, intellect, mystery',8:'Ambition, achievement, success',
+    9:'Philanthropy, completion, wisdom',11:'Intuition, inspiration, idealism',
+    22:'Master builder, practical idealist',33:'Master teacher, compassion'
+  };
+  const NUM_DESC_JA = {
+    1:'独立・開拓・強い意志',2:'協調・外交・感受性',3:'創造性・表現力・楽観主義',
+    4:'忍耐・実用・責任感',5:'自由・変化・冒険',6:'調和・奉仕・家族愛',
+    7:'探求・知性・神秘',8:'野望・達成・物質的成功',9:'博愛・奉仕・完成',
+    11:'直感・インスピレーション・理想主義',22:'大建設者・実用的理想',33:'マスター教師・慈悲'
+  };
+  const numDesc = isKo ? NUM_DESC_KO : isJa ? NUM_DESC_JA : NUM_DESC_EN;
+
+  const mkRing = (num, clr, lbl) => `
+    <div style="text-align:center;flex:1;">
+      <div style="width:56px;height:56px;border-radius:50%;background:${clr};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin:0 auto 6px;">${num}</div>
+      <div style="font-size:10px;font-weight:700;color:#374151;margin-bottom:3px;">${lbl}</div>
+      <div style="font-size:10px;color:#6b7280;line-height:1.4;">${numDesc[num]||num}</div>
+    </div>`;
+
+  const destLbl = isKo?'운명수':isJa?'運命数':'Destiny';
+  const soulLbl = isKo?'영혼수':isJa?'魂数':'Soul Urge';
+  const persLbl = isKo?'외면수':isJa?'外面数':'Personality';
+
+  const div = document.createElement('div');
+  div.id = 'name-panel';
+  div.style.cssText = 'background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:2px solid #93c5fd;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `
+    <div style="font-size:12px;font-weight:800;color:#1e40af;margin-bottom:14px;">🔢 ${title}</div>
+    <div style="display:flex;gap:12px;">
+      ${mkRing(nameResult.destinyNum,'#4f46e5',destLbl)}
+      ${mkRing(nameResult.soulUrge,'#ec4899',soulLbl)}
+      ${mkRing(nameResult.personality,'#d97706',persLbl)}
+    </div>`;
+
+  const share = document.querySelector('.share-section');
+  if (share) share.before(div);
+}
+
 // ── 오늘의 일진(日辰) — daily energy reading ──────────────
 function renderTodayIlchin(data) {
   if (data.systemKey !== 'saju') return;
@@ -3427,6 +4027,8 @@ function renderShareBtns(data) {
   container.innerHTML = '';
   const L = window.LUCKY_LANG || {};
   const copyLabel = L.copyLabel || 'Copy';
+  const copyLinkLabel = L.btnCopyLink || '🔗 Link';
+  const saveImgLabel  = L.btnSaveImage || '📷 Save';
 
   plats.forEach(p => {
     let btn;
@@ -3455,12 +4057,48 @@ function renderShareBtns(data) {
     }
     if (btn) container.insertAdjacentHTML('beforeend', btn);
   });
+
+  // Universal copy-link + image-save buttons (always shown after social buttons)
+  container.insertAdjacentHTML('beforeend', `
+    <button class="share-btn copy" onclick="doCopyLink(this)" style="background:#f0f9ff;border:1.5px solid #7dd3fc;color:#0369a1;">
+      <span class="sb-icon">🔗</span><span id="copy-link-label">${copyLinkLabel}</span>
+    </button>
+    <button class="share-btn copy" onclick="saveResultAsImage()" style="background:#fdf4ff;border:1.5px solid #d8b4fe;color:#7e22ce;">
+      <span class="sb-icon">📷</span><span>${saveImgLabel}</span>
+    </button>
+  `);
+}
+
+function doCopyLink(btn) {
+  const url = getShareUrl();
+  const L = window.LUCKY_LANG || {};
+  navigator.clipboard.writeText(url).then(() => {
+    const lbl = btn.querySelector('#copy-link-label');
+    const orig = lbl ? lbl.textContent : '';
+    if (lbl) lbl.textContent = L.btnCopied || '✓ Copied!';
+    setTimeout(() => { if (lbl) lbl.textContent = orig; }, 2000);
+  }).catch(() => {
+    prompt('Copy this URL:', url);
+  });
 }
 
 function getShareUrl() {
   if (!lastResult) return location.href;
-  const d = lastResult;
-  return `${location.origin}${location.pathname}?lang=${d.lang}&y=${d.year}&m=${d.month}&dy=${d.day}`;
+  const d   = lastResult;
+  const cat = window.LUCKY_SELECTED_CAT || 'lucky';
+  const p   = new URLSearchParams();
+  p.set('lang', d.lang);
+  p.set('bd', `${d.year}${String(d.month).padStart(2,'0')}${String(d.day).padStart(2,'0')}`);
+  // keep legacy params so worker OG still works
+  p.set('y', d.year); p.set('m', d.month); p.set('dy', d.day);
+  if (cat !== 'lucky') p.set('cat', cat);
+  if (d.gender) p.set('gender', d.gender);
+  if (d.birthHour !== null && d.birthHour !== undefined) p.set('bh', d.birthHour);
+  if (d.partnerData) {
+    const pb = d.partnerData;
+    p.set('bd2', `${pb.year}${String(pb.month).padStart(2,'0')}${String(pb.day).padStart(2,'0')}`);
+  }
+  return `${location.origin}${location.pathname}?${p.toString()}`;
 }
 function getShareText() { return lastResult ? buildShareText(lastResult) : ''; }
 
@@ -3744,6 +4382,15 @@ function toggleBirthTime() {
   if (icon) icon.textContent = open ? '▶' : '▼';
 }
 
+function toggleNameInput() {
+  const body = document.getElementById('name-input-body');
+  const icon = document.querySelector('#name-input-toggle .toggle-icon');
+  if (!body) return;
+  const open = body.style.display !== 'none' && body.style.display !== '';
+  body.style.display = open ? 'none' : 'block';
+  if (icon) icon.textContent = open ? '▶' : '▼';
+}
+
 // ── applyLang (static text updates) ──────────────────────
 function applyLang() {
   const L = window.LUCKY_LANG;
@@ -3919,8 +4566,13 @@ function applyLang() {
     L.methodBadges.forEach((t, i) => { if(bds[i]) bds[i].textContent = t; });
   }
 
+  // Name input section
+  if (L.nameInputLabel) setTxt('txt-name-input-label', L.nameInputLabel);
+  if (L.nameInputNote)  setTxt('txt-name-input-note',  L.nameInputNote);
+
   // Adapt input form for current category selection
   adaptInputForm(window.LUCKY_SELECTED_CAT || 'lucky');
+  readUrlParamsAndAutoFill();
 }
 
 function applyLangToResults(data) {

@@ -132,4 +132,15 @@ window.LUCKY_LANG = {
       a: 'Tidak. Togel adalah permainan peluang dan tidak ada sistem yang dapat menjamin kemenangan. Aplikasi ini menyediakan hiburan berdasarkan kearifan lokal kalender Jawa. Bermainlah secara bertanggung jawab.',
     },
   ],
+
+  nameInputLabel: 'Masukkan Nama (opsional) — Analisis Numerologi',
+  nameInputNote: 'Menganalisis numerologi nama Anda.',
+  nameDestiny: 'Angka Takdir', nameSoul: 'Angka Jiwa', namePersonality: 'Angka Kepribadian',
+  btnCopyLink: 'Salin Tautan', btnCopied: 'Disalin!',
+  btnSaveImage: 'Simpan Gambar',
+  annualCalendarTitle: 'Ramalan Bulanan Tahun Ini',
+  auspiciousTitle: 'Hari Baik Bulan Ini',
+  auspiciousGreat: 'Sangat Baik', auspiciousGood: 'Baik', auspiciousBad: 'Kurang Baik',
+  hariBaikTitle: 'Kalender Hari Baik (Weton)',
+  hariBaikGreat: 'Sangat Baik', hariBaikGood: 'Baik',
 };

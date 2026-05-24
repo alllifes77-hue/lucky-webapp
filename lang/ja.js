@@ -250,4 +250,15 @@ window.LUCKY_LANG = {
       a: '保証はできません。宝くじは確率的なゲームです。このアプリは九星気学の文化的な楽しみを提供するエンターテインメントです。適切な範囲でお楽しみください。',
     },
   ],
+
+  nameInputLabel: '名前入力（任意）— 数理分析',
+  nameInputNote: '名前の数理（数秘術）を分析します。',
+  nameDestiny: '運命数', nameSoul: '魂の数', namePersonality: '外面数',
+  btnCopyLink: 'リンクコピー', btnCopied: 'コピーしました！',
+  btnSaveImage: '画像保存',
+  annualCalendarTitle: '今年の月別運勢',
+  auspiciousTitle: '今月の吉日カレンダー',
+  auspiciousGreat: '大吉', auspiciousGood: '吉', auspiciousBad: '凶',
+  houiTitle: '方位吉凶・三星分析',
+  houiBest: '大吉方位', houiGood: '吉方位', houiCaution: '注意方位', houiBad: '凶方位',
 };

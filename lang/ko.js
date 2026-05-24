@@ -239,4 +239,16 @@ window.LUCKY_LANG = {
       a: '아닙니다. 로또는 무작위 추첨이며 어떤 시스템도 당첨을 보장할 수 없습니다. 이 앱은 사주팔자 전통 지식을 바탕으로 한 오락 서비스입니다. 책임감 있게 즐기세요.',
     },
   ],
+
+  nameInputLabel: '이름 입력 (선택) — 수리 분석',
+  nameInputNote: '이름의 수리(數理)를 분석합니다.',
+  nameDestiny: '운명수', nameSoul: '영혼수', namePersonality: '외면수',
+  btnCopyLink: '링크 복사', btnCopied: '복사됨!',
+  btnSaveImage: '이미지 저장',
+  annualCalendarTitle: '올해 월별 운세',
+  auspiciousTitle: '이달의 좋은 날',
+  auspiciousGreat: '대길', auspiciousGood: '길', auspiciousBad: '흉',
+  geokkukTitle: '격국(格局) 분석',
+  geokkukStrong: '신강(身强) — 일간이 강한 사주',
+  geokkukWeak: '신약(身弱) — 일간이 약한 사주',
 };
