@@ -1577,7 +1577,7 @@ function renderResults(data) {
    'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
-   'cz-badge-panel','daily-energy-panel'].forEach(id => {
+   'cz-badge-panel','daily-energy-panel','ai-chat-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1654,6 +1654,7 @@ function renderResults(data) {
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
   renderShareBtns(data);
+  renderAIChat(data);
   renderFaq();
 }
 
@@ -4093,6 +4094,157 @@ function renderShareBtns(data) {
       <span class="sb-icon">📷</span><span>${saveImgLabel}</span>
     </button>
   `);
+}
+
+function renderAIChat(data) {
+  const lang = window.LUCKY_LANG || 'ko';
+  const el = document.getElementById('ai-chat-panel');
+  if (el) el.remove();
+
+  // Build fortune data payload
+  const fd = {
+    birthDate: `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')}`,
+    element: data.cultural ? data.cultural.element : '',
+    zodiac: data.czKey || '',
+    luckyNums: (data.numbers || []).join(', '),
+    loveScore: data.loveData ? data.loveData.score : null,
+    moneyScore: data.moneyData ? data.moneyData.score : null,
+    careerScore: data.careerData ? data.careerData.score : null,
+    achieveScore: data.achievementData ? data.achievementData.score : null,
+  };
+
+  const LABELS = {
+    ko: { title:'🤖 AI 운세 해설', placeholder:'AI에게 질문하세요...', send:'전송', loading:'AI가 분석 중...', btn:'AI 상세 해설 받기' },
+    en: { title:'🤖 AI Fortune Reading', placeholder:'Ask AI anything...', send:'Send', loading:'AI is analyzing...', btn:'Get AI Reading' },
+    ja: { title:'🤖 AI運勢解説', placeholder:'AIに質問する...', send:'送信', loading:'AI解析中...', btn:'AI詳細解説を見る' },
+    de: { title:'🤖 KI Glückszahlen-Analyse', placeholder:'Fragen Sie die KI...', send:'Senden', loading:'KI analysiert...', btn:'KI-Analyse erhalten' },
+    fr: { title:'🤖 Analyse IA', placeholder:"Posez une question à l'IA...", send:'Envoyer', loading:"L'IA analyse...", btn:'Obtenir l\'analyse IA' },
+    es: { title:'🤖 Análisis IA', placeholder:'Pregunta a la IA...', send:'Enviar', loading:'IA analizando...', btn:'Obtener análisis IA' },
+    pt: { title:'🤖 Análise IA', placeholder:'Pergunte à IA...', send:'Enviar', loading:'IA analisando...', btn:'Obter análise IA' },
+    it: { title:'🤖 Analisi IA', placeholder:"Chiedi all'IA...", send:'Invia', loading:"L'IA sta analizzando...", btn:'Ottenere analisi IA' },
+    id: { title:'🤖 Analisis AI', placeholder:'Tanya AI...', send:'Kirim', loading:'AI sedang menganalisis...', btn:'Dapatkan analisis AI' },
+  };
+  const lb = LABELS[lang] || LABELS.en;
+
+  const panel = document.createElement('div');
+  panel.id = 'ai-chat-panel';
+  panel.style.cssText = 'background:#fff;border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.10);margin:16px 0;overflow:hidden;';
+  panel.innerHTML = `
+<div style="background:linear-gradient(135deg,#1e1b4b,#4c1d95);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+  <span style="font-size:22px;">🤖</span>
+  <span style="color:#fff;font-weight:800;font-size:15px;">${lb.title}</span>
+</div>
+<div id="ai-messages" style="padding:16px;min-height:80px;max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;"></div>
+<div style="padding:10px 14px;border-top:1px solid #e5e7eb;display:flex;gap:8px;">
+  <input id="ai-input" type="text" placeholder="${lb.placeholder}"
+    style="flex:1;border:1px solid #d1d5db;border-radius:50px;padding:9px 16px;font-size:14px;outline:none;background:#f9fafb;">
+  <button id="ai-send-btn" onclick="sendAIChatMessage()"
+    style="background:#4c1d95;color:#fff;border:none;border-radius:50px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">${lb.send}</button>
+</div>`;
+
+  // Insert before share section
+  const shareSec = document.querySelector('.share-section') || document.getElementById('s-result');
+  if (shareSec) shareSec.insertAdjacentElement('beforebegin', panel);
+  else document.getElementById('s-result').appendChild(panel);
+
+  // Store data on window for chat handler
+  window._aiChatLang = lang;
+  window._aiChatFD   = fd;
+  window._aiHistory  = [];
+
+  // Auto-trigger initial reading
+  _aiAddMessage('assistant', '', true);
+  _aiStreamMessage([], fd, lang);
+
+  // Enter key submit
+  document.getElementById('ai-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAIChatMessage(); }
+  });
+}
+
+function _aiAddMessage(role, text, streaming) {
+  const msgs = document.getElementById('ai-messages');
+  if (!msgs) return null;
+  const div = document.createElement('div');
+  div.style.cssText = role === 'user'
+    ? 'align-self:flex-end;background:#4c1d95;color:#fff;padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:13px;max-width:80%;line-height:1.6;'
+    : 'align-self:flex-start;background:#f3f4f6;color:#1c1917;padding:10px 14px;border-radius:16px 16px 16px 4px;font-size:13px;max-width:90%;line-height:1.7;white-space:pre-wrap;';
+  if (streaming) {
+    div.innerHTML = '<span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s infinite;margin-right:3px;"></span><span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s .3s infinite;margin-right:3px;"></span><span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s .6s infinite;"></span>';
+    if (!document.getElementById('ai-blink-style')) {
+      const st = document.createElement('style');
+      st.id = 'ai-blink-style';
+      st.textContent = '@keyframes ai-blink{0%,80%,100%{opacity:.2}40%{opacity:1}}';
+      document.head.appendChild(st);
+    }
+  } else {
+    div.textContent = text;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+async function _aiStreamMessage(history, fd, lang) {
+  const btn = document.getElementById('ai-send-btn');
+  const input = document.getElementById('ai-input');
+  if (btn) btn.disabled = true;
+  if (input) input.disabled = true;
+
+  const msgBox = document.getElementById('ai-messages');
+  let bubble = msgBox ? msgBox.lastElementChild : null;
+  if (!bubble) bubble = _aiAddMessage('assistant', '', true);
+
+  try {
+    const res = await fetch('https://all-lifes.com/lucky-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lang, fortuneData: fd, messages: history }),
+    });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    bubble.innerHTML = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n');
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const payload = line.slice(6).trim();
+        if (payload === '[DONE]') break;
+        try {
+          const json = JSON.parse(payload);
+          const delta = json.choices?.[0]?.delta?.content || '';
+          fullText += delta;
+          bubble.textContent = fullText;
+          if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
+        } catch {}
+      }
+    }
+    window._aiHistory = [...history, { role: 'assistant', content: fullText }];
+  } catch(e) {
+    if (bubble) bubble.textContent = '⚠️ ' + e.message;
+  } finally {
+    if (btn) btn.disabled = false;
+    if (input) { input.disabled = false; input.focus(); }
+  }
+}
+
+function sendAIChatMessage() {
+  const input = document.getElementById('ai-input');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  _aiAddMessage('user', text, false);
+  const history = [...(window._aiHistory || []), { role: 'user', content: text }];
+  window._aiHistory = history;
+  _aiAddMessage('assistant', '', true);
+  _aiStreamMessage(history, window._aiChatFD, window._aiChatLang);
 }
 
 function doCopyLink(btn) {
