@@ -6,7 +6,7 @@
 //   all-lifes.com/lucky-sitemap.xml → Sitemap
 // ═══════════════════════════════════════════════════════════
 
-const APP_URL  = 'https://lucky.all-lifes.com';
+const APP_URL  = 'https://all-lifes.com/lucky';
 const SITE_URL = 'https://all-lifes.com';
 const ALL_LANGS = ['ko','en','ja','de','fr','es','pt','it','id'];
 
@@ -1097,16 +1097,16 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
       }
     }
 
-    // ── Language lucky pages (/lucky/, /en/lucky/, /ja/lucky/, etc.) ─
-    const isKo = path === '/lucky/' || path === '/lucky';
+    // ── Language lucky pages (/en/lucky/, /ja/lucky/, etc.) ─
+    // /lucky/ itself passes through to Lightsail (direct SPA)
     const match = path.match(/^\/([a-z]{2})\/lucky/);
-    if (!isKo && !match) return fetch(request);
-    const lang = isKo ? 'ko' : match[1];
+    if (!match) return fetch(request);
+    const lang = match[1];
     if (!LANGS[lang]) return fetch(request);
 
     const L = LANGS[lang];
     const p = url.searchParams;
-    const canonical = lang === 'ko' ? `${SITE_URL}/lucky/` : `${SITE_URL}/${lang}/lucky/`;
+    const canonical = `${SITE_URL}/${lang}/lucky/`;
 
     // Result share params
     const isShare = p.get('y') && p.get('m') && p.get('dy');

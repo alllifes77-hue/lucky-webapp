@@ -1,0 +1,196 @@
+<!-- JSON-LD 구조화 데이터 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "사주팔자 행운의 번호",
+      "description": "생년월일로 사주팔자 천간지지를 계산하고 오행(木火土金水)에 맞는 로또 6/45 행운의 번호를 무료로 생성합니다.",
+      "url": "https://all-lifes.com/lucky",
+      "applicationCategory": "EntertainmentApplication",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"},
+      "inLanguage": "ko"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "같은 생년월일이면 항상 같은 번호가 나오나요?",
+          "acceptedAnswer": {"@type": "Answer", "text": "네, 동일한 생년월일 입력 시 항상 동일한 번호가 생성됩니다. 사주팔자와 오행 계산이 결정론적(deterministic) 알고리즘으로 이루어지기 때문입니다."}
+        },
+        {
+          "@type": "Question",
+          "name": "개인정보(생년월일)가 서버에 저장되나요?",
+          "acceptedAnswer": {"@type": "Answer", "text": "전혀 저장되지 않습니다. 모든 계산은 브라우저 내(클라이언트 사이드)에서만 이루어지며, 생년월일 데이터는 서버로 전송되지 않습니다."}
+        },
+        {
+          "@type": "Question",
+          "name": "이 번호로 실제 로또에 당첨될 수 있나요?",
+          "acceptedAnswer": {"@type": "Answer", "text": "로또 추첨은 완전한 무작위(random)이므로 특정 번호의 당첨을 보장할 수 없습니다. 사주팔자와 오행 철학을 바탕으로 한 엔터테인먼트 서비스입니다."}
+        },
+        {
+          "@type": "Question",
+          "name": "사주팔자 행운의 번호는 어떻게 계산되나요?",
+          "acceptedAnswer": {"@type": "Answer", "text": "생년월일의 연주(年柱) 천간(天干)으로 오행(木火土金水)을 산출합니다. 각 오행에 전통적으로 배속된 행운 숫자(木=3·8, 火=2·7, 土=5·0, 金=4·9, 水=1·6)가 번호 풀에서 4배 높은 가중치를 가지며, 나머지는 시드 기반 난수로 채워집니다."}
+        },
+        {
+          "@type": "Question",
+          "name": "영어, 일본어 등 다른 언어 버전도 있나요?",
+          "acceptedAnswer": {"@type": "Answer", "text": "있습니다. 영어(Numerology·Powerball), 일본어(九星気学·ロト6), 독일어·프랑스어·스페인어·이탈리아어(수비학·EuroMillions), 포르투갈어(Mega-Sena), 인도네시아어(Weton·Togel 4D) 버전이 제공됩니다."}
+        },
+        {
+          "@type": "Question",
+          "name": "모바일에서도 사용할 수 있나요?",
+          "acceptedAnswer": {"@type": "Answer", "text": "네, PC·태블릿·스마트폰 모두에서 동일하게 사용 가능합니다. 별도 앱 설치 없이 브라우저에서 바로 이용하세요."}
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<iframe
+  id="lucky-frame"
+  src="https://all-lifes.com/lucky/?lang=ko"
+  width="100%"
+  frameborder="0"
+  scrolling="no"
+  title="사주팔자 행운의 번호 - 생년월일 로또 번호 무료 생성"
+  style="border:none; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.1); display:block; width:100%; height:560px; min-height:0; transition:height .25s ease;">
+</iframe>
+
+<script>
+(function(){
+  var f = document.getElementById('lucky-frame');
+  var lastH = 560;
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type === 'lucky-resize' && e.data.height > 100){
+      var h = Math.ceil(e.data.height) + 24;
+      if(Math.abs(h - lastH) > 4){ lastH = h; f.style.height = h + 'px'; }
+    }
+  });
+  f.addEventListener('load', function(){
+    setTimeout(function(){
+      try {
+        var inner = f.contentDocument || f.contentWindow.document;
+        var bh = inner && inner.body ? inner.body.scrollHeight : 0;
+        if(bh > 100){ var h2 = bh + 24; lastH = h2; f.style.height = h2 + 'px'; }
+      } catch(ex){}
+    }, 800);
+  });
+})();
+</script>
+
+<!-- 본문 콘텐츠 -->
+<div style="max-width:860px; margin:48px auto 0; font-family:'맑은 고딕','Apple SD Gothic Neo',sans-serif;">
+
+  <h2 style="font-size:22px; font-weight:bold; color:#1e1b4b; margin-bottom:12px;">사주팔자(四柱八字)로 행운의 번호를 뽑는 원리</h2>
+  <p style="font-size:15px; color:#475569; line-height:1.8; margin-bottom:10px;">
+    사주팔자는 태어난 연(年)·월(月)·일(日)·시(時)를 각각 천간(天干)과 지지(地支)로 나타낸 동양 철학의 운명 체계입니다.
+    이 앱은 생년월일의 <strong>연주(年柱)</strong> 천간을 기준으로 오행 속성을 추출하고, 전통적으로 그 오행에 배속된 행운 숫자를 가중 반영해 로또 6/45 번호를 생성합니다.
+  </p>
+  <p style="font-size:15px; color:#475569; line-height:1.8; margin-bottom:24px;">
+    예를 들어 1990년생의 연주는 <strong>경오(庚午)</strong>로, 천간 庚은 <strong>金(금)</strong> 오행입니다.
+    金의 행운 숫자 4·9가 번호 풀에서 4배 높은 가중치를 갖고, 나머지 번호는 시드(seed) 기반 결정론적 난수로 채워집니다.
+    결과적으로 같은 생년월일은 항상 같은 번호를 생성합니다.
+  </p>
+
+  <!-- 천간-오행 표 -->
+  <table style="width:100%; border-collapse:collapse; font-size:14px; margin-bottom:32px;">
+    <thead>
+      <tr style="background:#1e1b4b; color:#fbbf24;">
+        <th style="padding:12px 14px; text-align:left; font-weight:700;">천간(天干)</th>
+        <th style="padding:12px 14px; text-align:left; font-weight:700;">오행</th>
+        <th style="padding:12px 14px; text-align:left; font-weight:700;">행운 숫자</th>
+        <th style="padding:12px 14px; text-align:left; font-weight:700;">상징 색상</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <td style="padding:11px 14px; color:#44403c;">甲(갑) · 乙(을)</td>
+        <td style="padding:11px 14px; color:#065f46; font-weight:600;">🌳 木 (나무)</td>
+        <td style="padding:11px 14px; color:#44403c;">3, 8</td>
+        <td style="padding:11px 14px; color:#44403c;">청색(靑)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #e2e8f0; background:#fafaf9;">
+        <td style="padding:11px 14px; color:#44403c;">丙(병) · 丁(정)</td>
+        <td style="padding:11px 14px; color:#7f1d1d; font-weight:600;">🔥 火 (불)</td>
+        <td style="padding:11px 14px; color:#44403c;">2, 7</td>
+        <td style="padding:11px 14px; color:#44403c;">적색(赤)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <td style="padding:11px 14px; color:#44403c;">戊(무) · 己(기)</td>
+        <td style="padding:11px 14px; color:#78350f; font-weight:600;">🌍 土 (흙)</td>
+        <td style="padding:11px 14px; color:#44403c;">5, 0</td>
+        <td style="padding:11px 14px; color:#44403c;">황색(黃)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #e2e8f0; background:#fafaf9;">
+        <td style="padding:11px 14px; color:#44403c;">庚(경) · 辛(신)</td>
+        <td style="padding:11px 14px; color:#1f2937; font-weight:600;">⚙️ 金 (금속)</td>
+        <td style="padding:11px 14px; color:#44403c;">4, 9</td>
+        <td style="padding:11px 14px; color:#44403c;">백색(白)</td>
+      </tr>
+      <tr>
+        <td style="padding:11px 14px; color:#44403c;">壬(임) · 癸(계)</td>
+        <td style="padding:11px 14px; color:#1e3a8a; font-weight:600;">💧 水 (물)</td>
+        <td style="padding:11px 14px; color:#44403c;">1, 6</td>
+        <td style="padding:11px 14px; color:#44403c;">흑색(黑)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="font-size:22px; font-weight:bold; color:#1e1b4b; margin-bottom:12px;">이용 방법 — 3단계로 완성</h2>
+  <p style="font-size:15px; color:#475569; line-height:1.8; margin-bottom:10px;">
+    <strong>① 생년월일 입력</strong> — 위 앱에서 본인의 생년(년)·월·일을 선택합니다. 양력 기준이며 1900년부터 현재까지 지원합니다.
+  </p>
+  <p style="font-size:15px; color:#475569; line-height:1.8; margin-bottom:10px;">
+    <strong>② 번호 생성</strong> — 「행운의 번호 뽑기」 버튼을 누르면 사주팔자 알고리즘이 오행을 계산하고 2~3초 내에 로또 6/45 형식의 번호 6개를 생성합니다.
+  </p>
+  <p style="font-size:15px; color:#475569; line-height:1.8; margin-bottom:32px;">
+    <strong>③ 결과 확인 및 공유</strong> — 번호와 함께 오행 속성, 행운의 색·요일, 재물운 메시지를 확인할 수 있습니다. 카카오톡·밴드·X(트위터)로 바로 공유 가능합니다.
+  </p>
+
+  <h2 style="font-size:22px; font-weight:bold; color:#1e1b4b; margin-bottom:20px;">자주 묻는 질문</h2>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;" open>
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">같은 생년월일이면 항상 같은 번호가 나오나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">네, 동일한 생년월일 입력 시 항상 동일한 번호가 생성됩니다. 사주팔자와 오행 계산이 결정론적(deterministic) 알고리즘으로 이루어지기 때문입니다. 이는 「나만의 번호」라는 개념을 구현하기 위한 설계입니다.</p>
+  </details>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;">
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">개인정보(생년월일)가 서버에 저장되나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">전혀 저장되지 않습니다. 모든 계산은 브라우저 내(클라이언트 사이드)에서만 이루어지며, 생년월일 데이터는 서버로 전송되지 않습니다.</p>
+  </details>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;">
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">이 번호로 실제 로또에 당첨될 수 있나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">로또 추첨은 완전한 무작위(random)이므로 특정 번호의 당첨을 보장할 수 없습니다. 이 앱은 사주팔자와 오행 철학을 바탕으로 한 엔터테인먼트 서비스입니다. 책임감 있는 복권 이용을 권장합니다.</p>
+  </details>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;">
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">사주팔자 행운의 번호는 어떻게 계산되나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">생년월일의 연주(年柱) 천간(天干)으로 오행(木火土金水)을 산출합니다. 각 오행의 전통 행운 숫자(木=3·8, 火=2·7, 土=5·0, 金=4·9, 水=1·6)가 번호 풀에서 4배 높은 가중치를 가지며, 나머지 번호는 시드 기반 난수로 채워집니다.</p>
+  </details>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;">
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">시(時)는 왜 입력하지 않나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">출생 시각은 정확히 모르는 경우가 많아 연주(年柱) 기반으로 오행을 산출합니다. 연주의 천간이 오행 특성을 가장 뚜렷하게 나타내며, 행운의 번호 생성에 충분한 변별력을 제공합니다.</p>
+  </details>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;">
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">영어, 일본어 등 다른 언어 버전도 있나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">있습니다. 영어(Numerology·Powerball), 일본어(九星気学·ロト6), 독일어·프랑스어·스페인어·이탈리아어(수비학·EuroMillions), 포르투갈어(Mega-Sena), 인도네시아어(Weton·Togel 4D) 버전이 제공됩니다.</p>
+  </details>
+
+  <details style="border:1px solid #e2e8f0; border-radius:12px; padding:16px 20px; margin-bottom:10px;">
+    <summary style="font-weight:600; cursor:pointer; color:#1e1b4b;">모바일에서도 사용할 수 있나요?</summary>
+    <p style="margin-top:10px; color:#475569; line-height:1.7;">네, PC·태블릿·스마트폰 모두에서 동일하게 사용 가능합니다. 별도 앱 설치 없이 브라우저에서 바로 이용하세요.</p>
+  </details>
+
+  <p style="font-size:12px; color:#92400e; background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px 18px; line-height:1.7; margin-top:32px;">
+    ⚠️ <strong>책임감 있는 복권 이용 안내:</strong> 본 서비스는 동양 철학(사주팔자·오행)을 활용한 엔터테인먼트 목적의 번호 생성기입니다. 로또 당첨을 보장하지 않으며, 과도한 복권 구매는 삼가 주시기 바랍니다. 사행산업통합감독위원회 도박문제 상담전화: 1336
+  </p>
+
+</div>

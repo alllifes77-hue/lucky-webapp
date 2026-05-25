@@ -4654,8 +4654,8 @@ function applyLang() {
 
   if (L.docTitle) document.title = L.docTitle;
 
-  const url = lang === 'ko' ? 'https://lucky.all-lifes.com/' : `https://lucky.all-lifes.com/?lang=${lang}`;
-  const ogImg = `https://lucky.all-lifes.com/og-${lang}.png`;
+  const url = lang === 'ko' ? 'https://all-lifes.com/lucky/' : `https://all-lifes.com/lucky/?lang=${lang}`;
+  const ogImg = `https://all-lifes.com/lucky/og-${lang}.png`;
 
   function setMeta(sel, val) { const m = document.querySelector(sel); if(m&&val) m.content = val; }
   function setAttr(sel, attr, val) { const m = document.querySelector(sel); if(m&&val) m[attr] = val; }
