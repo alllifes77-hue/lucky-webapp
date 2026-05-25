@@ -541,6 +541,16 @@ export default {
         ...ALL_LANGS.filter(l=>CAT_SLUGS[l]).flatMap(l=>Object.entries(CAT_SLUGS[l]).map(([cat,slug])=>({lang:l,loc:l==='ko'?`${SITE_URL}/${slug}/`:`${SITE_URL}/${l}/${slug}/`,priority:'0.85'}))),
         // Zodiac pages
         ...Object.entries(ZODIAC_SLUGS_SM).flatMap(([l,slugs])=>slugs.map(s=>({ lang:l, loc:`${SITE_URL}/${l}/${s}/`, priority:'0.7' }))),
+        // 십이지 Chinese zodiac (ko root-level + ja/en/id)
+        ...['원숭이','닭','개','돼지','쥐','소','호랑이','토끼','용','뱀','말','양'].map(s=>({lang:'ko',loc:`${SITE_URL}/${encodeURIComponent(s)}/`,priority:'0.75'})),
+        ...['saru','tori','inu','i','ne','ushi','tora','u','tatsu','mi','uma','hitsuji'].map(s=>({lang:'ja',loc:`${SITE_URL}/ja/${s}/`,priority:'0.75'})),
+        ...['monkey','rooster','dog','pig','rat','ox','tiger','rabbit','dragon','snake','horse','goat'].map(s=>({lang:'en',loc:`${SITE_URL}/en/${s}/`,priority:'0.7'})),
+        ...['monyet','ayam','anjing','babi','tikus','kerbau','macan','kelinci','naga','ular','kuda','kambing'].map(s=>({lang:'id',loc:`${SITE_URL}/id/${s}/`,priority:'0.7'})),
+        // Ko 출생연도 페이지 (1950-2010)
+        ...[...Array(61)].map((_,i)=>({lang:'ko',loc:`${SITE_URL}/${1950+i}/`,priority:'0.8'})),
+        // 혈액형 ko + ja
+        ...['blood-a','blood-b','blood-o','blood-ab'].map(s=>({lang:'ko',loc:`${SITE_URL}/ko/${s}/`,priority:'0.75'})),
+        ...['ketsueki-a','ketsueki-b','ketsueki-o','ketsueki-ab'].map(s=>({lang:'ja',loc:`${SITE_URL}/ja/${s}/`,priority:'0.75'})),
       ];
       const alts = locs.map(l =>
         `    <xhtml:link rel="alternate" hreflang="${l.lang}" href="${l.loc}"/>`
@@ -825,6 +835,265 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
 <script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
 </body></html>`;
         return new Response(cHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control': bd1&&bd2?'public,max-age=300':'public,max-age=3600'}});
+      }
+    }
+
+    // ── 십이지 Chinese Zodiac pages (/ko/rat/, /ja/nezumi/, /en/rat/, /id/tikus/) ─
+    {
+      const CZ_KEYS = ['monkey','rooster','dog','pig','rat','ox','tiger','rabbit','dragon','snake','horse','goat'];
+      const CZ_EMJ  = {monkey:'🐵',rooster:'🐔',dog:'🐶',pig:'🐷',rat:'🐭',ox:'🐮',tiger:'🐯',rabbit:'🐰',dragon:'🐲',snake:'🐍',horse:'🐴',goat:'🐑'};
+      const CZ_BIRTH_YEARS = {monkey:'1956,1968,1980,1992,2004,2016',rooster:'1957,1969,1981,1993,2005,2017',dog:'1958,1970,1982,1994,2006,2018',pig:'1959,1971,1983,1995,2007,2019',rat:'1960,1972,1984,1996,2008,2020',ox:'1961,1973,1985,1997,2009,2021',tiger:'1962,1974,1986,1998,2010,2022',rabbit:'1963,1975,1987,1999,2011,2023',dragon:'1964,1976,1988,2000,2012,2024',snake:'1965,1977,1989,2001,2013,2025',horse:'1966,1978,1990,2002,2014,2026',goat:'1967,1979,1991,2003,2015,2027'};
+      const CZ_SLUGS = {
+        ko:  ['원숭이','닭','개','돼지','쥐','소','호랑이','토끼','용','뱀','말','양'],
+        ja:  ['saru','tori','inu','i','ne','ushi','tora','u','tatsu','mi','uma','hitsuji'],
+        en:  ['monkey','rooster','dog','pig','rat','ox','tiger','rabbit','dragon','snake','horse','goat'],
+        id:  ['monyet','ayam','anjing','babi','tikus','kerbau','macan','kelinci','naga','ular','kuda','kambing'],
+      };
+      const CZ_NAMES = {
+        ko:  ['원숭이띠','닭띠','개띠','돼지띠','쥐띠','소띠','호랑이띠','토끼띠','용띠','뱀띠','말띠','양띠'],
+        ja:  ['申年生(さる)','酉年生(とり)','戌年生(いぬ)','亥年生(いのしし)','子年生(ねずみ)','丑年生(うし)','寅年生(とら)','卯年生(うさぎ)','辰年生(たつ)','巳年生(へび)','午年生(うま)','未年生(ひつじ)'],
+        en:  ['Monkey','Rooster','Dog','Pig','Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat'],
+        id:  ['Shio Monyet','Shio Ayam','Shio Anjing','Shio Babi','Shio Tikus','Shio Kerbau','Shio Macan','Shio Kelinci','Shio Naga','Shio Ular','Shio Kuda','Shio Kambing'],
+      };
+      const CZ_TRAITS = {
+        monkey:{ko:'영리하고 재치 있으며 적응력이 뛰어남',ja:'賢く機転が利き、柔軟性がある',en:'Clever, witty, and highly adaptable',id:'Cerdas, jenaka, dan adaptif'},
+        rooster:{ko:'부지런하고 관찰력이 뛰어나며 자신감 넘침',ja:'勤勉で観察眼があり、自信にあふれる',en:'Diligent, observant, and confident',id:'Rajin, observatif, dan percaya diri'},
+        dog:{ko:'충직하고 성실하며 책임감이 강함',ja:'忠実で誠実、責任感が強い',en:'Loyal, honest, and responsible',id:'Setia, jujur, dan bertanggung jawab'},
+        pig:{ko:'온화하고 관대하며 성실함',ja:'温かく寛大で誠実',en:'Kind, generous, and diligent',id:'Baik hati, murah hati, dan tekun'},
+        rat:{ko:'영리하고 재치 있으며 저축을 잘함',ja:'賢くて機転が利き、蓄財上手',en:'Smart, resourceful, and thrifty',id:'Cerdas, banyak akal, dan hemat'},
+        ox:{ko:'근면하고 믿음직하며 결단력 있음',ja:'勤勉で信頼でき、決断力がある',en:'Hardworking, reliable, and determined',id:'Rajin, dapat dipercaya, dan teguh'},
+        tiger:{ko:'용감하고 카리스마 있으며 리더십이 강함',ja:'勇敢でカリスマ性があり、リーダーシップが強い',en:'Brave, charismatic, and a natural leader',id:'Berani, karismatik, dan pemimpin alami'},
+        rabbit:{ko:'온화하고 섬세하며 예술적 감각이 뛰어남',ja:'穏やかで繊細、芸術的センスがある',en:'Gentle, elegant, and artistically gifted',id:'Lembut, halus, dan berbakat seni'},
+        dragon:{ko:'강렬하고 열정적이며 성공 지향적',ja:'力強く情熱的で、成功志向',en:'Powerful, passionate, and success-driven',id:'Kuat, penuh semangat, dan berorientasi sukses'},
+        snake:{ko:'직관적이고 우아하며 깊은 사고력 보유',ja:'直感的でエレガント、深い思考力を持つ',en:'Intuitive, elegant, and deeply thoughtful',id:'Intuitif, elegan, dan berpikir mendalam'},
+        horse:{ko:'활기차고 독립적이며 자유를 사랑함',ja:'活発で自立心が強く、自由を愛する',en:'Energetic, independent, and freedom-loving',id:'Energik, mandiri, dan mencintai kebebasan'},
+        goat:{ko:'창의적이고 온화하며 예술성이 풍부',ja:'創造的で穏やか、芸術性が豊か',en:'Creative, gentle, and artistically rich',id:'Kreatif, lembut, dan kaya seni'},
+      };
+      const CZ_COMPAT = {rat:['dragon','monkey'],ox:['snake','rooster'],tiger:['horse','dog'],rabbit:['goat','pig'],dragon:['rat','monkey'],snake:['ox','rooster'],horse:['tiger','dog'],goat:['rabbit','pig'],monkey:['rat','dragon'],rooster:['ox','snake'],dog:['tiger','horse'],pig:['rabbit','goat']};
+      const CZ_CLASH  = {rat:'horse',horse:'rat',ox:'goat',goat:'ox',tiger:'monkey',monkey:'tiger',rabbit:'rooster',rooster:'rabbit',dragon:'dog',dog:'dragon',snake:'pig',pig:'snake'};
+
+      const czLangs = Object.keys(CZ_SLUGS);
+      let czLang = null, czKey = null;
+
+      // Try /lang/slug/ pattern
+      const czM = path.match(/^\/([a-z]{2,3})\/([^\\/]+)\/?$/);
+      if (czM && czLangs.includes(czM[1])) {
+        const testLang = czM[1], testSlug = decodeURIComponent(czM[2]);
+        const idx = (CZ_SLUGS[testLang]||[]).indexOf(testSlug);
+        if (idx >= 0) { czLang = testLang; czKey = CZ_KEYS[idx]; }
+      }
+      // Try ko root-level /쥐/ pattern
+      if (!czKey) {
+        const koSlugM = path.match(/^\/([^\\/]+)\/?$/);
+        if (koSlugM) {
+          const testSlug = decodeURIComponent(koSlugM[1]);
+          const idx = (CZ_SLUGS.ko||[]).indexOf(testSlug);
+          if (idx >= 0) { czLang = 'ko'; czKey = CZ_KEYS[idx]; }
+        }
+      }
+
+      if (czLang && czKey && LANGS[czLang]) {
+        const czIdx = CZ_KEYS.indexOf(czKey);
+        const czName = (CZ_NAMES[czLang]||CZ_NAMES.en)[czIdx];
+        const czEmoji = CZ_EMJ[czKey];
+        const czTrait = (CZ_TRAITS[czKey]||{})[czLang] || (CZ_TRAITS[czKey]||{}).en || '';
+        const czBirths = CZ_BIRTH_YEARS[czKey] || '';
+        const compatKeys = CZ_COMPAT[czKey]||[];
+        const clashKey  = CZ_CLASH[czKey]||'';
+        const compatNames = compatKeys.map(k=>(CZ_NAMES[czLang]||CZ_NAMES.en)[CZ_KEYS.indexOf(k)]).join(', ');
+        const clashName  = clashKey ? (CZ_NAMES[czLang]||CZ_NAMES.en)[CZ_KEYS.indexOf(clashKey)] : '';
+        const CZL = LANGS[czLang];
+        const czSlug = (CZ_SLUGS[czLang]||[])[czIdx];
+        const czCanonical = czLang==='ko'?`${SITE_URL}/${encodeURIComponent(czSlug)}/`:`${SITE_URL}/${czLang}/${czSlug}/`;
+
+        const czTitleMap = {ko:`${czName} 행운의 번호 — 띠별 운세와 사주`,ja:`${czName}の運勢・幸運の数字`,en:`${czName} Lucky Numbers & Fortune`,id:`${czName} — Angka Keberuntungan & Ramalan`};
+        const czDescMap  = {ko:`${czName}(${czBirths}년생)의 행운 번호와 운세. ${czTrait}. 오늘의 행운 번호를 무료로 확인하세요.`,ja:`${czName}(${czBirths})の幸運の数字と運勢。${czTrait}。今すぐ無料で確認。`,en:`${czName} (born ${czBirths}) lucky numbers & fortune. ${czTrait}. Free generator — no signup.`,id:`${czName} (lahir ${czBirths}) — angka keberuntungan & ramalan. ${czTrait}. Gratis, tanpa daftar.`};
+
+        const compatLabel = czLang==='ko'?'삼합(相性 좋음)':czLang==='ja'?'相性が良い':czLang==='id'?'Cocok':'Compatible';
+        const clashLabel  = czLang==='ko'?'충(相冲 주의)':czLang==='ja'?'相冲(注意)':czLang==='id'?'Bentrok':'Clash';
+        const hreflangLinks = czLangs.filter(l=>CZ_SLUGS[l]).map(l=>{
+          const s = (CZ_SLUGS[l]||[])[czIdx];
+          if (!s) return '';
+          const href = l==='ko'?`${SITE_URL}/${encodeURIComponent(s)}/`:`${SITE_URL}/${l}/${s}/`;
+          return `<link rel="alternate" hreflang="${l}" href="${href}">`;
+        }).filter(Boolean).join('\n');
+
+        const czHtml = `<!DOCTYPE html><html lang="${czLang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(czTitleMap[czLang]||czTitleMap.en)}</title>
+<meta name="description" content="${esc(czDescMap[czLang]||czDescMap.en)}">
+<link rel="canonical" href="${esc(czCanonical)}">
+${hreflangLinks}
+<meta property="og:title" content="${esc(czTitleMap[czLang]||czTitleMap.en)}">
+<meta property="og:description" content="${esc(czDescMap[czLang]||czDescMap.en)}">
+<meta property="og:url" content="${esc(czCanonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${czLang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":${JSON.stringify(czTitleMap[czLang]||czTitleMap.en)},"description":${JSON.stringify(czDescMap[czLang]||czDescMap.en)},"url":${JSON.stringify(czCanonical)}}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#78350f,#b45309);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#fef3c7;max-width:520px;margin:0 auto 12px;}
+.start-btn{display:inline-block;background:#fff;color:#78350f;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.info-card{max-width:600px;margin:16px auto;padding:16px 20px;background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.info-card h2{font-size:15px;font-weight:800;color:#78350f;margin-bottom:8px;}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin:3px;}
+.badge-green{background:#dcfce7;color:#166534;}.badge-red{background:#fee2e2;color:#991b1b;}
+iframe{width:100%;border:none;display:block;height:560px;}</style>
+</head><body>
+<div class="hero">
+  <div style="font-size:60px;margin-bottom:8px;">${czEmoji}</div>
+  <h1>${esc(czTitleMap[czLang]||czTitleMap.en)}</h1>
+  <p>${esc(czTrait)}</p>
+  <p style="font-size:11px;color:#fef3c7;margin-bottom:12px;">${czBirths}</p>
+  <a class="start-btn" href="#lucky-frame">${esc(CZL.start)}</a>
+</div>
+<div class="info-card">
+  <h2>${compatLabel}</h2>
+  ${compatNames.split(', ').map(n=>`<span class="badge badge-green">${esc(n)}</span>`).join('')}
+  ${clashName?`<br><br><h2 style="margin-top:8px;">${clashLabel}</h2><span class="badge badge-red">${esc(clashName)}</span>`:''}
+</div>
+<iframe id="lucky-frame" src="${esc(`${APP_URL}/?lang=${czLang}`)}" scrolling="no" title="${esc(czName)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+</body></html>`;
+        return new Response(czHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Ko 출생연도 페이지 (/1990/, /1985/ etc.) ─────────────────
+    {
+      const yearM = path.match(/^\/(\d{4})\/?$/);
+      if (yearM) {
+        const birthYear = parseInt(yearM[1]);
+        if (birthYear >= 1940 && birthYear <= 2010) {
+          // 십간지 계산
+          const STEMS_KO   = ['경(庚)','신(辛)','임(壬)','계(癸)','갑(甲)','을(乙)','병(丙)','정(丁)','무(戊)','기(己)'];
+          const BRANCHES_KO= ['신(申)','유(酉)','술(戌)','해(亥)','자(子)','축(丑)','인(寅)','묘(卯)','진(辰)','사(巳)','오(午)','미(未)'];
+          const ELEMENTS_KO= ['金','金','水','水','木','木','火','火','土','土'];
+          const ZODIAC_KO  = ['원숭이','닭','개','돼지','쥐','소','호랑이','토끼','용','뱀','말','양'];
+          const stemIdx    = ((birthYear - 4) % 10 + 10) % 10;
+          const branchIdx  = ((birthYear - 4) % 12 + 12) % 12;
+          const stemStr    = STEMS_KO[stemIdx];
+          const branchStr  = BRANCHES_KO[branchIdx];
+          const element    = ELEMENTS_KO[stemIdx];
+          const zodiac     = ZODIAC_KO[branchIdx];
+          const yearName   = stemStr.split('(')[0]+branchStr.split('(')[0];
+
+          const byCanonical = `${SITE_URL}/${birthYear}/`;
+          const byTitle = `${birthYear}년생(${yearName}년) 사주 행운 번호 — ${zodiac}띠 ${element}기운 오늘의 운세`;
+          const byDesc  = `${birthYear}년생 ${zodiac}띠(${yearName}년) 사주팔자 기반 행운 번호 무료 생성. ${element}기운 ${stemStr}${branchStr}년생의 오늘의 운세와 금전운, 연애운, 직업운을 확인하세요.`;
+          const byIframe = `${APP_URL}/?lang=ko&bd=${birthYear}0101`;
+
+          const byHtml = `<!DOCTYPE html><html lang="ko"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(byTitle)}</title>
+<meta name="description" content="${esc(byDesc)}">
+<link rel="canonical" href="${esc(byCanonical)}">
+<meta property="og:title" content="${esc(byTitle)}">
+<meta property="og:description" content="${esc(byDesc)}">
+<meta property="og:url" content="${esc(byCanonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-ko.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":${JSON.stringify(byTitle)},"description":${JSON.stringify(byDesc)},"url":${JSON.stringify(byCanonical)}}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#4338ca);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#c7d2fe;max-width:520px;margin:0 auto 12px;}
+.start-btn{display:inline-block;background:#fbbf24;color:#1e1b4b;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.info-grid{display:flex;flex-wrap:wrap;gap:10px;max-width:600px;margin:14px auto;padding:0 16px;}
+.info-chip{background:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;color:#4338ca;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+iframe{width:100%;border:none;display:block;height:560px;}</style>
+</head><body>
+<div class="hero">
+  <h1>🔮 ${esc(byTitle)}</h1>
+  <p>${esc(byDesc)}</p>
+  <a class="start-btn" href="#lucky-frame">지금 바로 확인하기</a>
+</div>
+<div class="info-grid">
+  <span class="info-chip">🐾 ${zodiac}띠</span>
+  <span class="info-chip">☯️ ${element}(${stemStr}${branchStr}년)</span>
+  <span class="info-chip">📅 ${birthYear}년생</span>
+</div>
+<iframe id="lucky-frame" src="${esc(byIframe)}" scrolling="no" title="${esc(byTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+</body></html>`;
+          return new Response(byHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── 혈액형 운세 pages (/ko/blood-a/, /ja/ketsueki-a/ etc.) ─
+    {
+      const BT_SLUGS = {
+        ko: {a:'blood-a',b:'blood-b',o:'blood-o',ab:'blood-ab'},
+        ja: {a:'ketsueki-a',b:'ketsueki-b',o:'ketsueki-o',ab:'ketsueki-ab'},
+      };
+      const BT_NAMES = {ko:{a:'A형',b:'B형',o:'O형',ab:'AB형'},ja:{a:'A型',b:'B型',o:'O型',ab:'AB型'}};
+      const BT_TRAITS = {
+        a: {ko:'꼼꼼하고 성실하며 완벽주의 성향. 책임감이 강하고 섬세함.',ja:'几帳面で誠実、完璧主義。責任感が強く繊細。'},
+        b: {ko:'자유롭고 창의적이며 개성이 강함. 에너지가 넘치고 직관적.',ja:'自由奔放でクリエイティブ、個性的。エネルギッシュで直感的。'},
+        o: {ko:'자신감 넘치고 리더십이 강함. 낙관적이고 사교적.',ja:'自信に満ち、リーダーシップが強い。楽観的で社交的。'},
+        ab:{ko:'이성적이고 예술적이며 독창적. 두 성격을 모두 가짐.',ja:'理性的で芸術的、独創的。二面性を持つ複雑な性格。'},
+      };
+      const BT_LUCKY = {
+        a: {ko:'파란색·초록색 계열, 짝수, 월요일·수요일',ja:'青・緑系、偶数、月曜・水曜'},
+        b: {ko:'빨간색·오렌지 계열, 홀수, 화요일·목요일',ja:'赤・オレンジ系、奇数、火曜・木曜'},
+        o: {ko:'흰색·금색 계열, 8·6·3, 일요일·금요일',ja:'白・金系、8・6・3、日曜・金曜'},
+        ab:{ko:'보라색·은색 계열, 마스터수 11·22, 토요일',ja:'紫・銀系、マスター数11・22、土曜'},
+      };
+
+      const btM = path.match(/^\/([a-z]{2})\/([a-z][a-z-]*)\/?$/);
+      if (btM) {
+        const btLang = btM[1], btSlug = btM[2];
+        if (BT_SLUGS[btLang]) {
+          const btType = Object.keys(BT_SLUGS[btLang]).find(k=>BT_SLUGS[btLang][k]===btSlug);
+          if (btType && LANGS[btLang]) {
+            const btName   = BT_NAMES[btLang][btType];
+            const btTrait  = (BT_TRAITS[btType]||{})[btLang]||'';
+            const btLucky  = (BT_LUCKY[btType]||{})[btLang]||'';
+            const btCanon  = `${SITE_URL}/${btLang}/${btSlug}/`;
+            const btTitle  = btLang==='ko' ? `혈액형 ${btName} 운세 — 오늘의 행운 번호와 사주` : `血液型${btName}の運勢・今日の幸運の数字`;
+            const btDesc   = btLang==='ko' ? `혈액형 ${btName}의 성격과 운세. ${btTrait} 오늘의 행운 번호를 무료로 확인하세요.` : `血液型${btName}の性格と運勢。${btTrait}今すぐ幸運の数字を無料で確認。`;
+            const btIframe = `${APP_URL}/?lang=${btLang}`;
+            const btHtml = `<!DOCTYPE html><html lang="${btLang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(btTitle)}</title>
+<meta name="description" content="${esc(btDesc)}">
+<link rel="canonical" href="${esc(btCanon)}">
+<meta property="og:title" content="${esc(btTitle)}">
+<meta property="og:description" content="${esc(btDesc)}">
+<meta property="og:url" content="${esc(btCanon)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${btLang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":${JSON.stringify(btTitle)},"description":${JSON.stringify(btDesc)},"url":${JSON.stringify(btCanon)}}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fdf2f8;}
+.hero{background:linear-gradient(135deg,#831843,#db2777);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#fce7f3;max-width:520px;margin:0 auto 12px;}
+.start-btn{display:inline-block;background:#fff;color:#831843;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.info-card{max-width:600px;margin:14px auto;padding:14px 18px;background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.08);font-size:13px;color:#374151;}
+.info-card h2{font-size:14px;font-weight:800;color:#831843;margin-bottom:6px;}
+iframe{width:100%;border:none;display:block;height:560px;}</style>
+</head><body>
+<div class="hero">
+  <div style="font-size:52px;font-weight:900;margin-bottom:8px;">${btName}</div>
+  <h1>${esc(btTitle)}</h1>
+  <p>${esc(btTrait)}</p>
+  <a class="start-btn" href="#lucky-frame">${btLang==='ko'?'운세 보기':'運勢を見る'}</a>
+</div>
+<div class="info-card">
+  <h2>${btLang==='ko'?'행운의 색상·숫자·요일':'ラッキーカラー・数字・曜日'}</h2>
+  <p>${esc(btLucky)}</p>
+</div>
+<iframe id="lucky-frame" src="${esc(btIframe)}" scrolling="no" title="${esc(btTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+</body></html>`;
+            return new Response(btHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
+          }
+        }
       }
     }
 

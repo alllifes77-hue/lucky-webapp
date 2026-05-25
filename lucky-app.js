@@ -785,6 +785,29 @@ function getRokuyo(y, m, d) {
   return (lunarMonth + lunarDay) % 6;
 }
 
+// ── 십이지(十二支) Chinese Zodiac + 오늘의 기운 ─────────────
+const _CZ_KEYS=['monkey','rooster','dog','pig','rat','ox','tiger','rabbit','dragon','snake','horse','goat'];
+const _CZ_EMJ={monkey:'🐵',rooster:'🐔',dog:'🐶',pig:'🐷',rat:'🐭',ox:'🐮',tiger:'🐯',rabbit:'🐰',dragon:'🐲',snake:'🐍',horse:'🐴',goat:'🐑'};
+const _CZ_KO={monkey:'원숭이띠',rooster:'닭띠',dog:'개띠',pig:'돼지띠',rat:'쥐띠',ox:'소띠',tiger:'호랑이띠',rabbit:'토끼띠',dragon:'용띠',snake:'뱀띠',horse:'말띠',goat:'양띠'};
+const _CZ_JA={monkey:'申年生',rooster:'酉年生',dog:'戌年生',pig:'亥年生',rat:'子年生',ox:'丑年生',tiger:'寅年生',rabbit:'卯年生',dragon:'辰年生',snake:'巳年生',horse:'午年生',goat:'未年生'};
+const _CZ_EN={monkey:'Monkey',rooster:'Rooster',dog:'Dog',pig:'Pig',rat:'Rat',ox:'Ox',tiger:'Tiger',rabbit:'Rabbit',dragon:'Dragon',snake:'Snake',horse:'Horse',goat:'Goat'};
+const _CZ_ID={monkey:'Monyet',rooster:'Ayam',dog:'Anjing',pig:'Babi',rat:'Tikus',ox:'Kerbau',tiger:'Macan',rabbit:'Kelinci',dragon:'Naga',snake:'Ular',horse:'Kuda',goat:'Kambing'};
+function _getCZKey(y){return _CZ_KEYS[((y%12)+12)%12];}
+function _getCZName(y,lang){const k=_getCZKey(y);return lang==='ko'?_CZ_KO[k]:lang==='ja'?_CZ_JA[k]:lang==='id'?_CZ_ID[k]:_CZ_EN[k];}
+function _getCZBirthYears(y){const ys=[];let s=y;while(s>1951)s-=12;while(s<1951)s+=12;while(s<=2020){ys.push(s);s+=12;}return ys;}
+function _getMoonPhase(){
+  const t=new Date();const jd=gregJD(t.getFullYear(),t.getMonth()+1,t.getDate());
+  const p=((jd-2451563)%29.530588853+29.530588853)%29.530588853/29.530588853;
+  if(p<0.03||p>0.97)return{icon:'🌑',key:'new'};
+  if(p<0.22)return{icon:'🌒',key:'waxing_crescent'};
+  if(p<0.28)return{icon:'🌓',key:'first_quarter'};
+  if(p<0.47)return{icon:'🌔',key:'waxing_gibbous'};
+  if(p<0.53)return{icon:'🌕',key:'full'};
+  if(p<0.72)return{icon:'🌖',key:'waning_gibbous'};
+  if(p<0.78)return{icon:'🌗',key:'last_quarter'};
+  return{icon:'🌘',key:'waning_crescent'};
+}
+
 // ── ko 格局(格局) 판단 ────────────────────────────────────
 function calcGeokkuk(data) {
   if (data.systemKey !== 'saju' || !data.fullSaju) return null;
@@ -1515,7 +1538,7 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     }
   }
 
-  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, seunData, hapChongData, shinsalData, sipiunsungData, iljuronData, woluunData, gunghapData: null, gender: gender || null, geokkukData, kyuseiSanseiData, annualFortune, auspiciousDates };
+  return { year, month, day, lang, cultural, colorData, dayData, systemKey, fmt, mainNums, bonusNums, seed, drawEnergy, lotteryId, compatScore, scoreMap, upcomingDates, birthHour: birthHour ?? null, birthMinute: birthMinute ?? 0, fullSaju, sunSign, moonSign, monthKyusei, fortuneScores, daeunData, seunData, hapChongData, shinsalData, sipiunsungData, iljuronData, woluunData, gunghapData: null, gender: gender || null, geokkukData, kyuseiSanseiData, annualFortune, auspiciousDates, czKey: _getCZKey(year) };
 }
 
 // ── Render Results ────────────────────────────────────────
@@ -1553,7 +1576,8 @@ function renderResults(data) {
   ['detailed-reading-panel','seun-panel','woluun-panel','hapchong-panel','shinsal-panel',
    'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
-   'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel'].forEach(id => {
+   'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
+   'cz-badge-panel','daily-energy-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1627,6 +1651,8 @@ function renderResults(data) {
   renderAuspiciousCalendarPanel(data);
   const personName = ((document.getElementById('person-name') || {}).value || '').trim();
   if (personName) renderNamePanel(calcNameNumerology(personName));
+  renderDailyEnergyPanel(data);
+  renderChineseZodiacBadge(data);
   renderShareBtns(data);
   renderFaq();
 }
@@ -4101,6 +4127,129 @@ function getShareUrl() {
   return `${location.origin}${location.pathname}?${p.toString()}`;
 }
 function getShareText() { return lastResult ? buildShareText(lastResult) : ''; }
+
+// ── 오늘의 기운 패널 ─────────────────────────────────────────
+function renderDailyEnergyPanel(data) {
+  const existing = document.getElementById('daily-energy-panel');
+  if (existing) existing.remove();
+
+  const today = new Date();
+  const ty = today.getFullYear(), tm = today.getMonth()+1, td = today.getDate();
+  const jd = gregJD(ty, tm, td);
+
+  // 일진 간지
+  const stemIdx   = ((Math.floor(jd - 2451551) % 10) + 10) % 10;
+  const branchIdx = ((Math.floor(jd - 2451551) % 12) + 12) % 12;
+  const el        = ELEMENTS[stemIdx];
+  const EL_COLOR  = {'木':'#16a34a','火':'#dc2626','土':'#b45309','金':'#d97706','水':'#2563eb'};
+  const EL_KO     = {'木':'목','火':'화','土':'토','金':'금','水':'수'};
+  const elColor   = EL_COLOR[el] || '#6b7280';
+
+  // 달 위상
+  const moon = _getMoonPhase();
+  const L = window.LUCKY_LANG || {};
+  const MOON_KO = {new:'삭(朔)',waxing_crescent:'초승달',first_quarter:'상현(上弦)',waxing_gibbous:'차는 달',full:'보름달',waning_gibbous:'기우는 달',last_quarter:'하현(下弦)',waning_crescent:'그믐달'};
+  const MOON_JA = {new:'新月',waxing_crescent:'三日月',first_quarter:'上弦の月',waxing_gibbous:'十日夜',full:'満月',waning_gibbous:'十六夜',last_quarter:'下弦の月',waning_crescent:'有明月'};
+  const MOON_EN = {new:'New Moon',waxing_crescent:'Waxing Crescent',first_quarter:'First Quarter',waxing_gibbous:'Waxing Gibbous',full:'Full Moon',waning_gibbous:'Waning Gibbous',last_quarter:'Last Quarter',waning_crescent:'Waning Crescent'};
+  const moonMap = data.lang==='ko'?MOON_KO:data.lang==='ja'?MOON_JA:MOON_EN;
+  const moonLabel = moonMap[moon.key] || moon.key;
+
+  // 오늘의 수비학적 수 (Universal Day Number)
+  const udn = [ty,tm,td].join('').split('').reduce((a,c)=>a+parseInt(c),0);
+  let udnR = udn;
+  while(udnR > 9 && udnR !== 11 && udnR !== 22) udnR = String(udnR).split('').reduce((a,c)=>a+parseInt(c),0);
+  const UDN_EN = ['','Ambition','Balance','Expression','Stability','Change','Harmony','Wisdom','Power','Completion','Master','Master'];
+  const UDN_KO = ['','야망','균형','표현','안정','변화','조화','지혜','파워','완성','마스터','마스터'];
+  const udnLabel = data.lang==='ko' ? UDN_KO[udnR] : UDN_EN[udnR] || '';
+
+  const TITLE = {ko:'오늘의 기운',ja:'今日のエネルギー',en:"Today's Energy",de:'Heutiger Tag',fr:"Énergie du jour",es:'Energía de hoy',pt:'Energia do dia',it:"L'energia di oggi",id:'Energi Hari Ini'};
+  const IL_KO  = STEMS[stemIdx]+BRANCHES[branchIdx];
+  const IL_TXT = data.lang==='ko' ? `${IL_KO}일 (${EL_KO[el]})`
+                : data.lang==='ja' ? `${IL_KO}の日`
+                : `${STEMS[stemIdx]}${BRANCHES[branchIdx]}`;
+
+  const panel = document.createElement('div');
+  panel.id = 'daily-energy-panel';
+  panel.style.cssText = 'background:linear-gradient(135deg,#1e293b,#0f172a);border-radius:16px;padding:16px;margin:16px 0;color:#fff;';
+  panel.innerHTML = `
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#94a3b8;margin-bottom:10px;text-transform:uppercase;">${TITLE[data.lang]||TITLE.en}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center;">
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:22px;font-weight:900;color:${elColor};">${IL_KO}</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:3px;">${IL_TXT}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:28px;">${moon.icon}</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:3px;">${moonLabel}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 6px;">
+        <div style="font-size:28px;font-weight:900;color:#fbbf24;">${udnR}</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:3px;">${udnLabel}</div>
+      </div>
+    </div>`;
+
+  const shareSec = document.querySelector('.share-section');
+  if (shareSec) shareSec.parentNode.insertBefore(panel, shareSec);
+  else document.getElementById('s-result').appendChild(panel);
+}
+
+// ── 십이지 (Chinese Zodiac) 배지 패널 ───────────────────────
+function renderChineseZodiacBadge(data) {
+  const existing = document.getElementById('cz-badge-panel');
+  if (existing) existing.remove();
+
+  const L = window.LUCKY_LANG || {};
+  const czKey = data.czKey || _getCZKey(data.year);
+  const czEmj = _CZ_EMJ[czKey];
+  const czName = _getCZName(data.year, data.lang);
+  const birthYears = _getCZBirthYears(data.year).filter(y=>y>=1924&&y<=2020).join(', ');
+
+  // 올해(2026 = Horse) vs 생띠 관계
+  const currentYear = new Date().getFullYear();
+  const currentKey  = _getCZKey(currentYear);
+  const CZ_CLASH = {rat:'horse',horse:'rat',ox:'goat',goat:'ox',tiger:'monkey',monkey:'tiger',rabbit:'rooster',rooster:'rabbit',dragon:'dog',dog:'dragon',snake:'pig',pig:'snake'};
+  const CZ_COMPAT = {rat:['dragon','monkey'],ox:['snake','rooster'],tiger:['horse','dog'],rabbit:['goat','pig'],dragon:['rat','monkey'],snake:['ox','rooster'],horse:['tiger','dog'],goat:['rabbit','pig'],monkey:['rat','dragon'],rooster:['ox','snake'],dog:['tiger','horse'],pig:['rabbit','goat']};
+
+  let yearNote = '';
+  if (czKey === currentKey) {
+    yearNote = data.lang==='ko' ? '⚠️ 본명년(本命年) — 변화가 많은 해. 부적·빨간 속옷으로 액막이를 챙기세요.' : data.lang==='ja' ? '⚠️ 本命年 — 変化の多い年。お守りで厄除けを。' : '⚠️ Your zodiac year — expect big changes. Wear red for luck.';
+  } else if (CZ_CLASH[czKey] === currentKey) {
+    yearNote = data.lang==='ko' ? '⚡ 충(沖)의 해 — 올해 건강과 인간관계에 주의가 필요합니다.' : data.lang==='ja' ? '⚡ 冲の年 — 健康と人間関係に注意。' : '⚡ Clash year — take extra care in health and relationships.';
+  } else if ((CZ_COMPAT[czKey]||[]).includes(currentKey)) {
+    yearNote = data.lang==='ko' ? '✨ 삼합(三合)의 해 — 귀인의 도움으로 행운이 따르는 시기입니다.' : data.lang==='ja' ? '✨ 三合の年 — 貴人の助けで運気上昇。' : '✨ Harmonious year — expect support and good fortune.';
+  } else {
+    yearNote = data.lang==='ko' ? '🌟 평운의 해 — 꾸준히 노력하면 결실을 맺을 수 있습니다.' : data.lang==='ja' ? '🌟 平運の年 — コツコツ努力が実る年。' : '🌟 Stable year — steady effort brings results.';
+  }
+
+  const COMPAT_NAMES = (CZ_COMPAT[czKey]||[]).map(k=>_getCZName(1900+_CZ_KEYS.indexOf(k)*12,data.lang)).join(', ');
+  const CLASH_NAME = CZ_CLASH[czKey] ? _getCZName(1900+_CZ_KEYS.indexOf(CZ_CLASH[czKey])*12,data.lang) : '';
+
+  const TITLE = {ko:'나의 띠',ja:'あなたの干支',en:'Your Zodiac Sign',de:'Ihr Tierzeichen',fr:'Votre signe',es:'Tu signo',pt:'Seu signo',it:'Il tuo segno',id:'Shio Anda'};
+  const LBL_COMPAT = {ko:'삼합(相生)',ja:'相性良',en:'Compatible',de:'Kompatibel',fr:'Compatible',es:'Compatible',pt:'Compatível',it:'Compatibile',id:'Cocok'};
+  const LBL_CLASH  = {ko:'충(相沖)',ja:'相冲',en:'Clash',de:'Konflikt',fr:'Conflit',es:'Conflicto',pt:'Conflito',it:'Conflitto',id:'Bentrok'};
+
+  const panel = document.createElement('div');
+  panel.id = 'cz-badge-panel';
+  panel.style.cssText = 'background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML = `
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#92400e;margin-bottom:12px;text-transform:uppercase;">${TITLE[data.lang]||TITLE.en}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+      <div style="font-size:52px;line-height:1;">${czEmj}</div>
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#78350f;">${czName}</div>
+        <div style="font-size:11px;color:#92400e;margin-top:3px;">${birthYears}</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,.05);border-radius:10px;padding:10px 12px;font-size:12px;color:#78350f;line-height:1.5;margin-bottom:10px;">${yearNote}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${COMPAT_NAMES ? `<span style="background:#dcfce7;color:#166534;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">${LBL_COMPAT[data.lang]||LBL_COMPAT.en}: ${COMPAT_NAMES}</span>` : ''}
+      ${CLASH_NAME ? `<span style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">${LBL_CLASH[data.lang]||LBL_CLASH.en}: ${CLASH_NAME}</span>` : ''}
+    </div>`;
+
+  const shareSec = document.querySelector('.share-section');
+  if (shareSec) shareSec.parentNode.insertBefore(panel, shareSec);
+  else document.getElementById('s-result').appendChild(panel);
+}
 
 function doShareKakao() {
   const text = getShareText();
