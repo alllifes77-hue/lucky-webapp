@@ -508,6 +508,39 @@ const CAT_META = {
   },
 };
 
+// ── Shared SEO helpers ───────────────────────────────────
+const NAV_FOOTER_CSS = `
+.page-nav{background:#0f172a;padding:16px 16px 14px;}
+.nav-inner{max-width:780px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.page-nav a{color:#94a3b8;text-decoration:none;font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid rgba(148,163,184,.2);white-space:nowrap;}
+.page-nav a:hover,.page-nav a.nav-act{background:#4338ca;color:#fff;border-color:#4338ca;}
+.site-footer{background:#0f172a;color:#475569;font-size:11px;text-align:center;padding:10px 20px 20px;border-top:1px solid #1e293b;}
+.site-footer a{color:#4f46e5;text-decoration:none;margin:0 6px;}`;
+
+const _NAV_CAT_LABELS = {
+  ko:{saju:'🔮 사주',love:'💝 연애운',money:'💰 금전운',career:'💼 직업운',achievement:'🏆 성취운',gunghap:'💑 궁합'},
+  ja:{saju:'🔮 九星気学',love:'💝 恋愛運',money:'💰 金運',career:'💼 仕事運',achievement:'🏆 学業運',gunghap:'💑 相性'},
+  en:{saju:'🔮 Birth Chart',love:'💝 Love',money:'💰 Money',career:'💼 Career',achievement:'🏆 Achievement',gunghap:'💑 Compatibility'},
+  de:{saju:'🔮 Geburtschart',love:'💝 Liebe',money:'💰 Geld',career:'💼 Karriere',achievement:'🏆 Leistung',gunghap:'💑 Partnerschaft'},
+  fr:{saju:'🔮 Thème',love:'💝 Amour',money:'💰 Finances',career:'💼 Carrière',achievement:'🏆 Réussite',gunghap:'💑 Compatibilité'},
+  es:{saju:'🔮 Carta',love:'💝 Amor',money:'💰 Dinero',career:'💼 Carrera',achievement:'🏆 Logros',gunghap:'💑 Compatibilidad'},
+  pt:{saju:'🔮 Mapa',love:'💝 Amor',money:'💰 Dinheiro',career:'💼 Carreira',achievement:'🏆 Conquistas',gunghap:'💑 Compatibilidade'},
+  it:{saju:'🔮 Tema',love:'💝 Amore',money:'💰 Denaro',career:'💼 Carriera',achievement:'🏆 Risultati',gunghap:'💑 Compatibilità'},
+  id:{saju:'🔮 Primbon',love:'💝 Cinta',money:'💰 Rezeki',career:'💼 Karir',achievement:'🏆 Prestasi',gunghap:'💑 Kecocokan'},
+};
+const _NAV_MAIN = {ko:'🍀 행운의 번호',ja:'🍀 幸運の数字',en:'🍀 Lucky Numbers',de:'🍀 Glückszahlen',fr:'🍀 Numéros de Chance',es:'🍀 Números de Suerte',pt:'🍀 Números da Sorte',it:'🍀 Numeri Fortunati',id:'🍀 Angka Keberuntungan'};
+
+function buildNavFooter(lang, activePage) {
+  const catSlugs = CAT_SLUGS[lang] || {};
+  const labels = _NAV_CAT_LABELS[lang] || _NAV_CAT_LABELS.en;
+  const mainHref = lang === 'ko' ? `${SITE_URL}/lucky/` : `${SITE_URL}/${lang}/lucky/`;
+  const catLinks = Object.entries(catSlugs).map(([cat, slug]) => {
+    const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
+    return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
+  }).join('');
+  return `<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
+}
+
 // ── Escape HTML ──────────────────────────────────────────
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -516,6 +549,14 @@ export default {
   async fetch(request) {
     const url  = new URL(request.url);
     const path = url.pathname;
+
+    // ── robots.txt ───────────────────────────────────────
+    if (path === '/robots.txt') {
+      return new Response(
+        `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/lucky-sitemap.xml\n`,
+        {headers:{'Content-Type':'text/plain;charset=UTF-8','Cache-Control':'public,max-age=86400'}}
+      );
+    }
 
     // ── Sitemap ──────────────────────────────────────────
     if (path === '/lucky-sitemap.xml') {
@@ -672,6 +713,7 @@ iframe{width:100%;border:none;display:block;height:560px;}
 .faq-item summary::after{content:'＋';font-size:17px;color:#d97706;margin-left:10px;flex-shrink:0;}
 .faq-item[open] summary::after{content:'－';}
 .faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+${NAV_FOOTER_CSS}
 </style>
 </head>
 <body>
@@ -689,6 +731,7 @@ iframe{width:100%;border:none;display:block;height:560px;}
   </div>
 </div>
 <script>(function(){var f=document.getElementById('cat-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});f.addEventListener('load',function(){setTimeout(function(){try{var inner=f.contentDocument||f.contentWindow.document;var bh=inner&&inner.body?inner.body.scrollHeight:0;if(bh>100){var h2=bh+24;lastH=h2;f.style.height=h2+'px';}}catch(ex){}},800);});})();</script>
+${buildNavFooter(catLang, catKey)}
 </body>
 </html>`;
           return new Response(catHtml,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':(catKey==='gunghap'&&url.searchParams.get('bd')&&url.searchParams.get('bd2'))?'public,max-age=300':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
@@ -940,7 +983,25 @@ ${hreflangLinks}
 .info-card h2{font-size:15px;font-weight:800;color:#78350f;margin-bottom:8px;}
 .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin:3px;}
 .badge-green{background:#dcfce7;color:#166534;}.badge-red{background:#fee2e2;color:#991b1b;}
-iframe{width:100%;border:none;display:block;height:560px;}</style>
+iframe{width:100%;border:none;display:block;height:560px;}
+.cz-detail{max-width:780px;margin:0 auto;padding:20px 16px;}
+.cz-desc{margin-bottom:16px;padding:18px 20px;background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.cz-desc h2{font-size:16px;font-weight:800;color:#78350f;margin-bottom:8px;}
+.cz-desc p{font-size:14px;color:#44403c;line-height:1.8;}
+.cz-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.cz-card{flex:1;min-width:160px;background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.cz-card strong{display:block;font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px;text-transform:uppercase;}
+.cz-card span{font-size:13px;color:#374151;}
+.cz-card a{color:#4338ca;text-decoration:none;margin:0 2px;}
+.cz-faq h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.cz-faq details{border-bottom:1px solid #e7e5e4;padding:2px 0;}
+.cz-faq summary{padding:12px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;color:#1c1917;}
+.cz-faq summary::-webkit-details-marker{display:none;}
+.cz-faq summary::after{content:'＋';float:right;color:#d97706;}
+.cz-faq details[open] summary::after{content:'－';}
+.cz-faq p{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:12px;}
+${NAV_FOOTER_CSS}
+</style>
 </head><body>
 <div class="hero">
   <div style="font-size:60px;margin-bottom:8px;">${czEmoji}</div>
@@ -954,8 +1015,27 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
   ${compatNames.split(', ').map(n=>`<span class="badge badge-green">${esc(n)}</span>`).join('')}
   ${clashName?`<br><br><h2 style="margin-top:8px;">${clashLabel}</h2><span class="badge badge-red">${esc(clashName)}</span>`:''}
 </div>
+<div class="cz-detail">
+  <div class="cz-desc">
+    <h2>${czLang==='ko'?`${czName} 완전 가이드`:czLang==='ja'?`${czName}完全ガイド`:czLang==='id'?`Panduan Lengkap ${czName}`:`Complete Guide to ${czName}`}</h2>
+    <p>${esc(czDescMap[czLang]||czDescMap.en)}</p>
+  </div>
+  <div class="cz-grid">
+    <div class="cz-card"><strong>${czLang==='ko'?'출생연도':czLang==='ja'?'生まれ年':czLang==='id'?'Tahun Lahir':'Birth Years'}</strong><span>${czBirths.split(',').map(y=>`<a href="${czLang==='ko'?`${SITE_URL}/${y.trim()}/`:`${SITE_URL}/${czLang}/${czSlug}/`}">${y.trim()}</a>`).join(' · ')}</span></div>
+    <div class="cz-card"><strong>${czLang==='ko'?'상생 띠':czLang==='ja'?'相性良':czLang==='id'?'Cocok':'Compatible'}</strong><span>${esc(compatNames)}</span></div>
+    ${clashName?`<div class="cz-card"><strong>${czLang==='ko'?'충(注意)':czLang==='ja'?'相冲(注意)':czLang==='id'?'Hindari':'Clash'}</strong><span>${esc(clashName)}</span></div>`:''}
+  </div>
+  <section class="cz-faq">
+    <h2>${czLang==='ko'?'자주 묻는 질문':czLang==='ja'?'よくある質問':czLang==='id'?'Pertanyaan Umum':'Frequently Asked Questions'}</h2>
+    <details open><summary>${czLang==='ko'?`${czName}의 성격은?`:czLang==='ja'?`${czName}の性格は？`:czLang==='id'?`Bagaimana sifat ${czName}?`:`What are ${czName} personality traits?`}</summary><p>${esc(czTrait)}</p></details>
+    <details><summary>${czLang==='ko'?`${czName}과 잘 맞는 띠는?`:czLang==='ja'?`${czName}と相性が良い干支は？`:czLang==='id'?`Shio apa yang cocok dengan ${czName}?`:`Which zodiac signs are compatible with ${czName}?`}</summary><p>${esc(compatNames)}</p></details>
+    <details><summary>${czLang==='ko'?`2026년 ${czName} 운세는?`:czLang==='ja'?`2026年${czName}の運勢は？`:czLang==='id'?`Bagaimana nasib ${czName} tahun 2026?`:`What is the ${czName} fortune in 2026?`}</summary><p>${czLang==='ko'?`2026년 병오년(丙午年)은 말띠 해입니다. ${czName === '말띠'?'본명년(本命年)으로 변화가 많은 한 해입니다. 건강과 인간관계에 특히 주의하세요.':compatKeys.includes('horse')?'삼합의 해로 귀인의 도움으로 행운이 따르는 시기입니다.':CZ_CLASH[czKey]==='horse'?'충(沖)의 해로 건강과 인간관계에 신중히 대처하세요.':'평운의 해입니다. 꾸준한 노력이 좋은 결실을 맺습니다.'}`:czLang==='ja'?`2026年は丙午年(うまどし)です。${CZ_CLASH[czKey]==='horse'?`${czName}は冲の年です。健康と人間関係に注意が必要です。`:compatKeys.includes('horse')?`${czName}は三合の年で、貴人の助けが期待できます。`:`${czName}は平穏な一年になります。コツコツ努力が実を結ぶでしょう。`}`:czLang==='id'?`Tahun 2026 adalah tahun Kuda (Bingwu). ${CZ_CLASH[czKey]==='horse'?`${czName} perlu berhati-hati dalam kesehatan dan hubungan.`:compatKeys.includes('horse')?`${czName} akan mendapat bantuan dan keberuntungan.`:`${czName} dapat meraih hasil melalui kerja keras.`}`:`In 2026 (Year of the Horse), ${CZ_CLASH[czKey]==='horse'?`${czName} faces a clash year — take care of health and relationships.`:compatKeys.includes('horse')?`${czName} enjoys a harmonious year with support and good fortune.`:`${czName} has a stable year — steady effort brings results.`}`}</p></details>
+    <details><summary>${czLang==='ko'?'행운 번호를 어떻게 받나요?':czLang==='ja'?'幸運の数字の取得方法は？':czLang==='id'?'Bagaimana cara mendapatkan angka keberuntungan?':'How do I get my lucky numbers?'}</summary><p>${czLang==='ko'?'생년월일을 입력하면 사주팔자 기반 행운 번호를 즉시 무료로 받을 수 있습니다.':czLang==='ja'?'生年月日を入力すると、九星気学に基づいた幸運の数字を無料で取得できます。':czLang==='id'?'Masukkan tanggal lahir Anda untuk mendapatkan angka keberuntungan berdasarkan Primbon Jawa.':'Enter your date of birth to instantly receive free lucky numbers based on your zodiac sign.'}</p></details>
+  </section>
+</div>
 <iframe id="lucky-frame" src="${esc(`${APP_URL}/?lang=${czLang}`)}" scrolling="no" title="${esc(czName)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter(czLang, 'lucky')}
 </body></html>`;
         return new Response(czHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
       }
@@ -1004,7 +1084,9 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
 .start-btn{display:inline-block;background:#fbbf24;color:#1e1b4b;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
 .info-grid{display:flex;flex-wrap:wrap;gap:10px;max-width:600px;margin:14px auto;padding:0 16px;}
 .info-chip{background:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;color:#4338ca;box-shadow:0 1px 4px rgba(0,0,0,.08);}
-iframe{width:100%;border:none;display:block;height:560px;}</style>
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
 </head><body>
 <div class="hero">
   <h1>🔮 ${esc(byTitle)}</h1>
@@ -1016,8 +1098,26 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
   <span class="info-chip">☯️ ${element}(${stemStr}${branchStr}년)</span>
   <span class="info-chip">📅 ${birthYear}년생</span>
 </div>
+<div class="by-faq" style="max-width:600px;margin:0 auto;padding:14px 16px;">
+  <section>
+    <h2 style="font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;">${birthYear}년생 자주 묻는 질문</h2>
+    <details open style="border-bottom:1px solid #e5e7eb;padding:4px 0;">
+      <summary style="padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;">${birthYear}년생(${yearName}년) 사주의 특징은? <span style="float:right;color:#d97706;">＋</span></summary>
+      <p style="font-size:13px;color:#6b7280;line-height:1.75;padding-bottom:10px;">${birthYear}년생은 ${stemStr}${branchStr}년 ${zodiac}띠로 오행은 ${element}에 속합니다. ${element === '木' ? '목(木) 기운은 성장·발전·인자함을 상징합니다. 창의적이고 진취적인 성향이 강합니다.' : element === '火' ? '화(火) 기운은 열정·활력·빛을 상징합니다. 열정적이고 사교적인 성향이 강합니다.' : element === '土' ? '토(土) 기운은 안정·신뢰·인내를 상징합니다. 성실하고 믿음직한 성향이 강합니다.' : element === '金' ? '금(金) 기운은 결단·의리·강인함을 상징합니다. 결단력 있고 의리 있는 성향이 강합니다.' : '수(水) 기운은 지혜·유연함·소통을 상징합니다. 지혜롭고 유연한 성향이 강합니다.'}</p>
+    </details>
+    <details style="border-bottom:1px solid #e5e7eb;padding:4px 0;">
+      <summary style="padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;">${birthYear}년생의 행운 번호는? <span style="float:right;color:#d97706;">＋</span></summary>
+      <p style="font-size:13px;color:#6b7280;line-height:1.75;padding-bottom:10px;">아래 앱에 생년월일을 입력하면 사주팔자 기반 행운 번호를 즉시 무료로 받을 수 있습니다. ${element} 기운과 ${zodiac}띠의 특성을 반영한 로또 6/45 형식의 번호가 제공됩니다.</p>
+    </details>
+    <details style="padding:4px 0;">
+      <summary style="padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;">2026년 ${birthYear}년생 운세는? <span style="float:right;color:#d97706;">＋</span></summary>
+      <p style="font-size:13px;color:#6b7280;line-height:1.75;padding-bottom:10px;">2026년은 병오년(丙午年) 말띠 해입니다. ${zodiac}띠와 말띠의 관계를 분석해 연애운·금전운·직업운을 종합 확인하세요. 아래 앱에서 정확한 생년월일을 입력하면 맞춤 운세가 제공됩니다.</p>
+    </details>
+  </section>
+</div>
 <iframe id="lucky-frame" src="${esc(byIframe)}" scrolling="no" title="${esc(byTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter('ko', 'lucky')}
 </body></html>`;
           return new Response(byHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
         }
@@ -1076,7 +1176,9 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
 .start-btn{display:inline-block;background:#fff;color:#831843;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
 .info-card{max-width:600px;margin:14px auto;padding:14px 18px;background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.08);font-size:13px;color:#374151;}
 .info-card h2{font-size:14px;font-weight:800;color:#831843;margin-bottom:6px;}
-iframe{width:100%;border:none;display:block;height:560px;}</style>
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
 </head><body>
 <div class="hero">
   <div style="font-size:52px;font-weight:900;margin-bottom:8px;">${btName}</div>
@@ -1088,8 +1190,26 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
   <h2>${btLang==='ko'?'행운의 색상·숫자·요일':'ラッキーカラー・数字・曜日'}</h2>
   <p>${esc(btLucky)}</p>
 </div>
+<div style="max-width:600px;margin:0 auto;padding:14px 16px;">
+  <section>
+    <h2 style="font-size:16px;font-weight:800;color:#831843;margin-bottom:12px;">${btLang==='ko'?`혈액형 ${btName} 자주 묻는 질문`:`血液型${btName} よくある質問`}</h2>
+    <details open style="border-bottom:1px solid #fce7f3;padding:4px 0;">
+      <summary style="padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;">${btLang==='ko'?`${btName}형의 성격과 특징은?`:`${btName}型の性格と特徴は？`} <span style="float:right;color:#db2777;">＋</span></summary>
+      <p style="font-size:13px;color:#6b7280;line-height:1.75;padding-bottom:10px;">${esc(btTrait)}</p>
+    </details>
+    <details style="border-bottom:1px solid #fce7f3;padding:4px 0;">
+      <summary style="padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;">${btLang==='ko'?`${btName}형의 행운 색상과 숫자는?`:`${btName}型のラッキーカラーと数字は？`} <span style="float:right;color:#db2777;">＋</span></summary>
+      <p style="font-size:13px;color:#6b7280;line-height:1.75;padding-bottom:10px;">${esc(btLucky)}</p>
+    </details>
+    <details style="padding:4px 0;">
+      <summary style="padding:11px 0;font-size:14px;font-weight:700;cursor:pointer;list-style:none;">${btLang==='ko'?'행운 번호는 어떻게 받나요?':'幸運の数字の取得方法は？'} <span style="float:right;color:#db2777;">＋</span></summary>
+      <p style="font-size:13px;color:#6b7280;line-height:1.75;padding-bottom:10px;">${btLang==='ko'?'아래 앱에 생년월일을 입력하면 사주팔자·혈액형 특성을 반영한 행운 번호를 즉시 무료로 받을 수 있습니다.':'下のアプリに生年月日を入力すると、血液型の特性を反映した幸運の数字を無料で取得できます。'}</p>
+    </details>
+  </section>
+</div>
 <iframe id="lucky-frame" src="${esc(btIframe)}" scrolling="no" title="${esc(btTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter(btLang, 'lucky')}
 </body></html>`;
             return new Response(btHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
           }
@@ -1243,6 +1363,7 @@ iframe{width:100%;border:none;display:block;height:560px;min-height:0;transition
 .faq-item summary::after{content:'＋';font-size:18px;color:#d97706;flex-shrink:0;margin-left:12px;}
 .faq-item[open] summary::after{content:'－';}
 .faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:16px;}
+${NAV_FOOTER_CSS}
 </style>
 </head>
 <body>
@@ -1284,6 +1405,7 @@ iframe{width:100%;border:none;display:block;height:560px;min-height:0;transition
   });
 })();
 </script>
+${buildNavFooter(lang,'lucky')}
 </body>
 </html>`;
 

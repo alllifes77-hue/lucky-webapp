@@ -484,7 +484,13 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
       <!-- SEO / FAQ -->
       <div class="seo-section">
         <h2 id="txt-faq-h2">자주 묻는 질문</h2>
-        <div id="faq-list"></div>
+        <div id="faq-list">
+          <details open><summary>사주팔자로 어떻게 행운의 번호를 뽑나요?</summary><p>생년월일에서 천간지지(연주)를 추출하고 오행(목·화·토·금·수)을 분석합니다. 각 오행에는 전통적으로 배속된 행운 숫자가 있으며, 이를 기반으로 로또 6/45 형식의 번호를 생성합니다.</p></details>
+          <details><summary>매일 같은 번호가 나오나요?</summary><p>생년월일이 같으면 항상 동일한 번호가 생성됩니다. 사주팔자 분석은 태어난 날의 천간지지를 기반으로 하므로 결과가 일정합니다.</p></details>
+          <details><summary>여러 언어를 지원하나요?</summary><p>네, 한국어(사주팔자), 일본어(구성기학), 영어/독일어/프랑스어/스페인어/포르투갈어/이탈리아어(수비학), 인도네시아어(프림본 자와) 총 9개 언어를 지원합니다.</p></details>
+          <details><summary>로또 당첨을 보장하나요?</summary><p>아닙니다. 이 앱은 전통 철학(사주팔자, 수비학 등)을 기반으로 한 오락적 목적의 서비스입니다. 로또는 확률 게임이므로 당첨을 보장할 수 없습니다.</p></details>
+          <details><summary>연애운, 금전운도 볼 수 있나요?</summary><p>네. 행운 번호 외에도 연애운, 금전운, 직업운, 성취운, 궁합 등 5가지 운세 카테고리를 각각 0~100점으로 분석하고 상세 풀이를 제공합니다.</p></details>
+        </div>
       </div>
 
     </div>
@@ -496,7 +502,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () =>
-    navigator.serviceWorker.register('/service-worker.js').catch(() => {})
+    navigator.serviceWorker.register('/lucky/service-worker.js').catch(() => {})
   );
 }
 </script>
