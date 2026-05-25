@@ -573,9 +573,19 @@ export default {
       const locs = [
         { lang:'ko', loc:`${SITE_URL}/lucky/`, priority:'1.0' },
         ...['en','ja','de','fr','es','pt','it','id'].map(l => ({ lang:l, loc:`${SITE_URL}/${l}/lucky/`, priority:'0.9' })),
-        // Today pages
-        { lang:'ko', loc:`${SITE_URL}/ko/today/`, priority:'0.8' },
-        { lang:'ja', loc:`${SITE_URL}/ja/today/`, priority:'0.8' },
+        // Today pages for all 9 langs
+        ...ALL_LANGS.map(l => ({ lang:l, loc:`${SITE_URL}/${l}/today/`, priority:'0.8' })),
+        // Angel number pages (en/de/fr/es/pt/it × 10 numbers)
+        ...['en','de','fr','es','pt','it'].flatMap(l => {
+          const pfx={en:'angel',de:'engel',fr:'ange',es:'angel',pt:'anjo',it:'angelo'};
+          return ['111','222','333','444','555','666','777','888','999','1111'].map(n=>({lang:l,loc:`${SITE_URL}/${l}/${pfx[l]}/${n}/`,priority:'0.75'}));
+        }),
+        // Nine Star Ki (ja, 9 pages)
+        ...['ikki','jikoku','sanpoku','yonroku','goo','rokusei','shichishin','hapaku','kyushi'].map(s=>({lang:'ja',loc:`${SITE_URL}/ja/${s}/`,priority:'0.75'})),
+        // En born year pages (1940–2010)
+        ...[...Array(71)].map((_,i)=>({lang:'en',loc:`${SITE_URL}/en/born-${1940+i}/`,priority:'0.75'})),
+        // Ja nen pages (1940–2010)
+        ...[...Array(71)].map((_,i)=>({lang:'ja',loc:`${SITE_URL}/ja/${1940+i}nen/`,priority:'0.75'})),
         // Compat pages
         ...Object.entries(COMPAT_PATHS_SM).map(([l,slug])=>({ lang:l, loc:`${SITE_URL}/${l}/${slug}/`, priority:'0.7' })),
         // Category pages (9 langs × 6 cats = 54 URLs) — ko는 루트 레벨
@@ -739,6 +749,110 @@ ${buildNavFooter(catLang, catKey)}
       }
     }
 
+    // ── Angel number pages (/en/angel/111/, /de/engel/222/, etc.) ───
+    {
+      const ANGEL_PREFIX = {en:'angel',de:'engel',fr:'ange',es:'angel',pt:'anjo',it:'angelo'};
+      const ANGEL_NUMS = ['111','222','333','444','555','666','777','888','999','1111'];
+      const angelMatch = path.match(/^\/([a-z]{2})\/(angel|engel|ange|anjo|angelo)\/(\d{3,4})\/?$/);
+      if (angelMatch) {
+        const aLang = angelMatch[1], aNum = angelMatch[3];
+        if (ANGEL_PREFIX[aLang] === angelMatch[2] && ANGEL_NUMS.includes(aNum) && LANGS[aLang]) {
+          const ANGEL_MEANINGS = {
+            '111':{en:'New beginnings, manifestation, and alignment. Your thoughts are becoming reality — focus on what you truly want.',de:'Neubeginn, Manifestation und Ausrichtung. Ihre Gedanken werden Wirklichkeit.',fr:'Nouveaux débuts, manifestation et alignement. Vos pensées deviennent réalité.',es:'Nuevos comienzos, manifestación y alineación. Tus pensamientos se están convirtiendo en realidad.',pt:'Novos começos, manifestação e alinhamento. Seus pensamentos estão se tornando realidade.',it:'Nuovi inizi, manifestazione e allineamento. I tuoi pensieri stanno diventando realtà.'},
+            '222':{en:'Balance, partnership, and faith. Trust the process — you are exactly where you need to be.',de:'Balance, Partnerschaft und Vertrauen. Vertraue dem Prozess.',fr:'Équilibre, partenariat et foi. Faites confiance au processus.',es:'Equilibrio, asociación y fe. Confía en el proceso.',pt:'Equilíbrio, parceria e fé. Confie no processo.',it:'Equilibrio, partnership e fiducia. Fidati del processo.'},
+            '333':{en:'Creative energy, self-expression, and growth. The ascended masters are near.',de:'Kreative Energie, Selbstausdruck und Wachstum.',fr:'Énergie créative, expression personnelle et croissance.',es:'Energía creativa, autoexpresión y crecimiento.',pt:'Energia criativa, autoexpressão e crescimento.',it:'Energia creativa, autoespressione e crescita.'},
+            '444':{en:'Stability, protection, and angelic presence. You are surrounded by support.',de:'Stabilität, Schutz und engelhafte Präsenz.',fr:'Stabilité, protection et présence angélique.',es:'Estabilidad, protección y presencia angélica.',pt:'Estabilidade, proteção e presença angelical.',it:'Stabilità, protezione e presenza angelica.'},
+            '555':{en:'Major change, freedom, and transformation. A significant shift is coming.',de:'Große Veränderung, Freiheit und Transformation.',fr:'Changement majeur, liberté et transformation.',es:'Cambio mayor, libertad y transformación.',pt:'Grande mudança, liberdade e transformação.',it:'Cambiamento importante, libertà e trasformazione.'},
+            '666':{en:'Realignment — balance between material and spiritual. Refocus on what truly matters.',de:'Neuausrichtung — Gleichgewicht zwischen Materiellem und Spirituellem.',fr:'Réalignement — équilibre entre matériel et spirituel.',es:'Realineación — equilibrio entre lo material y lo espiritual.',pt:'Realinhamento — equilíbrio entre o material e o espiritual.',it:'Riallineamento — equilibrio tra materiale e spirituale.'},
+            '777':{en:'Divine luck, spiritual awakening, and inner wisdom. You are on the right path.',de:'Göttliches Glück, spirituelles Erwachen und innere Weisheit.',fr:'Chance divine, éveil spirituel et sagesse intérieure.',es:'Suerte divina, despertar espiritual y sabiduría interior.',pt:'Sorte divina, despertar espiritual e sabedoria interior.',it:'Fortuna divina, risveglio spirituale e saggezza interiore.'},
+            '888':{en:'Abundance, financial flow, and achievement. Prosperity cycles are activating.',de:'Fülle, finanzieller Fluss und Erfolg. Wohlstandszyklen aktivieren sich.',fr:'Abondance, flux financier et accomplissement.',es:'Abundancia, flujo financiero y logro.',pt:'Abundância, fluxo financeiro e realização.',it:'Abbondanza, flusso finanziario e realizzazione.'},
+            '999':{en:'Completion, endings, and humanitarian service. A major chapter is closing.',de:'Vollendung, Enden und humanitärer Dienst. Ein großes Kapitel schließt sich.',fr:'Achèvement, fins et service humanitaire.',es:'Culminación, finales y servicio humanitario.',pt:'Conclusão, finais e serviço humanitário.',it:'Completamento, finali e servizio umanitario.'},
+            '1111':{en:'Awakening, portal, and alignment. A powerful manifestation gateway is open.',de:'Erwachen, Portal und Ausrichtung. Ein kraftvolles Manifestationstor ist offen.',fr:'Éveil, portail et alignement. Une puissante porte de manifestation est ouverte.',es:'Despertar, portal y alineación. Una poderosa puerta de manifestación está abierta.',pt:'Despertar, portal e alinhamento. Um poderoso portal de manifestação está aberto.',it:'Risveglio, portale e allineamento. Un potente portale di manifestazione è aperto.'},
+          };
+          const aCanonical = `${SITE_URL}/${aLang}/${ANGEL_PREFIX[aLang]}/${aNum}/`;
+          const meaning = (ANGEL_MEANINGS[aNum]||{})[aLang] || (ANGEL_MEANINGS[aNum]||{}).en || '';
+          const aTitle = aLang==='de'?`Engelszahl ${aNum} Bedeutung — Numerologie & Glückszahlen`:aLang==='fr'?`Nombre Angélique ${aNum} Signification — Numérologie`:aLang==='es'?`Número Angelical ${aNum} Significado — Numerología`:aLang==='pt'?`Número Anjo ${aNum} Significado — Numerologia`:aLang==='it'?`Numero Angelico ${aNum} Significato — Numerologia`:`Angel Number ${aNum} Meaning — Numerology & Lucky Numbers`;
+          const aDesc = `${meaning.slice(0,120)}`;
+          const aNavNums = ANGEL_NUMS.filter(n=>n!==aNum).map(n=>`<a href="${SITE_URL}/${aLang}/${ANGEL_PREFIX[aLang]}/${n}/">${n}</a>`).join(' ');
+          const aFaq = aLang==='de'?[
+            {q:`Was bedeutet Engelszahl ${aNum}?`,a:meaning},
+            {q:'Wie oft sehe ich Engelszahlen?',a:'Engelszahlen erscheinen, wenn Sie besonders empfänglich für spirituelle Botschaften sind — typischerweise in Zeiten des Wandels.'},
+            {q:'Sind Engelszahlen wirklich bedeutsam?',a:'Viele Numerologen und spirituelle Praktiker sehen in wiederkehrenden Zahlenmustern Hinweise des Universums. Ob Sie daran glauben liegt bei Ihnen.'},
+          ]:aLang==='fr'?[
+            {q:`Que signifie le nombre angélique ${aNum}?`,a:meaning},
+            {q:'À quelle fréquence les nombres angéliques apparaissent-ils?',a:'Ils apparaissent quand vous êtes réceptif aux messages spirituels, souvent lors de transitions importantes.'},
+            {q:'Les nombres angéliques sont-ils vraiment significatifs?',a:'Nombreux numérологues voient dans ces patterns répétitifs des signes de l\'univers. La signification vous appartient.'},
+          ]:aLang==='es'?[
+            {q:`¿Qué significa el número angelical ${aNum}?`,a:meaning},
+            {q:'¿Con qué frecuencia aparecen los números angelicales?',a:'Aparecen cuando estás receptivo a mensajes espirituales, a menudo en momentos de cambio.'},
+            {q:'¿Son realmente significativos los números angelicales?',a:'Muchos numerólogos ven en estos patrones repetitivos señales del universo. El significado es tuyo para interpretarlo.'},
+          ]:aLang==='pt'?[
+            {q:`O que significa o número anjo ${aNum}?`,a:meaning},
+            {q:'Com que frequência os números anjo aparecem?',a:'Eles aparecem quando você está receptivo a mensagens espirituais, frequentemente em momentos de mudança.'},
+            {q:'Os números anjo são realmente significativos?',a:'Muitos numerólogos veem nesses padrões repetitivos sinais do universo. O significado é seu para interpretar.'},
+          ]:aLang==='it'?[
+            {q:`Cosa significa il numero angelico ${aNum}?`,a:meaning},
+            {q:'Con quale frequenza appaiono i numeri angelici?',a:'Appaiono quando sei ricettivo ai messaggi spirituali, spesso in momenti di cambiamento.'},
+            {q:'I numeri angelici sono davvero significativi?',a:'Molti numerologi vedono in questi pattern ripetuti segnali dell\'universo. Il significato è tuo da interpretare.'},
+          ]:[
+            {q:`What does angel number ${aNum} mean?`,a:meaning},
+            {q:'How often do angel numbers appear?',a:'Angel numbers appear when you are particularly receptive to spiritual messages — typically during periods of change or transition.'},
+            {q:'Are angel numbers scientifically proven?',a:'Angel numbers are a concept from numerology and spiritual practice, not mainstream science. Many people find personal meaning and guidance in recognizing these patterns.'},
+          ];
+          const aFaqHtml = aFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+          const aFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":aFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
+          const aHtml = `<!DOCTYPE html><html lang="${aLang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(aTitle)}</title>
+<meta name="description" content="${esc(aDesc)}">
+<link rel="canonical" href="${esc(aCanonical)}">
+<meta property="og:title" content="${esc(aTitle)}">
+<meta property="og:description" content="${esc(aDesc)}">
+<meta property="og:url" content="${esc(aCanonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${aLang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${aFaqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f3ff;}
+.hero{background:linear-gradient(135deg,#3b0764,#7c3aed);color:#fff;padding:36px 20px;text-align:center;}
+.hero .angel-num{font-size:clamp(52px,12vw,88px);font-weight:900;letter-spacing:-2px;margin-bottom:8px;}
+.hero h1{font-size:clamp(18px,3.5vw,28px);font-weight:800;margin-bottom:10px;color:#e9d5ff;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:14px;}
+.meaning-card{max-width:640px;margin:20px auto;padding:20px 24px;background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(109,40,217,.12);border-left:4px solid #7c3aed;}
+.meaning-card p{font-size:15px;color:#374151;line-height:1.85;}
+.num-nav{max-width:640px;margin:16px auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.num-nav a{display:inline-block;padding:6px 14px;border-radius:20px;background:#ede9fe;color:#4c1d95;font-size:13px;font-weight:700;text-decoration:none;}
+.num-nav a:hover{background:#7c3aed;color:#fff;}
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#7c3aed;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
+</head><body>
+<div class="hero">
+  <div class="angel-num">${esc(aNum)}</div>
+  <h1>${esc(aTitle)}</h1>
+  <a class="start-btn" href="#angel-frame">${LANGS[aLang].start||'Get Lucky Numbers'}</a>
+</div>
+<div class="meaning-card"><p>${esc(meaning)}</p></div>
+<div class="num-nav">${aNavNums}</div>
+<div class="faq-wrap"><h2>FAQ</h2>${aFaqHtml}</div>
+<iframe id="angel-frame" src="${esc(`${APP_URL}/?lang=${aLang}`)}" scrolling="no" title="${esc(aTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('angel-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter(aLang,'lucky')}
+</body></html>`;
+          return new Response(aHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
     // ── Zodiac sign pages (/en/aries/, /de/widder/, etc.) ───
     const ZODIAC_SLUGS = {
       en:['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'],
@@ -756,6 +870,24 @@ ${buildNavFooter(catLang, catKey)}
       pt:['Áries','Touro','Gêmeos','Câncer','Leão','Virgem','Libra','Escorpião','Sagitário','Capricórnio','Aquário','Peixes'],
       it:['Ariete','Toro','Gemelli','Cancro','Leone','Vergine','Bilancia','Scorpione','Sagittario','Capricorno','Acquario','Pesci'],
     };
+    const ZODIAC_DATES = {
+      en:['Mar 21–Apr 19','Apr 20–May 20','May 21–Jun 20','Jun 21–Jul 22','Jul 23–Aug 22','Aug 23–Sep 22','Sep 23–Oct 22','Oct 23–Nov 21','Nov 22–Dec 21','Dec 22–Jan 19','Jan 20–Feb 18','Feb 19–Mar 20'],
+      de:['21. Mär–19. Apr','20. Apr–20. Mai','21. Mai–20. Jun','21. Jun–22. Jul','23. Jul–22. Aug','23. Aug–22. Sep','23. Sep–22. Okt','23. Okt–21. Nov','22. Nov–21. Dez','22. Dez–19. Jan','20. Jan–18. Feb','19. Feb–20. Mär'],
+      fr:['21 Mar–19 Avr','20 Avr–20 Mai','21 Mai–20 Jun','21 Jun–22 Jul','23 Jul–22 Aoû','23 Aoû–22 Sep','23 Sep–22 Oct','23 Oct–21 Nov','22 Nov–21 Déc','22 Déc–19 Jan','20 Jan–18 Fév','19 Fév–20 Mar'],
+      es:['21 Mar–19 Abr','20 Abr–20 May','21 May–20 Jun','21 Jun–22 Jul','23 Jul–22 Ago','23 Ago–22 Sep','23 Sep–22 Oct','23 Oct–21 Nov','22 Nov–21 Dic','22 Dic–19 Ene','20 Ene–18 Feb','19 Feb–20 Mar'],
+      pt:['21 Mar–19 Abr','20 Abr–20 Mai','21 Mai–20 Jun','21 Jun–22 Jul','23 Jul–22 Ago','23 Ago–22 Set','23 Set–22 Out','23 Out–21 Nov','22 Nov–21 Dez','22 Dez–19 Jan','20 Jan–18 Fev','19 Fev–20 Mar'],
+      it:['21 Mar–19 Apr','20 Apr–20 Mag','21 Mag–20 Giu','21 Giu–22 Lug','23 Lug–22 Ago','23 Ago–22 Set','23 Set–22 Ott','23 Ott–21 Nov','22 Nov–21 Dic','22 Dic–19 Gen','20 Gen–18 Feb','19 Feb–20 Mar'],
+    };
+    const ZODIAC_LUCKY = [[1,9,19,41],[2,6,24,37],[3,5,12,29],[2,7,11,32],[1,5,9,41],[3,6,14,27],[6,15,24,42],[9,18,28,37],[3,9,21,33],[4,8,13,26],[4,7,11,22],[2,7,12,29]];
+    const ZODIAC_EMOJIS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    const ZODIAC_TRAITS = {
+      en:['Bold, ambitious, and a natural-born leader driven by passion.','Patient, reliable, and sensual — Taurus loves beauty and comfort.','Curious, adaptable, and communicative — Gemini thrives on variety.','Intuitive, nurturing, and emotional — Cancer values home and family.','Generous, creative, and confident — Leo loves the spotlight.','Analytical, practical, and hardworking — Virgo seeks perfection.','Diplomatic, fair-minded, and social — Libra seeks balance.','Passionate, resourceful, and determined — Scorpio dives deep.','Adventurous, optimistic, and freedom-loving — Sagittarius seeks truth.','Disciplined, responsible, and ambitious — Capricorn climbs high.','Original, independent, and humanitarian — Aquarius thinks outside the box.','Compassionate, artistic, and intuitive — Pisces lives between dreams and reality.'],
+      de:['Mutig, ehrgeizig und ein geborener Anführer, angetrieben von Leidenschaft.','Geduldig, zuverlässig und sinnlich — Stier liebt Schönheit und Komfort.','Neugierig, anpassungsfähig und kommunikativ — Zwillinge gedeihen durch Abwechslung.','Intuitiv, fürsorglich und emotional — Krebs schätzt Heim und Familie.','Großzügig, kreativ und selbstbewusst — Löwe liebt das Rampenlicht.','Analytisch, praktisch und fleißig — Jungfrau strebt nach Perfektion.','Diplomatisch, gerecht und gesellig — Waage sucht Gleichgewicht.','Leidenschaftlich, einfallsreich und entschlossen — Skorpion geht in die Tiefe.','Abenteuerlustig, optimistisch und freiheitsliebend — Schütze sucht Wahrheit.','Diszipliniert, verantwortungsbewusst und ehrgeizig — Steinbock klettert hoch.','Originell, unabhängig und humanistisch — Wassermann denkt außerhalb der Box.','Mitfühlend, künstlerisch und intuitiv — Fische leben zwischen Träumen und Realität.'],
+      fr:['Courageux, ambitieux et un leader né, animé par la passion.','Patient, fiable et sensuel — le Taureau aime la beauté et le confort.','Curieux, adaptable et communicatif — les Gémeaux s\'épanouissent dans la variété.','Intuitif, bienveillant et émotionnel — le Cancer valorise le foyer et la famille.','Généreux, créatif et confiant — le Lion aime être sous les projecteurs.','Analytique, pratique et travailleur — la Vierge recherche la perfection.','Diplomatique, équitable et sociable — la Balance recherche l\'équilibre.','Passionné, plein de ressources et déterminé — le Scorpion plonge en profondeur.','Aventureux, optimiste et épris de liberté — le Sagittaire cherche la vérité.','Discipliné, responsable et ambitieux — le Capricorne grimpe haut.','Original, indépendant et humaniste — le Verseau pense hors des sentiers battus.','Compatissant, artistique et intuitif — les Poissons vivent entre rêves et réalité.'],
+      es:['Valiente, ambicioso y líder nato, impulsado por la pasión.','Paciente, confiable y sensual — Tauro ama la belleza y el confort.','Curioso, adaptable y comunicativo — Géminis prospera con la variedad.','Intuitivo, protector y emocional — Cáncer valora el hogar y la familia.','Generoso, creativo y seguro — Leo ama el protagonismo.','Analítico, práctico y trabajador — Virgo busca la perfección.','Diplomático, justo y sociable — Libra busca el equilibrio.','Apasionado, ingenioso y decidido — Escorpio profundiza.','Aventurero, optimista y amante de la libertad — Sagitario busca la verdad.','Disciplinado, responsable y ambicioso — Capricornio escala alto.','Original, independiente y humanitario — Acuario piensa fuera de la caja.','Compasivo, artístico e intuitivo — Piscis vive entre sueños y realidad.'],
+      pt:['Ousado, ambicioso e líder nato, movido pela paixão.','Paciente, confiável e sensual — Touro ama a beleza e o conforto.','Curioso, adaptável e comunicativo — Gêmeos prospera com a variedade.','Intuitivo, protetor e emocional — Câncer valoriza o lar e a família.','Generoso, criativo e confiante — Leão ama os holofotes.','Analítico, prático e trabalhador — Virgem busca a perfeição.','Diplomático, justo e sociável — Libra busca o equilíbrio.','Apaixonado, engenhoso e determinado — Escorpião mergulha fundo.','Aventureiro, otimista e amante da liberdade — Sagitário busca a verdade.','Disciplinado, responsável e ambicioso — Capricórnio sobe alto.','Original, independente e humanitário — Aquário pensa fora da caixa.','Compassivo, artístico e intuitivo — Peixes vive entre sonhos e realidade.'],
+      it:['Coraggioso, ambizioso e leader nato, guidato dalla passione.','Paziente, affidabile e sensuale — il Toro ama la bellezza e il comfort.','Curioso, adattabile e comunicativo — i Gemelli prosperano nella varietà.','Intuitivo, premuroso ed emotivo — il Cancro valorizza la casa e la famiglia.','Generoso, creativo e sicuro — il Leone ama essere al centro della scena.','Analitico, pratico e laborioso — la Vergine cerca la perfezione.','Diplomatico, equo e socievole — la Bilancia cerca l\'equilibrio.','Appassionato, pieno di risorse e determinato — lo Scorpione scava in profondità.','Avventuroso, ottimista e amante della libertà — il Sagittario cerca la verità.','Disciplinato, responsabile e ambizioso — il Capricorno scala in alto.','Originale, indipendente e umanitario — l\'Acquario pensa fuori dagli schemi.','Compassionevole, artistico e intuitivo — i Pesci vivono tra sogni e realtà.'],
+    };
     const zodiacMatch = path.match(/^\/([a-z]{2,3})\/([a-z]+)\/?$/);
     if (zodiacMatch && zodiacMatch[2] !== 'lucky' && zodiacMatch[2] !== 'today' && zodiacMatch[2] !== 'compatibility' && zodiacMatch[2] !== 'gunghap') {
       const zLang = zodiacMatch[1], zSlug = zodiacMatch[2];
@@ -765,14 +897,52 @@ ${buildNavFooter(catLang, catKey)}
         if (signIdx >= 0 && LANGS[zLang]) {
           const ZL = LANGS[zLang];
           const signName = (ZODIAC_NAMES[zLang] || ZODIAC_NAMES.en)[signIdx];
+          const signDates = (ZODIAC_DATES[zLang] || ZODIAC_DATES.en)[signIdx];
+          const signTrait = (ZODIAC_TRAITS[zLang] || ZODIAC_TRAITS.en)[signIdx];
+          const signEmoji = ZODIAC_EMOJIS[signIdx];
+          const signLucky = ZODIAC_LUCKY[signIdx];
           const zCanonical = `${SITE_URL}/${zLang}/${zSlug}/`;
-          const zTitle = `${signName} Lucky Numbers – ${ZL.h1}`;
-          const zDesc  = `Generate lucky numbers for ${signName}. ${ZL.desc}`;
+          const zTitle = zLang==='de'?`${signName} Glückszahlen & Horoskop — ${ZL.h1}`:zLang==='fr'?`${signName} Numéros Chanceux & Horoscope — ${ZL.h1}`:zLang==='es'?`${signName} Números de la Suerte & Horóscopo — ${ZL.h1}`:zLang==='pt'?`${signName} Números da Sorte & Horóscopo — ${ZL.h1}`:zLang==='it'?`${signName} Numeri Fortunati & Oroscopo — ${ZL.h1}`:`${signName} Lucky Numbers & Horoscope — ${ZL.h1}`;
+          const zDesc  = `${signTrait} ${zLang==='de'?`Kostenlose Glückszahlen für ${signName}`:zLang==='fr'?`Numéros chanceux gratuits pour ${signName}`:zLang==='es'?`Números de la suerte gratuitos para ${signName}`:zLang==='pt'?`Números da sorte gratuitos para ${signName}`:zLang==='it'?`Numeri fortunati gratuiti per ${signName}`:`Free lucky numbers for ${signName}`}.`;
           const zIframe = `${APP_URL}/?lang=${zLang}`;
-          const zHref = ALL_LANGS.filter(l=>ZODIAC_SLUGS[l]).map(l=>{
+          const zHref = Object.keys(ZODIAC_SLUGS).map(l=>{
             const s=(ZODIAC_SLUGS[l]||[])[signIdx];
             return s?`<link rel="alternate" hreflang="${l}" href="${SITE_URL}/${l}/${s}/">`:'';
           }).filter(Boolean).join('\n    ');
+          const zLuckyBadges = signLucky.map(n=>`<span class="lucky-badge">${n}</span>`).join('');
+          const zFaq = zLang==='de'?[
+            {q:`Wann ist ${signName}?`,a:`${signName} umfasst den Zeitraum ${signDates}.`},
+            {q:`Was sind die Eigenschaften von ${signName}?`,a:signTrait},
+            {q:`Was sind die Glückszahlen für ${signName}?`,a:`Die traditionellen Glückszahlen für ${signName} sind: ${signLucky.join(', ')}.`},
+            {q:`Wie werden Glückszahlen für ${signName} berechnet?`,a:`Die Glückszahlen basieren auf der Numerologie und den Schwingungseigenschaften des ${signName}-Zeichens.`},
+          ]:zLang==='fr'?[
+            {q:`Quand est ${signName}?`,a:`${signName} couvre la période du ${signDates}.`},
+            {q:`Quelles sont les caractéristiques de ${signName}?`,a:signTrait},
+            {q:`Quels sont les numéros chanceux pour ${signName}?`,a:`Les numéros chanceux traditionnels pour ${signName} sont: ${signLucky.join(', ')}.`},
+            {q:`Comment les numéros chanceux sont-ils calculés pour ${signName}?`,a:`Les numéros sont basés sur la numérologie et les propriétés vibratoires du signe ${signName}.`},
+          ]:zLang==='es'?[
+            {q:`¿Cuándo es ${signName}?`,a:`${signName} abarca el período del ${signDates}.`},
+            {q:`¿Cuáles son las características de ${signName}?`,a:signTrait},
+            {q:`¿Cuáles son los números de la suerte para ${signName}?`,a:`Los números de la suerte tradicionales para ${signName} son: ${signLucky.join(', ')}.`},
+            {q:`¿Cómo se calculan los números de la suerte para ${signName}?`,a:`Los números se basan en la numerología y las propiedades vibratorias del signo ${signName}.`},
+          ]:zLang==='pt'?[
+            {q:`Quando é ${signName}?`,a:`${signName} abrange o período de ${signDates}.`},
+            {q:`Quais são as características de ${signName}?`,a:signTrait},
+            {q:`Quais são os números da sorte para ${signName}?`,a:`Os números da sorte tradicionais para ${signName} são: ${signLucky.join(', ')}.`},
+            {q:`Como os números da sorte são calculados para ${signName}?`,a:`Os números são baseados na numerologia e nas propriedades vibracionais do signo ${signName}.`},
+          ]:zLang==='it'?[
+            {q:`Quando è ${signName}?`,a:`${signName} copre il periodo dal ${signDates}.`},
+            {q:`Quali sono le caratteristiche di ${signName}?`,a:signTrait},
+            {q:`Quali sono i numeri fortunati per ${signName}?`,a:`I numeri fortunati tradizionali per ${signName} sono: ${signLucky.join(', ')}.`},
+            {q:`Come vengono calcolati i numeri fortunati per ${signName}?`,a:`I numeri si basano sulla numerologia e sulle proprietà vibrazionali del segno ${signName}.`},
+          ]:[
+            {q:`When is ${signName}?`,a:`${signName} covers the period ${signDates}.`},
+            {q:`What are the personality traits of ${signName}?`,a:signTrait},
+            {q:`What are the lucky numbers for ${signName}?`,a:`The traditional lucky numbers for ${signName} are: ${signLucky.join(', ')}.`},
+            {q:`How are lucky numbers calculated for ${signName}?`,a:`Lucky numbers are based on numerological resonance — each zodiac sign has numbers that vibrate at compatible frequencies, derived from the sign's elemental properties and ruling planet.`},
+          ];
+          const zFaqHtml = zFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+          const zFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":zFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const zHtml = `<!DOCTYPE html><html lang="${zLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>${esc(zTitle)}</title>
@@ -785,31 +955,93 @@ ${zHref}
 <meta property="og:type" content="website">
 <meta property="og:image" content="${APP_URL}/og-${zLang}.png">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${zFaqSchema}</script>
 <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
-.hero{background:linear-gradient(135deg,#1e1b4b,#4c1d95);color:#fff;padding:28px 20px;text-align:center;}
-.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:8px;}
-.hero p{font-size:13px;color:#c4b5fd;max-width:520px;margin:0 auto;}
-.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
-iframe{width:100%;border:none;display:block;height:560px;}</style>
+.hero{background:linear-gradient(135deg,#1e1b4b,#4c1d95);color:#fff;padding:32px 20px;text-align:center;}
+.hero .sign-emoji{font-size:52px;margin-bottom:8px;}
+.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:6px;}
+.hero .dates{font-size:13px;color:#c4b5fd;margin-bottom:14px;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.lucky-badges{max-width:600px;margin:16px auto;padding:0 16px;text-align:center;}
+.lucky-badge{display:inline-block;background:#4c1d95;color:#e9d5ff;font-weight:800;font-size:15px;padding:8px 16px;border-radius:10px;margin:4px;}
+.trait-card{max-width:600px;margin:16px auto;padding:18px 20px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);font-size:14px;color:#374151;line-height:1.85;}
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#d97706;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
 </head><body>
-<div class="hero"><h1>${esc(signName)} — ${esc(ZL.h1)}</h1><p>${esc(ZL.body)}</p><a class="start-btn" href="#lucky-frame">${esc(ZL.start)}</a></div>
-<iframe id="lucky-frame" src="${esc(zIframe)}" scrolling="no" title="${esc(signName)} lucky numbers" loading="lazy"></iframe>
-<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+<div class="hero">
+  <div class="sign-emoji">${signEmoji}</div>
+  <h1>${esc(signName)}</h1>
+  <div class="dates">${esc(signDates)}</div>
+  <a class="start-btn" href="#zodiac-frame">${esc(ZL.start)}</a>
+</div>
+<div class="lucky-badges">${zLuckyBadges}</div>
+<div class="trait-card">${esc(signTrait)}</div>
+<div class="faq-wrap"><h2>FAQ</h2>${zFaqHtml}</div>
+<iframe id="zodiac-frame" src="${esc(zIframe)}" scrolling="no" title="${esc(signName)} lucky numbers" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('zodiac-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter(zLang,'lucky')}
 </body></html>`;
-          return new Response(zHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600'}});
+          return new Response(zHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
         }
       }
     }
 
-    // ── Today's fortune pages (/ko/today/, /ja/today/) ──────
-    const todayMatch = path.match(/^\/(ko|ja)\/today\/?$/);
+    // ── Today's fortune pages (/ko/today/, /en/today/, all 9 langs) ──────
+    const todayMatch = path.match(/^\/(ko|en|ja|de|fr|es|pt|it|id)\/today\/?$/);
     if (todayMatch) {
       const tLang = todayMatch[1];
       const TL = LANGS[tLang] || LANGS.en;
       const today = new Date().toISOString().slice(0,10);
       const tCanonical = `${SITE_URL}/${tLang}/today/`;
-      const tTitle = tLang==='ko' ? `오늘의 운세 — ${TL.h1}` : `今日の運勢 — ${TL.h1}`;
-      const tDesc  = tLang==='ko' ? `오늘 날짜(${today}) 기반 운세. ${TL.desc}` : `本日(${today})の運勢。${TL.desc}`;
+      const TODAY_TITLES = {
+        ko:`오늘의 운세 & 행운 번호 — ${today}`,
+        en:`Today's Lucky Numbers — ${today} | Free Daily Fortune`,
+        ja:`今日の運勢・幸運の数字 — ${today}`,
+        de:`Heutige Glückszahlen — ${today}`,
+        fr:`Numéros Chanceux du Jour — ${today}`,
+        es:`Números de la Suerte Hoy — ${today}`,
+        pt:`Números da Sorte Hoje — ${today}`,
+        it:`Numeri Fortunati Oggi — ${today}`,
+        id:`Angka Keberuntungan Hari Ini — ${today}`,
+      };
+      const TODAY_DESCS = {
+        ko:`오늘(${today}) 날짜 기반 운세와 행운 번호. ${TL.desc}`,
+        en:`Free lucky numbers for today, ${today}. ${TL.desc}`,
+        ja:`本日(${today})の運勢と幸運の数字。${TL.desc}`,
+        de:`Kostenlose Glückszahlen für heute, ${today}. ${TL.desc}`,
+        fr:`Numéros chanceux gratuits pour aujourd'hui, ${today}. ${TL.desc}`,
+        es:`Números de la suerte gratuitos para hoy, ${today}. ${TL.desc}`,
+        pt:`Números da sorte gratuitos para hoje, ${today}. ${TL.desc}`,
+        it:`Numeri fortunati gratuiti per oggi, ${today}. ${TL.desc}`,
+        id:`Angka keberuntungan gratis untuk hari ini, ${today}. ${TL.desc}`,
+      };
+      const TODAY_BTNS = {ko:'운세 보기',en:'Get Today\'s Numbers',ja:'運勢を見る',de:'Zahlen abrufen',fr:'Obtenir les numéros',es:'Obtener números',pt:'Obter números',it:'Ottieni i numeri',id:'Dapatkan angka'};
+      const TODAY_FAQ = {
+        ko:[{q:'오늘의 행운 번호는 어떻게 계산되나요?',a:'오늘 날짜의 유니버설 데이 넘버와 생년월일 기반 라이프 패스 넘버를 결합하여 계산됩니다.'},{q:'매일 달라지나요?',a:'날짜가 바뀌면 유니버설 데이 넘버가 달라지므로 오늘의 번호도 변경됩니다.'},{q:'어떤 복권에 사용할 수 있나요?',a:'로또 6/45 형식으로 제공됩니다. 생년월일을 입력하면 맞춤 번호를 받을 수 있습니다.'}],
+        en:[{q:'How are today\'s lucky numbers calculated?',a:'Today\'s Universal Day Number is combined with your Life Path Number to identify the most resonant numbers for the day.'},{q:'Do the numbers change every day?',a:'Yes — as the Universal Day Number changes each day, the resonance pattern shifts, producing fresh recommendations daily.'},{q:'Which lottery formats are supported?',a:'Powerball, Mega Millions, Pick 4, and Pick 3. Enter your birth date below for personalized numbers.'}],
+        ja:[{q:'今日のラッキーナンバーはどう計算しますか？',a:'今日の日付のユニバーサルデーナンバーと生年月日から導く本命星を組み合わせて計算します。'},{q:'毎日変わりますか？',a:'はい — 日付が変わるとユニバーサルデーナンバーが変わるため、ラッキーナンバーも更新されます。'},{q:'対応している宝くじは？',a:'ロト6・ロト7・ミニロト・ナンバーズ4に対応しています。'}],
+        de:[{q:'Wie werden heutige Glückszahlen berechnet?',a:'Die Universelle Tageszahl von heute wird mit Ihrer Lebenspfadzahl kombiniert.'},{q:'Ändern sich die Zahlen täglich?',a:'Ja — die Universelle Tageszahl ändert sich täglich, was neue Empfehlungen generiert.'},{q:'Welche Lotterien werden unterstützt?',a:'EuroMillions, EuroJackpot und Lotto 6aus49.'}],
+        fr:[{q:'Comment les numéros d\'aujourd\'hui sont-ils calculés?',a:'Le Nombre Universel du Jour est combiné avec votre Nombre de Chemin de Vie.'},{q:'Les numéros changent-ils chaque jour?',a:'Oui — le Nombre Universel du Jour évolue quotidiennement.'},{q:'Quelles loteries sont prises en charge?',a:'EuroMillions, EuroJackpot et toutes les loteries nationales.'}],
+        es:[{q:'¿Cómo se calculan los números de hoy?',a:'El Número Universal del Día se combina con tu Número de Camino de Vida.'},{q:'¿Los números cambian cada día?',a:'Sí — el Número Universal del Día cambia diariamente.'},{q:'¿Qué loterías están disponibles?',a:'EuroMillones, EuroJackpot y loterias nacionales.'}],
+        pt:[{q:'Como os números de hoje são calculados?',a:'O Número Universal do Dia é combinado com o seu Número de Caminho de Vida.'},{q:'Os números mudam todos os dias?',a:'Sim — o Número Universal do Dia muda diariamente.'},{q:'Quais loterias são suportadas?',a:'Mega Sena e outras loterias nacionais.'}],
+        it:[{q:'Come vengono calcolati i numeri di oggi?',a:'Il Numero Universale del Giorno viene combinato con il tuo Numero di Percorso di Vita.'},{q:'I numeri cambiano ogni giorno?',a:'Sì — il Numero Universale del Giorno cambia quotidianamente.'},{q:'Quali lotterie sono supportate?',a:'SuperEnalotto e altre lotterie nazionali.'}],
+        id:[{q:'Bagaimana angka keberuntungan hari ini dihitung?',a:'Angka Universal Hari digabungkan dengan Nomor Jalur Hidup Anda.'},{q:'Apakah angka berubah setiap hari?',a:'Ya — Angka Universal Hari berubah setiap hari.'},{q:'Lotere apa yang didukung?',a:'Togel dan lotere nasional Indonesia.'}],
+      };
+      const tTitle = TODAY_TITLES[tLang] || TODAY_TITLES.en;
+      const tDesc  = TODAY_DESCS[tLang]  || TODAY_DESCS.en;
+      const tFaq   = TODAY_FAQ[tLang]    || TODAY_FAQ.en;
+      const tFaqHtml = tFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+      const tFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":tFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
       const tIframe = `${APP_URL}/?lang=${tLang}`;
       const tHtml = `<!DOCTYPE html><html lang="${tLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -822,18 +1054,38 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
 <meta property="og:type" content="website">
 <meta property="og:image" content="${APP_URL}/og-${tLang}.png">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${tFaqSchema}</script>
 <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
-.hero{background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;padding:28px 20px;text-align:center;}
-.hero h1{font-size:clamp(20px,4vw,34px);font-weight:900;margin-bottom:8px;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;padding:32px 20px;text-align:center;}
+.hero .today-date{font-size:13px;color:#818cf8;margin-bottom:6px;}
+.hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
 .hero p{font-size:13px;color:#c4b5fd;max-width:520px;margin:0 auto;}
 .start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
-iframe{width:100%;border:none;display:block;height:560px;}</style>
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#d97706;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
 </head><body>
-<div class="hero"><h1>${esc(tTitle)}</h1><p>${esc(tDesc)}</p><a class="start-btn" href="#lucky-frame">${tLang==='ko'?'운세 보기':'運勢を見る'}</a></div>
-<iframe id="lucky-frame" src="${esc(tIframe)}" scrolling="no" title="${esc(tTitle)}" loading="lazy"></iframe>
-<script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+<div class="hero">
+  <div class="today-date">${esc(today)}</div>
+  <h1>${esc(tTitle)}</h1>
+  <p>${esc(tDesc.slice(0,120))}</p>
+  <a class="start-btn" href="#today-frame">${esc(TODAY_BTNS[tLang]||TODAY_BTNS.en)}</a>
+</div>
+<div class="faq-wrap"><h2>FAQ</h2>${tFaqHtml}</div>
+<iframe id="today-frame" src="${esc(tIframe)}" scrolling="no" title="${esc(tTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('today-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter(tLang,'lucky')}
 </body></html>`;
-      return new Response(tHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=1800'}});
+      return new Response(tHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
     }
 
     // ── Compatibility share pages (/ko/gunghap/, /en/compatibility/, etc.) ─
@@ -878,6 +1130,114 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
 <script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
 </body></html>`;
         return new Response(cHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control': bd1&&bd2?'public,max-age=300':'public,max-age=3600'}});
+      }
+    }
+
+    // ── Nine Star Ki pages (/ja/ikki/, /ja/jikoku/, etc.) ───
+    {
+      const KSK_SLUGS  = ['ikki','jikoku','sanpoku','yonroku','goo','rokusei','shichishin','hapaku','kyushi'];
+      const KSK_NAMES  = ['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+      const KSK_EMOJIS = ['💧','🌑','🌿','🌳','⭐','⚙️','🔱','🏔️','🔥'];
+      const KSK_ELEMENT= ['水','土','木','木','土','金','金','土','火'];
+      const KSK_COLOR  = ['白色','黒色','碧色','緑色','黄色','白金色','赤色','白色','紫色'];
+      const KSK_DIR    = ['北','南西','東','南東','中央','北西','西','北東','南'];
+      const KSK_LUCKY  = [[1,6,8],[2,5,8],[3,4,9],[3,4,9],[5,2,8],[6,1,7],[7,6,1],[8,5,2],[9,3,6]];
+      const KSK_TRAITS = [
+        '直感力が鋭く、柔軟性と知恵を持ちます。困難な状況でも流れに乗る力があります。',
+        '勤勉で忍耐強く、大地のような安定感を持ちます。コツコツとした努力が実を結ぶ星です。',
+        '行動力があり、新しいものへの好奇心旺盛。創造性と発展の力を持ちます。',
+        '穏やかで信頼性が高く、調和を大切にします。人間関係の橋渡し役として才能があります。',
+        '強力なエネルギーを持つ中心の星。変化と転換の力があり影響が大きい。',
+        '正義感が強く、リーダーシップに優れます。天の恵みと権威を象徴する星です。',
+        '社交的で明るく話術に長けます。金運と楽しみを引き寄せる魅力的な星です。',
+        '変化と革新を司る山の星。継承と転換期に強く、再出発の力を持ちます。',
+        '直感と美的感覚に優れた芸術の星。明るく情熱的で人を惹きつける魅力があります。',
+      ];
+      const kskM = path.match(/^\/ja\/([a-z]+)\/?$/);
+      if (kskM) {
+        const kIdx = KSK_SLUGS.indexOf(kskM[1]);
+        if (kIdx >= 0) {
+          const kName   = KSK_NAMES[kIdx];
+          const kEmoji  = KSK_EMOJIS[kIdx];
+          const kElem   = KSK_ELEMENT[kIdx];
+          const kColor  = KSK_COLOR[kIdx];
+          const kDir    = KSK_DIR[kIdx];
+          const kLucky  = KSK_LUCKY[kIdx];
+          const kTrait  = KSK_TRAITS[kIdx];
+          const kCanon  = `${SITE_URL}/ja/${KSK_SLUGS[kIdx]}/`;
+          const kTitle  = `${kName}（九星気学）— 幸運の数字・吉方位・運勢`;
+          const kDesc   = `${kName}の特徴と運勢。五行：${kElem}、吉方位：${kDir}、吉色：${kColor}。${kTrait}`;
+          const kNavLinks = KSK_SLUGS.map((s,i)=>`<a href="${SITE_URL}/ja/${s}/"${i===kIdx?' style="background:#065f46;color:#fff;"':''}>${KSK_NAMES[i]}</a>`).join('');
+          const kFaq = [
+            {q:`${kName}の生まれ年はいつ？`,a:`九星気学では生まれ年から本命星を割り出します。${kName}の方は、九星の計算式（(11-生まれ年)%9）で${kIdx}になる年が対象です。`},
+            {q:`${kName}の性格は？`,a:kTrait},
+            {q:`${kName}のラッキーナンバーは？`,a:`${kName}の吉数は ${kLucky.join('・')} です。これらの数字は五行属性「${kElem}」に基づく振動数と調和しています。`},
+            {q:'九星気学とは何ですか？',a:'九星気学は中国の九宮術を基盤とした日本の占術です。生まれ年から9つの星（一白〜九紫）のいずれかに分類され、五行（木・火・土・金・水）と方位の吉凶を判断します。'},
+          ];
+          const kFaqHtml   = kFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+          const kFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":kFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
+          const kHtml = `<!DOCTYPE html><html lang="ja"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(kTitle)}</title>
+<meta name="description" content="${esc(kDesc)}">
+<link rel="canonical" href="${esc(kCanon)}">
+<meta property="og:title" content="${esc(kTitle)}">
+<meta property="og:description" content="${esc(kDesc)}">
+<meta property="og:url" content="${esc(kCanon)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-ja.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${kFaqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0fdf4;}
+.hero{background:linear-gradient(135deg,#14532d,#16a34a);color:#fff;padding:32px 20px;text-align:center;}
+.hero .star-emoji{font-size:52px;margin-bottom:8px;}
+.hero h1{font-size:clamp(20px,4vw,32px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#bbf7d0;max-width:520px;margin:0 auto 14px;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.stat-grid{display:flex;flex-wrap:wrap;gap:10px;max-width:600px;margin:16px auto;padding:0 16px;}
+.stat-card{flex:1;min-width:130px;background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.stat-card strong{display:block;font-size:11px;font-weight:700;color:#166534;margin-bottom:4px;text-transform:uppercase;}
+.stat-card span{font-size:14px;color:#374151;font-weight:600;}
+.lucky-badges{max-width:600px;margin:0 auto 12px;padding:0 16px;text-align:center;}
+.lucky-badge{display:inline-block;background:#166534;color:#bbf7d0;font-weight:800;font-size:15px;padding:8px 16px;border-radius:10px;margin:4px;}
+.trait-card{max-width:600px;margin:0 auto 16px;padding:18px 20px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);font-size:14px;color:#374151;line-height:1.85;}
+.star-nav{max-width:700px;margin:16px auto;padding:0 16px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.star-nav a{display:inline-block;padding:6px 12px;border-radius:20px;background:#dcfce7;color:#14532d;font-size:12px;font-weight:700;text-decoration:none;}
+.star-nav a:hover{background:#16a34a;color:#fff;}
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#16a34a;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
+</head><body>
+<div class="hero">
+  <div class="star-emoji">${kEmoji}</div>
+  <h1>${esc(kName)}</h1>
+  <p>${esc(kTrait)}</p>
+  <a class="start-btn" href="#ksk-frame">ラッキーナンバーを引く</a>
+</div>
+<div class="stat-grid">
+  <div class="stat-card"><strong>五行</strong><span>${kElem}</span></div>
+  <div class="stat-card"><strong>吉方位</strong><span>${kDir}</span></div>
+  <div class="stat-card"><strong>吉色</strong><span>${kColor}</span></div>
+</div>
+<div class="lucky-badges">${kLucky.map(n=>`<span class="lucky-badge">${n}</span>`).join('')}</div>
+<div class="trait-card">${esc(kTrait)}</div>
+<div class="star-nav">${kNavLinks}</div>
+<div class="faq-wrap"><h2>よくある質問</h2>${kFaqHtml}</div>
+<iframe id="ksk-frame" src="${esc(`${APP_URL}/?lang=ja`)}" scrolling="no" title="${esc(kTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('ksk-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter('ja','lucky')}
+</body></html>`;
+          return new Response(kHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
+        }
       }
     }
 
@@ -1120,6 +1480,165 @@ ${NAV_FOOTER_CSS}
 ${buildNavFooter('ko', 'lucky')}
 </body></html>`;
           return new Response(byHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── En born-YYYY pages (/en/born-1990/ etc.) ─────────────────
+    {
+      const enBornM = path.match(/^\/en\/born-(\d{4})\/?$/);
+      if (enBornM) {
+        const by = parseInt(enBornM[1]);
+        if (by >= 1940 && by <= 2010) {
+          const STEMS_EN   = ['Geng(金)','Xin(金)','Ren(水)','Gui(水)','Jia(木)','Yi(木)','Bing(火)','Ding(火)','Wu(土)','Ji(土)'];
+          const BRANCHES_EN= ['Monkey','Rooster','Dog','Pig','Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat'];
+          const ELEMENTS_EN= ['Metal','Metal','Water','Water','Wood','Wood','Fire','Fire','Earth','Earth'];
+          const stemIdx    = ((by - 4) % 10 + 10) % 10;
+          const branchIdx  = ((by - 4) % 12 + 12) % 12;
+          const stem       = STEMS_EN[stemIdx];
+          const branch     = BRANCHES_EN[branchIdx];
+          const element    = ELEMENTS_EN[stemIdx];
+          const elemDesc   = element==='Metal'?'strength and determination':element==='Water'?'wisdom and adaptability':element==='Wood'?'growth and creativity':element==='Fire'?'passion and charisma':'stability and reliability';
+          const enCanon    = `${SITE_URL}/en/born-${by}/`;
+          const enTitle    = `Born in ${by} Lucky Numbers — Year of the ${branch} ${element} Element`;
+          const enDesc     = `Free Powerball & Mega Millions lucky numbers for people born in ${by}. Year of the ${branch} (${element} element — ${elemDesc}). Instant, no signup required.`;
+          const enFaq = [
+            {q:`What zodiac is ${by}?`,a:`${by} is the Year of the ${branch} in the Chinese zodiac.`},
+            {q:`What element is ${by}?`,a:`${by} is a ${element} year (${stem} stem). ${element} represents ${elemDesc}.`},
+            {q:`What are lucky numbers for people born in ${by}?`,a:`Enter your exact birth date below for personalized lucky numbers based on your Life Path Number and ${branch}/${element} energy.`},
+            {q:'Is numerology different for each birth year?',a:'Yes — your birth year determines your Chinese zodiac animal and elemental energy, which along with your Life Path Number shapes your unique numerological profile.'},
+          ];
+          const enFaqHtml   = enFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+          const enFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":enFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
+          const enByHtml = `<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(enTitle)}</title>
+<meta name="description" content="${esc(enDesc)}">
+<link rel="canonical" href="${esc(enCanon)}">
+<meta property="og:title" content="${esc(enTitle)}">
+<meta property="og:description" content="${esc(enDesc)}">
+<meta property="og:url" content="${esc(enCanon)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-en.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${enFaqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#4338ca);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#c7d2fe;max-width:520px;margin:0 auto 12px;}
+.start-btn{display:inline-block;background:#fbbf24;color:#1e1b4b;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.info-grid{display:flex;flex-wrap:wrap;gap:10px;max-width:600px;margin:14px auto;padding:0 16px;}
+.info-chip{background:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;color:#4338ca;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#d97706;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
+</head><body>
+<div class="hero">
+  <h1>Born in ${by} — Lucky Numbers</h1>
+  <p>${esc(enDesc)}</p>
+  <a class="start-btn" href="#en-born-frame">Get My Lucky Numbers</a>
+</div>
+<div class="info-grid">
+  <span class="info-chip">🐾 Year of the ${branch}</span>
+  <span class="info-chip">☯️ ${element} (${stem})</span>
+  <span class="info-chip">📅 Born ${by}</span>
+</div>
+<div class="faq-wrap"><h2>Frequently Asked Questions</h2>${enFaqHtml}</div>
+<iframe id="en-born-frame" src="${esc(`${APP_URL}/?lang=en&bd=${by}0101`)}" scrolling="no" title="${esc(enTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('en-born-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter('en','lucky')}
+</body></html>`;
+          return new Response(enByHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── Ja YYYYnen pages (/ja/1990nen/ etc.) ─────────────────────
+    {
+      const jaNenM = path.match(/^\/ja\/(\d{4})nen\/?$/);
+      if (jaNenM) {
+        const by = parseInt(jaNenM[1]);
+        if (by >= 1940 && by <= 2010) {
+          const STEMS_JA    = ['庚(こう)','辛(しん)','壬(じん)','癸(き)','甲(こう)','乙(おつ)','丙(へい)','丁(てい)','戊(ぼ)','己(き)'];
+          const BRANCHES_JA = ['申(さる)','酉(とり)','戌(いぬ)','亥(いのしし)','子(ね)','丑(うし)','寅(とら)','卯(うさぎ)','辰(たつ)','巳(み)','午(うま)','未(ひつじ)'];
+          const ELEMENTS_JA = ['金','金','水','水','木','木','火','火','土','土'];
+          const KSK_NAMES_SHORT = ['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
+          const stemIdx    = ((by - 4) % 10 + 10) % 10;
+          const branchIdx  = ((by - 4) % 12 + 12) % 12;
+          const stemStr    = STEMS_JA[stemIdx];
+          const branchStr  = BRANCHES_JA[branchIdx];
+          const element    = ELEMENTS_JA[stemIdx];
+          const kskIdx     = ((11 - by) % 9 + 9) % 9;
+          const kskName    = KSK_NAMES_SHORT[kskIdx];
+          const jaCanon    = `${SITE_URL}/ja/${by}nen/`;
+          const jaTitle    = `${by}年生まれ幸運の数字 — ${stemStr}${branchStr}年${element}行・九星気学ラッキーナンバー`;
+          const jaDesc     = `${by}年生まれ（${stemStr}${branchStr}年、本命星：${kskName}）の幸運の数字を無料で取得。五行${element}の吉数と九星気学に基づくラッキーナンバー。`;
+          const jaFaq = [
+            {q:`${by}年は何年ですか？`,a:`${by}年は${stemStr}${branchStr}年（${branchStr.split('(')[0]}年）です。`},
+            {q:`${by}年生まれの性格は？`,a:`五行は「${element}」です。${element === '木' ? '木の気は成長・発展・仁の象徴。創造的で進取の気性が強い。' : element === '火' ? '火の気は情熱・活力・輝きの象徴。情熱的で社交的な性格。' : element === '土' ? '土の気は安定・信頼・忍耐の象徴。誠実で頼りがいのある性格。' : element === '金' ? '金の気は決断・義理・強さの象徴。決断力があり義理堅い性格。' : '水の気は知恵・柔軟性・コミュニケーションの象徴。知恵深く柔軟な性格。'}`},
+            {q:`${by}年生まれの幸運の数字は？`,a:`下のアプリに生年月日を入力すると、九星気学（本命星：${kskName}）と五行「${element}」に基づくラッキーナンバーを無料で取得できます。`},
+            {q:'九星気学とは何ですか？',a:'九星気学は生まれ年から9つの星（一白〜九紫）を割り出し、五行と方位の吉凶を判断する日本の占術です。'},
+          ];
+          const jaFaqHtml   = jaFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+          const jaFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":jaFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
+          const jaNenHtml = `<!DOCTYPE html><html lang="ja"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(jaTitle)}</title>
+<meta name="description" content="${esc(jaDesc)}">
+<link rel="canonical" href="${esc(jaCanon)}">
+<meta property="og:title" content="${esc(jaTitle)}">
+<meta property="og:description" content="${esc(jaDesc)}">
+<meta property="og:url" content="${esc(jaCanon)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-ja.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${jaFaqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#4338ca);color:#fff;padding:28px 20px;text-align:center;}
+.hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#c7d2fe;max-width:520px;margin:0 auto 12px;}
+.start-btn{display:inline-block;background:#fbbf24;color:#1e1b4b;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;}
+.info-grid{display:flex;flex-wrap:wrap;gap:10px;max-width:600px;margin:14px auto;padding:0 16px;}
+.info-chip{background:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;color:#4338ca;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#d97706;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
+</head><body>
+<div class="hero">
+  <h1>🔮 ${esc(jaTitle)}</h1>
+  <p>${esc(jaDesc)}</p>
+  <a class="start-btn" href="#ja-nen-frame">今すぐ確認する</a>
+</div>
+<div class="info-grid">
+  <span class="info-chip">🐾 ${branchStr}</span>
+  <span class="info-chip">☯️ ${element}（${stemStr}${branchStr}年）</span>
+  <span class="info-chip">⭐ ${kskName}</span>
+  <span class="info-chip">📅 ${by}年生まれ</span>
+</div>
+<div class="faq-wrap"><h2>${by}年生まれ よくある質問</h2>${jaFaqHtml}</div>
+<iframe id="ja-nen-frame" src="${esc(`${APP_URL}/?lang=ja&bd=${by}0101`)}" scrolling="no" title="${esc(jaTitle)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('ja-nen-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter('ja','lucky')}
+</body></html>`;
+          return new Response(jaNenHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
         }
       }
     }
