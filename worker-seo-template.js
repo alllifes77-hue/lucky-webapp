@@ -9,15 +9,7 @@
 const APP_URL  = 'https://all-lifes.com/lucky';
 const SITE_URL = 'https://all-lifes.com';
 const ALL_LANGS = ['ko','en','ja','de','fr','es','pt','it','id'];
-// Models tried in order — first available wins (verified live 2026-05-27)
-const OPENROUTER_MODELS = [
-  'nvidia/nemotron-3-super-120b-a12b:free',   // 120B — verified OK
-  'openai/gpt-oss-120b:free',                  // 120B — verified OK
-  'google/gemma-4-31b-it:free',               // 31B  — verified OK
-  'nvidia/nemotron-nano-9b-v2:free',           // 9B   — verified OK
-  'meta-llama/llama-3.3-70b-instruct:free',   // 70B  — OK when not rate-limited
-  'nousresearch/hermes-3-llama-3.1-405b:free',// 405B — OK when not rate-limited
-];
+
 
 // ── Per-language SEO metadata ────────────────────────────
 const LANGS = {
@@ -550,38 +542,6 @@ function buildNavFooter(lang, activePage) {
   return `<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
 }
 
-function buildFortuneSystemPrompt(lang, d) {
-  const today = new Date().toISOString().slice(0,10);
-  const CONTEXTS = {
-    ko:`당신은 사주팔자·오행·동양 철학 전문가입니다. 한국어로만 답변하세요. 오늘은 ${today}입니다. 2025~2026년 한국의 경제·사회·트렌드(고금리, 취업난, AI혁명 등)를 반영해 현실적이고 따뜻한 조언을 주세요.`,
-    en:`You are an expert in Pythagorean numerology and Western astrology. Answer in English only. Today is ${today}. Reflect 2025-2026 global trends (AI disruption, economic uncertainty, shifting job markets) in your advice.`,
-    ja:`あなたは九星気学・数秘術・東洋哲学の専門家です。日本語のみで回答してください。今日は${today}です。2025〜2026年の日本の社会・経済トレンド（少子化、AI化、物価上昇など）を踏まえてアドバイスしてください。`,
-    de:`Sie sind Experte für pythagoräische Numerologie und westliche Astrologie. Antworten Sie nur auf Deutsch. Heute ist der ${today}. Berücksichtigen Sie Trends 2025-2026 (Energiewende, Digitalisierung, wirtschaftliche Lage in Deutschland).`,
-    fr:`Vous êtes expert en numérologie pythagoricienne et astrologie occidentale. Répondez uniquement en français. Aujourd'hui c'est le ${today}. Tenez compte des tendances 2025-2026 (transition écologique, IA, marché du travail en France).`,
-    es:`Eres experto en numerología pitagórica y astrología occidental. Responde solo en español. Hoy es ${today}. Ten en cuenta las tendencias 2025-2026 (IA, mercado laboral, situación económica en España/Latinoamérica).`,
-    pt:`Você é especialista em numerologia pitagórica e astrologia ocidental. Responda apenas em português. Hoje é ${today}. Considere as tendências 2025-2026 (IA, mercado de trabalho, economia do Brasil).`,
-    it:`Sei esperto di numerologia pitagorica e astrologia occidentale. Rispondi solo in italiano. Oggi è ${today}. Considera le tendenze 2025-2026 (IA, mercato del lavoro, situazione economica in Italia).`,
-    id:`Anda ahli Primbon Jawa, Weton, dan astrologi tradisional. Jawab hanya dalam bahasa Indonesia. Hari ini ${today}. Pertimbangkan tren 2025-2026 (transformasi digital, ekonomi Indonesia, peluang kerja).`,
-  };
-  const ROLES = {
-    ko:`사용자의 사주 데이터를 바탕으로: 1) 왜 이런 운세가 나왔는지 오행 원리로 설명, 2) 현재 삶의 주요 기회와 주의점, 3) 앞으로 3~6개월 더 나은 방향 3가지 제안. 500자 내외로 친근하고 통찰력 있게 작성하세요.`,
-    en:`Based on the user's numerology data: 1) Explain why these fortune scores appeared using Life Path principles, 2) Key opportunities and cautions right now, 3) Three actionable steps for the next 3-6 months. ~350 words, warm and insightful tone.`,
-    ja:`ユーザーの九星気学データをもとに: 1) なぜこの運勢になったか九星の原理で説明、2) 現在の主な機会と注意点、3) 今後3〜6ヶ月のより良い方向性3つ。400字程度、親しみやすく洞察力のある文体で。`,
-    de:`Basierend auf den Numerologie-Daten: 1) Warum diese Scores entstanden sind, 2) Aktuelle Chancen und Vorsichtsmaßnahmen, 3) Drei umsetzbare Schritte für die nächsten 3-6 Monate. ~300 Wörter, warmherzig und aufschlussreich.`,
-    fr:`Basé sur les données numérologique: 1) Pourquoi ces scores sont apparus, 2) Opportunités et précautions actuelles, 3) Trois étapes concrètes pour les 3-6 prochains mois. ~300 mots, ton chaleureux.`,
-    es:`Basado en los datos numerológicos: 1) Por qué aparecieron estos puntajes, 2) Oportunidades y precauciones actuales, 3) Tres pasos prácticos para los próximos 3-6 meses. ~300 palabras, tono cálido.`,
-    pt:`Com base nos dados numerológicos: 1) Por que esses scores apareceram, 2) Oportunidades e precauções atuais, 3) Três passos práticos para os próximos 3-6 meses. ~300 palavras, tom caloroso.`,
-    it:`Basandoti sui dati numerologici: 1) Perché questi punteggi sono emersi, 2) Opportunità e precauzioni attuali, 3) Tre passi pratici per i prossimi 3-6 mesi. ~300 parole, tono caloroso.`,
-    id:`Berdasarkan data Primbon: 1) Mengapa skor-skor ini muncul, 2) Peluang dan kehati-hatian saat ini, 3) Tiga langkah praktis untuk 3-6 bulan ke depan. ~300 kata, nada hangat dan berwawasan.`,
-  };
-  let dataStr = '';
-  if (d) {
-    const labels = {ko:['생년월일','오행','띠','행운번호','연애운','금전운','직업운','달성운'],en:['Birth date','Element','Zodiac','Lucky numbers','Love','Money','Career','Achievement'],ja:['生年月日','五行','干支','ラッキー数','恋愛運','金運','仕事運','達成運']};
-    const lb = labels[lang] || labels.en;
-    dataStr = `\n\n[User Fortune Data]\n${lb[0]}: ${d.birthDate||''}\n${lb[1]}: ${d.element||''}\n${lb[2]}: ${d.zodiac||''}\n${lb[3]}: ${d.luckyNums||''}\n${lb[4]}: ${d.loveScore||'?'}/100\n${lb[5]}: ${d.moneyScore||'?'}/100\n${lb[6]}: ${d.careerScore||'?'}/100\n${lb[7]}: ${d.achieveScore||'?'}/100`;
-  }
-  return (CONTEXTS[lang]||CONTEXTS.en) + dataStr + '\n\n' + (ROLES[lang]||ROLES.en);
-}
 
 // ── Escape HTML ──────────────────────────────────────────
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -598,72 +558,6 @@ export default {
         `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/lucky-sitemap.xml\n`,
         {headers:{'Content-Type':'text/plain;charset=UTF-8','Cache-Control':'public,max-age=86400'}}
       );
-    }
-
-    // ── AI Fortune Chat (/lucky-chat) ────────────────────────────────────
-    if (path === '/lucky-chat') {
-      const corsHeaders = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      };
-      if (request.method === 'OPTIONS') return new Response(null, {headers: corsHeaders});
-      if (request.method !== 'POST') return new Response('Method Not Allowed', {status:405});
-      try {
-        const body = await request.json();
-        const { lang = 'en', fortuneData = null, messages = [] } = body;
-        const systemPrompt = buildFortuneSystemPrompt(lang, fortuneData);
-        // When messages is empty (initial auto-reading), inject a user turn so the LLM responds
-        const INIT_REQUESTS = {
-          ko:'제 운세를 오행 원리와 현시대 트렌드를 반영해 자세히 분석해주세요.',
-          en:'Please give me a detailed fortune reading using my numerology data.',
-          ja:'私の命式データをもとに九星気学の視点で詳しく運勢を分析してください。',
-          de:'Bitte geben Sie mir eine detaillierte Numerologie-Analyse meiner Daten.',
-          fr:'Veuillez me donner une analyse numérologique détaillée de mes données.',
-          es:'Por favor, dame un análisis numerológico detallado de mis datos.',
-          pt:'Por favor, me dê uma análise numerológica detalhada dos meus dados.',
-          it:"Per favore, dammi un'analisi numerologica dettagliata dei miei dati.",
-          id:'Tolong berikan analisis Primbon saya secara detail berdasarkan data saya.',
-        };
-        const userMessages = messages.length === 0
-          ? [{ role: 'user', content: INIT_REQUESTS[lang] || INIT_REQUESTS.en }]
-          : messages;
-        const allMessages = [{ role:'system', content: systemPrompt }, ...userMessages];
-        const orHeaders = {
-          'Authorization': `Bearer ${env.OPENROUTER_KEY}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://all-lifes.com',
-          'X-Title': 'Lucky Fortune AI',
-        };
-        // Try each model in order until one succeeds (handles deprecated/unavailable models)
-        let orRes = null;
-        let lastErr = '';
-        for (const model of OPENROUTER_MODELS) {
-          orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: orHeaders,
-            body: JSON.stringify({ model, messages: allMessages, stream: true, max_tokens: 1000, temperature: 0.75 }),
-          });
-          if (orRes.ok) break;
-          lastErr = await orRes.text();
-          orRes = null;
-        }
-        if (!orRes) {
-          // All models failed — return SSE-formatted error so client can display it gracefully
-          const errMsg = 'data: {"choices":[{"delta":{"content":"⚠️ AI 서비스가 일시적으로 불안정합니다. 잠시 후 다시 시도해주세요.\\n(AI service temporarily unavailable. Please try again shortly.)"}}]}\n\ndata: [DONE]\n\n';
-          return new Response(errMsg, {status: 200, headers: {...corsHeaders, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache'}});
-        }
-        return new Response(orRes.body, {
-          headers: {
-            ...corsHeaders,
-            'Content-Type': 'text/event-stream',
-            'Cache-Control': 'no-cache',
-            'X-Accel-Buffering': 'no',
-          }
-        });
-      } catch(e) {
-        return new Response(JSON.stringify({error: e.message}), {status:500, headers:{...corsHeaders,'Content-Type':'application/json'}});
-      }
     }
 
     // ── Sitemap ──────────────────────────────────────────
