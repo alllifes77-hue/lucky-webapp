@@ -9,12 +9,14 @@
 const APP_URL  = 'https://all-lifes.com/lucky';
 const SITE_URL = 'https://all-lifes.com';
 const ALL_LANGS = ['ko','en','ja','de','fr','es','pt','it','id'];
-// Models tried in order — first available wins
+// Models tried in order — first available wins (verified live 2026-05-27)
 const OPENROUTER_MODELS = [
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'meta-llama/llama-3.1-70b-instruct:free',
-  'mistralai/mistral-7b-instruct:free',
-  'google/gemma-2-9b-it:free',
+  'nvidia/nemotron-3-super-120b-a12b:free',   // 120B — verified OK
+  'openai/gpt-oss-120b:free',                  // 120B — verified OK
+  'google/gemma-4-31b-it:free',               // 31B  — verified OK
+  'nvidia/nemotron-nano-9b-v2:free',           // 9B   — verified OK
+  'meta-llama/llama-3.3-70b-instruct:free',   // 70B  — OK when not rate-limited
+  'nousresearch/hermes-3-llama-3.1-405b:free',// 405B — OK when not rate-limited
 ];
 
 // ── Per-language SEO metadata ────────────────────────────
@@ -647,7 +649,9 @@ export default {
           orRes = null;
         }
         if (!orRes) {
-          return new Response(JSON.stringify({error: lastErr}), {status: 503, headers: {...corsHeaders, 'Content-Type':'application/json'}});
+          // All models failed — return SSE-formatted error so client can display it gracefully
+          const errMsg = 'data: {"choices":[{"delta":{"content":"⚠️ AI 서비스가 일시적으로 불안정합니다. 잠시 후 다시 시도해주세요.\\n(AI service temporarily unavailable. Please try again shortly.)"}}]}\n\ndata: [DONE]\n\n';
+          return new Response(errMsg, {status: 200, headers: {...corsHeaders, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache'}});
         }
         return new Response(orRes.body, {
           headers: {
