@@ -605,7 +605,22 @@ export default {
         const body = await request.json();
         const { lang = 'en', fortuneData = null, messages = [] } = body;
         const systemPrompt = buildFortuneSystemPrompt(lang, fortuneData);
-        const allMessages = [{ role:'system', content: systemPrompt }, ...messages];
+        // When messages is empty (initial auto-reading), inject a user turn so the LLM responds
+        const INIT_REQUESTS = {
+          ko:'제 운세를 오행 원리와 현시대 트렌드를 반영해 자세히 분석해주세요.',
+          en:'Please give me a detailed fortune reading using my numerology data.',
+          ja:'私の命式データをもとに九星気学の視点で詳しく運勢を分析してください。',
+          de:'Bitte geben Sie mir eine detaillierte Numerologie-Analyse meiner Daten.',
+          fr:'Veuillez me donner une analyse numérologique détaillée de mes données.',
+          es:'Por favor, dame un análisis numerológico detallado de mis datos.',
+          pt:'Por favor, me dê uma análise numerológica detalhada dos meus dados.',
+          it:"Per favore, dammi un'analisi numerologica dettagliata dei miei dati.",
+          id:'Tolong berikan analisis Primbon saya secara detail berdasarkan data saya.',
+        };
+        const userMessages = messages.length === 0
+          ? [{ role: 'user', content: INIT_REQUESTS[lang] || INIT_REQUESTS.en }]
+          : messages;
+        const allMessages = [{ role:'system', content: systemPrompt }, ...userMessages];
         const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {

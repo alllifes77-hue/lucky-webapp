@@ -4096,12 +4096,24 @@ function renderShareBtns(data) {
   `);
 }
 
+// Initial prompts (same as Worker INIT_REQUESTS — must stay in sync)
+const _AI_INIT = {
+  ko:'제 운세를 오행 원리와 현시대 트렌드를 반영해 자세히 분석해주세요.',
+  en:'Please give me a detailed fortune reading using my numerology data.',
+  ja:'私の命式データをもとに九星気学の視点で詳しく運勢を分析してください。',
+  de:'Bitte geben Sie mir eine detaillierte Numerologie-Analyse meiner Daten.',
+  fr:'Veuillez me donner une analyse numérologique détaillée de mes données.',
+  es:'Por favor, dame un análisis numerológico detallado de mis datos.',
+  pt:'Por favor, me dê uma análise numerológica detalhada dos meus dados.',
+  it:"Per favore, dammi un'analisi numerologica dettagliata dei miei dati.",
+  id:'Tolong berikan analisis Primbon saya secara detail berdasarkan data saya.',
+};
+
 function renderAIChat(data) {
-  const lang = window.LUCKY_LANG || 'ko';
+  const lang = data.lang || window.LUCKY_CURRENT_LANG || 'ko';
   const el = document.getElementById('ai-chat-panel');
   if (el) el.remove();
 
-  // Build fortune data payload
   const fd = {
     birthDate: `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')}`,
     element: data.cultural ? data.cultural.element : '',
@@ -4114,15 +4126,15 @@ function renderAIChat(data) {
   };
 
   const LABELS = {
-    ko: { title:'🤖 AI 운세 해설', placeholder:'AI에게 질문하세요...', send:'전송', loading:'AI가 분석 중...', btn:'AI 상세 해설 받기' },
-    en: { title:'🤖 AI Fortune Reading', placeholder:'Ask AI anything...', send:'Send', loading:'AI is analyzing...', btn:'Get AI Reading' },
-    ja: { title:'🤖 AI運勢解説', placeholder:'AIに質問する...', send:'送信', loading:'AI解析中...', btn:'AI詳細解説を見る' },
-    de: { title:'🤖 KI Glückszahlen-Analyse', placeholder:'Fragen Sie die KI...', send:'Senden', loading:'KI analysiert...', btn:'KI-Analyse erhalten' },
-    fr: { title:'🤖 Analyse IA', placeholder:"Posez une question à l'IA...", send:'Envoyer', loading:"L'IA analyse...", btn:'Obtenir l\'analyse IA' },
-    es: { title:'🤖 Análisis IA', placeholder:'Pregunta a la IA...', send:'Enviar', loading:'IA analizando...', btn:'Obtener análisis IA' },
-    pt: { title:'🤖 Análise IA', placeholder:'Pergunte à IA...', send:'Enviar', loading:'IA analisando...', btn:'Obter análise IA' },
-    it: { title:'🤖 Analisi IA', placeholder:"Chiedi all'IA...", send:'Invia', loading:"L'IA sta analizzando...", btn:'Ottenere analisi IA' },
-    id: { title:'🤖 Analisis AI', placeholder:'Tanya AI...', send:'Kirim', loading:'AI sedang menganalisis...', btn:'Dapatkan analisis AI' },
+    ko: { title:'🤖 AI 운세 해설', placeholder:'AI에게 질문하세요...', send:'전송' },
+    en: { title:'🤖 AI Fortune Reading', placeholder:'Ask AI anything...', send:'Send' },
+    ja: { title:'🤖 AI運勢解説', placeholder:'AIに質問する...', send:'送信' },
+    de: { title:'🤖 KI-Analyse', placeholder:'Fragen Sie die KI...', send:'Senden' },
+    fr: { title:'🤖 Analyse IA', placeholder:"Posez une question...", send:'Envoyer' },
+    es: { title:'🤖 Análisis IA', placeholder:'Pregunta a la IA...', send:'Enviar' },
+    pt: { title:'🤖 Análise IA', placeholder:'Pergunte à IA...', send:'Enviar' },
+    it: { title:'🤖 Analisi IA', placeholder:"Chiedi all'IA...", send:'Invia' },
+    id: { title:'🤖 Analisis AI', placeholder:'Tanya AI...', send:'Kirim' },
   };
   const lb = LABELS[lang] || LABELS.en;
 
@@ -4142,21 +4154,20 @@ function renderAIChat(data) {
     style="background:#4c1d95;color:#fff;border:none;border-radius:50px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">${lb.send}</button>
 </div>`;
 
-  // Insert before share section
   const shareSec = document.querySelector('.share-section') || document.getElementById('s-result');
   if (shareSec) shareSec.insertAdjacentElement('beforebegin', panel);
   else document.getElementById('s-result').appendChild(panel);
 
-  // Store data on window for chat handler
   window._aiChatLang = lang;
   window._aiChatFD   = fd;
-  window._aiHistory  = [];
 
-  // Auto-trigger initial reading
+  // Seed history with the implicit initial user turn so follow-up Q&A has full context
+  const initUserMsg = { role: 'user', content: _AI_INIT[lang] || _AI_INIT.en };
+  window._aiHistory = [initUserMsg];
+
   _aiAddMessage('assistant', '', true);
-  _aiStreamMessage([], fd, lang);
+  _aiStreamMessage([initUserMsg], fd, lang);
 
-  // Enter key submit
   document.getElementById('ai-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAIChatMessage(); }
   });
@@ -4187,13 +4198,13 @@ function _aiAddMessage(role, text, streaming) {
 
 async function _aiStreamMessage(history, fd, lang) {
   const btn = document.getElementById('ai-send-btn');
-  const input = document.getElementById('ai-input');
+  const inp = document.getElementById('ai-input');
   if (btn) btn.disabled = true;
-  if (input) input.disabled = true;
+  if (inp) inp.disabled = true;
 
   const msgBox = document.getElementById('ai-messages');
   let bubble = msgBox ? msgBox.lastElementChild : null;
-  if (!bubble) bubble = _aiAddMessage('assistant', '', true);
+  if (!bubble || bubble.dataset.role !== 'assistant-stream') bubble = _aiAddMessage('assistant', '', true);
 
   try {
     const res = await fetch('https://all-lifes.com/lucky-chat', {
@@ -4201,49 +4212,59 @@ async function _aiStreamMessage(history, fd, lang) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ lang, fortuneData: fd, messages: history }),
     });
-    if (!res.ok) throw new Error('API error ' + res.status);
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => res.status);
+      throw new Error('API ' + res.status + ': ' + errBody);
+    }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let fullText = '';
+    let buf = '';
     bubble.innerHTML = '';
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split('\n');
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop(); // keep incomplete last line
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
         const payload = line.slice(6).trim();
-        if (payload === '[DONE]') break;
+        if (payload === '[DONE]') { buf = ''; break; }
         try {
           const json = JSON.parse(payload);
-          const delta = json.choices?.[0]?.delta?.content || '';
-          fullText += delta;
-          bubble.textContent = fullText;
-          if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
+          const delta = json.choices?.[0]?.delta?.content;
+          if (delta) {
+            fullText += delta;
+            bubble.textContent = fullText;
+            if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
+          }
         } catch {}
       }
     }
+    if (!fullText) bubble.textContent = '⚠️ No response received. Please try again.';
+    // Update history with the assistant turn so follow-up Q&A has full context
     window._aiHistory = [...history, { role: 'assistant', content: fullText }];
   } catch(e) {
     if (bubble) bubble.textContent = '⚠️ ' + e.message;
   } finally {
     if (btn) btn.disabled = false;
-    if (input) { input.disabled = false; input.focus(); }
+    if (inp) { inp.disabled = false; inp.focus(); }
   }
 }
 
 function sendAIChatMessage() {
-  const input = document.getElementById('ai-input');
-  if (!input) return;
-  const text = input.value.trim();
+  const inp = document.getElementById('ai-input');
+  if (!inp) return;
+  const text = inp.value.trim();
   if (!text) return;
-  input.value = '';
+  inp.value = '';
   _aiAddMessage('user', text, false);
   const history = [...(window._aiHistory || []), { role: 'user', content: text }];
   window._aiHistory = history;
-  _aiAddMessage('assistant', '', true);
+  const bubble = _aiAddMessage('assistant', '', true);
+  if (bubble) bubble.dataset.role = 'assistant-stream';
   _aiStreamMessage(history, window._aiChatFD, window._aiChatLang);
 }
 
