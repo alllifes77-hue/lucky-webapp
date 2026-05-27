@@ -9,7 +9,13 @@
 const APP_URL  = 'https://all-lifes.com/lucky';
 const SITE_URL = 'https://all-lifes.com';
 const ALL_LANGS = ['ko','en','ja','de','fr','es','pt','it','id'];
-const OPENROUTER_MODEL = 'meta-llama/llama-3.1-8b-instruct:free';
+// Models tried in order — first available wins
+const OPENROUTER_MODELS = [
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'meta-llama/llama-3.1-70b-instruct:free',
+  'mistralai/mistral-7b-instruct:free',
+  'google/gemma-2-9b-it:free',
+];
 
 // ── Per-language SEO metadata ────────────────────────────
 const LANGS = {
@@ -621,25 +627,27 @@ export default {
           ? [{ role: 'user', content: INIT_REQUESTS[lang] || INIT_REQUESTS.en }]
           : messages;
         const allMessages = [{ role:'system', content: systemPrompt }, ...userMessages];
-        const orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${env.OPENROUTER_KEY}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://all-lifes.com',
-            'X-Title': 'Lucky Fortune AI',
-          },
-          body: JSON.stringify({
-            model: OPENROUTER_MODEL,
-            messages: allMessages,
-            stream: true,
-            max_tokens: 1000,
-            temperature: 0.75,
-          }),
-        });
-        if (!orRes.ok) {
-          const errText = await orRes.text();
-          return new Response(JSON.stringify({error: errText}), {status: orRes.status, headers: {...corsHeaders, 'Content-Type':'application/json'}});
+        const orHeaders = {
+          'Authorization': `Bearer ${env.OPENROUTER_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://all-lifes.com',
+          'X-Title': 'Lucky Fortune AI',
+        };
+        // Try each model in order until one succeeds (handles deprecated/unavailable models)
+        let orRes = null;
+        let lastErr = '';
+        for (const model of OPENROUTER_MODELS) {
+          orRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: orHeaders,
+            body: JSON.stringify({ model, messages: allMessages, stream: true, max_tokens: 1000, temperature: 0.75 }),
+          });
+          if (orRes.ok) break;
+          lastErr = await orRes.text();
+          orRes = null;
+        }
+        if (!orRes) {
+          return new Response(JSON.stringify({error: lastErr}), {status: 503, headers: {...corsHeaders, 'Content-Type':'application/json'}});
         }
         return new Response(orRes.body, {
           headers: {
