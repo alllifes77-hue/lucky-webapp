@@ -1,0 +1,264 @@
+/* =====================================================
+   Lucky Numbers WordPress Plugin — lucky-style.css
+   ===================================================== */
+
+.lk-wrap {
+  font-family: -apple-system, BlinkMacSystemFont, 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  color: #1c1917;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 0 40px;
+}
+
+/* ── 히어로 배너 ─────────────────────────────── */
+.lk-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4c1d95 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 40px 28px 32px;
+  margin-bottom: 36px;
+  text-align: center;
+}
+.lk-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #a5b4fc;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+.lk-hero-title {
+  font-size: clamp(22px, 4vw, 34px) !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  line-height: 1.3 !important;
+  margin: 0 0 12px !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.lk-hero-sub {
+  font-size: 14px;
+  color: #c4b5fd;
+  line-height: 1.8;
+  max-width: 540px;
+  margin: 0 auto 20px;
+}
+.lk-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.lk-chip {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: #e0e7ff;
+  white-space: nowrap;
+}
+
+/* ── 웹앱 iframe ──────────────────────────────── */
+.lk-app-wrap {
+  margin-bottom: 40px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(30,27,75,0.15);
+}
+.lk-app-wrap iframe {
+  width: 100%;
+  min-height: 680px;
+  border: none;
+  display: block;
+  background: #1e1b4b;
+}
+
+/* ── 섹션 공통 ────────────────────────────────── */
+.lk-section {
+  margin-bottom: 44px;
+}
+.lk-section p {
+  font-size: 14px;
+  line-height: 1.9;
+  color: #44403c;
+  margin-bottom: 14px;
+}
+.lk-section-title {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #1e1b4b !important;
+  border-left: 4px solid #d97706 !important;
+  padding-left: 14px !important;
+  margin: 0 0 18px !important;
+  line-height: 1.4 !important;
+}
+
+/* ── 천간-오행 테이블 ─────────────────────────── */
+.lk-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 18px 0;
+  border-radius: 12px;
+}
+.lk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 360px;
+}
+.lk-table thead tr {
+  background: #1e1b4b;
+}
+.lk-table th {
+  color: #fbbf24;
+  padding: 11px 14px;
+  text-align: left;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.lk-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #e7e5e4;
+  color: #44403c;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+.lk-table tr:last-child td {
+  border-bottom: none;
+}
+.lk-table tbody tr:nth-child(even) td {
+  background: #fafaf9;
+}
+
+/* ── 오행 카드 그리드 ─────────────────────────── */
+.lk-ohaeng {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+.lk-oh {
+  border-radius: 14px;
+  padding: 18px 10px;
+  text-align: center;
+}
+.oh-icon  { font-size: 28px; margin-bottom: 6px; }
+.oh-name  { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.oh-nums  { font-size: 16px; font-weight: 900; margin-bottom: 3px; }
+.oh-meaning { font-size: 11px; opacity: 0.8; }
+.oh-wood  { background: #d1fae5; color: #065f46; }
+.oh-fire  { background: #fee2e2; color: #7f1d1d; }
+.oh-earth { background: #fef3c7; color: #78350f; }
+.oh-metal { background: #f3f4f6; color: #1f2937; }
+.oh-water { background: #dbeafe; color: #1e3a8a; }
+@media (max-width: 540px) {
+  .lk-ohaeng { grid-template-columns: repeat(3, 1fr); }
+  .lk-oh:nth-child(4), .lk-oh:nth-child(5) { grid-column: span 1; }
+}
+
+/* ── 이용 방법 스텝 ───────────────────────────── */
+.lk-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.lk-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.step-num {
+  min-width: 36px;
+  height: 36px;
+  background: #d97706;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.step-body strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1c1917;
+}
+.step-body span {
+  font-size: 13px;
+  color: #78716c;
+  line-height: 1.7;
+}
+
+/* ── FAQ 아코디언 ─────────────────────────────── */
+.lk-faq {
+  border: 1px solid #e7e5e4;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.lk-faq-item {
+  border-bottom: 1px solid #e7e5e4;
+}
+.lk-faq-item:last-child {
+  border-bottom: none;
+}
+.lk-faq-q {
+  width: 100%;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1c1917;
+  text-align: left;
+  line-height: 1.5;
+  transition: background 0.15s;
+}
+.lk-faq-q:hover {
+  background: #fffbeb;
+}
+.lk-faq-icon {
+  color: #d97706;
+  font-size: 20px;
+  font-weight: 400;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.lk-faq-a {
+  font-size: 13px;
+  color: #78716c;
+  line-height: 1.8;
+  padding: 0 20px 16px;
+}
+
+/* ── 법적 고지 ────────────────────────────────── */
+.lk-notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.8;
+  margin-top: 8px;
+}
+.lk-notice strong {
+  font-weight: 700;
+}

@@ -1,0 +1,64 @@
+name: Deploy to all-lifes.com
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Cloudflare Worker 배포 (SEO 래퍼)
+      - name: Deploy Cloudflare Worker
+        run: |
+          ACCOUNT_ID="9ba6054d0b8a97457cd23dfe558e915e"
+          WORKER_NAME="lucky-multilang"
+
+          echo '{"main_module":"worker.js"}' > /tmp/cf-metadata.json
+
+          curl -s -X PUT \
+            "https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts/${WORKER_NAME}" \
+            -H "Authorization: Bearer ${{ secrets.CF_TOKEN }}" \
+            -F "metadata=@/tmp/cf-metadata.json;type=application/json" \
+            -F "worker.js=@worker-seo-template.js;type=application/javascript+module" \
+            | tee /tmp/cf-result.json
+
+          if ! cat /tmp/cf-result.json | python3 -c "import sys,json; d=json.load(sys.stdin); sys.exit(0 if d.get('success') else 1)"; then
+            echo "Cloudflare Worker 배포 실패"
+            cat /tmp/cf-result.json
+            exit 1
+          fi
+
+          echo "Cloudflare Worker 배포 성공"
+
+      # 2. SSH 키 설정
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      # 3. 정적 파일을 서버 /lucky/ 경로로 rsync
+      - name: Sync static files to server
+        run: |
+          rsync -avz --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='*.ps1' \
+            --exclude='generate-*.html' \
+            --exclude='wordpress-*.html' \
+            --exclude='node_modules/' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}/"
+
+          echo "파일 동기화 완료"
+
+      # 4. Google Sitemap 핑
+      - name: Ping Google Sitemap
+        run: |
+          curl -s "https://www.google.com/ping?sitemap=https://all-lifes.com/lucky-sitemap.xml" -o /dev/null -w "%{http_code}"
+          echo " — Google 핑 완료"
