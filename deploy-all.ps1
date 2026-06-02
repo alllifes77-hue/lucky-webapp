@@ -89,50 +89,60 @@ if (-not $SkipSync) {
   if (-not $SSH_HOST -or -not $SSH_USER -or -not $SSH_PATH) {
     Warn "SSH 설정 미완성 (HOST/USER/PATH) → 파일 동기화 건너뜀"
   } else {
-    # 서버로 보낼 정적 파일 목록 (로컬 도구/메타는 제외)
-    $include = @(
-      "index.html","lucky-app.js","service-worker.js","lucky-style.css",
-      "site.webmanifest","lang"
-    )
-    # og-*.png, favicon, apple-touch-icon, 썸네일 등 패턴 추가
-    $patterns = @("og-*.png","favicon*","apple-touch-icon*","*-thumbnail*.png","Luckynumber.jpg")
+    # 서버에 올리지 않을 항목 (개발 도구 / 메타 / 워커 소스)
+    $blockDirs  = @(".git",".github","node_modules")
+    $blockNames = @("worker-seo-template.js")
+    $blockPats  = @("*.ps1","generate-*.html","wordpress-*.html","deploy.config*","*.md",".gitignore")
 
-    # 존재하는 항목만 staging 으로 모음
+    # staging 으로 배포 대상만 모음
     $stage = Join-Path $env:TEMP "lucky-deploy-stage"
     if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
     New-Item -ItemType Directory -Path $stage -Force | Out-Null
 
-    foreach ($i in $include) {
-      $p = Join-Path $root $i
-      if (Test-Path $p) { Copy-Item $p $stage -Recurse -Force }
-    }
-    foreach ($pat in $patterns) {
-      Get-ChildItem -Path $root -Filter $pat -File -ErrorAction SilentlyContinue |
-        ForEach-Object { Copy-Item $_.FullName $stage -Force }
-    }
+    Get-ChildItem -Path $root -Force | Where-Object {
+      $name = $_.Name
+      if ($_.PSIsContainer -and ($blockDirs -contains $name)) { return $false }
+      if ($blockNames -contains $name) { return $false }
+      foreach ($pat in $blockPats) { if ($name -like $pat) { return $false } }
+      return $true
+    } | ForEach-Object { Copy-Item $_.FullName $stage -Recurse -Force }
+
+    # tar 파일을 로컬에 만든 뒤 scp 전송 (PowerShell 파이프 바이너리 손상 방지)
+    $tmpTar  = Join-Path $env:TEMP "lucky-deploy.tar.gz"
+    if (Test-Path $tmpTar) { Remove-Item $tmpTar -Force }
+    Push-Location $stage
+    tar czf $tmpTar *
+    Pop-Location
 
     $sshOpts = @("-p", $SSH_PORT, "-o", "StrictHostKeyChecking=accept-new")
-    if ($SSH_KEY) { $sshOpts += @("-i", $SSH_KEY) }
+    $scpOpts = @("-P", $SSH_PORT, "-o", "StrictHostKeyChecking=accept-new")
+    if ($SSH_KEY) { $sshOpts += @("-i", $SSH_KEY); $scpOpts += @("-i", $SSH_KEY) }
 
-    # tar 스트림으로 디렉토리 구조 보존하며 전송
-    $target = "$SSH_USER@$SSH_HOST"
-    Push-Location $stage
+    $target  = "$SSH_USER@$SSH_HOST"
+    $remoteTar = "/tmp/lucky-deploy.tar.gz"
     Say "  전송 중 → ${target}:$SSH_PATH" "Gray"
-    tar czf - * | & ssh @sshOpts $target "mkdir -p '$SSH_PATH' && tar xzf - -C '$SSH_PATH'"
+
+    & scp @scpOpts $tmpTar "${target}:$remoteTar"
     $code = $LASTEXITCODE
-    Pop-Location
+    if ($code -eq 0) {
+      & ssh @sshOpts $target "mkdir -p '$SSH_PATH' && tar xzf '$remoteTar' -C '$SSH_PATH' && rm -f '$remoteTar'"
+      $code = $LASTEXITCODE
+    }
+
     Remove-Item $stage -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item $tmpTar -Force -ErrorAction SilentlyContinue
 
     if ($code -eq 0) { Ok "서버 파일 동기화 완료" }
     else { Warn "SSH 동기화 실패 (exit $code) — HOST/USER/KEY/PATH 확인" }
   }
 } else { Warn "[3/4] 동기화 단계 건너뜀 (-SkipSync)" }
 
-# ── 4) Google 사이트맵 핑 ───────────────────────────────────
-Say "`n[4/4] Google 사이트맵 핑"
+# ── 4) 사이트맵 확인 ────────────────────────────────────────
+# (Google 은 2023년 sitemap ping 엔드포인트를 폐기 → robots.txt 로 자동 발견)
+Say "`n[4/4] 사이트맵 확인"
 try {
-  $ping = Invoke-WebRequest -Uri "https://www.google.com/ping?sitemap=https://all-lifes.com/lucky-sitemap.xml" -UseBasicParsing -TimeoutSec 10
-  Ok "Google 핑 완료 ($($ping.StatusCode))"
-} catch { Warn "Google 핑 실패 (무시 가능): $($_.Exception.Message)" }
+  $sm = Invoke-WebRequest -Uri "https://all-lifes.com/lucky-sitemap.xml" -UseBasicParsing -TimeoutSec 10
+  Ok "사이트맵 응답 ($($sm.StatusCode)) — robots.txt 로 자동 색인됨"
+} catch { Warn "사이트맵 확인 실패 (무시 가능): $($_.Exception.Message)" }
 
 Say "`n=== 배포 완료 ===" "Green"
