@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lucky Number Square Thumbnail Generator</title>
+<style>
+body{font-family:sans-serif;background:#0f0e17;color:#fff;padding:30px;text-align:center;}
+h1{color:#fbbf24;margin-bottom:24px;font-size:20px;}
+button{background:#d97706;color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px;}
+button:hover{background:#b45309;}
+canvas{border:2px solid #4338ca;border-radius:8px;margin-top:20px;}
+</style>
+</head>
+<body>
+<h1>🍀 Lucky Number — Square Thumbnail (1200×1200)</h1>
+<button onclick="download()">Download PNG</button>
+<br>
+<canvas id="c" width="1200" height="1200"></canvas>
+
+<script>
+function draw() {
+  const cvs = document.getElementById('c');
+  const ctx = cvs.getContext('2d');
+  const W = 1200, H = 1200;
+
+  // Background gradient
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0,   '#0f0e17');
+  bg.addColorStop(0.45,'#1e1b4b');
+  bg.addColorStop(1,   '#312e81');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Decorative glow circles
+  const glow1 = ctx.createRadialGradient(1050, 180, 0, 1050, 180, 340);
+  glow1.addColorStop(0, 'rgba(124,58,237,0.22)');
+  glow1.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow1;
+  ctx.fillRect(0, 0, W, H);
+
+  const glow2 = ctx.createRadialGradient(160, 1020, 0, 160, 1020, 300);
+  glow2.addColorStop(0, 'rgba(217,119,6,0.18)');
+  glow2.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow2;
+  ctx.fillRect(0, 0, W, H);
+
+  // Left accent bar
+  const barGrad = ctx.createLinearGradient(0, 0, 0, H);
+  barGrad.addColorStop(0, '#fbbf24');
+  barGrad.addColorStop(1, '#d97706');
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(0, 0, 10, H);
+
+  // Top label
+  ctx.fillStyle = '#a5b4fc';
+  ctx.font = 'bold 26px Arial';
+  ctx.letterSpacing = '4px';
+  ctx.textAlign = 'center';
+  ctx.fillText('🍀 LUCKY NUMBERS', W / 2, 90);
+
+  // Site URL top-right
+  ctx.fillStyle = '#4f46e5';
+  ctx.font = '22px Arial';
+  ctx.letterSpacing = '0px';
+  ctx.textAlign = 'right';
+  ctx.fillText('all-lifes.com', W - 52, 90);
+
+  // Big clover emoji
+  ctx.font = '140px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🍀', W / 2, 310);
+
+  // Main title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 86px Arial Black, Arial';
+  ctx.textAlign = 'center';
+  ctx.shadowColor = 'rgba(124,58,237,0.5)';
+  ctx.shadowBlur = 30;
+  ctx.fillText('Lucky', W / 2, 430);
+  ctx.fillText('Numbers', W / 2, 530);
+  ctx.shadowBlur = 0;
+
+  // Subtitle
+  ctx.fillStyle = '#c4b5fd';
+  ctx.font = '32px Arial';
+  ctx.fillText('Generated from your birthday', W / 2, 600);
+
+  // Divider line
+  ctx.strokeStyle = 'rgba(167,139,250,0.3)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 638); ctx.lineTo(W - 120, 638);
+  ctx.stroke();
+
+  // Lottery balls
+  const BALLS   = [7, 15, 22, 31, 38, 42];
+  const COLORS  = [
+    {f:'#d97706', h:'#92400e'},
+    {f:'#1d4ed8', h:'#1e3a8a'},
+    {f:'#dc2626', h:'#7f1d1d'},
+    {f:'#374151', h:'#111827'},
+    {f:'#059669', h:'#064e3b'},
+    {f:'#7c3aed', h:'#4c1d95'},
+  ];
+  const R = 72, spacing = 164, ballsY = 790;
+  const startX = W / 2 - ((BALLS.length - 1) * spacing) / 2;
+
+  BALLS.forEach((n, i) => {
+    const cx = startX + i * spacing;
+    const cy = ballsY;
+    const c  = COLORS[i];
+
+    // Drop shadow
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.55)';
+    ctx.shadowBlur  = 24;
+    ctx.shadowOffsetY = 8;
+    ctx.fillStyle = c.f;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // Ball gradient
+    const grad = ctx.createRadialGradient(cx - 20, cy - 22, 10, cx, cy, R);
+    grad.addColorStop(0, lighten(c.f, 50));
+    grad.addColorStop(1, c.f);
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+
+    // Shine
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(cx - 20, cy - 24, 28, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // Number
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `bold ${n >= 10 ? 42 : 48}px Arial Black, Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n, cx, cy + 3);
+  });
+
+  ctx.textBaseline = 'alphabetic';
+
+  // System badge row
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 28px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Numerology  ·  Saju  ·  Kyusei', W / 2, 930);
+
+  // Bottom pill badge
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  roundRect(ctx, W / 2 - 240, 960, 480, 56, 28);
+  ctx.fill();
+  ctx.fillStyle = '#e0e7ff';
+  ctx.font = '22px Arial';
+  ctx.fillText('✅ Free  ·  🔒 No Login  ·  ⚡ Instant', W / 2, 994);
+
+  // Bottom bar
+  const botGrad = ctx.createLinearGradient(0, 0, W, 0);
+  botGrad.addColorStop(0, '#d97706');
+  botGrad.addColorStop(1, '#7c3aed');
+  ctx.fillStyle = botGrad;
+  ctx.globalAlpha = 0.5;
+  ctx.fillRect(0, H - 14, W, 14);
+  ctx.globalAlpha = 1;
+}
+
+function lighten(hex, amt) {
+  const n = parseInt(hex.replace('#',''), 16);
+  const r = Math.min(255, (n >> 16) + amt);
+  const g = Math.min(255, ((n >> 8) & 0xFF) + amt);
+  const b = Math.min(255, (n & 0xFF) + amt);
+  return `rgb(${r},${g},${b})`;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function download() {
+  const cvs = document.getElementById('c');
+  const a = document.createElement('a');
+  a.href = cvs.toDataURL('image/png');
+  a.download = 'lucky-thumbnail-square.png';
+  a.click();
+}
+
+draw();
+</script>
+</body>
+</html>
