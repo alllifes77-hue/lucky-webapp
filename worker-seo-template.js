@@ -623,8 +623,8 @@ export default {
         ...[...Array(71)].map((_,i)=>({lang:'en',loc:`${SITE_URL}/en/born-${1940+i}/`,priority:'0.75'})),
         // Ja nen pages (1940–2010)
         ...[...Array(71)].map((_,i)=>({lang:'ja',loc:`${SITE_URL}/ja/${1940+i}nen/`,priority:'0.75'})),
-        // Compat pages
-        ...Object.entries(COMPAT_PATHS_SM).map(([l,slug])=>({ lang:l, loc:`${SITE_URL}/${l}/${slug}/`, priority:'0.7' })),
+        // Compat pages (ko 제외 — ko 궁합은 루트 /gunghap/ 카테고리로 이미 등록됨. /ko/gunghap/는 301 리다이렉트라 sitemap 부적합)
+        ...Object.entries(COMPAT_PATHS_SM).filter(([l])=>l!=='ko').map(([l,slug])=>({ lang:l, loc:`${SITE_URL}/${l}/${slug}/`, priority:'0.7' })),
         // Category pages (9 langs × 6 cats = 54 URLs) — ko는 루트 레벨
         ...ALL_LANGS.filter(l=>CAT_SLUGS[l]).flatMap(l=>Object.entries(CAT_SLUGS[l]).map(([cat,slug])=>({lang:l,loc:l==='ko'?`${SITE_URL}/${slug}/`:`${SITE_URL}/${l}/${slug}/`,priority:'0.85'}))),
         // Zodiac pages
@@ -1860,7 +1860,7 @@ ${buildNavFooter(btLang, 'lucky')}
     const hreflangs = ALL_LANGS.map(l => {
       const href = l === 'ko' ? `${SITE_URL}/lucky/` : `${SITE_URL}/${l}/lucky/`;
       return `<link rel="alternate" hreflang="${l}" href="${href}">`;
-    }).join('\n    ');
+    }).join('\n    ') + `\n    <link rel="alternate" hreflang="x-default" href="${SITE_URL}/en/lucky/">`;
 
     // ── Structured data schemas ──────────────────────────
     const appSchema = JSON.stringify({
