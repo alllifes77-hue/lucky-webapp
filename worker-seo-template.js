@@ -553,16 +553,17 @@ function buildNavFooter(lang, activePage) {
 // ── AI 운세 상담 시스템 프롬프트 ─────────────────────────
 function buildFortuneSystemPrompt(lang, d) {
   const today = new Date().toISOString().slice(0,10);
+  // 간결 모드: 질문에 직접 답하고 인사말·서론 없이 핵심만 (토큰 절감 → 무료 한도↑)
   const CONTEXTS = {
-    ko:`당신은 사주팔자·오행·동양 철학 전문 상담가입니다. 반드시 한국어로만, 따뜻하고 친근한 말투로 답변하세요. 오늘은 ${today}입니다. 사용자의 운세 데이터를 근거로 구체적이고 현실적인 조언을 주되, 미신적 단정은 피하고 재미와 통찰의 균형을 지키세요. 답변은 300자 내외로 간결하게.`,
-    en:`You are an expert advisor in Pythagorean numerology and Western astrology. Answer only in English, warm and friendly. Today is ${today}. Base your advice on the user's data with concrete, realistic suggestions. Keep it ~200 words.`,
-    ja:`あなたは九星気学・数秘術・東洋哲学の専門相談員です。必ず日本語のみ、親しみやすい口調で答えてください。今日は${today}です。ユーザーのデータに基づき具体的で現実的な助言を。250字程度で簡潔に。`,
-    de:`Du bist Experte für pythagoräische Numerologie und westliche Astrologie. Antworte nur auf Deutsch, warmherzig. Heute ist ${today}. Gib konkrete, realistische Ratschläge auf Basis der Daten. ~180 Wörter.`,
-    fr:`Tu es expert en numérologie pythagoricienne et astrologie occidentale. Réponds uniquement en français, avec chaleur. Aujourd'hui c'est le ${today}. Donne des conseils concrets et réalistes. ~180 mots.`,
-    es:`Eres experto en numerología pitagórica y astrología occidental. Responde solo en español, con calidez. Hoy es ${today}. Da consejos concretos y realistas. ~180 palabras.`,
-    pt:`Você é especialista em numerologia pitagórica e astrologia ocidental. Responda apenas em português, com calor. Hoje é ${today}. Dê conselhos concretos e realistas. ~180 palavras.`,
-    it:`Sei esperto di numerologia pitagorica e astrologia occidentale. Rispondi solo in italiano, con calore. Oggi è ${today}. Dai consigli concreti e realistici. ~180 parole.`,
-    id:`Anda ahli Primbon, Weton, dan astrologi. Jawab hanya dalam bahasa Indonesia, hangat dan ramah. Hari ini ${today}. Beri saran konkret dan realistis. ~180 kata.`,
+    ko:`사주·오행 운세 상담가. 한국어로만. 오늘 ${today}. 질문에 바로 답하고 인사말·서론 없이 핵심만 2~3문장으로 간결하게.`,
+    en:`Numerology & astrology advisor. English only. Today ${today}. Answer the question directly in 2-3 short sentences, no greeting or preamble.`,
+    ja:`九星・数秘の運勢相談員。日本語のみ。今日${today}。挨拶や前置きなしで質問に直接、2〜3文で簡潔に。`,
+    de:`Numerologie-Berater. Nur Deutsch. Heute ${today}. Antworte direkt in 2-3 kurzen Sätzen, ohne Begrüßung.`,
+    fr:`Conseiller en numérologie. Français uniquement. Aujourd'hui ${today}. Réponds directement en 2-3 phrases courtes, sans salutation.`,
+    es:`Asesor de numerología. Solo español. Hoy ${today}. Responde directo en 2-3 frases cortas, sin saludo.`,
+    pt:`Consultor de numerologia. Só português. Hoje ${today}. Responda direto em 2-3 frases curtas, sem saudação.`,
+    it:`Consulente di numerologia. Solo italiano. Oggi ${today}. Rispondi diretto in 2-3 frasi brevi, senza saluto.`,
+    id:`Konsultan Primbon. Hanya bahasa Indonesia. Hari ini ${today}. Jawab langsung dalam 2-3 kalimat singkat, tanpa salam.`,
   };
   let dataStr = '';
   if (d) {
@@ -694,7 +695,7 @@ ${urlsXml}
             const gr = await fetch('https://api.groq.com/openai/v1/chat/completions', {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${env.GROQ_KEY}`, 'Content-Type': 'application/json' },
-              body: JSON.stringify({ model: GROQ_MODEL, messages: allMessages, stream: true, max_tokens: 600, temperature: 0.7 }),
+              body: JSON.stringify({ model: GROQ_MODEL, messages: allMessages, stream: true, max_tokens: 300, temperature: 0.6 }),
             });
             if (gr.ok && gr.body) {
               return new Response(gr.body, { headers: sseHeaders });
@@ -707,9 +708,9 @@ ${urlsXml}
         if (env && env.AI) {
           let stream;
           try {
-            stream = await env.AI.run(CHAT_MODEL, { messages: allMessages, stream: true, max_tokens: 600, temperature: 0.7 });
+            stream = await env.AI.run(CHAT_MODEL, { messages: allMessages, stream: true, max_tokens: 300, temperature: 0.6 });
           } catch (e1) {
-            stream = await env.AI.run(CHAT_MODEL_FALLBACK, { messages: allMessages, stream: true, max_tokens: 600, temperature: 0.7 });
+            stream = await env.AI.run(CHAT_MODEL_FALLBACK, { messages: allMessages, stream: true, max_tokens: 300, temperature: 0.6 });
           }
           return new Response(stream, { headers: sseHeaders });
         }
