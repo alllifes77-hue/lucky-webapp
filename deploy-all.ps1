@@ -69,7 +69,7 @@ if (-not $SkipWorker) {
     $tmpScript   = Join-Path $env:TEMP "worker.js"
     $tmpMetadata = Join-Path $env:TEMP "cf-metadata.json"
     Copy-Item $scriptPath $tmpScript -Force
-    [System.IO.File]::WriteAllText($tmpMetadata, '{"main_module":"worker.js"}', [System.Text.UTF8Encoding]::new($false))
+    [System.IO.File]::WriteAllText($tmpMetadata, '{"main_module":"worker.js","bindings":[{"type":"ai","name":"AI"}]}', [System.Text.UTF8Encoding]::new($false))
 
     $resp = curl.exe -s -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$WORKER_NAME" `
       -H "Authorization: Bearer $CF_TOKEN" `

@@ -994,8 +994,38 @@ function reduceToMaster(n) {
   return n;
 }
 
+// 한글 이름 수리 분석 (자모 획수 기반 성명학)
+// 초성/종성 = 자음(외면수), 중성 = 모음(영혼수), 전체 = 운명수
+const _HANGUL_CHO  = [2,4,2,3,6,5,4,4,8,2,4,1,3,6,4,3,4,4,3]; // ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ
+const _HANGUL_JUNG = [2,3,3,4,2,3,3,4,2,4,5,3,3,2,4,5,3,3,1,2,1]; // ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ
+const _HANGUL_JONG = [0,2,4,4,2,5,5,3,5,7,9,9,7,9,9,8,4,4,6,2,4,1,3,4,3,4,4,3]; // 받침 없음 + ㄱ..ㅎ
+
+function calcHangulNumerology(name) {
+  let consSum = 0, vowSum = 0, any = false;
+  for (const ch of name) {
+    const code = ch.charCodeAt(0) - 0xAC00;
+    if (code < 0 || code > 11171) continue; // 완성형 한글 음절만
+    any = true;
+    const cho  = Math.floor(code / 588);
+    const jung = Math.floor((code % 588) / 28);
+    const jong = code % 28;
+    consSum += (_HANGUL_CHO[cho] || 0) + (_HANGUL_JONG[jong] || 0);
+    vowSum  += (_HANGUL_JUNG[jung] || 0);
+  }
+  if (!any) return null;
+  return {
+    name: name.trim(),
+    destinyNum:  reduceToMaster(consSum + vowSum),
+    soulUrge:    reduceToMaster(vowSum  || 1),
+    personality: reduceToMaster(consSum || 1),
+  };
+}
+
 function calcNameNumerology(name) {
   if (!name || !name.trim()) return null;
+  // 한글이 포함되면 자모 획수 성명학으로 분석
+  if (/[가-힣]/.test(name)) return calcHangulNumerology(name);
+  // 그 외(로마자)는 피타고라스 수비학
   const letters = name.toLowerCase().replace(/[^a-z]/g,'').split('');
   if (!letters.length) return null;
   const destinyNum  = reduceToMaster(letters.reduce((a,c)=>a+(PYTHAGOREAN_TABLE[c]||0),0));
@@ -1577,7 +1607,7 @@ function renderResults(data) {
    'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
-   'cz-badge-panel','daily-energy-panel'].forEach(id => {
+   'cz-badge-panel','daily-energy-panel','ai-chat-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1654,6 +1684,7 @@ function renderResults(data) {
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
   renderShareBtns(data);
+  renderAIChat(data);
   renderFaq();
 }
 
@@ -4095,6 +4126,200 @@ function renderShareBtns(data) {
   `);
 }
 
+// ══════════════════════════════════════════════════════════
+// AI 운세 상담 챗봇 (Cloudflare Workers AI 백엔드)
+// 결과는 위에 그대로 출력되고, 이 패널은 "관련 질문"용으로만 동작.
+// (자동 전송 없음 — 사용자가 직접 질문/추천칩 클릭 시에만 호출)
+// ══════════════════════════════════════════════════════════
+const _AI_LABELS = {
+  ko:{title:'🔮 AI 운세 상담', ph:'운세에 대해 물어보세요...', send:'전송',
+      welcome:'안녕하세요! 위 운세 결과에 대해 궁금한 점을 자유롭게 물어보세요. 오행·사주를 바탕으로 답해드릴게요. 😊',
+      sugg:['올해 금전운을 더 자세히 알려줘','연애운을 높이려면 어떻게 해야 해?','직업·진로에 대한 조언을 줘']},
+  en:{title:'🔮 AI Fortune Chat', ph:'Ask about your fortune...', send:'Send',
+      welcome:"Hi! Ask me anything about your fortune results above — I'll answer based on your numerology and chart. 😊",
+      sugg:['Tell me more about my money luck this year','How can I improve my love life?','Any career advice for me?']},
+  ja:{title:'🔮 AI運勢相談', ph:'運勢について質問...', send:'送信',
+      welcome:'こんにちは！上の運勢結果について何でも聞いてください。九星・命式をもとにお答えします。😊',
+      sugg:['今年の金運をもっと詳しく','恋愛運を上げるには？','仕事・キャリアの助言が欲しい']},
+  de:{title:'🔮 KI-Horoskop-Chat', ph:'Frag nach deinem Schicksal...', send:'Senden',
+      welcome:'Hallo! Frag mich alles zu deinen Ergebnissen oben – ich antworte auf Basis deiner Numerologie. 😊',
+      sugg:['Mehr über mein Geldglück dieses Jahr','Wie verbessere ich mein Liebesleben?','Karriere-Tipps für mich?']},
+  fr:{title:'🔮 Chat IA Horoscope', ph:'Posez une question...', send:'Envoyer',
+      welcome:'Bonjour ! Posez vos questions sur vos résultats ci-dessus — je réponds selon votre numérologie. 😊',
+      sugg:['Plus de détails sur ma chance financière','Comment améliorer ma vie amoureuse ?','Des conseils de carrière ?']},
+  es:{title:'🔮 Chat IA del Destino', ph:'Pregunta sobre tu destino...', send:'Enviar',
+      welcome:'¡Hola! Pregúntame lo que quieras sobre tus resultados de arriba — responderé según tu numerología. 😊',
+      sugg:['Más sobre mi suerte económica este año','¿Cómo mejorar mi vida amorosa?','¿Algún consejo profesional?']},
+  pt:{title:'🔮 Chat IA da Sorte', ph:'Pergunte sobre sua sorte...', send:'Enviar',
+      welcome:'Olá! Pergunte qualquer coisa sobre seus resultados acima — responderei com base na sua numerologia. 😊',
+      sugg:['Mais sobre minha sorte financeira este ano','Como melhorar minha vida amorosa?','Algum conselho de carreira?']},
+  it:{title:'🔮 Chat IA Oroscopo', ph:'Chiedi del tuo destino...', send:'Invia',
+      welcome:'Ciao! Chiedimi tutto sui tuoi risultati qui sopra — risponderò in base alla tua numerologia. 😊',
+      sugg:['Più dettagli sulla mia fortuna economica','Come migliorare la mia vita amorosa?','Qualche consiglio di carriera?']},
+  id:{title:'🔮 Obrolan AI Keberuntungan', ph:'Tanya tentang nasibmu...', send:'Kirim',
+      welcome:'Halo! Tanyakan apa saja tentang hasil di atas — saya jawab berdasarkan Primbon & numerologi Anda. 😊',
+      sugg:['Lebih detail soal rezeki tahun ini','Bagaimana meningkatkan asmara?','Saran karier untuk saya?']},
+};
+
+function renderAIChat(data) {
+  const lang = data.lang || window.LUCKY_CURRENT_LANG || 'ko';
+  const old = document.getElementById('ai-chat-panel');
+  if (old) old.remove();
+
+  const fd = {
+    birthDate: `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')}`,
+    element: data.cultural ? data.cultural.element : '',
+    zodiac: data.czKey || '',
+    luckyNums: (data.numbers || []).join(', '),
+    loveScore:    data.loveData ? data.loveData.score : null,
+    moneyScore:   data.moneyData ? data.moneyData.score : null,
+    careerScore:  data.careerData ? data.careerData.score : null,
+    achieveScore: data.achievementData ? data.achievementData.score : null,
+  };
+  const lb = _AI_LABELS[lang] || _AI_LABELS.en;
+  window._aiChatLang = lang;
+  window._aiChatFD   = fd;
+  window._aiHistory  = [];
+  window._aiSugg     = lb.sugg;
+
+  const chips = lb.sugg.map((s,i)=>
+    `<button type="button" onclick="_aiAskSuggestion(${i})" style="background:#fff;border:1px solid #c7d2fe;color:#4338ca;border-radius:50px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;line-height:1.3;text-align:left;">${s}</button>`
+  ).join('');
+
+  const panel = document.createElement('div');
+  panel.id = 'ai-chat-panel';
+  panel.style.cssText = 'background:#fff;border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.10);margin:16px 0;overflow:hidden;';
+  panel.innerHTML = `
+<div style="background:linear-gradient(135deg,#1e1b4b,#4c1d95);padding:14px 18px;display:flex;align-items:center;gap:10px;">
+  <span style="color:#fff;font-weight:800;font-size:15px;">${lb.title}</span>
+</div>
+<div id="ai-messages" style="padding:16px;min-height:60px;max-height:440px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;"></div>
+<div id="ai-suggestions" style="padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:7px;">${chips}</div>
+<div style="padding:10px 14px;border-top:1px solid #e5e7eb;display:flex;gap:8px;">
+  <input id="ai-input" type="text" placeholder="${lb.ph}"
+    style="flex:1;border:1px solid #d1d5db;border-radius:50px;padding:9px 16px;font-size:14px;outline:none;background:#f9fafb;">
+  <button id="ai-send-btn" onclick="sendAIChatMessage()"
+    style="background:#4c1d95;color:#fff;border:none;border-radius:50px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">${lb.send}</button>
+</div>`;
+
+  const shareSec = document.querySelector('.share-section') || document.getElementById('s-result');
+  if (shareSec && shareSec.parentNode) shareSec.insertAdjacentElement('beforebegin', panel);
+  else { const r = document.getElementById('s-result'); if (r) r.appendChild(panel); }
+
+  // 자동 전송 없이 환영 메시지만 표시
+  _aiAddMessage('assistant', lb.welcome, false);
+
+  const inp = document.getElementById('ai-input');
+  if (inp) inp.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAIChatMessage(); }
+  });
+}
+
+function _aiAskSuggestion(i) {
+  const t = (window._aiSugg || [])[i];
+  if (!t) return;
+  const inp = document.getElementById('ai-input');
+  if (inp) inp.value = t;
+  sendAIChatMessage();
+}
+
+function _aiAddMessage(role, text, streaming) {
+  const msgs = document.getElementById('ai-messages');
+  if (!msgs) return null;
+  const div = document.createElement('div');
+  div.style.cssText = role === 'user'
+    ? 'align-self:flex-end;background:#4c1d95;color:#fff;padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:13px;max-width:80%;line-height:1.6;'
+    : 'align-self:flex-start;background:#f3f4f6;color:#1c1917;padding:10px 14px;border-radius:16px 16px 16px 4px;font-size:13px;max-width:90%;line-height:1.7;white-space:pre-wrap;';
+  if (streaming) {
+    div.innerHTML = '<span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s infinite;margin-right:3px;"></span><span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s .3s infinite;margin-right:3px;"></span><span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s .6s infinite;"></span>';
+    if (!document.getElementById('ai-blink-style')) {
+      const st = document.createElement('style');
+      st.id = 'ai-blink-style';
+      st.textContent = '@keyframes ai-blink{0%,80%,100%{opacity:.2}40%{opacity:1}}';
+      document.head.appendChild(st);
+    }
+  } else {
+    div.textContent = text;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+async function _aiStreamMessage(history, fd, lang) {
+  const btn = document.getElementById('ai-send-btn');
+  const inp = document.getElementById('ai-input');
+  if (btn) btn.disabled = true;
+  if (inp) inp.disabled = true;
+
+  const msgBox = document.getElementById('ai-messages');
+  let bubble = msgBox ? msgBox.lastElementChild : null;
+  if (!bubble || bubble.dataset.role !== 'assistant-stream') bubble = _aiAddMessage('assistant', '', true);
+
+  try {
+    const res = await fetch('https://all-lifes.com/lucky-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lang, fortuneData: fd, messages: history }),
+    });
+    if (!res.ok || !res.body) {
+      const errBody = await res.text().catch(() => res.status);
+      throw new Error('API ' + res.status + ': ' + errBody);
+    }
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '', buf = '';
+    if (bubble) bubble.innerHTML = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const payload = line.slice(5).trim();
+        if (payload === '[DONE]' || payload === '') continue;
+        try {
+          const json = JSON.parse(payload);
+          // Workers AI 스트리밍은 {"response":"..."} 형식 (OpenAI 형식도 호환)
+          const delta = json.response ?? json.choices?.[0]?.delta?.content;
+          if (delta) {
+            fullText += delta;
+            if (bubble) bubble.textContent = fullText;
+            if (msgBox) msgBox.scrollTop = msgBox.scrollHeight;
+          }
+        } catch {}
+      }
+    }
+    if (!fullText && bubble) bubble.textContent = '⚠️ No response received. Please try again.';
+    window._aiHistory = [...history, { role: 'assistant', content: fullText }];
+  } catch(e) {
+    if (bubble) bubble.textContent = '⚠️ ' + e.message;
+  } finally {
+    if (btn) btn.disabled = false;
+    if (inp) { inp.disabled = false; inp.focus(); }
+  }
+}
+
+function sendAIChatMessage() {
+  const inp = document.getElementById('ai-input');
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  // 첫 질문 시 추천칩 숨김
+  const sg = document.getElementById('ai-suggestions');
+  if (sg) sg.style.display = 'none';
+  _aiAddMessage('user', text, false);
+  const history = [...(window._aiHistory || []), { role: 'user', content: text }];
+  window._aiHistory = history;
+  const bubble = _aiAddMessage('assistant', '', true);
+  if (bubble) bubble.dataset.role = 'assistant-stream';
+  _aiStreamMessage(history, window._aiChatFD, window._aiChatLang);
+}
+
 function doCopyLink(btn) {
   const url = getShareUrl();
   const L = window.LUCKY_LANG || {};
@@ -4718,6 +4943,9 @@ function applyLang() {
   // Name input section
   if (L.nameInputLabel) setTxt('txt-name-input-label', L.nameInputLabel);
   if (L.nameInputNote)  setTxt('txt-name-input-note',  L.nameInputNote);
+  const _namePh = { ko:'이름 (한글)', ja:'お名前（ローマ字）', en:'Name', de:'Name', fr:'Nom', es:'Nombre', pt:'Nome', it:'Nome', id:'Nama' };
+  const _pnEl = document.getElementById('person-name');
+  if (_pnEl) _pnEl.placeholder = L.nameInputPlaceholder || _namePh[window.LUCKY_CURRENT_LANG] || _namePh.en;
 
   // Adapt input form for current category selection
   adaptInputForm(window.LUCKY_SELECTED_CAT || 'lucky');

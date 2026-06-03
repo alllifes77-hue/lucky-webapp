@@ -16,7 +16,7 @@ $tmpScript   = "$env:TEMP\worker.js"
 $tmpMetadata = "$env:TEMP\cf-metadata.json"
 
 Copy-Item $SCRIPT_PATH $tmpScript -Force
-[System.IO.File]::WriteAllText($tmpMetadata, '{"main_module":"worker.js"}', [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText($tmpMetadata, '{"main_module":"worker.js","bindings":[{"type":"ai","name":"AI"}]}', [System.Text.UTF8Encoding]::new($false))
 
 $response = curl.exe -s -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$WORKER_NAME" `
   -H "Authorization: Bearer $TOKEN" `

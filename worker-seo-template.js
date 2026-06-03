@@ -10,6 +10,10 @@ const APP_URL  = 'https://all-lifes.com/lucky';
 const SITE_URL = 'https://all-lifes.com';
 const ALL_LANGS = ['ko','en','ja','de','fr','es','pt','it','id'];
 
+// AI 운세 상담 모델 (Cloudflare Workers AI — 외부 키 불필요)
+const CHAT_MODEL          = '@cf/meta/llama-3.1-8b-instruct';
+const CHAT_MODEL_FALLBACK = '@cf/mistral/mistral-7b-instruct-v0.1';
+
 
 // ── Per-language SEO metadata ────────────────────────────
 const LANGS = {
@@ -543,6 +547,33 @@ function buildNavFooter(lang, activePage) {
 }
 
 
+// ── AI 운세 상담 시스템 프롬프트 ─────────────────────────
+function buildFortuneSystemPrompt(lang, d) {
+  const today = new Date().toISOString().slice(0,10);
+  const CONTEXTS = {
+    ko:`당신은 사주팔자·오행·동양 철학 전문 상담가입니다. 반드시 한국어로만, 따뜻하고 친근한 말투로 답변하세요. 오늘은 ${today}입니다. 사용자의 운세 데이터를 근거로 구체적이고 현실적인 조언을 주되, 미신적 단정은 피하고 재미와 통찰의 균형을 지키세요. 답변은 300자 내외로 간결하게.`,
+    en:`You are an expert advisor in Pythagorean numerology and Western astrology. Answer only in English, warm and friendly. Today is ${today}. Base your advice on the user's data with concrete, realistic suggestions. Keep it ~200 words.`,
+    ja:`あなたは九星気学・数秘術・東洋哲学の専門相談員です。必ず日本語のみ、親しみやすい口調で答えてください。今日は${today}です。ユーザーのデータに基づき具体的で現実的な助言を。250字程度で簡潔に。`,
+    de:`Du bist Experte für pythagoräische Numerologie und westliche Astrologie. Antworte nur auf Deutsch, warmherzig. Heute ist ${today}. Gib konkrete, realistische Ratschläge auf Basis der Daten. ~180 Wörter.`,
+    fr:`Tu es expert en numérologie pythagoricienne et astrologie occidentale. Réponds uniquement en français, avec chaleur. Aujourd'hui c'est le ${today}. Donne des conseils concrets et réalistes. ~180 mots.`,
+    es:`Eres experto en numerología pitagórica y astrología occidental. Responde solo en español, con calidez. Hoy es ${today}. Da consejos concretos y realistas. ~180 palabras.`,
+    pt:`Você é especialista em numerologia pitagórica e astrologia ocidental. Responda apenas em português, com calor. Hoje é ${today}. Dê conselhos concretos e realistas. ~180 palavras.`,
+    it:`Sei esperto di numerologia pitagorica e astrologia occidentale. Rispondi solo in italiano, con calore. Oggi è ${today}. Dai consigli concreti e realistici. ~180 parole.`,
+    id:`Anda ahli Primbon, Weton, dan astrologi. Jawab hanya dalam bahasa Indonesia, hangat dan ramah. Hari ini ${today}. Beri saran konkret dan realistis. ~180 kata.`,
+  };
+  let dataStr = '';
+  if (d) {
+    const labels = {
+      ko:['생년월일','오행','띠','행운번호','연애운','금전운','직업운','성취운'],
+      en:['Birth date','Element','Zodiac','Lucky numbers','Love','Money','Career','Achievement'],
+      ja:['生年月日','五行','干支','ラッキー数','恋愛運','金運','仕事運','達成運'],
+    };
+    const lb = labels[lang] || labels.en;
+    dataStr = `\n\n[User Fortune Data]\n${lb[0]}: ${d.birthDate||''}\n${lb[1]}: ${d.element||''}\n${lb[2]}: ${d.zodiac||''}\n${lb[3]}: ${d.luckyNums||''}\n${lb[4]}: ${d.loveScore??'?'}/100\n${lb[5]}: ${d.moneyScore??'?'}/100\n${lb[6]}: ${d.careerScore??'?'}/100\n${lb[7]}: ${d.achieveScore??'?'}/100`;
+  }
+  return (CONTEXTS[lang] || CONTEXTS.en) + dataStr;
+}
+
 // ── Escape HTML ──────────────────────────────────────────
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -630,6 +661,45 @@ ${urlsXml}
       return new Response(svg, {
         headers: { 'Content-Type':'image/svg+xml', 'Cache-Control':'public,max-age=3600', 'Access-Control-Allow-Origin':'*' }
       });
+    }
+
+    // ── AI 운세 상담 (/lucky-chat) — Cloudflare Workers AI 백엔드 ──
+    if (path === '/lucky-chat') {
+      const cors = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      };
+      if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
+      if (request.method !== 'POST')    return new Response('Method Not Allowed', { status: 405, headers: cors });
+      try {
+        const body = await request.json();
+        const { lang = 'en', fortuneData = null, messages = [] } = body;
+        const systemPrompt = buildFortuneSystemPrompt(lang, fortuneData);
+        const userMessages = (messages && messages.length)
+          ? messages
+          : [{ role: 'user', content: 'Please give me a brief reading based on my data.' }];
+        const allMessages = [{ role: 'system', content: systemPrompt }, ...userMessages];
+
+        if (!env || !env.AI) {
+          const m = 'data: {"response":"⚠️ AI 서비스가 설정되지 않았습니다. (AI binding missing)"}\n\ndata: [DONE]\n\n';
+          return new Response(m, { status: 200, headers: { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache' } });
+        }
+
+        let stream;
+        try {
+          stream = await env.AI.run(CHAT_MODEL, { messages: allMessages, stream: true, max_tokens: 800, temperature: 0.7 });
+        } catch (e1) {
+          // 1차 모델 실패 시 경량 모델로 폴백
+          stream = await env.AI.run(CHAT_MODEL_FALLBACK, { messages: allMessages, stream: true, max_tokens: 800, temperature: 0.7 });
+        }
+        return new Response(stream, {
+          headers: { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache', 'X-Accel-Buffering':'no' }
+        });
+      } catch (e) {
+        const m = 'data: {"response":"⚠️ 일시적 오류가 발생했습니다. 잠시 후 다시 시도해주세요."}\n\ndata: [DONE]\n\n';
+        return new Response(m, { status: 200, headers: { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache' } });
+      }
     }
 
     // ── Category pages: /{lang}/{cat-slug}/ + ko root-level /{cat-slug}/ ──
