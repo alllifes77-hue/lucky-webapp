@@ -69,7 +69,18 @@ if (-not $SkipWorker) {
     $tmpScript   = Join-Path $env:TEMP "worker.js"
     $tmpMetadata = Join-Path $env:TEMP "cf-metadata.json"
     Copy-Item $scriptPath $tmpScript -Force
-    [System.IO.File]::WriteAllText($tmpMetadata, '{"main_module":"worker.js","bindings":[{"type":"ai","name":"AI"}]}', [System.Text.UTF8Encoding]::new($false))
+
+    # 바인딩: AI(폴백) + (있으면) Groq 시크릿. 시크릿은 매 배포 시 로컬 config 에서 재설정됨.
+    $bindings = '{"type":"ai","name":"AI"}'
+    if ($GROQ_KEY) {
+      $gk = $GROQ_KEY -replace '\\','\\' -replace '"','\"'
+      $bindings += ',{"type":"secret_text","name":"GROQ_KEY","text":"' + $gk + '"}'
+      Write-Host "  (Groq 시크릿 포함)" -ForegroundColor Gray
+    } else {
+      Write-Host "  (GROQ_KEY 미설정 → Cloudflare AI 폴백만 사용)" -ForegroundColor Gray
+    }
+    $metaJson = '{"main_module":"worker.js","bindings":[' + $bindings + ']}'
+    [System.IO.File]::WriteAllText($tmpMetadata, $metaJson, [System.Text.UTF8Encoding]::new($false))
 
     $resp = curl.exe -s -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$WORKER_NAME" `
       -H "Authorization: Bearer $CF_TOKEN" `

@@ -10,6 +10,10 @@
 # 발급: https://dash.cloudflare.com/profile/api-tokens → "Edit Cloudflare Workers"
 $CF_TOKEN   = ""
 
+# Groq ─ AI 운세 챗봇 주 백엔드 (무료, 매우 빠름). 비우면 Cloudflare AI 폴백만 사용.
+# 발급: https://console.groq.com/keys (무료 가입 → Create API Key, gsk_... 형식)
+$GROQ_KEY   = ""
+
 # SSH ─ all-lifes.com 서버의 /lucky/ 정적 파일 동기화용
 $SSH_HOST   = ""            # 예: all-lifes.com  또는  123.45.67.89
 $SSH_USER   = ""            # 예: ubuntu / root

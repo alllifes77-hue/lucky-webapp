@@ -1,12 +1,16 @@
-# Cloudflare Worker 자동 배포 스크립트
+﻿# Cloudflare Worker 자동 배포 스크립트
 # 사용법: .\deploy-worker.ps1
 
 $ACCOUNT_ID = "9ba6054d0b8a97457cd23dfe558e915e"
 $WORKER_NAME = "lucky-multilang"
 $SCRIPT_PATH = "$PSScriptRoot\worker-seo-template.js"
 
-# API 토큰 (환경변수로 관리 권장: $env:CF_TOKEN)
-$TOKEN = if ($env:CF_TOKEN) { $env:CF_TOKEN } else {
+# 로컬 config 에서 CF_TOKEN / GROQ_KEY 불러오기 (있으면)
+$cfg = "$PSScriptRoot\deploy.config.ps1"
+if (Test-Path $cfg) { . $cfg }
+
+# API 토큰 (config → env → 프롬프트 순)
+$TOKEN = if ($CF_TOKEN) { $CF_TOKEN } elseif ($env:CF_TOKEN) { $env:CF_TOKEN } else {
     Read-Host "Cloudflare API Token"
 }
 
@@ -16,7 +20,14 @@ $tmpScript   = "$env:TEMP\worker.js"
 $tmpMetadata = "$env:TEMP\cf-metadata.json"
 
 Copy-Item $SCRIPT_PATH $tmpScript -Force
-[System.IO.File]::WriteAllText($tmpMetadata, '{"main_module":"worker.js","bindings":[{"type":"ai","name":"AI"}]}', [System.Text.UTF8Encoding]::new($false))
+
+# 바인딩: AI(폴백) + (있으면) Groq 시크릿. 시크릿 유실 방지를 위해 매 배포 시 재설정.
+$bindings = '{"type":"ai","name":"AI"}'
+if ($GROQ_KEY) {
+    $gk = $GROQ_KEY -replace '\\','\\' -replace '"','\"'
+    $bindings += ',{"type":"secret_text","name":"GROQ_KEY","text":"' + $gk + '"}'
+}
+[System.IO.File]::WriteAllText($tmpMetadata, ('{"main_module":"worker.js","bindings":[' + $bindings + ']}'), [System.Text.UTF8Encoding]::new($false))
 
 $response = curl.exe -s -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$WORKER_NAME" `
   -H "Authorization: Bearer $TOKEN" `

@@ -10,7 +10,10 @@ const APP_URL  = 'https://all-lifes.com/lucky';
 const SITE_URL = 'https://all-lifes.com';
 const ALL_LANGS = ['ko','en','ja','de','fr','es','pt','it','id'];
 
-// AI 운세 상담 모델 (Cloudflare Workers AI — 외부 키 불필요)
+// AI 운세 상담 모델
+// 주: Groq(매우 빠름, 무료 14,400req/일) — 워커 시크릿 GROQ_KEY 필요
+const GROQ_MODEL          = 'llama-3.1-8b-instant';
+// 폴백: Cloudflare Workers AI (외부 키 불필요)
 const CHAT_MODEL          = '@cf/meta/llama-3.1-8b-instruct';
 const CHAT_MODEL_FALLBACK = '@cf/mistral/mistral-7b-instruct-v0.1';
 
@@ -663,7 +666,9 @@ ${urlsXml}
       });
     }
 
-    // ── AI 운세 상담 (/lucky-chat) — Cloudflare Workers AI 백엔드 ──
+    // ── AI 운세 상담 (/lucky-chat) ──────────────────────────────
+    // 무료 천장 극대화: Groq(주, ~수천회/일·매우 빠름) → 한도 초과/실패 시
+    // Cloudflare Workers AI(폴백, 키 불필요)로 자동 전환. 두 무료 티어를 쌓음.
     if (path === '/lucky-chat') {
       const cors = {
         'Access-Control-Allow-Origin': '*',
@@ -672,6 +677,8 @@ ${urlsXml}
       };
       if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
       if (request.method !== 'POST')    return new Response('Method Not Allowed', { status: 405, headers: cors });
+
+      const sseHeaders = { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache', 'X-Accel-Buffering':'no' };
       try {
         const body = await request.json();
         const { lang = 'en', fortuneData = null, messages = [] } = body;
@@ -681,24 +688,37 @@ ${urlsXml}
           : [{ role: 'user', content: 'Please give me a brief reading based on my data.' }];
         const allMessages = [{ role: 'system', content: systemPrompt }, ...userMessages];
 
-        if (!env || !env.AI) {
-          const m = 'data: {"response":"⚠️ AI 서비스가 설정되지 않았습니다. (AI binding missing)"}\n\ndata: [DONE]\n\n';
-          return new Response(m, { status: 200, headers: { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache' } });
+        // 1) Groq 우선 (OpenAI 호환 스트리밍)
+        if (env && env.GROQ_KEY) {
+          try {
+            const gr = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${env.GROQ_KEY}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ model: GROQ_MODEL, messages: allMessages, stream: true, max_tokens: 600, temperature: 0.7 }),
+            });
+            if (gr.ok && gr.body) {
+              return new Response(gr.body, { headers: sseHeaders });
+            }
+            // gr.ok=false(429 토큰/요청 한도 등) → 아래 CF 폴백으로
+          } catch (eg) { /* 네트워크 오류 → CF 폴백 */ }
         }
 
-        let stream;
-        try {
-          stream = await env.AI.run(CHAT_MODEL, { messages: allMessages, stream: true, max_tokens: 800, temperature: 0.7 });
-        } catch (e1) {
-          // 1차 모델 실패 시 경량 모델로 폴백
-          stream = await env.AI.run(CHAT_MODEL_FALLBACK, { messages: allMessages, stream: true, max_tokens: 800, temperature: 0.7 });
+        // 2) Cloudflare Workers AI 폴백 (키 불필요)
+        if (env && env.AI) {
+          let stream;
+          try {
+            stream = await env.AI.run(CHAT_MODEL, { messages: allMessages, stream: true, max_tokens: 600, temperature: 0.7 });
+          } catch (e1) {
+            stream = await env.AI.run(CHAT_MODEL_FALLBACK, { messages: allMessages, stream: true, max_tokens: 600, temperature: 0.7 });
+          }
+          return new Response(stream, { headers: sseHeaders });
         }
-        return new Response(stream, {
-          headers: { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache', 'X-Accel-Buffering':'no' }
-        });
+
+        const m = 'data: {"response":"⚠️ AI 서비스가 설정되지 않았습니다."}\n\ndata: [DONE]\n\n';
+        return new Response(m, { status: 200, headers: sseHeaders });
       } catch (e) {
         const m = 'data: {"response":"⚠️ 일시적 오류가 발생했습니다. 잠시 후 다시 시도해주세요."}\n\ndata: [DONE]\n\n';
-        return new Response(m, { status: 200, headers: { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache' } });
+        return new Response(m, { status: 200, headers: sseHeaders });
       }
     }
 
