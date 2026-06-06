@@ -581,6 +581,22 @@ function buildFortuneSystemPrompt(lang, d) {
 // ── Escape HTML ──────────────────────────────────────────
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+// ── hreflang 태그 빌더 (하위 페이지 언어 클러스터링) ──────────
+// entries: [{lang, url}] — 같은 콘텐츠의 각 언어 버전. xDefault 지정 시 x-default 추가.
+function buildHreflang(entries, xDefault){
+  let s = entries.map(e=>`<link rel="alternate" hreflang="${e.lang}" href="${e.url}">`).join('\n');
+  if (xDefault) s += `\n<link rel="alternate" hreflang="x-default" href="${xDefault}">`;
+  return s;
+}
+// 출생연도 페이지 언어 클러스터 (ko /YYYY/, en /en/born-YYYY/, ja /ja/YYYYnen/)
+function bornYearHreflang(year){
+  const y = parseInt(year, 10);
+  const e = [];
+  if (y>=1950 && y<=2010) e.push({lang:'ko', url:`${SITE_URL}/${y}/`});
+  if (y>=1940 && y<=2010) { e.push({lang:'en', url:`${SITE_URL}/en/born-${y}/`}); e.push({lang:'ja', url:`${SITE_URL}/ja/${y}nen/`}); }
+  return buildHreflang(e, (y>=1940 && y<=2010) ? `${SITE_URL}/en/born-${y}/` : '');
+}
+
 // ── Main fetch handler ───────────────────────────────────
 export default {
   async fetch(request, env) {
@@ -863,6 +879,7 @@ ${buildNavFooter(catLang, catKey)}
             '1111':{en:'Awakening, portal, and alignment. A powerful manifestation gateway is open.',de:'Erwachen, Portal und Ausrichtung. Ein kraftvolles Manifestationstor ist offen.',fr:'Éveil, portail et alignement. Une puissante porte de manifestation est ouverte.',es:'Despertar, portal y alineación. Una poderosa puerta de manifestación está abierta.',pt:'Despertar, portal e alinhamento. Um poderoso portal de manifestação está aberto.',it:'Risveglio, portale e allineamento. Un potente portale di manifestazione è aperto.'},
           };
           const aCanonical = `${SITE_URL}/${aLang}/${ANGEL_PREFIX[aLang]}/${aNum}/`;
+          const aHreflang = buildHreflang(Object.keys(ANGEL_PREFIX).map(l=>({lang:l,url:`${SITE_URL}/${l}/${ANGEL_PREFIX[l]}/${aNum}/`})), `${SITE_URL}/en/angel/${aNum}/`);
           const meaning = (ANGEL_MEANINGS[aNum]||{})[aLang] || (ANGEL_MEANINGS[aNum]||{}).en || '';
           const aTitle = aLang==='de'?`Engelszahl ${aNum} Bedeutung — Numerologie & Glückszahlen`:aLang==='fr'?`Nombre Angélique ${aNum} Signification — Numérologie`:aLang==='es'?`Número Angelical ${aNum} Significado — Numerología`:aLang==='pt'?`Número Anjo ${aNum} Significado — Numerologia`:aLang==='it'?`Numero Angelico ${aNum} Significato — Numerologia`:`Angel Number ${aNum} Meaning — Numerology & Lucky Numbers`;
           const aDesc = `${meaning.slice(0,120)}`;
@@ -899,6 +916,7 @@ ${buildNavFooter(catLang, catKey)}
 <title>${esc(aTitle)}</title>
 <meta name="description" content="${esc(aDesc)}">
 <link rel="canonical" href="${esc(aCanonical)}">
+${aHreflang}
 <meta property="og:title" content="${esc(aTitle)}">
 <meta property="og:description" content="${esc(aDesc)}">
 <meta property="og:url" content="${esc(aCanonical)}">
@@ -1096,6 +1114,7 @@ ${buildNavFooter(zLang,'lucky')}
       const TL = LANGS[tLang] || LANGS.en;
       const today = new Date().toISOString().slice(0,10);
       const tCanonical = `${SITE_URL}/${tLang}/today/`;
+      const tHreflang = buildHreflang(ALL_LANGS.map(l=>({lang:l,url:`${SITE_URL}/${l}/today/`})), `${SITE_URL}/en/today/`);
       const TODAY_TITLES = {
         ko:`오늘의 운세 & 행운 번호 — ${today}`,
         en:`Today's Lucky Numbers — ${today} | Free Daily Fortune`,
@@ -1130,9 +1149,33 @@ ${buildNavFooter(zLang,'lucky')}
         it:[{q:'Come vengono calcolati i numeri di oggi?',a:'Il Numero Universale del Giorno viene combinato con il tuo Numero di Percorso di Vita.'},{q:'I numeri cambiano ogni giorno?',a:'Sì — il Numero Universale del Giorno cambia quotidianamente.'},{q:'Quali lotterie sono supportate?',a:'SuperEnalotto e altre lotterie nazionali.'}],
         id:[{q:'Bagaimana angka keberuntungan hari ini dihitung?',a:'Angka Universal Hari digabungkan dengan Nomor Jalur Hidup Anda.'},{q:'Apakah angka berubah setiap hari?',a:'Ya — Angka Universal Hari berubah setiap hari.'},{q:'Lotere apa yang didukung?',a:'Togel dan lotere nasional Indonesia.'}],
       };
+      // 콘텐츠 보강: 인트로 단락
+      const TODAY_INTRO = {
+        ko:`매일 바뀌는 <strong>유니버설 데이 넘버</strong>(오늘 날짜 ${today}의 모든 숫자를 합산해 1~9로 환원한 값)는 그날의 전체적인 에너지 흐름을 나타냅니다. 여기에 당신의 생년월일에서 도출한 라이프 패스 넘버를 결합하면, 오늘 당신과 가장 공명하는 행운 번호를 찾을 수 있습니다. 사주팔자의 천간지지와 오행 분석까지 더해 로또 6/45 형식의 맞춤 번호를 무료로 제공합니다. 아래에 생년월일을 입력하면 즉시 오늘의 번호와 연애·금전·직업·성취운 점수를 확인할 수 있습니다.`,
+        en:`Every day carries a unique <strong>Universal Day Number</strong> — derived by reducing today's date (${today}) to a single digit (1–9) — which reflects the overall energy of the day. Combined with your personal Life Path Number from your birth date, it reveals the numbers that resonate most strongly with you today. This free tool blends Pythagorean numerology with daily resonance to generate Powerball, Mega Millions, and Pick 4 numbers tailored to you. Enter your birth date below for instant lucky numbers plus your Love, Money, Career, and Achievement scores.`,
+        ja:`毎日変化する<strong>ユニバーサルデーナンバー</strong>（本日${today}の数字をすべて足して1〜9に還元した値）は、その日の全体的なエネルギーを表します。これに生年月日から導く本命星を組み合わせることで、今日のあなたに最も共鳴する幸運の数字が分かります。九星気学と数秘術を融合し、ロト6・ロト7形式の数字を無料で提供します。下に生年月日を入力すると、本日の数字と恋愛・金運・仕事・達成運のスコアがすぐに表示されます。`,
+        de:`Jeder Tag trägt eine einzigartige <strong>Universelle Tageszahl</strong> — gebildet aus dem heutigen Datum (${today}), reduziert auf eine Ziffer (1–9). Kombiniert mit Ihrer persönlichen Lebenspfadzahl zeigt sie die Zahlen, die heute am stärksten mit Ihnen schwingen. Dieses kostenlose Tool verbindet pythagoräische Numerologie mit der Tagesresonanz für EuroMillions und Lotto 6aus49. Geben Sie unten Ihr Geburtsdatum ein.`,
+        fr:`Chaque jour porte un <strong>Nombre Universel du Jour</strong> unique — obtenu en réduisant la date du jour (${today}) à un seul chiffre (1–9). Combiné à votre Nombre de Chemin de Vie, il révèle les numéros qui résonnent le plus avec vous aujourd'hui. Cet outil gratuit mêle numérologie pythagoricienne et résonance quotidienne pour EuroMillions et le Loto. Entrez votre date de naissance ci-dessous.`,
+        es:`Cada día lleva un <strong>Número Universal del Día</strong> único — obtenido reduciendo la fecha de hoy (${today}) a un solo dígito (1–9). Combinado con tu Número de Camino de Vida, revela los números que más resuenan contigo hoy. Esta herramienta gratuita combina numerología pitagórica con la resonancia diaria para EuroMillones. Introduce tu fecha de nacimiento abajo.`,
+        pt:`Cada dia carrega um <strong>Número Universal do Dia</strong> único — obtido reduzindo a data de hoje (${today}) a um único dígito (1–9). Combinado com o seu Número de Caminho de Vida, revela os números que mais ressoam com você hoje. Esta ferramenta gratuita combina numerologia pitagórica com a ressonância diária para a Mega-Sena. Insira a sua data de nascimento abaixo.`,
+        it:`Ogni giorno porta un <strong>Numero Universale del Giorno</strong> unico — ottenuto riducendo la data di oggi (${today}) a una sola cifra (1–9). Combinato con il tuo Numero del Percorso di Vita, rivela i numeri che risuonano di più con te oggi. Questo strumento gratuito unisce la numerologia pitagorica alla risonanza quotidiana per il SuperEnalotto. Inserisci la tua data di nascita qui sotto.`,
+        id:`Setiap hari membawa <strong>Angka Universal Hari</strong> yang unik — diperoleh dengan menjumlahkan tanggal hari ini (${today}) menjadi satu digit (1–9). Dikombinasikan dengan Nomor Jalur Hidup Anda, ia mengungkap angka yang paling beresonansi dengan Anda hari ini. Alat gratis ini memadukan numerologi dengan Primbon Jawa untuk prediksi Togel 4D. Masukkan tanggal lahir Anda di bawah.`,
+      };
+      const TODAY_FAQ_EXTRA = {
+        ko:[{q:'유니버설 데이 넘버란 무엇인가요?',a:'오늘 날짜(연·월·일)의 모든 숫자를 더해 한 자리(1~9)로 환원한 수비학 값으로, 그날의 보편적 에너지를 상징합니다.'},{q:'행운 번호를 매일 확인하는 것이 좋나요?',a:'네. 유니버설 데이 넘버가 매일 달라지므로, 당첨 게임을 하는 날의 에너지에 맞춰 번호를 새로 받아보는 것을 권장합니다.'}],
+        en:[{q:'What is a Universal Day Number?',a:'It is a numerology value found by adding all digits of today\'s date (year, month, day) and reducing to a single digit (1–9), symbolizing the universal energy of that day.'},{q:'Should I check my lucky numbers every day?',a:'Yes. Because the Universal Day Number changes daily, it is best to generate fresh numbers that align with the energy of the specific day you play.'}],
+        ja:[{q:'ユニバーサルデーナンバーとは？',a:'今日の日付（年・月・日）の数字をすべて足して1桁（1〜9）に還元した数秘術の値で、その日の普遍的なエネルギーを象徴します。'},{q:'毎日確認したほうが良いですか？',a:'はい。ユニバーサルデーナンバーは毎日変わるため、宝くじを買う日のエネルギーに合わせて数字を取得することをおすすめします。'}],
+        de:[{q:'Was ist eine Universelle Tageszahl?',a:'Ein Numerologiewert aus der Summe aller Ziffern des heutigen Datums, reduziert auf eine Ziffer (1–9), der die Energie des Tages symbolisiert.'},{q:'Sollte ich täglich nachsehen?',a:'Ja, da sich die Universelle Tageszahl täglich ändert, sind frische Zahlen für den jeweiligen Spieltag am besten.'}],
+        fr:[{q:'Qu\'est-ce que le Nombre Universel du Jour?',a:'Une valeur numérologique obtenue en additionnant tous les chiffres de la date du jour, réduite à un seul chiffre (1–9), symbolisant l\'énergie du jour.'},{q:'Dois-je vérifier chaque jour?',a:'Oui, car le Nombre Universel du Jour change quotidiennement, des numéros frais pour le jour de jeu sont préférables.'}],
+        es:[{q:'¿Qué es el Número Universal del Día?',a:'Un valor numerológico obtenido sumando todos los dígitos de la fecha de hoy, reducido a un solo dígito (1–9), que simboliza la energía del día.'},{q:'¿Debo consultarlo cada día?',a:'Sí, como el Número Universal del Día cambia a diario, conviene generar números nuevos para el día en que juegas.'}],
+        pt:[{q:'O que é o Número Universal do Dia?',a:'Um valor numerológico obtido somando todos os dígitos da data de hoje, reduzido a um único dígito (1–9), que simboliza a energia do dia.'},{q:'Devo verificar todos os dias?',a:'Sim, como o Número Universal do Dia muda diariamente, é melhor gerar números novos para o dia em que você joga.'}],
+        it:[{q:'Cos\'è il Numero Universale del Giorno?',a:'Un valore numerologico ottenuto sommando tutte le cifre della data di oggi, ridotto a una cifra (1–9), che simboleggia l\'energia del giorno.'},{q:'Dovrei controllare ogni giorno?',a:'Sì, poiché il Numero Universale del Giorno cambia quotidianamente, è meglio generare numeri nuovi per il giorno in cui giochi.'}],
+        id:[{q:'Apa itu Angka Universal Hari?',a:'Nilai numerologi yang diperoleh dengan menjumlahkan semua digit tanggal hari ini, direduksi menjadi satu digit (1–9), melambangkan energi hari itu.'},{q:'Haruskah saya cek setiap hari?',a:'Ya, karena Angka Universal Hari berubah setiap hari, sebaiknya hasilkan angka baru untuk hari Anda bermain.'}],
+      };
       const tTitle = TODAY_TITLES[tLang] || TODAY_TITLES.en;
       const tDesc  = TODAY_DESCS[tLang]  || TODAY_DESCS.en;
-      const tFaq   = TODAY_FAQ[tLang]    || TODAY_FAQ.en;
+      const tIntro = TODAY_INTRO[tLang]  || TODAY_INTRO.en;
+      const tFaq   = [...(TODAY_FAQ[tLang]||TODAY_FAQ.en), ...(TODAY_FAQ_EXTRA[tLang]||TODAY_FAQ_EXTRA.en)];
       const tFaqHtml = tFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
       const tFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":tFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
       const tIframe = `${APP_URL}/?lang=${tLang}`;
@@ -1141,6 +1184,7 @@ ${buildNavFooter(zLang,'lucky')}
 <title>${esc(tTitle)}</title>
 <meta name="description" content="${esc(tDesc)}">
 <link rel="canonical" href="${esc(tCanonical)}">
+${tHreflang}
 <meta property="og:title" content="${esc(tTitle)}">
 <meta property="og:description" content="${esc(tDesc)}">
 <meta property="og:url" content="${esc(tCanonical)}">
@@ -1154,6 +1198,8 @@ ${buildNavFooter(zLang,'lucky')}
 .hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
 .hero p{font-size:13px;color:#c4b5fd;max-width:520px;margin:0 auto;}
 .start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
+.intro-card{max-width:640px;margin:20px auto 0;padding:20px 22px;background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);font-size:14px;color:#44403c;line-height:1.9;}
+.intro-card strong{color:#4c1d95;}
 .faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
 .faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
 .faq-item{border-bottom:1px solid #e7e5e4;}
@@ -1173,6 +1219,7 @@ ${NAV_FOOTER_CSS}
   <p>${esc(tDesc.slice(0,120))}</p>
   <a class="start-btn" href="#today-frame">${esc(TODAY_BTNS[tLang]||TODAY_BTNS.en)}</a>
 </div>
+<div class="intro-card">${tIntro}</div>
 <div class="faq-wrap"><h2>FAQ</h2>${tFaqHtml}</div>
 <iframe id="today-frame" src="${esc(tIframe)}" scrolling="no" title="${esc(tTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('today-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
@@ -1523,6 +1570,7 @@ ${buildNavFooter(czLang, 'lucky')}
 <title>${esc(byTitle)}</title>
 <meta name="description" content="${esc(byDesc)}">
 <link rel="canonical" href="${esc(byCanonical)}">
+${bornYearHreflang(birthYear)}
 <meta property="og:title" content="${esc(byTitle)}">
 <meta property="og:description" content="${esc(byDesc)}">
 <meta property="og:url" content="${esc(byCanonical)}">
@@ -1608,6 +1656,7 @@ ${buildNavFooter('ko', 'lucky')}
 <title>${esc(enTitle)}</title>
 <meta name="description" content="${esc(enDesc)}">
 <link rel="canonical" href="${esc(enCanon)}">
+${bornYearHreflang(by)}
 <meta property="og:title" content="${esc(enTitle)}">
 <meta property="og:description" content="${esc(enDesc)}">
 <meta property="og:url" content="${esc(enCanon)}">
@@ -1688,6 +1737,7 @@ ${buildNavFooter('en','lucky')}
 <title>${esc(jaTitle)}</title>
 <meta name="description" content="${esc(jaDesc)}">
 <link rel="canonical" href="${esc(jaCanon)}">
+${bornYearHreflang(by)}
 <meta property="og:title" content="${esc(jaTitle)}">
 <meta property="og:description" content="${esc(jaDesc)}">
 <meta property="og:url" content="${esc(jaCanon)}">
@@ -1755,6 +1805,16 @@ ${buildNavFooter('ja','lucky')}
         o: {ko:'흰색·금색 계열, 8·6·3, 일요일·금요일',ja:'白・金系、8・6・3、日曜・金曜'},
         ab:{ko:'보라색·은색 계열, 마스터수 11·22, 토요일',ja:'紫・銀系、マスター数11・22、土曜'},
       };
+      const BT_INTRO = {
+        a:{ko:`혈액형 A형은 동아시아 혈액형 성격학에서 가장 신중하고 성실한 유형으로 여겨집니다. 계획을 중시하고 디테일에 강하며, 주변을 배려하는 섬세함이 돋보입니다. 이러한 안정 지향적 기질은 수비학에서 짝수와 4·2의 에너지와 공명하는 것으로 해석됩니다. 아래에서 생년월일을 입력하면 A형의 성향과 사주 오행을 함께 반영한 오늘의 행운 번호를 무료로 받을 수 있습니다.`,
+           ja:`血液型A型は、東アジアの血液型性格学で最も慎重で誠実なタイプとされます。計画性を重んじ細部に強く、周囲への気配りが際立ちます。この安定志向の気質は、数秘術では偶数や4・2のエネルギーと共鳴すると解釈されます。下に生年月日を入力すると、A型の特性と四柱推命の五行を反映した本日の幸運の数字を無料で取得できます。`},
+        b:{ko:`혈액형 B형은 자유분방하고 창의적인 유형으로, 개성과 직관이 강한 것이 특징입니다. 틀에 얽매이지 않는 발상과 넘치는 에너지로 새로운 길을 개척하는 힘이 있습니다. 수비학적으로는 홀수와 변화·모험의 5 에너지와 잘 어울립니다. 생년월일을 입력해 B형 기질과 오행 분석을 결합한 오늘의 행운 번호를 무료로 확인해 보세요.`,
+           ja:`血液型B型は自由奔放でクリエイティブなタイプで、個性と直感が強いのが特徴です。枠にとらわれない発想とあふれるエネルギーで新しい道を切り開く力があります。数秘術的には奇数や変化・冒険の5エネルギーと相性が良いとされます。生年月日を入力して、B型の気質と五行分析を組み合わせた本日の幸運の数字を無料で確認しましょう。`},
+        o:{ko:`혈액형 O형은 자신감과 리더십이 강하고 낙관적이며 사교적인 유형입니다. 목표를 향한 추진력과 사람을 끌어당기는 매력으로 집단의 중심이 되는 경우가 많습니다. 수비학에서는 성취와 풍요의 8, 그리고 6·3의 에너지와 공명합니다. 아래 앱에 생년월일을 입력하면 O형 특성과 사주를 반영한 오늘의 행운 번호를 무료로 받아볼 수 있습니다.`,
+           ja:`血液型O型は自信とリーダーシップが強く、楽観的で社交的なタイプです。目標への推進力と人を惹きつける魅力で、集団の中心になることが多いです。数秘術では達成と豊かさの8、そして6・3のエネルギーと共鳴します。下のアプリに生年月日を入力すると、O型の特性と四柱推命を反映した本日の幸運の数字を無料で取得できます。`},
+        ab:{ko:`혈액형 AB형은 이성적이면서 예술적이고 독창적인 유형으로, A형과 B형의 두 기질을 함께 지닌 복합적 성격이 특징입니다. 객관적 분석력과 풍부한 감수성을 동시에 갖춰 균형 잡힌 시야를 가집니다. 수비학적으로는 직관과 영감의 마스터수 11·22와 깊이 공명합니다. 생년월일을 입력해 AB형 기질과 오행을 결합한 오늘의 행운 번호를 무료로 확인하세요.`,
+           ja:`血液型AB型は理性的でありながら芸術的・独創的なタイプで、A型とB型の二つの気質を併せ持つ複雑な性格が特徴です。客観的な分析力と豊かな感受性を兼ね備え、バランスの取れた視野を持ちます。数秘術的には直感とインスピレーションのマスター数11・22と深く共鳴します。生年月日を入力して、AB型の気質と五行を組み合わせた本日の幸運の数字を無料で確認しましょう。`},
+      };
 
       const btM = path.match(/^\/([a-z]{2})\/([a-z][a-z-]*)\/?$/);
       if (btM) {
@@ -1766,6 +1826,11 @@ ${buildNavFooter('ja','lucky')}
             const btTrait  = (BT_TRAITS[btType]||{})[btLang]||'';
             const btLucky  = (BT_LUCKY[btType]||{})[btLang]||'';
             const btCanon  = `${SITE_URL}/${btLang}/${btSlug}/`;
+            const btIntro  = (BT_INTRO[btType]||{})[btLang]||'';
+            const btHreflang = buildHreflang([
+              {lang:'ko', url:`${SITE_URL}/ko/${BT_SLUGS.ko[btType]}/`},
+              {lang:'ja', url:`${SITE_URL}/ja/${BT_SLUGS.ja[btType]}/`},
+            ]);
             const btTitle  = btLang==='ko' ? `혈액형 ${btName} 운세 — 오늘의 행운 번호와 사주` : `血液型${btName}の運勢・今日の幸運の数字`;
             const btDesc   = btLang==='ko' ? `혈액형 ${btName}의 성격과 운세. ${btTrait} 오늘의 행운 번호를 무료로 확인하세요.` : `血液型${btName}の性格と運勢。${btTrait}今すぐ幸運の数字を無料で確認。`;
             const btIframe = `${APP_URL}/?lang=${btLang}`;
@@ -1774,6 +1839,7 @@ ${buildNavFooter('ja','lucky')}
 <title>${esc(btTitle)}</title>
 <meta name="description" content="${esc(btDesc)}">
 <link rel="canonical" href="${esc(btCanon)}">
+${btHreflang}
 <meta property="og:title" content="${esc(btTitle)}">
 <meta property="og:description" content="${esc(btDesc)}">
 <meta property="og:url" content="${esc(btCanon)}">
@@ -1801,6 +1867,9 @@ ${NAV_FOOTER_CSS}
 <div class="info-card">
   <h2>${btLang==='ko'?'행운의 색상·숫자·요일':'ラッキーカラー・数字・曜日'}</h2>
   <p>${esc(btLucky)}</p>
+</div>
+<div class="info-card" style="line-height:1.9;">
+  <p>${esc(btIntro)}</p>
 </div>
 <div style="max-width:600px;margin:0 auto;padding:14px 16px;">
   <section>
