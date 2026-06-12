@@ -3602,21 +3602,76 @@ function renderWoluunPanel(data) {
 }
 
 // ── 궁합(相性) 패널 ──────────────────────────────────────
+// 궁합 패널 9개 언어 사전 (verdict: 종합판정 / bars: 분석항목 / sipsin: 십신 / biTypes: 일지 합충 / elements: 오행 표기)
+const GUNGHAP_T = {
+  ko: { title:'두 사람 궁합(相性) 분석', pts:'점', tenGods:'십신 관계', branchPrefix:'일지',
+    verdict:{great:'천생연분 — 매우 좋은 궁합입니다 ♡',good:'좋은 인연 — 상호 보완적입니다',fair:'보통 — 노력으로 좋아집니다',challenging:'도전적 — 서로 이해와 배려가 필요합니다'},
+    bars:['연간 오행','일간 오행','일지 합충','천간 합'],
+    sipsin:{비겁:'비겁',식상:'식상',재성:'재성',관성:'관성',인성:'인성'},
+    biTypes:{'六合':'육합(六合)','六冲':'육충(六沖)','三合':'삼합(三合)'},
+    elements:{'木':'목(木)','火':'화(火)','土':'토(土)','金':'금(金)','水':'수(水)'} },
+  en: { title:'Compatibility Analysis', pts:'pts', tenGods:'Ten Gods', branchPrefix:'Branch',
+    verdict:{great:'Soulmates — exceptional match ♡',good:'Great match — complementary energies',fair:'Moderate — can improve with effort',challenging:'Challenging — needs mutual understanding'},
+    bars:['Year Element','Day Element','Day Branch','Stem Harmony'],
+    sipsin:{비겁:'Sibling',식상:'Expression',재성:'Wealth',관성:'Authority',인성:'Intelligence'},
+    biTypes:{'六合':'Six Harmony (六合)','六冲':'Six Clash (六冲)','三合':'Triple Harmony (三合)'},
+    elements:{'木':'Wood (木)','火':'Fire (火)','土':'Earth (土)','金':'Metal (金)','水':'Water (水)'} },
+  ja: { title:'二人の相性分析', pts:'点', tenGods:'十神関係', branchPrefix:'日支',
+    verdict:{great:'天生縁分 — 最高の相性 ♡',good:'良縁 — 相互補完的',fair:'普通 — 努力で良くなる',challenging:'挑戦的 — 理解と思いやりが必要'},
+    bars:['年干五行','日干五行','日支合冲','天干合'],
+    sipsin:{비겁:'比劫',식상:'食傷',재성:'財星',관성:'官星',인성:'印星'},
+    biTypes:{'六合':'六合','六冲':'六冲','三合':'三合'},
+    elements:{'木':'木','火':'火','土':'土','金':'金','水':'水'} },
+  de: { title:'Partnerschafts-Analyse', pts:' Pkt.', tenGods:'Zehn Götter', branchPrefix:'Tageszweig',
+    verdict:{great:'Seelenverwandte — außergewöhnliche Verbindung ♡',good:'Sehr gutes Paar — sich ergänzende Energien',fair:'Mittel — kann mit Einsatz wachsen',challenging:'Herausfordernd — braucht gegenseitiges Verständnis'},
+    bars:['Jahres-Element','Tages-Element','Tageszweig','Stamm-Harmonie'],
+    sipsin:{비겁:'Geschwister',식상:'Ausdruck',재성:'Reichtum',관성:'Autorität',인성:'Weisheit'},
+    biTypes:{'六合':'Sechser-Harmonie (六合)','六冲':'Sechser-Konflikt (六冲)','三合':'Dreier-Harmonie (三合)'},
+    elements:{'木':'Holz (木)','火':'Feuer (火)','土':'Erde (土)','金':'Metall (金)','水':'Wasser (水)'} },
+  fr: { title:'Analyse de Compatibilité', pts:' pts', tenGods:'Dix Dieux', branchPrefix:'Branche du jour',
+    verdict:{great:'Âmes sœurs — accord exceptionnel ♡',good:'Très bon duo — énergies complémentaires',fair:"Moyen — peut s'améliorer avec des efforts",challenging:'Exigeant — demande une compréhension mutuelle'},
+    bars:["Élément de l'année",'Élément du jour','Branche du jour','Harmonie des tiges'],
+    sipsin:{비겁:'Fratrie',식상:'Expression',재성:'Richesse',관성:'Autorité',인성:'Sagesse'},
+    biTypes:{'六合':'Harmonie des Six (六合)','六冲':'Conflit des Six (六冲)','三合':'Triple Harmonie (三合)'},
+    elements:{'木':'Bois (木)','火':'Feu (火)','土':'Terre (土)','金':'Métal (金)','水':'Eau (水)'} },
+  es: { title:'Análisis de Compatibilidad', pts:' pts', tenGods:'Diez Dioses', branchPrefix:'Rama del día',
+    verdict:{great:'Almas gemelas — unión excepcional ♡',good:'Gran pareja — energías complementarias',fair:'Moderado — mejora con esfuerzo',challenging:'Desafiante — requiere comprensión mutua'},
+    bars:['Elemento del año','Elemento del día','Rama del día','Armonía de tallos'],
+    sipsin:{비겁:'Hermandad',식상:'Expresión',재성:'Riqueza',관성:'Autoridad',인성:'Sabiduría'},
+    biTypes:{'六合':'Armonía de Seis (六合)','六冲':'Choque de Seis (六冲)','三合':'Triple Armonía (三合)'},
+    elements:{'木':'Madera (木)','火':'Fuego (火)','土':'Tierra (土)','金':'Metal (金)','水':'Agua (水)'} },
+  pt: { title:'Análise de Compatibilidade', pts:' pts', tenGods:'Dez Deuses', branchPrefix:'Ramo do dia',
+    verdict:{great:'Almas gêmeas — combinação excepcional ♡',good:'Ótimo par — energias complementares',fair:'Moderado — melhora com esforço',challenging:'Desafiador — requer compreensão mútua'},
+    bars:['Elemento do ano','Elemento do dia','Ramo do dia','Harmonia dos troncos'],
+    sipsin:{비겁:'Irmandade',식상:'Expressão',재성:'Riqueza',관성:'Autoridade',인성:'Sabedoria'},
+    biTypes:{'六合':'Harmonia dos Seis (六合)','六冲':'Choque dos Seis (六冲)','三合':'Tripla Harmonia (三合)'},
+    elements:{'木':'Madeira (木)','火':'Fogo (火)','土':'Terra (土)','金':'Metal (金)','水':'Água (水)'} },
+  it: { title:'Analisi di Compatibilità', pts:' pt.', tenGods:'Dieci Divinità', branchPrefix:'Ramo del giorno',
+    verdict:{great:'Anime gemelle — intesa eccezionale ♡',good:'Ottima coppia — energie complementari',fair:"Discreta — migliora con l'impegno",challenging:'Impegnativa — richiede comprensione reciproca'},
+    bars:["Elemento dell'anno",'Elemento del giorno','Ramo del giorno','Armonia dei tronchi'],
+    sipsin:{비겁:'Fratellanza',식상:'Espressione',재성:'Ricchezza',관성:'Autorità',인성:'Saggezza'},
+    biTypes:{'六合':'Armonia dei Sei (六合)','六冲':'Scontro dei Sei (六冲)','三合':'Tripla Armonia (三合)'},
+    elements:{'木':'Legno (木)','火':'Fuoco (火)','土':'Terra (土)','金':'Metallo (金)','水':'Acqua (水)'} },
+  id: { title:'Analisis Kecocokan', pts:' poin', tenGods:'Sepuluh Dewa', branchPrefix:'Cabang hari',
+    verdict:{great:'Belahan jiwa — pasangan luar biasa ♡',good:'Pasangan serasi — energi saling melengkapi',fair:'Sedang — membaik dengan usaha',challenging:'Menantang — perlu saling pengertian'},
+    bars:['Elemen tahun','Elemen hari','Cabang hari','Harmoni batang'],
+    sipsin:{비겁:'Persaudaraan',식상:'Ekspresi',재성:'Kekayaan',관성:'Otoritas',인성:'Kebijaksanaan'},
+    biTypes:{'六合':'Harmoni Enam (六合)','六冲':'Benturan Enam (六冲)','三合':'Harmoni Tiga (三合)'},
+    elements:{'木':'Kayu (木)','火':'Api (火)','土':'Tanah (土)','金':'Logam (金)','水':'Air (水)'} },
+};
+
 function renderGunghapPanel(data) {
   const gh = data.gunghapData;
   const pb = data.partnerData;
   if (!gh || !pb) return;
-  const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja';
-  const title = isKo ? '두 사람 궁합(相性) 분석' : isJa ? '二人の相性分析' : 'Compatibility Analysis';
+  const lang = data.lang;
+  const T = GUNGHAP_T[lang] || GUNGHAP_T.en;
+  const title = T.title;
 
   const EC = {'木':'#16a34a','火':'#dc2626','土':'#d97706','金':'#64748b','水':'#1d4ed8'};
-  const EKO = {'木':'목(木)','火':'화(火)','土':'토(土)','金':'금(金)','水':'수(水)'};
   const e1Clr = EC[gh.el1] || '#4f46e5', e2Clr = EC[gh.el2] || '#ec4899';
 
-  const COMPAT_KO = {great:'천생연분 — 매우 좋은 궁합입니다 ♡',good:'좋은 인연 — 상호 보완적입니다',fair:'보통 — 노력으로 좋아집니다',challenging:'도전적 — 서로 이해와 배려가 필요합니다'};
-  const COMPAT_EN = {great:'Soulmates — exceptional match ♡',good:'Great match — complementary energies',fair:'Moderate — can improve with effort',challenging:'Challenging — needs mutual understanding'};
-  const COMPAT_JA = {great:'天生縁分 — 最高の相性 ♡',good:'良縁 — 相互補完的',fair:'普通 — 努力で良くなる',challenging:'挑戦的 — 理解と思いやりが必要'};
-  const compatStr = isKo ? COMPAT_KO[gh.compat] : isJa ? COMPAT_JA[gh.compat] : COMPAT_EN[gh.compat];
+  const compatStr = T.verdict[gh.compat];
   const compatClr = gh.compat==='great'?'#ec4899':gh.compat==='good'?'#16a34a':gh.compat==='fair'?'#d97706':'#dc2626';
 
   // score ring SVG
@@ -3631,22 +3686,22 @@ function renderGunghapPanel(data) {
   </svg>
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
     <div style="font-size:20px;font-weight:900;color:${ringColor};">${gh.overall}</div>
-    <div style="font-size:9px;color:#6b7280;font-weight:600;">${isKo?'점':isJa?'点':'pts'}</div>
+    <div style="font-size:9px;color:#6b7280;font-weight:600;">${T.pts}</div>
   </div>`;
 
   // breakdown bars
   const BARS = [
-    {lbl:isKo?'연간 오행':isJa?'年干五行':'Year Element', score:gh.yearElScore, w:25},
-    {lbl:isKo?'일간 오행':isJa?'日干五行':'Day Element',  score:gh.dayElScore,  w:30},
-    {lbl:isKo?'일지 합충':isJa?'日支合冲':'Day Branch',   score:gh.dayBiScore,  w:30},
-    {lbl:isKo?'천간 합':isJa?'天干合':'Stem Harmony',    score:gh.stemHapScore,w:15},
+    {lbl:T.bars[0], score:gh.yearElScore, w:25},
+    {lbl:T.bars[1], score:gh.dayElScore,  w:30},
+    {lbl:T.bars[2], score:gh.dayBiScore,  w:30},
+    {lbl:T.bars[3], score:gh.stemHapScore,w:15},
   ];
   const barsHTML = BARS.map(b => {
     const clr = b.score>=80?'#16a34a':b.score>=60?'#4f46e5':'#dc2626';
     return `<div style="margin-bottom:8px;">
       <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
         <span style="font-size:10px;color:#64748b;font-weight:600;">${b.lbl}</span>
-        <span style="font-size:10px;font-weight:800;color:${clr};">${b.score}${isKo?'점':isJa?'点':'pts'}</span>
+        <span style="font-size:10px;font-weight:800;color:${clr};">${b.score}${T.pts}</span>
       </div>
       <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;">
         <div style="height:100%;width:${b.score}%;background:${clr};border-radius:3px;transition:width .6s;"></div>
@@ -3658,21 +3713,25 @@ function renderGunghapPanel(data) {
   const dA = data, dB = pb;
   const yA = `${dA.year}-${String(dA.month).padStart(2,'0')}-${String(dA.day).padStart(2,'0')}`;
   const yB = `${dB.year}-${String(dB.month).padStart(2,'0')}-${String(dB.day).padStart(2,'0')}`;
-  const elA = isKo ? (EKO[gh.el1]||gh.el1) : gh.el1;
-  const elB = isKo ? (EKO[gh.el2]||gh.el2) : gh.el2;
+  const elA = T.elements[gh.el1] || gh.el1;
+  const elB = T.elements[gh.el2] || gh.el2;
+  // 연주 간지 — 비ko 시스템은 cultural에 stemIdx/branchIdx가 없으므로 생년에서 직접 계산
+  const _gz = (d) => {
+    const si = (d.cultural && d.cultural.stemIdx != null) ? d.cultural.stemIdx : (((d.year - 4) % 10) + 10) % 10;
+    const bi = (d.cultural && d.cultural.branchIdx != null) ? d.cultural.branchIdx : (((d.year - 4) % 12) + 12) % 12;
+    return (STEMS[si] || '') + (BRANCHES[bi] || '');
+  };
 
   // sipsin A→B and B→A
-  const SIPSIN_EN2 = {비겁:'Sibling',식상:'Expression',재성:'Wealth',관성:'Authority',인성:'Intelligence'};
-  const SIPSIN_JA2 = {비겁:'比劫',식상:'食傷',재성:'財星',관성:'官星',인성:'印星'};
-  const s1 = isKo ? (gh.sipsinAtoB||'') : isJa ? (SIPSIN_JA2[gh.sipsinAtoB]||gh.sipsinAtoB||'') : (SIPSIN_EN2[gh.sipsinAtoB]||gh.sipsinAtoB||'');
-  const s2 = isKo ? (gh.sipsinBtoA||'') : isJa ? (SIPSIN_JA2[gh.sipsinBtoA]||gh.sipsinBtoA||'') : (SIPSIN_EN2[gh.sipsinBtoA]||gh.sipsinBtoA||'');
-  const arrowLbl = isKo?'십신 관계':isJa?'十神関係':'Ten Gods';
+  const s1 = T.sipsin[gh.sipsinAtoB] || gh.sipsinAtoB || '';
+  const s2 = T.sipsin[gh.sipsinBtoA] || gh.sipsinBtoA || '';
+  const arrowLbl = T.tenGods;
   const vsHtml = (s1&&s2) ? `<div style="text-align:center;margin-top:10px;font-size:11px;color:#374151;">
     <span style="font-weight:700;color:#4f46e5;">${s1}</span> ↔ <span style="font-weight:700;color:#ec4899;">${s2}</span>
     <div style="font-size:9px;color:#9ca3af;margin-top:2px;">${arrowLbl}</div>
   </div>` : '';
 
-  const dayBiLbl = gh.dayBiType ? (isKo ? `일지 ${gh.dayBiType}` : isJa ? `日支${gh.dayBiType}` : `Branch ${gh.dayBiType}`) : '';
+  const dayBiLbl = gh.dayBiType ? `${T.branchPrefix} · ${T.biTypes[gh.dayBiType] || gh.dayBiType}` : '';
 
   const div = document.createElement('div');
   div.id = 'gunghap-section';
@@ -3683,14 +3742,14 @@ function renderGunghapPanel(data) {
       <div style="flex:1;background:${e1Clr}10;border:2px solid ${e1Clr}40;border-radius:14px;padding:10px 12px;text-align:center;">
         <div style="font-size:20px;margin-bottom:4px;">👤</div>
         <div style="font-size:11px;font-weight:700;color:#374151;">${yA}</div>
-        <div style="font-size:12px;font-weight:800;color:${e1Clr};">${dA.cultural ? STEMS[dA.cultural.stemIdx]+BRANCHES[dA.cultural.branchIdx] : ''}</div>
+        <div style="font-size:12px;font-weight:800;color:${e1Clr};">${_gz(dA)}</div>
         <div style="font-size:10px;color:#64748b;margin-top:2px;">${elA}</div>
       </div>
       <div style="display:flex;align-items:center;justify-content:center;font-size:20px;">💞</div>
       <div style="flex:1;background:${e2Clr}10;border:2px solid ${e2Clr}40;border-radius:14px;padding:10px 12px;text-align:center;">
         <div style="font-size:20px;margin-bottom:4px;">👤</div>
         <div style="font-size:11px;font-weight:700;color:#374151;">${yB}</div>
-        <div style="font-size:12px;font-weight:800;color:${e2Clr};">${dB.cultural ? STEMS[dB.cultural.stemIdx]+BRANCHES[dB.cultural.branchIdx] : ''}</div>
+        <div style="font-size:12px;font-weight:800;color:${e2Clr};">${_gz(dB)}</div>
         <div style="font-size:10px;color:#64748b;margin-top:2px;">${elB}</div>
       </div>
     </div>
