@@ -79,6 +79,10 @@ if (-not $SkipWorker) {
     } else {
       Write-Host "  (GROQ_KEY 미설정 → Cloudflare AI 폴백만 사용)" -ForegroundColor Gray
     }
+    if ($AE_APP_KEY -and $AE_APP_SECRET) {
+      $bindings += ',{"type":"secret_text","name":"AE_APP_KEY","text":"' + $AE_APP_KEY + '"},{"type":"secret_text","name":"AE_APP_SECRET","text":"' + $AE_APP_SECRET + '"}'
+      Write-Host "  (AliExpress 시크릿 포함)" -ForegroundColor Gray
+    }
     $metaJson = '{"main_module":"worker.js","bindings":[' + $bindings + ']}'
     [System.IO.File]::WriteAllText($tmpMetadata, $metaJson, [System.Text.UTF8Encoding]::new($false))
 

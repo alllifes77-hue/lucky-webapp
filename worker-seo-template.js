@@ -781,6 +781,104 @@ ${urlsXml}
       }
     }
 
+    // ── AliExpress 어필리에이트 추천 상품 (/ko/aff-products?lang=xx) ──
+    // 기존 /ko/* 라우트로 도달하는 내부 API. App Secret 은 워커 시크릿(AE_APP_SECRET)에만 존재.
+    // 엣지 캐시 6시간 → API 호출량 최소화 (Test 앱 한도 보호).
+    if (path === '/ko/aff-products') {
+      const jsonHeaders = { 'Content-Type':'application/json;charset=UTF-8', 'Access-Control-Allow-Origin':'*', 'Cache-Control':'public, max-age=10800' };
+      try {
+        if (!env || !env.AE_APP_KEY || !env.AE_APP_SECRET) {
+          return new Response(JSON.stringify({ ok:false, reason:'no-creds' }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+        }
+        const affLang = (url.searchParams.get('lang') || 'en').toLowerCase();
+        // 언어별 마켓 설정: 배송국가/통화/표시언어 (상품 제목이 현지어로 옴)
+        const AFF_MARKET = {
+          ko:{ ship:'KR', cur:'KRW', tl:'ko' }, en:{ ship:'US', cur:'USD', tl:'en' },
+          ja:{ ship:'JP', cur:'JPY', tl:'ja' }, de:{ ship:'DE', cur:'EUR', tl:'de' },
+          fr:{ ship:'FR', cur:'EUR', tl:'fr' }, es:{ ship:'ES', cur:'EUR', tl:'es' },
+          pt:{ ship:'BR', cur:'BRL', tl:'pt' }, it:{ ship:'IT', cur:'EUR', tl:'it' },
+          id:{ ship:'ID', cur:'IDR', tl:'id' },
+        };
+        const mk = AFF_MARKET[affLang] || AFF_MARKET.en;
+
+        // 엣지 캐시 조회 (언어별 키)
+        const cache = caches.default;
+        const cacheKey = new Request(`https://ae-aff.cache/${affLang}`);
+        const hit = await cache.match(cacheKey);
+        if (hit) {
+          const cachedBody = await hit.text();
+          return new Response(cachedBody, { headers: jsonHeaders });
+        }
+
+        // TOP /sync 서명: 파라미터 ASCII 정렬 → key+value 연결 → HMAC-SHA256(secret) → 대문자 hex
+        const aeCall = async (tl, ship) => {
+          const params = {
+            app_key: env.AE_APP_KEY,
+            method: 'aliexpress.affiliate.product.query',
+            sign_method: 'sha256',
+            timestamp: String(Date.now()),
+            format: 'json',
+            v: '2.0',
+            keywords: 'lucky charm bracelet feng shui',
+            target_currency: mk.cur,
+            target_language: tl,
+            tracking_id: 'luckynum',
+            page_size: '10',
+            sort: 'LAST_VOLUME_DESC',
+          };
+          if (ship) params.ship_to_country = ship;
+          const sorted = Object.keys(params).sort().map(k => k + params[k]).join('');
+          const cryptoKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.AE_APP_SECRET), { name:'HMAC', hash:'SHA-256' }, false, ['sign']);
+          const sigBuf = await crypto.subtle.sign('HMAC', cryptoKey, new TextEncoder().encode(sorted));
+          const sign = [...new Uint8Array(sigBuf)].map(b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+          const qs = new URLSearchParams({ ...params, sign }).toString();
+          const apiResp = await fetch(`https://api-sg.aliexpress.com/sync?${qs}`, { method:'POST' });
+          return apiResp.json().catch(() => null);
+        };
+
+        // 폴백 체인: (현지어,배송국) → (en,배송국) → (현지어,무배송국) → (en,무배송국)
+        // 일부 언어(target_language)·국가(ship_to_country: KR/ID 등)는 API 미지원이라 단계적 완화
+        const extract = (resp) => {
+          const r = resp && resp.aliexpress_affiliate_product_query_response
+            && resp.aliexpress_affiliate_product_query_response.resp_result
+            && resp.aliexpress_affiliate_product_query_response.resp_result.result;
+          return (r && r.products && r.products.product) || [];
+        };
+        const attempts = [];
+        attempts.push([mk.tl, mk.ship]);
+        if (mk.tl !== 'en') attempts.push(['en', mk.ship]);
+        attempts.push([mk.tl, null]);
+        if (mk.tl !== 'en') attempts.push(['en', null]);
+        let j = null, list = [];
+        for (const [tl, ship] of attempts) {
+          j = await aeCall(tl, ship);
+          list = extract(j);
+          if (list.length) break;
+        }
+
+        if (!list.length) {
+          const detail = (j && j.error_response && (j.error_response.msg || j.error_response.code))
+            || (j && j.aliexpress_affiliate_product_query_response && j.aliexpress_affiliate_product_query_response.resp_result && j.aliexpress_affiliate_product_query_response.resp_result.resp_msg)
+            || 'empty';
+          return new Response(JSON.stringify({ ok:false, reason:String(detail).slice(0,200) }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+        }
+
+        const products = list.slice(0, 8).map(p => ({
+          t: p.product_title,
+          img: p.product_main_image_url,
+          price: p.target_sale_price || p.sale_price || '',
+          cur: p.target_sale_price_currency || p.sale_price_currency || mk.cur,
+          url: p.promotion_link,
+        })).filter(p => p.url && p.img);
+
+        const body = JSON.stringify({ ok:true, lang: affLang, products });
+        await cache.put(cacheKey, new Response(body, { headers: { 'Cache-Control':'public, max-age=21600' } }));
+        return new Response(body, { headers: jsonHeaders });
+      } catch (e) {
+        return new Response(JSON.stringify({ ok:false, reason:'error' }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+      }
+    }
+
     // ── Category pages: /{lang}/{cat-slug}/ + ko root-level /{cat-slug}/ ──
     {
       // ko는 /ko/ 없이 루트 레벨: /saju/, /love-fortune/ 등

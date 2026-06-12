@@ -18,6 +18,10 @@ $GROQ_KEY   = ""
 # 키 파일을 서버 루트 /{키}.txt 로 업로드해야 함. 비우면 핑 건너뜀.
 $INDEXNOW_KEY = ""
 
+# AliExpress 어필리에이트 API (openservice.aliexpress.com 앱 키/시크릿). 비우면 추천상품 패널 미렌더.
+$AE_APP_KEY    = ""
+$AE_APP_SECRET = ""
+
 # SSH ─ all-lifes.com 서버의 /lucky/ 정적 파일 동기화용
 $SSH_HOST   = ""            # 예: all-lifes.com  또는  123.45.67.89
 $SSH_USER   = ""            # 예: ubuntu / root

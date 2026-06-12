@@ -1632,7 +1632,7 @@ function renderResults(data) {
    'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
-   'cz-badge-panel','daily-energy-panel','ai-chat-panel'].forEach(id => {
+   'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1708,6 +1708,7 @@ function renderResults(data) {
   if (personName) renderNamePanel(calcNameNumerology(personName));
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
+  renderAliExpressPanel(data);
   renderShareBtns(data);
   renderAIChat(data);
   renderFaq();
@@ -4485,6 +4486,63 @@ function doNativeShare() {
   try {
     const L = window.LUCKY_LANG || {};
     navigator.share({ title: document.title, text: (L.ogResultDesc || L.desc || ''), url: getShareUrl() }).catch(()=>{});
+  } catch(e) {}
+}
+
+// ── AliExpress 어필리에이트 추천 상품 패널 (전 언어, 결과 화면) ──
+const AE_AFF_L = {
+  ko:{ title:'🧧 행운 아이템 추천 · 광고', disc:'AliExpress 파트너스 활동으로 일정액의 수수료를 받을 수 있습니다.' },
+  en:{ title:'🧧 Lucky Charm Picks · Ad', disc:'As an AliExpress affiliate, we may earn a commission from qualifying purchases.' },
+  ja:{ title:'🧧 開運アイテム · 広告', disc:'AliExpressアフィリエイトにより、購入に応じて手数料を受け取る場合があります。' },
+  de:{ title:'🧧 Glücksbringer-Auswahl · Anzeige', disc:'Als AliExpress-Partner verdienen wir ggf. an qualifizierten Käufen.' },
+  fr:{ title:'🧧 Porte-bonheur · Pub', disc:'En tant que partenaire AliExpress, nous pouvons percevoir une commission sur les achats éligibles.' },
+  es:{ title:'🧧 Amuletos de la suerte · Anuncio', disc:'Como afiliados de AliExpress, podemos recibir una comisión por compras elegibles.' },
+  pt:{ title:'🧧 Amuletos da sorte · Anúncio', disc:'Como afiliados do AliExpress, podemos receber comissão por compras qualificadas.' },
+  it:{ title:'🧧 Portafortuna · Annuncio', disc:'In qualità di affiliati AliExpress, potremmo ricevere una commissione sugli acquisti idonei.' },
+  id:{ title:'🧧 Jimat keberuntungan · Iklan', disc:'Sebagai afiliasi AliExpress, kami dapat menerima komisi dari pembelian yang memenuhi syarat.' },
+};
+
+async function renderAliExpressPanel(data) {
+  try {
+    const lang = data.lang || window.LUCKY_CURRENT_LANG || 'ko';
+    const lb = AE_AFF_L[lang] || AE_AFF_L.en;
+
+    // 세션 캐시 3시간 (엣지 캐시와 별개로 클라 재호출 절약)
+    const ck = 'ae_aff_' + lang;
+    let payload = null;
+    try {
+      const c = JSON.parse(sessionStorage.getItem(ck) || 'null');
+      if (c && (Date.now() - c.t) < 3*3600*1000) payload = c.d;
+    } catch(_) {}
+    if (!payload) {
+      const res = await fetch('https://all-lifes.com/ko/aff-products?lang=' + lang);
+      if (!res.ok) return;
+      payload = await res.json();
+      try { sessionStorage.setItem(ck, JSON.stringify({ t: Date.now(), d: payload })); } catch(_) {}
+    }
+    if (!payload || !payload.ok || !payload.products || !payload.products.length) return;
+    if (!document.getElementById('s-result')) return;
+
+    const cards = payload.products.map(p => `
+      <a href="${p.url}" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:#1c1917;background:#fff;border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;">
+        <img src="${p.img}" alt="" loading="lazy" style="width:122px;height:122px;object-fit:cover;display:block;">
+        <div style="padding:7px 8px 9px;">
+          <div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:#44403c;">${(p.t||'').replace(/</g,'&lt;').slice(0,60)}</div>
+          <div style="font-size:12px;font-weight:800;color:#d97706;margin-top:4px;">${p.price} ${p.cur}</div>
+        </div>
+      </a>`).join('');
+
+    const old = document.getElementById('ae-aff-panel');
+    if (old) old.remove();
+    const div = document.createElement('div');
+    div.id = 'ae-aff-panel';
+    div.style.cssText = 'background:#fff;border:2px solid #e7e5e4;border-radius:20px;padding:16px 0 12px;margin-bottom:16px;overflow:hidden;';
+    div.innerHTML = `
+      <div style="font-size:12px;font-weight:800;color:#374151;margin:0 18px 10px;">${lb.title}</div>
+      <div style="display:flex;gap:9px;overflow-x:auto;padding:0 18px 6px;-webkit-overflow-scrolling:touch;">${cards}</div>
+      <p style="font-size:9.5px;color:#a8a29e;margin:8px 18px 0;line-height:1.5;">${lb.disc}</p>`;
+    const share = document.querySelector('.share-section');
+    if (share) share.before(div);
   } catch(e) {}
 }
 
