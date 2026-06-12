@@ -1686,6 +1686,7 @@ function renderResults(data) {
   renderShareBtns(data);
   renderAIChat(data);
   renderFaq();
+  _saveBirthAndHistory(data);
 }
 
 const SET_NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'];
@@ -4087,6 +4088,13 @@ function renderShareBtns(data) {
   const copyLinkLabel = L.btnCopyLink || '🔗 Link';
   const saveImgLabel  = L.btnSaveImage || '📷 Save';
 
+  // 모바일 OS 공유시트 (지원 브라우저에서만)
+  if (navigator.share) {
+    const NS = { ko:'공유하기', en:'Share', ja:'共有', de:'Teilen', fr:'Partager', es:'Compartir', pt:'Compartilhar', it:'Condividi', id:'Bagikan' };
+    container.insertAdjacentHTML('beforeend',
+      `<button class="share-btn copy" onclick="doNativeShare()" style="background:#1c1917;border:1.5px solid #1c1917;color:#fff;"><span class="sb-icon">📤</span><span>${NS[lang]||NS.en}</span></button>`);
+  }
+
   plats.forEach(p => {
     let btn;
     switch (p.id) {
@@ -4170,7 +4178,7 @@ function renderAIChat(data) {
     birthDate: `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')}`,
     element: data.cultural ? data.cultural.element : '',
     zodiac: data.czKey || '',
-    luckyNums: (data.numbers || []).join(', '),
+    luckyNums: (data.mainNums || data.numbers || []).join(', '),
     loveScore:    data.loveData ? data.loveData.score : null,
     moneyScore:   data.moneyData ? data.moneyData.score : null,
     careerScore:  data.careerData ? data.careerData.score : null,
@@ -4318,6 +4326,76 @@ function sendAIChatMessage() {
   const bubble = _aiAddMessage('assistant', '', true);
   if (bubble) bubble.dataset.role = 'assistant-stream';
   _aiStreamMessage(history, window._aiChatFD, window._aiChatLang);
+}
+
+// ══════════════════════════════════════════════════════════
+// 편의 기능: 생일 기억 · 최근 운세 기록 · 네이티브 공유 · 로또 당첨번호 비교
+// (모두 localStorage/브라우저 API 기반 — 서버 저장 없음)
+// ══════════════════════════════════════════════════════════
+const _LS_BIRTH = 'lucky_birth_v1';
+const _LS_HIST  = 'lucky_history_v1';
+
+function _saveBirthAndHistory(data) {
+  try {
+    if (!data || !data.year) return;
+    const gender = (document.querySelector('.gender-btn.active') || {}).dataset?.gender || null;
+    localStorage.setItem(_LS_BIRTH, JSON.stringify({ y:data.year, m:data.month, d:data.day, g:gender }));
+    const hist = JSON.parse(localStorage.getItem(_LS_HIST) || '[]');
+    const entry = { t:Date.now(), y:data.year, m:data.month, d:data.day,
+                    nums:(data.mainNums||data.numbers||[]).slice(0,7), cat:window.LUCKY_SELECTED_CAT||'lucky' };
+    // 같은 생일+카테고리 중복은 최신으로 교체
+    const dedup = hist.filter(h => !(h.y===entry.y && h.m===entry.m && h.d===entry.d && h.cat===entry.cat));
+    dedup.unshift(entry);
+    localStorage.setItem(_LS_HIST, JSON.stringify(dedup.slice(0,5)));
+  } catch(e) {}
+}
+
+function _restoreBirthInfo() {
+  try {
+    const s = JSON.parse(localStorage.getItem(_LS_BIRTH) || 'null');
+    if (!s) return;
+    const set = (id,v) => { const el = document.getElementById(id); if (el && v && !el.value) el.value = v; };
+    set('bday-year', s.y); set('bday-month', s.m); set('bday-day', s.d);
+    if (s.g) selectGender(s.g);
+  } catch(e) {}
+}
+
+function _renderHistoryChips() {
+  try {
+    const wrap = document.getElementById('recent-history');
+    if (!wrap) return;
+    const hist = JSON.parse(localStorage.getItem(_LS_HIST) || '[]');
+    if (!hist.length) { wrap.style.display = 'none'; return; }
+    const L = window.LUCKY_LANG || {};
+    const lang = window.LUCKY_CURRENT_LANG || 'ko';
+    const TITLE = { ko:'🕘 최근 기록', en:'🕘 Recent', ja:'🕘 最近の記録', de:'🕘 Verlauf', fr:'🕘 Récent', es:'🕘 Reciente', pt:'🕘 Recente', it:'🕘 Recenti', id:'🕘 Riwayat' };
+    const catIcons = { lucky:'🍀', saju:'🔮', love:'💝', money:'💰', career:'💼', achievement:'🏆', gunghap:'💑' };
+    wrap.style.display = '';
+    wrap.innerHTML = `<div style="font-size:12px;font-weight:700;color:var(--text3,#78716c);margin-bottom:7px;">${TITLE[lang]||TITLE.en}</div>` +
+      hist.map((h,i) =>
+        `<button type="button" onclick="_useHistory(${i})" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--border2,#e7e5e4);border-radius:50px;padding:7px 13px;margin:0 6px 6px 0;font-size:12px;font-weight:600;color:var(--text,#1c1917);cursor:pointer;">${catIcons[h.cat]||'🍀'} ${h.y}.${String(h.m).padStart(2,'0')}.${String(h.d).padStart(2,'0')}${h.nums&&h.nums.length?` · ${h.nums.slice(0,3).join(',')}…`:''}</button>`
+      ).join('');
+  } catch(e) {}
+}
+
+function _useHistory(i) {
+  try {
+    const hist = JSON.parse(localStorage.getItem(_LS_HIST) || '[]');
+    const h = hist[i]; if (!h) return;
+    document.getElementById('bday-year').value  = h.y;
+    document.getElementById('bday-month').value = h.m;
+    document.getElementById('bday-day').value   = h.d;
+    if (h.cat && typeof selectCategory === 'function' && window.LUCKY_SELECTED_CAT !== h.cat) selectCategory(h.cat);
+    startGenerate();
+  } catch(e) {}
+}
+
+// 모바일 네이티브 공유 (navigator.share 지원 기기에서만 버튼 노출)
+function doNativeShare() {
+  try {
+    const L = window.LUCKY_LANG || {};
+    navigator.share({ title: document.title, text: (L.ogResultDesc || L.desc || ''), url: getShareUrl() }).catch(()=>{});
+  } catch(e) {}
 }
 
 function doCopyLink(btn) {
@@ -5048,4 +5126,9 @@ document.addEventListener('DOMContentLoaded', () => {
       _rTimer = setTimeout(sendHeight, 150);
     }).observe(document.body);
   }
+});
+
+// ── 편의 기능 초기화 (생일 복원 + 최근 기록 칩) ──────────────
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => { _restoreBirthInfo(); _renderHistoryChips(); }, 50);
 });
