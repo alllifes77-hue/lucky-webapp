@@ -533,7 +533,10 @@ const NAV_FOOTER_CSS = `
 .aff-body strong{font-size:14px;font-weight:800;}
 .aff-body span{font-size:12px;color:#78716c;}
 .aff-cta{flex-shrink:0;background:#d97706;color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:50px;white-space:nowrap;}
-.ads-unit-wrap{max-width:780px;margin:18px auto 6px;padding:0 16px;min-height:50px;}`;
+.ads-unit-wrap{max-width:780px;margin:18px auto 6px;padding:0 16px;min-height:50px;}
+.cp-slot{max-width:780px;margin:14px auto;padding:0 16px;text-align:center;}
+.cp-slot .aff-label{text-align:left;max-width:680px;margin:0 auto 8px;}
+.cp-disclosure{font-size:10px;color:#9ca3af;margin-top:7px;line-height:1.5;}`;
 
 const _NAV_CAT_LABELS = {
   ko:{saju:'🔮 사주',love:'💝 연애운',money:'💰 금전운',career:'💼 직업운',achievement:'🏆 성취운',gunghap:'💑 궁합'},
@@ -556,7 +559,7 @@ function buildNavFooter(lang, activePage) {
     const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
     return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
   }).join('');
-  return `${ADS_UNIT}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
+  return `${ADS_UNIT}${lang==='ko'?COUPANG_WIDGET:''}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
 }
 
 
@@ -602,6 +605,10 @@ const AFF_OFFERS = {
   // en: [{ icon:'✨', title:'Personal Astrology Reading', desc:'First reading 50% off', cta:'Get Reading', url:'https://example.com/?aff=YOUR_ID' }],
 };
 const AFF_LABELS = { ko:'추천 서비스 · 광고', en:'Recommended · Ad', ja:'おすすめ · 広告', de:'Empfohlen · Anzeige', fr:'Recommandé · Pub', es:'Recomendado · Anuncio', pt:'Recomendado · Anúncio', it:'Consigliato · Annuncio', id:'Rekomendasi · Iklan' };
+
+// ── 쿠팡 파트너스 다이내믹 위젯 (ko 페이지 전용) ─────────────
+// 화면 폭에 맞춰 위젯 너비를 동적 계산(모바일 잘림 방지). 경제적 이해관계 표시 문구 의무 포함.
+const COUPANG_WIDGET = `<div class="cp-slot"><div class="aff-label">쿠팡 추천 상품 · 광고</div><iframe id="cp-frame" style="width:680px;max-width:100%;height:140px;border:0;display:block;margin:0 auto;" scrolling="no" referrerpolicy="unsafe-url" loading="lazy" title="쿠팡 파트너스 추천 상품"></iframe><script>(function(){var f=document.getElementById('cp-frame');var w=Math.min(680,Math.max(300,document.documentElement.clientWidth-32));f.style.width=w+'px';f.src='https://ads-partners.coupang.com/widgets.html?id=996633&template=carousel&trackingCode=AF4227535&subId=&width='+w+'&height=140&tsource=';})();</script><p class="cp-disclosure">이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p></div>`;
 function renderAffSlot(lang){
   const offers = AFF_OFFERS[lang];
   if (!offers || !offers.length) return '';
