@@ -416,6 +416,9 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
         <div id="recent-history" style="display:none;margin-top:18px;text-align:left;"></div>
       </div>
 
+      <!-- AdSense 디스플레이 — 홈(입력) 화면, iframe 임베드 시 미삽입 (하단 스크립트가 주입) -->
+      <div id="ad-home" style="max-width:500px;margin:0 auto 24px;"></div>
+
       <div class="method-section">
         <div class="method-card" id="method-card">
           <div class="method-title" id="txt-method-title">🔮 사주팔자(四柱八字) 분석</div>
@@ -509,6 +512,11 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 if (window.self === window.top) {
   try {
     document.getElementById('ad-bottom').innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  } catch (e) {}
+  // 홈(입력) 화면 광고 — 결과로 가기 전 노출
+  try {
+    document.getElementById('ad-home').innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
     (adsbygoogle = window.adsbygoogle || []).push({});
   } catch (e) {}
 
