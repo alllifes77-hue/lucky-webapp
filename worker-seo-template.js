@@ -523,7 +523,16 @@ const NAV_FOOTER_CSS = `
 .page-nav a{color:#94a3b8;text-decoration:none;font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid rgba(148,163,184,.2);white-space:nowrap;}
 .page-nav a:hover,.page-nav a.nav-act{background:#4338ca;color:#fff;border-color:#4338ca;}
 .site-footer{background:#0f172a;color:#475569;font-size:11px;text-align:center;padding:10px 20px 20px;border-top:1px solid #1e293b;}
-.site-footer a{color:#4f46e5;text-decoration:none;margin:0 6px;}`;
+.site-footer a{color:#4f46e5;text-decoration:none;margin:0 6px;}
+.aff-slot{max-width:640px;margin:18px auto;padding:0 16px;}
+.aff-label{font-size:10px;font-weight:700;color:#9ca3af;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.aff-card{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #e7e5e4;border-radius:14px;padding:13px 16px;margin-bottom:8px;text-decoration:none;color:#1c1917;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:transform .12s,border-color .12s;}
+.aff-card:hover{transform:translateY(-1px);border-color:#d97706;}
+.aff-icon{font-size:26px;flex-shrink:0;}
+.aff-body{flex:1;display:flex;flex-direction:column;gap:2px;}
+.aff-body strong{font-size:14px;font-weight:800;}
+.aff-body span{font-size:12px;color:#78716c;}
+.aff-cta{flex-shrink:0;background:#d97706;color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:50px;white-space:nowrap;}`;
 
 const _NAV_CAT_LABELS = {
   ko:{saju:'🔮 사주',love:'💝 연애운',money:'💰 금전운',career:'💼 직업운',achievement:'🏆 성취운',gunghap:'💑 궁합'},
@@ -546,7 +555,7 @@ function buildNavFooter(lang, activePage) {
     const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
     return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
   }).join('');
-  return `<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
+  return `${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
 }
 
 
@@ -576,6 +585,25 @@ function buildFortuneSystemPrompt(lang, d) {
     dataStr = `\n\n[User Fortune Data]\n${lb[0]}: ${d.birthDate||''}\n${lb[1]}: ${d.element||''}\n${lb[2]}: ${d.zodiac||''}\n${lb[3]}: ${d.luckyNums||''}\n${lb[4]}: ${d.loveScore??'?'}/100\n${lb[5]}: ${d.moneyScore??'?'}/100\n${lb[6]}: ${d.careerScore??'?'}/100\n${lb[7]}: ${d.achieveScore??'?'}/100`;
   }
   return (CONTEXTS[lang] || CONTEXTS.en) + dataStr;
+}
+
+// ── AdSense 태그 (모든 SEO 페이지 공통 — Auto Ads) ─────────
+const ADS_TAG = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378943893051810" crossorigin="anonymous"></script>`;
+
+// ── 어필리에이트 슬롯 (링크 확보 시 AFF_OFFERS 만 채우면 전 페이지에 표시) ──
+// 형식: lang: [{ icon, title, desc, cta, url }] — url 은 어필리에이트 트래킹 링크.
+// 비워두면 아무것도 렌더되지 않음. rel="sponsored nofollow" 로 SEO 안전.
+const AFF_OFFERS = {
+  // 예시:
+  // ko: [{ icon:'🔮', title:'전문 타로 1:1 상담', desc:'첫 상담 50% 할인', cta:'상담 받기', url:'https://example.com/?aff=YOUR_ID' }],
+  // en: [{ icon:'✨', title:'Personal Astrology Reading', desc:'First reading 50% off', cta:'Get Reading', url:'https://example.com/?aff=YOUR_ID' }],
+};
+const AFF_LABELS = { ko:'추천 서비스 · 광고', en:'Recommended · Ad', ja:'おすすめ · 広告', de:'Empfohlen · Anzeige', fr:'Recommandé · Pub', es:'Recomendado · Anuncio', pt:'Recomendado · Anúncio', it:'Consigliato · Annuncio', id:'Rekomendasi · Iklan' };
+function renderAffSlot(lang){
+  const offers = AFF_OFFERS[lang];
+  if (!offers || !offers.length) return '';
+  const cards = offers.map(o=>`<a class="aff-card" href="${o.url}" target="_blank" rel="sponsored nofollow noopener"><span class="aff-icon">${o.icon||'⭐'}</span><span class="aff-body"><strong>${esc(o.title)}</strong><span>${esc(o.desc||'')}</span></span><span class="aff-cta">${esc(o.cta||'→')}</span></a>`).join('');
+  return `<div class="aff-slot"><div class="aff-label">${AFF_LABELS[lang]||AFF_LABELS.en}</div>${cards}</div>`;
 }
 
 // ── Escape HTML ──────────────────────────────────────────
@@ -914,6 +942,7 @@ ${buildNavFooter(catLang, catKey)}
           const aFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":aFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const aHtml = `<!DOCTYPE html><html lang="${aLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(aTitle)}</title>
 <meta name="description" content="${esc(aDesc)}">
 <link rel="canonical" href="${esc(aCanonical)}">
@@ -1057,6 +1086,7 @@ ${buildNavFooter(aLang,'lucky')}
           const zFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":zFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const zHtml = `<!DOCTYPE html><html lang="${zLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(zTitle)}</title>
 <meta name="description" content="${esc(zDesc)}">
 <link rel="canonical" href="${esc(zCanonical)}">
@@ -1182,6 +1212,7 @@ ${buildNavFooter(zLang,'lucky')}
       const tIframe = `${APP_URL}/?lang=${tLang}`;
       const tHtml = `<!DOCTYPE html><html lang="${tLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(tTitle)}</title>
 <meta name="description" content="${esc(tDesc)}">
 <link rel="canonical" href="${esc(tCanonical)}">
@@ -1251,6 +1282,7 @@ ${buildNavFooter(tLang,'lucky')}
         }
         const cHtml = `<!DOCTYPE html><html lang="${cLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(ogT)}</title>
 <meta name="description" content="${esc(ogD)}">
 <link rel="canonical" href="${esc(cCanonical)}">
@@ -1319,6 +1351,7 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
           const kFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":kFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const kHtml = `<!DOCTYPE html><html lang="ja"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(kTitle)}</title>
 <meta name="description" content="${esc(kDesc)}">
 <link rel="canonical" href="${esc(kCanon)}">
@@ -1464,6 +1497,7 @@ ${buildNavFooter('ja','lucky')}
 
         const czHtml = `<!DOCTYPE html><html lang="${czLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(czTitleMap[czLang]||czTitleMap.en)}</title>
 <meta name="description" content="${esc(czDescMap[czLang]||czDescMap.en)}">
 <link rel="canonical" href="${esc(czCanonical)}">
@@ -1568,6 +1602,7 @@ ${buildNavFooter(czLang, 'lucky')}
 
           const byHtml = `<!DOCTYPE html><html lang="ko"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(byTitle)}</title>
 <meta name="description" content="${esc(byDesc)}">
 <link rel="canonical" href="${esc(byCanonical)}">
@@ -1654,6 +1689,7 @@ ${buildNavFooter('ko', 'lucky')}
           const enFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":enFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const enByHtml = `<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(enTitle)}</title>
 <meta name="description" content="${esc(enDesc)}">
 <link rel="canonical" href="${esc(enCanon)}">
@@ -1735,6 +1771,7 @@ ${buildNavFooter('en','lucky')}
           const jaFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":jaFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const jaNenHtml = `<!DOCTYPE html><html lang="ja"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(jaTitle)}</title>
 <meta name="description" content="${esc(jaDesc)}">
 <link rel="canonical" href="${esc(jaCanon)}">
@@ -1837,6 +1874,7 @@ ${buildNavFooter('ja','lucky')}
             const btIframe = `${APP_URL}/?lang=${btLang}`;
             const btHtml = `<!DOCTYPE html><html lang="${btLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
 <title>${esc(btTitle)}</title>
 <meta name="description" content="${esc(btDesc)}">
 <link rel="canonical" href="${esc(btCanon)}">
