@@ -101,8 +101,8 @@ if (-not $SkipSync) {
     Warn "SSH 설정 미완성 (HOST/USER/PATH) → 파일 동기화 건너뜀"
   } else {
     # 서버에 올리지 않을 항목 (개발 도구 / 메타 / 워커 소스)
-    $blockDirs  = @(".git",".github","node_modules")
-    $blockNames = @("worker-seo-template.js")
+    $blockDirs  = @(".git",".github","node_modules",".claude")
+    $blockNames = @("worker-seo-template.js","robots-server.txt")
     $blockPats  = @("*.ps1","generate-*.html","wordpress-*.html","deploy.config*","*.md",".gitignore")
 
     # staging 으로 배포 대상만 모음
@@ -148,12 +148,22 @@ if (-not $SkipSync) {
   }
 } else { Warn "[3/4] 동기화 단계 건너뜀 (-SkipSync)" }
 
-# ── 4) 사이트맵 확인 ────────────────────────────────────────
-# (Google 은 2023년 sitemap ping 엔드포인트를 폐기 → robots.txt 로 자동 발견)
-Say "`n[4/4] 사이트맵 확인"
+# ── 4) 사이트맵 확인 + IndexNow 핑 ──────────────────────────
+# (Google 은 robots.txt 의 Sitemap 라인으로 자동 발견. IndexNow 는 Bing·Yandex 즉시 재크롤링)
+Say "`n[4/4] 사이트맵 확인 + IndexNow 핑"
 try {
-  $sm = Invoke-WebRequest -Uri "https://all-lifes.com/lucky-sitemap.xml" -UseBasicParsing -TimeoutSec 10
-  Ok "사이트맵 응답 ($($sm.StatusCode)) — robots.txt 로 자동 색인됨"
-} catch { Warn "사이트맵 확인 실패 (무시 가능): $($_.Exception.Message)" }
+  $sm = Invoke-WebRequest -Uri "https://all-lifes.com/lucky-sitemap.xml" -UseBasicParsing -TimeoutSec 15
+  Ok "사이트맵 응답 ($($sm.StatusCode))"
+  if ($INDEXNOW_KEY) {
+    $inUrls = [regex]::Matches($sm.Content, '<loc>([^<]+)</loc>') | ForEach-Object { $_.Groups[1].Value }
+    $inPayload = @{ host="all-lifes.com"; key=$INDEXNOW_KEY; keyLocation="https://all-lifes.com/$INDEXNOW_KEY.txt"; urlList=$inUrls } | ConvertTo-Json -Depth 3
+    $inFile = Join-Path $env:TEMP "indexnow-deploy.json"
+    [System.IO.File]::WriteAllText($inFile, $inPayload, [System.Text.UTF8Encoding]::new($false))
+    $inCode = curl.exe -s -o "$env:TEMP\indexnow-resp.txt" -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" -H "Content-Type: application/json; charset=utf-8" --data "@$inFile" --max-time 40
+    Remove-Item $inFile -Force -ErrorAction SilentlyContinue
+    if ($inCode -eq "200" -or $inCode -eq "202") { Ok "IndexNow 핑 완료 ($($inUrls.Count)개 URL, HTTP $inCode)" }
+    else { Warn "IndexNow 핑 실패 (HTTP $inCode — 키 검증 대기 중이면 다음 배포 때 자동 재시도)" }
+  } else { Warn "INDEXNOW_KEY 미설정 → IndexNow 핑 건너뜀" }
+} catch { Warn "사이트맵/IndexNow 단계 실패 (무시 가능): $($_.Exception.Message)" }
 
 Say "`n=== 배포 완료 ===" "Green"

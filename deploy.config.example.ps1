@@ -14,6 +14,10 @@ $CF_TOKEN   = ""
 # 발급: https://console.groq.com/keys (무료 가입 → Create API Key, gsk_... 형식)
 $GROQ_KEY   = ""
 
+# IndexNow ─ Bing·Yandex 즉시 재크롤링용 키 (32자 hex).
+# 키 파일을 서버 루트 /{키}.txt 로 업로드해야 함. 비우면 핑 건너뜀.
+$INDEXNOW_KEY = ""
+
 # SSH ─ all-lifes.com 서버의 /lucky/ 정적 파일 동기화용
 $SSH_HOST   = ""            # 예: all-lifes.com  또는  123.45.67.89
 $SSH_USER   = ""            # 예: ubuntu / root

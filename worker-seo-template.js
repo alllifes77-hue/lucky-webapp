@@ -613,7 +613,8 @@ export default {
 
     // ── Sitemap ──────────────────────────────────────────
     if (path === '/lucky-sitemap.xml') {
-      const lastmod = '2026-05-24';
+      const lastmod = '2026-06-12'; // 콘텐츠 대규모 변경일 (hreflang·콘텐츠 보강)
+      const todayStr = new Date().toISOString().slice(0,10); // today 페이지는 매일 갱신
       const ZODIAC_SLUGS_SM = {
         en:['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'],
         de:['widder','stier','zwillinge','krebs','loewe','jungfrau','waage','skorpion','schuetze','steinbock','wassermann','fische'],
@@ -626,8 +627,8 @@ export default {
       const locs = [
         { lang:'ko', loc:`${SITE_URL}/lucky/`, priority:'1.0' },
         ...['en','ja','de','fr','es','pt','it','id'].map(l => ({ lang:l, loc:`${SITE_URL}/${l}/lucky/`, priority:'0.9' })),
-        // Today pages for all 9 langs
-        ...ALL_LANGS.map(l => ({ lang:l, loc:`${SITE_URL}/${l}/today/`, priority:'0.8' })),
+        // Today pages for all 9 langs (매일 콘텐츠 갱신 → lastmod 동적)
+        ...ALL_LANGS.map(l => ({ lang:l, loc:`${SITE_URL}/${l}/today/`, priority:'0.8', lm: todayStr })),
         // Angel number pages (en/de/fr/es/pt/it × 10 numbers)
         ...['en','de','fr','es','pt','it'].flatMap(l => {
           const pfx={en:'angel',de:'engel',fr:'ange',es:'angel',pt:'anjo',it:'angelo'};
@@ -662,9 +663,9 @@ export default {
 
       const urlsXml = locs.map((l) => `  <url>
     <loc>${l.loc}</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>${l.lm ? 'daily' : 'weekly'}</changefreq>
     <priority>${l.priority || '0.7'}</priority>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${l.lm || lastmod}</lastmod>
   </url>`).join('\n');
 
       return new Response(`<?xml version="1.0" encoding="UTF-8"?>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://all-lifes.com/sitemap_index.xml
+Sitemap: https://all-lifes.com/lucky-sitemap.xml
+Sitemap: https://all-lifes.com/iq-test-sitemap.xml
+#DaumWebMasterTool:d792f7a42161792f7911348ddd8394d7bab5820454b56585e14eab551e2c92df:vVVYkOn39ghyYVl737kvOg==
