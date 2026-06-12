@@ -50,7 +50,7 @@ window.LUCKY_LANG = {
     "Votre numéro de chemin de vie rayonne d'une énergie puissante aujourd'hui. Ces numéros sont en harmonie avec votre signature cosmique.",
     "La numérologie révèle un alignement favorable pour vous. L'univers a assigné ces numéros comme votre fréquence personnelle.",
     "Votre date de naissance encode un motif vibratoire unique. Ces numéros chanceux reflètent les mathématiques cachées de votre destin.",
-    "Les principes numérологiques anciens identifient une forte résonance dans ces numéros. La fortune sourit aux esprits préparés.",
+    "Les principes numérologiques anciens identifient une forte résonance dans ces numéros. La fortune sourit aux esprits préparés.",
     "La somme de votre date de naissance pointe vers ces numéros chanceux avec une remarquable clarté.",
   ],
 

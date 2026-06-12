@@ -930,7 +930,7 @@ ${buildNavFooter(catLang, catKey)}
           ]:aLang==='fr'?[
             {q:`Que signifie le nombre angélique ${aNum}?`,a:meaning},
             {q:'À quelle fréquence les nombres angéliques apparaissent-ils?',a:'Ils apparaissent quand vous êtes réceptif aux messages spirituels, souvent lors de transitions importantes.'},
-            {q:'Les nombres angéliques sont-ils vraiment significatifs?',a:'Nombreux numérологues voient dans ces patterns répétitifs des signes de l\'univers. La signification vous appartient.'},
+            {q:'Les nombres angéliques sont-ils vraiment significatifs?',a:'Nombreux numérologues voient dans ces patterns répétitifs des signes de l\'univers. La signification vous appartient.'},
           ]:aLang==='es'?[
             {q:`¿Qué significa el número angelical ${aNum}?`,a:meaning},
             {q:'¿Con qué frecuencia aparecen los números angelicales?',a:'Aparecen cuando estás receptivo a mensajes espirituales, a menudo en momentos de cambio.'},

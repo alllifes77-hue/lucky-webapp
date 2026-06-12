@@ -1,26 +1,30 @@
 // Lucky Numbers PWA Service Worker
-const CACHE_NAME = 'lucky-v4';
+// v5: 경로 수정(/lucky/ 스코프), HTML 은 network-first 로 변경 (업데이트 즉시 반영)
+const CACHE_NAME = 'lucky-v5';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/lucky-app.js',
-  '/lang/ko.js',
-  '/lang/en.js',
-  '/lang/ja.js',
-  '/lang/de.js',
-  '/lang/fr.js',
-  '/lang/es.js',
-  '/lang/pt.js',
-  '/lang/it.js',
-  '/lang/id.js',
-  '/favicon-32x32.png',
-  '/favicon-16x16.png',
-  '/apple-touch-icon.png',
+  '/lucky/',
+  '/lucky/index.html',
+  '/lucky/lucky-app.js',
+  '/lucky/lang/ko.js',
+  '/lucky/lang/en.js',
+  '/lucky/lang/ja.js',
+  '/lucky/lang/de.js',
+  '/lucky/lang/fr.js',
+  '/lucky/lang/es.js',
+  '/lucky/lang/pt.js',
+  '/lucky/lang/it.js',
+  '/lucky/lang/id.js',
+  '/lucky/favicon-32x32.png',
+  '/lucky/favicon-16x16.png',
+  '/lucky/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(c => c.addAll(STATIC_ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(c =>
+      // 하나가 실패해도 나머지는 캐시되도록 개별 add (addAll 은 전체 롤백)
+      Promise.allSettled(STATIC_ASSETS.map(u => c.add(u)))
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -34,14 +38,28 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  // Network-first for CDN scripts (astronomy engine)
+
+  // 외부(CDN 등): network-first
   if (url.hostname !== location.hostname) {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    return;
+  }
+
+  // HTML 문서(내비게이션): network-first — 배포 즉시 반영, 오프라인 시 캐시 폴백
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
     e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
+      fetch(e.request).then(response => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+        }
+        return response;
+      }).catch(() => caches.match(e.request).then(c => c || caches.match('/lucky/')))
     );
     return;
   }
-  // Cache-first for same-origin static assets
+
+  // 정적 자산(js/css/png — 버전 쿼리로 무효화): cache-first
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
