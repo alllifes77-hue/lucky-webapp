@@ -1155,6 +1155,38 @@ ${buildNavFooter(zLang,'lucky')}
       const TL = LANGS[tLang] || LANGS.en;
       const today = new Date().toISOString().slice(0,10);
       const tCanonical = `${SITE_URL}/${tLang}/today/`;
+
+      // 오늘의 유니버설 데이 넘버(UDN) + 날짜 기반 결정론적 행운 숫자 6개
+      // → 매일 실제로 바뀌는 고유 콘텐츠 (changefreq daily 와 일치, '오늘의 행운 번호' 검색 대응)
+      const tUdn = (() => { let s = today.replace(/-/g,'').split('').reduce((a,c)=>a+ +c,0); while (s>9 && s!==11 && s!==22) s = String(s).split('').reduce((a,c)=>a+ +c,0); return s; })();
+      const tNums = (() => {
+        let seed = 0; for (const c of today) seed = (seed*31 + c.charCodeAt(0)) >>> 0;
+        const out = [];
+        while (out.length < 6) { seed = (seed*1103515245 + 12345) >>> 0; const n = (seed % 45) + 1; if (!out.includes(n)) out.push(n); }
+        return out.sort((a,b)=>a-b);
+      })();
+      const TODAY_NUMS_LABEL = {
+        ko:`오늘의 유니버설 행운 숫자`, en:`Today's Universal Lucky Numbers`, ja:`今日のユニバーサルラッキーナンバー`,
+        de:`Heutige universelle Glückszahlen`, fr:`Numéros chanceux universels du jour`, es:`Números de la suerte universales de hoy`,
+        pt:`Números da sorte universais de hoje`, it:`Numeri fortunati universali di oggi`, id:`Angka keberuntungan universal hari ini`,
+      };
+      const TODAY_UDN_LABEL = {
+        ko:`오늘(${today})의 유니버설 데이 넘버는 <strong>${tUdn}</strong>입니다. 아래 숫자는 이 날짜의 수비학 진동에서 도출된 보편 행운 숫자이며, 생년월일을 입력하면 나만의 맞춤 번호를 받을 수 있습니다.`,
+        en:`The Universal Day Number for ${today} is <strong>${tUdn}</strong>. The numbers below are derived from today's numerological vibration — enter your birth date below for numbers personalized to you.`,
+        ja:`本日(${today})のユニバーサルデーナンバーは<strong>${tUdn}</strong>です。以下は今日の数秘術的振動から導かれた普遍的な数字で、生年月日を入力すればあなた専用の数字が得られます。`,
+        de:`Die Universelle Tageszahl für ${today} ist <strong>${tUdn}</strong>. Die folgenden Zahlen stammen aus der heutigen numerologischen Schwingung — geben Sie unten Ihr Geburtsdatum für persönliche Zahlen ein.`,
+        fr:`Le Nombre Universel du Jour pour ${today} est <strong>${tUdn}</strong>. Les numéros ci-dessous découlent de la vibration numérologique du jour — entrez votre date de naissance pour des numéros personnalisés.`,
+        es:`El Número Universal del Día para ${today} es <strong>${tUdn}</strong>. Los números siguientes derivan de la vibración numerológica de hoy — introduce tu fecha de nacimiento para números personalizados.`,
+        pt:`O Número Universal do Dia para ${today} é <strong>${tUdn}</strong>. Os números abaixo derivam da vibração numerológica de hoje — insira sua data de nascimento para números personalizados.`,
+        it:`Il Numero Universale del Giorno per ${today} è <strong>${tUdn}</strong>. I numeri qui sotto derivano dalla vibrazione numerologica di oggi — inserisci la tua data di nascita per numeri personalizzati.`,
+        id:`Angka Universal Hari untuk ${today} adalah <strong>${tUdn}</strong>. Angka di bawah berasal dari getaran numerologi hari ini — masukkan tanggal lahir Anda untuk angka pribadi.`,
+      };
+      const tNumBalls = tNums.map(n=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;font-weight:900;font-size:17px;margin:3px;">${n}</span>`).join('');
+      const tDailyHtml = `<div class="intro-card" style="text-align:center;">
+  <div style="font-size:13px;font-weight:800;color:#4c1d95;margin-bottom:10px;">🍀 ${TODAY_NUMS_LABEL[tLang]||TODAY_NUMS_LABEL.en} — ${today}</div>
+  <div style="margin-bottom:12px;">${tNumBalls}</div>
+  <p style="font-size:12.5px;color:#6b7280;line-height:1.8;text-align:left;">${TODAY_UDN_LABEL[tLang]||TODAY_UDN_LABEL.en}</p>
+</div>`;
       const tHreflang = buildHreflang(ALL_LANGS.map(l=>({lang:l,url:`${SITE_URL}/${l}/today/`})), `${SITE_URL}/en/today/`);
       const TODAY_TITLES = {
         ko:`오늘의 운세 & 행운 번호 — ${today}`,
@@ -1261,6 +1293,7 @@ ${NAV_FOOTER_CSS}
   <p>${esc(tDesc.slice(0,120))}</p>
   <a class="start-btn" href="#today-frame">${esc(TODAY_BTNS[tLang]||TODAY_BTNS.en)}</a>
 </div>
+${tDailyHtml}
 <div class="intro-card">${tIntro}</div>
 <div class="faq-wrap"><h2>FAQ</h2>${tFaqHtml}</div>
 <iframe id="today-frame" src="${esc(tIframe)}" scrolling="no" title="${esc(tTitle)}" loading="lazy"></iframe>

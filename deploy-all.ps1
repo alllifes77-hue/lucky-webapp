@@ -102,7 +102,7 @@ if (-not $SkipSync) {
   } else {
     # 서버에 올리지 않을 항목 (개발 도구 / 메타 / 워커 소스)
     $blockDirs  = @(".git",".github","node_modules",".claude")
-    $blockNames = @("worker-seo-template.js","robots-server.txt")
+    $blockNames = @("worker-seo-template.js","robots-server.txt","lucky-thumbnail-square.png","Luckynumber.jpg")
     $blockPats  = @("*.ps1","generate-*.html","wordpress-*.html","deploy.config*","*.md",".gitignore")
 
     # staging 으로 배포 대상만 모음
