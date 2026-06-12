@@ -532,7 +532,8 @@ const NAV_FOOTER_CSS = `
 .aff-body{flex:1;display:flex;flex-direction:column;gap:2px;}
 .aff-body strong{font-size:14px;font-weight:800;}
 .aff-body span{font-size:12px;color:#78716c;}
-.aff-cta{flex-shrink:0;background:#d97706;color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:50px;white-space:nowrap;}`;
+.aff-cta{flex-shrink:0;background:#d97706;color:#fff;font-size:12px;font-weight:800;padding:7px 14px;border-radius:50px;white-space:nowrap;}
+.ads-unit-wrap{max-width:780px;margin:18px auto 6px;padding:0 16px;min-height:50px;}`;
 
 const _NAV_CAT_LABELS = {
   ko:{saju:'🔮 사주',love:'💝 연애운',money:'💰 금전운',career:'💼 직업운',achievement:'🏆 성취운',gunghap:'💑 궁합'},
@@ -555,7 +556,7 @@ function buildNavFooter(lang, activePage) {
     const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
     return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
   }).join('');
-  return `${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
+  return `${ADS_UNIT}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
 }
 
 
@@ -587,8 +588,10 @@ function buildFortuneSystemPrompt(lang, d) {
   return (CONTEXTS[lang] || CONTEXTS.en) + dataStr;
 }
 
-// ── AdSense 태그 (모든 SEO 페이지 공통 — Auto Ads) ─────────
+// ── AdSense (모든 SEO 페이지 공통) ──────────────────────────
+// ADS_TAG: head 로더 스크립트 / ADS_UNIT: 수동 디스플레이 광고 단위 (all-life-webapp, slot 8233374508)
 const ADS_TAG = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378943893051810" crossorigin="anonymous"></script>`;
+const ADS_UNIT = `<div class="ads-unit-wrap"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
 
 // ── 어필리에이트 슬롯 (링크 확보 시 AFF_OFFERS 만 채우면 전 페이지에 표시) ──
 // 형식: lang: [{ icon, title, desc, cta, url }] — url 은 어필리에이트 트래킹 링크.
