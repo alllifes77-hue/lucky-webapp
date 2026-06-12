@@ -559,7 +559,7 @@ function buildNavFooter(lang, activePage) {
     const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
     return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
   }).join('');
-  return `${ADS_UNIT}${lang==='ko'?COUPANG_WIDGET:''}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">Sitemap</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
+  return `${ADS_UNIT}${lang==='ko'?COUPANG_WIDGET:''}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/lucky-sitemap.xml">${({ko:'사이트맵',ja:'サイトマップ',en:'Sitemap',de:'Seitenübersicht',fr:'Plan du site',es:'Mapa del sitio',pt:'Mapa do site',it:'Mappa del sito',id:'Peta situs'})[lang]||'Sitemap'}</a> · <a href="${mainHref}">${mainHref}</a></footer>`;
 }
 
 
@@ -735,9 +735,14 @@ ${urlsXml}
       if (request.method !== 'POST')    return new Response('Method Not Allowed', { status: 405, headers: cors });
 
       const sseHeaders = { ...cors, 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache', 'X-Accel-Buffering':'no' };
+      // 오류 메시지는 요청 언어로 (body 파싱 실패 시 en 폴백) — 이전엔 전 언어에 한국어 고정이었음
+      let chatLang = 'en';
+      const CHAT_ERR = { ko:'⚠️ 일시적 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', en:'⚠️ A temporary error occurred. Please try again shortly.', ja:'⚠️ 一時的なエラーが発生しました。しばらくしてからお試しください。', de:'⚠️ Ein vorübergehender Fehler ist aufgetreten. Bitte versuchen Sie es gleich erneut.', fr:'⚠️ Une erreur temporaire est survenue. Veuillez réessayer dans un instant.', es:'⚠️ Ocurrió un error temporal. Inténtalo de nuevo en un momento.', pt:'⚠️ Ocorreu um erro temporário. Tente novamente em instantes.', it:'⚠️ Si è verificato un errore temporaneo. Riprova tra poco.', id:'⚠️ Terjadi kesalahan sementara. Silakan coba lagi sebentar lagi.' };
+      const sseMsg = (txt) => `data: ${JSON.stringify({ response: txt })}\n\ndata: [DONE]\n\n`;
       try {
         const body = await request.json();
         const { lang = 'en', fortuneData = null, messages = [] } = body;
+        if (ALL_LANGS.includes(lang)) chatLang = lang;
         const systemPrompt = buildFortuneSystemPrompt(lang, fortuneData);
         const userMessages = (messages && messages.length)
           ? messages
@@ -770,11 +775,9 @@ ${urlsXml}
           return new Response(stream, { headers: sseHeaders });
         }
 
-        const m = 'data: {"response":"⚠️ AI 서비스가 설정되지 않았습니다."}\n\ndata: [DONE]\n\n';
-        return new Response(m, { status: 200, headers: sseHeaders });
+        return new Response(sseMsg(CHAT_ERR[chatLang] || CHAT_ERR.en), { status: 200, headers: sseHeaders });
       } catch (e) {
-        const m = 'data: {"response":"⚠️ 일시적 오류가 발생했습니다. 잠시 후 다시 시도해주세요."}\n\ndata: [DONE]\n\n';
-        return new Response(m, { status: 200, headers: sseHeaders });
+        return new Response(sseMsg(CHAT_ERR[chatLang] || CHAT_ERR.en), { status: 200, headers: sseHeaders });
       }
     }
 
@@ -1024,7 +1027,7 @@ ${buildNavFooter(aLang,'lucky')}
     const ZODIAC_DATES = {
       en:['Mar 21–Apr 19','Apr 20–May 20','May 21–Jun 20','Jun 21–Jul 22','Jul 23–Aug 22','Aug 23–Sep 22','Sep 23–Oct 22','Oct 23–Nov 21','Nov 22–Dec 21','Dec 22–Jan 19','Jan 20–Feb 18','Feb 19–Mar 20'],
       de:['21. Mär–19. Apr','20. Apr–20. Mai','21. Mai–20. Jun','21. Jun–22. Jul','23. Jul–22. Aug','23. Aug–22. Sep','23. Sep–22. Okt','23. Okt–21. Nov','22. Nov–21. Dez','22. Dez–19. Jan','20. Jan–18. Feb','19. Feb–20. Mär'],
-      fr:['21 Mar–19 Avr','20 Avr–20 Mai','21 Mai–20 Jun','21 Jun–22 Jul','23 Jul–22 Aoû','23 Aoû–22 Sep','23 Sep–22 Oct','23 Oct–21 Nov','22 Nov–21 Déc','22 Déc–19 Jan','20 Jan–18 Fév','19 Fév–20 Mar'],
+      fr:['21 Mar–19 Avr','20 Avr–20 Mai','21 Mai–20 Juin','21 Juin–22 Juil','23 Juil–22 Aoû','23 Aoû–22 Sep','23 Sep–22 Oct','23 Oct–21 Nov','22 Nov–21 Déc','22 Déc–19 Jan','20 Jan–18 Fév','19 Fév–20 Mar'],
       es:['21 Mar–19 Abr','20 Abr–20 May','21 May–20 Jun','21 Jun–22 Jul','23 Jul–22 Ago','23 Ago–22 Sep','23 Sep–22 Oct','23 Oct–21 Nov','22 Nov–21 Dic','22 Dic–19 Ene','20 Ene–18 Feb','19 Feb–20 Mar'],
       pt:['21 Mar–19 Abr','20 Abr–20 Mai','21 Mai–20 Jun','21 Jun–22 Jul','23 Jul–22 Ago','23 Ago–22 Set','23 Set–22 Out','23 Out–21 Nov','22 Nov–21 Dez','22 Dez–19 Jan','20 Jan–18 Fev','19 Fev–20 Mar'],
       it:['21 Mar–19 Apr','20 Apr–20 Mag','21 Mag–20 Giu','21 Giu–22 Lug','23 Lug–22 Ago','23 Ago–22 Set','23 Set–22 Ott','23 Ott–21 Nov','22 Nov–21 Dic','22 Dic–19 Gen','20 Gen–18 Feb','19 Feb–20 Mar'],
@@ -1139,7 +1142,7 @@ ${NAV_FOOTER_CSS}
 <div class="lucky-badges">${zLuckyBadges}</div>
 <div class="trait-card">${esc(signTrait)}</div>
 <div class="faq-wrap"><h2>FAQ</h2>${zFaqHtml}</div>
-<iframe id="zodiac-frame" src="${esc(zIframe)}" scrolling="no" title="${esc(signName)} lucky numbers" loading="lazy"></iframe>
+<iframe id="zodiac-frame" src="${esc(zIframe)}" scrolling="no" title="${esc(zTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('zodiac-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
 ${buildNavFooter(zLang,'lucky')}
 </body></html>`;
@@ -1217,7 +1220,7 @@ ${buildNavFooter(zLang,'lucky')}
         ja:[{q:'今日のラッキーナンバーはどう計算しますか？',a:'今日の日付のユニバーサルデーナンバーと生年月日から導く本命星を組み合わせて計算します。'},{q:'毎日変わりますか？',a:'はい — 日付が変わるとユニバーサルデーナンバーが変わるため、ラッキーナンバーも更新されます。'},{q:'対応している宝くじは？',a:'ロト6・ロト7・ミニロト・ナンバーズ4に対応しています。'}],
         de:[{q:'Wie werden heutige Glückszahlen berechnet?',a:'Die Universelle Tageszahl von heute wird mit Ihrer Lebenspfadzahl kombiniert.'},{q:'Ändern sich die Zahlen täglich?',a:'Ja — die Universelle Tageszahl ändert sich täglich, was neue Empfehlungen generiert.'},{q:'Welche Lotterien werden unterstützt?',a:'EuroMillions, EuroJackpot und Lotto 6aus49.'}],
         fr:[{q:'Comment les numéros d\'aujourd\'hui sont-ils calculés?',a:'Le Nombre Universel du Jour est combiné avec votre Nombre de Chemin de Vie.'},{q:'Les numéros changent-ils chaque jour?',a:'Oui — le Nombre Universel du Jour évolue quotidiennement.'},{q:'Quelles loteries sont prises en charge?',a:'EuroMillions, EuroJackpot et toutes les loteries nationales.'}],
-        es:[{q:'¿Cómo se calculan los números de hoy?',a:'El Número Universal del Día se combina con tu Número de Camino de Vida.'},{q:'¿Los números cambian cada día?',a:'Sí — el Número Universal del Día cambia diariamente.'},{q:'¿Qué loterías están disponibles?',a:'EuroMillones, EuroJackpot y loterias nacionales.'}],
+        es:[{q:'¿Cómo se calculan los números de hoy?',a:'El Número Universal del Día se combina con tu Número de Camino de Vida.'},{q:'¿Los números cambian cada día?',a:'Sí — el Número Universal del Día cambia diariamente.'},{q:'¿Qué loterías están disponibles?',a:'EuroMillones, EuroJackpot y loterías nacionales.'}],
         pt:[{q:'Como os números de hoje são calculados?',a:'O Número Universal do Dia é combinado com o seu Número de Caminho de Vida.'},{q:'Os números mudam todos os dias?',a:'Sim — o Número Universal do Dia muda diariamente.'},{q:'Quais loterias são suportadas?',a:'Mega Sena e outras loterias nacionais.'}],
         it:[{q:'Come vengono calcolati i numeri di oggi?',a:'Il Numero Universale del Giorno viene combinato con il tuo Numero di Percorso di Vita.'},{q:'I numeri cambiano ogni giorno?',a:'Sì — il Numero Universale del Giorno cambia quotidianamente.'},{q:'Quali lotterie sono supportate?',a:'SuperEnalotto e altre lotterie nazionali.'}],
         id:[{q:'Bagaimana angka keberuntungan hari ini dihitung?',a:'Angka Universal Hari digabungkan dengan Nomor Jalur Hidup Anda.'},{q:'Apakah angka berubah setiap hari?',a:'Ya — Angka Universal Hari berubah setiap hari.'},{q:'Lotere apa yang didukung?',a:'Togel dan lotere nasional Indonesia.'}],
@@ -1290,12 +1293,12 @@ ${NAV_FOOTER_CSS}
 <div class="hero">
   <div class="today-date">${esc(today)}</div>
   <h1>${esc(tTitle)}</h1>
-  <p>${esc(tDesc.slice(0,120))}</p>
+  <p>${esc(tDesc.length>120 ? tDesc.slice(0,120).replace(/s+S*$/,'')+'…' : tDesc)}</p>
   <a class="start-btn" href="#today-frame">${esc(TODAY_BTNS[tLang]||TODAY_BTNS.en)}</a>
 </div>
 ${tDailyHtml}
 <div class="intro-card">${tIntro}</div>
-<div class="faq-wrap"><h2>FAQ</h2>${tFaqHtml}</div>
+<div class="faq-wrap"><h2>${esc(TL.faqH2||'FAQ')}</h2>${tFaqHtml}</div>
 <iframe id="today-frame" src="${esc(tIframe)}" scrolling="no" title="${esc(tTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('today-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
 ${buildNavFooter(tLang,'lucky')}
@@ -1385,7 +1388,7 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
           const kDesc   = `${kName}の特徴と運勢。五行：${kElem}、吉方位：${kDir}、吉色：${kColor}。${kTrait}`;
           const kNavLinks = KSK_SLUGS.map((s,i)=>`<a href="${SITE_URL}/ja/${s}/"${i===kIdx?' style="background:#065f46;color:#fff;"':''}>${KSK_NAMES[i]}</a>`).join('');
           const kFaq = [
-            {q:`${kName}の生まれ年はいつ？`,a:`九星気学では生まれ年から本命星を割り出します。${kName}の方は、九星の計算式（(11-生まれ年)%9）で${kIdx}になる年が対象です。`},
+            {q:`${kName}の生まれ年はいつ？`,a:`九星気学では生まれ年から本命星を割り出します。生まれ年の数字を1桁になるまで足し、11からその数を引きます（9を超えたら9を引く）。${kName}の方は、この計算で${kIdx+1}になる年が対象です。`},
             {q:`${kName}の性格は？`,a:kTrait},
             {q:`${kName}のラッキーナンバーは？`,a:`${kName}の吉数は ${kLucky.join('・')} です。これらの数字は五行属性「${kElem}」に基づく振動数と調和しています。`},
             {q:'九星気学とは何ですか？',a:'九星気学は中国の九宮術を基盤とした日本の占術です。生まれ年から9つの星（一白〜九紫）のいずれかに分類され、五行（木・火・土・金・水）と方位の吉凶を判断します。'},
@@ -1529,8 +1532,8 @@ ${buildNavFooter('ja','lucky')}
         const czTitleMap = {ko:`${czName} 행운의 번호 — 띠별 운세와 사주`,ja:`${czName}の運勢・幸運の数字`,en:`${czName} Lucky Numbers & Fortune`,id:`${czName} — Angka Keberuntungan & Ramalan`};
         const czDescMap  = {ko:`${czName}(${czBirths}년생)의 행운 번호와 운세. ${czTrait}. 오늘의 행운 번호를 무료로 확인하세요.`,ja:`${czName}(${czBirths})の幸運の数字と運勢。${czTrait}。今すぐ無料で確認。`,en:`${czName} (born ${czBirths}) lucky numbers & fortune. ${czTrait}. Free generator — no signup.`,id:`${czName} (lahir ${czBirths}) — angka keberuntungan & ramalan. ${czTrait}. Gratis, tanpa daftar.`};
 
-        const compatLabel = czLang==='ko'?'삼합(相性 좋음)':czLang==='ja'?'相性が良い':czLang==='id'?'Cocok':'Compatible';
-        const clashLabel  = czLang==='ko'?'충(相冲 주의)':czLang==='ja'?'相冲(注意)':czLang==='id'?'Bentrok':'Clash';
+        const compatLabel = czLang==='ko'?'삼합(三合) — 잘 맞는 띠':czLang==='ja'?'相性が良い':czLang==='id'?'Cocok':'Compatible';
+        const clashLabel  = czLang==='ko'?'충(沖) — 주의할 띠':czLang==='ja'?'相冲(注意)':czLang==='id'?'Bentrok':'Clash';
         const hreflangLinks = czLangs.filter(l=>CZ_SLUGS[l]).map(l=>{
           const s = (CZ_SLUGS[l]||[])[czIdx];
           if (!s) return '';
@@ -1601,7 +1604,7 @@ ${NAV_FOOTER_CSS}
   <div class="cz-grid">
     <div class="cz-card"><strong>${czLang==='ko'?'출생연도':czLang==='ja'?'生まれ年':czLang==='id'?'Tahun Lahir':'Birth Years'}</strong><span>${czBirths.split(',').map(y=>`<a href="${czLang==='ko'?`${SITE_URL}/${y.trim()}/`:`${SITE_URL}/${czLang}/${czSlug}/`}">${y.trim()}</a>`).join(' · ')}</span></div>
     <div class="cz-card"><strong>${czLang==='ko'?'상생 띠':czLang==='ja'?'相性良':czLang==='id'?'Cocok':'Compatible'}</strong><span>${esc(compatNames)}</span></div>
-    ${clashName?`<div class="cz-card"><strong>${czLang==='ko'?'충(注意)':czLang==='ja'?'相冲(注意)':czLang==='id'?'Hindari':'Clash'}</strong><span>${esc(clashName)}</span></div>`:''}
+    ${clashName?`<div class="cz-card"><strong>${czLang==='ko'?'충(沖) 주의':czLang==='ja'?'相冲(注意)':czLang==='id'?'Hindari':'Clash'}</strong><span>${esc(clashName)}</span></div>`:''}
   </div>
   <section class="cz-faq">
     <h2>${czLang==='ko'?'자주 묻는 질문':czLang==='ja'?'よくある質問':czLang==='id'?'Pertanyaan Umum':'Frequently Asked Questions'}</h2>
@@ -1794,12 +1797,17 @@ ${buildNavFooter('en','lucky')}
           const BRANCHES_JA = ['申(さる)','酉(とり)','戌(いぬ)','亥(いのしし)','子(ね)','丑(うし)','寅(とら)','卯(うさぎ)','辰(たつ)','巳(み)','午(うま)','未(ひつじ)'];
           const ELEMENTS_JA = ['金','金','水','水','木','木','火','火','土','土'];
           const KSK_NAMES_SHORT = ['一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星','九紫火星'];
-          const stemIdx    = ((by - 4) % 10 + 10) % 10;
-          const branchIdx  = ((by - 4) % 12 + 12) % 12;
+          // 배열이 庚/申 시작이므로: 庚=서기 연도 끝자리 0, 申=year%12==0 (예: 1980=庚申)
+          const stemIdx    = ((by % 10) + 10) % 10;
+          const branchIdx  = ((by % 12) + 12) % 12;
           const stemStr    = STEMS_JA[stemIdx];
           const branchStr  = BRANCHES_JA[branchIdx];
           const element    = ELEMENTS_JA[stemIdx];
-          const kskIdx     = ((11 - by) % 9 + 9) % 9;
+          // 본명성: 연도 숫자합을 1자리로 환원(s) → 11-s, 9 초과 시 9 감산 → 배열은 0-based라 -1
+          let _kskRoot = String(by).split('').reduce((a,c)=>a+ +c,0);
+          while (_kskRoot > 9) _kskRoot = String(_kskRoot).split('').reduce((a,c)=>a+ +c,0);
+          let _kskStar = 11 - _kskRoot; if (_kskStar > 9) _kskStar -= 9;
+          const kskIdx     = _kskStar - 1;
           const kskName    = KSK_NAMES_SHORT[kskIdx];
           const jaCanon    = `${SITE_URL}/ja/${by}nen/`;
           const jaTitle    = `${by}年生まれ幸運の数字 — ${stemStr}${branchStr}年${element}行・九星気学ラッキーナンバー`;

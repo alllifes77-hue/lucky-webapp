@@ -30,13 +30,13 @@ window.LUCKY_LANG = {
   setsLabel: 'Anzahl der Tipps',
   lotterySelectLabel: 'Lotterie wählen',
   drawDateLabel: 'Ziehungsdatum (optional) — für präzisere Analyse',
-  drawDateNote: 'Die Energie des Ziehungsdatums (Tagsstamm · UDN · Tagsstern) wird mit Ihrer Geburtsenergie kombiniert, um präzisere Zahlen zu erzeugen.',
+  drawDateNote: 'Die Energie des Ziehungsdatums (Tagesstamm · UDN · Tagesstern) wird mit Ihrer Geburtsenergie kombiniert, um präzisere Zahlen zu erzeugen.',
   whyTitle: 'Warum diese Zahlen?',
   birthEnergyLabel: 'Geburtsenergie',
   drawEnergyLabel: 'Ziehungsenergie',
 
   methodTitle: '🔢 Numerologie — Lebenspfadzahl',
-  methodDesc: 'Ihre Lebenspfadzahl wird berechnet, indem alle Ziffern Ihres Geburtsdatums summiert werden. Jede Zahl (1–9, Meisterzahlen 11, 22, 33) trägt einzigartige Eigenschaften und zugehörige Glückszahlen aus der Kabalah-Numerologie.',
+  methodDesc: 'Ihre Lebenspfadzahl wird berechnet, indem alle Ziffern Ihres Geburtsdatums summiert werden. Jede Zahl (1–9, Meisterzahlen 11, 22, 33) trägt einzigartige Eigenschaften und zugehörige Glückszahlen aus der Kabbala-Numerologie.',
   methodBadges: ['🌟 Lebenspfadzahl','🎯 EuroMillions 5+2','✨ Personalisiert'],
 
   colorNames: {
@@ -150,7 +150,7 @@ window.LUCKY_LANG = {
     mid:['Fortschritt sammelt sich stetig an. Vertrauen Sie dem Prozess und bleiben Sie konsequent.',
          'Tiefe statt Breite bringt dauerhaftere Erfüllung.',
          'Zusammenarbeit kann Ihre Leistungen in dieser Phase vervielfachen.',
-         'Bestehende Projekte abschließen schlägt neue Anfänge jetzt.'],
+         'Bestehende Projekte abzuschließen ist jetzt wichtiger, als Neues zu beginnen.'],
     low:['Entfernen Sie Hindernisse, bevor Sie neue Ziele verfolgen.',
          'Überprüfen und lernen Sie aus vergangenen Bemühungen statt vorwärtszudrängen.',
          'Bitten Sie um Hilfe statt allein zu kämpfen — Weisheit erkennt Grenzen.',
@@ -173,9 +173,9 @@ window.LUCKY_LANG = {
     ['Suchen Sie Balance und Schönheit — Ästhetik steigert Ihr Wohlbefinden.','Pastellblau und Rosa verstärken die Waage-Harmonie.','Soziale Diplomatie öffnet Türen, die roher Ehrgeiz nicht kann.'],
     ['Tauchen Sie tief in das ein, was wirklich wichtig ist. Ihre Intensität ist ein Geschenk.','Tiefes Rot und Schwarz kanalisieren Skorpions transformative Kraft.','Nächtliche Forschung und Strategie-Sessions passen zu Ihrer Energie.'],
     ['Erweitern Sie Ihren Horizont — reisen, studieren, neue Philosophien erkunden.','Lila und Türkis erheben Schütze-Visionen.','Donnerstag ist Ihr glücklichster Tag für große Entscheidungen.'],
-    ['Bauen Sie strategisch und geduldig — Steinbock-Ausdauer gewinnt lange Spiele.','Dunkelgrün und Anthrazit verstärken Steinbock-Ambitionen.','Samstag ist ideal für Planung und strukturiertes Zielsetzung.'],
+    ['Bauen Sie strategisch und geduldig — Steinbock-Ausdauer gewinnt lange Spiele.','Dunkelgrün und Anthrazit verstärken Steinbock-Ambitionen.','Samstag ist ideal für Planung und strukturierte Zielsetzung.'],
     ['Innovieren Sie und vernetzen Sie sich mit gleichgesinnten Visionären.','Elektrisches Blau und Silber entfachen Wassermann-Originalität.','Gemeinschaftsprojekte profitieren enorm von Ihrer einzigartigen Perspektive.'],
-    ['Vertrauen Sie Ihrer Vorstellungskraft und spirituellen Intuition.','Meeresgrün und Lavendel vertiefen Fisches kreative Gaben.','Kreative Tätigkeiten donnerstags bringen außergewöhnlichen Fluss.'],
+    ['Vertrauen Sie Ihrer Vorstellungskraft und spirituellen Intuition.','Meeresgrün und Lavendel vertiefen die kreativen Gaben der Fische.','Kreative Tätigkeiten donnerstags bringen außergewöhnlichen Fluss.'],
   ],
 
   faqItems: [

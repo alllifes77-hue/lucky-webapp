@@ -113,6 +113,19 @@ const LIFE_PATH_DAYS = {
   1:'Sunday',2:'Monday',3:'Wednesday',4:'Saturday',5:'Friday',
   6:'Friday',7:'Monday',8:'Saturday',9:'Tuesday',11:'Monday',22:'Saturday',33:'Wednesday',
 };
+// LPN→요일 인덱스(0=일) — 전 언어가 같은 요일을 보도록 (이전엔 en만 계산되고 나머지는 일요일 고정 버그)
+const LIFE_PATH_DAY_IDX = {1:0,2:1,3:3,4:6,5:5,6:5,7:1,8:6,9:2,11:1,22:6,33:3};
+const DAY_NAMES_FULL = {
+  ko:['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],
+  en:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  ja:['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],
+  de:['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],
+  fr:['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+  es:['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+  pt:['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'],
+  it:['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],
+  id:['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],
+};
 const LIFE_PATH_LUCKY_BASE = {
   1:[1,10,19,28,37,46,55,64],2:[2,11,20,29,38,47,56,65],
   3:[3,12,21,30,39,48,57,66],4:[4,13,22,31,40,49,58,67],
@@ -742,8 +755,12 @@ function calcWoluunData(d) {
 
 // ── 궁합(相性) — Two-person Compatibility ────────────────────
 function calcGunghapData(dA, dB) {
-  if (!dA || !dB || dA.systemKey !== 'saju' || dB.systemKey !== 'saju') return null;
-  const el1 = dA.cultural.element, el2 = dB.cultural.element;
+  if (!dA || !dB) return null;
+  // 비ko 시스템(kyusei/numerology/jawanese)에서도 연주(年柱)를 생년에서 직접 계산해 궁합 산출
+  // (이전엔 saju 외 systemKey면 null 반환 → 8개 언어에서 궁합 결과가 아예 안 나오던 버그)
+  const _yStem = (d) => (d.cultural && d.cultural.stemIdx != null) ? d.cultural.stemIdx : (((d.year - 4) % 10) + 10) % 10;
+  const _yEl   = (d) => (d.cultural && d.cultural.element) ? d.cultural.element : ELEMENTS[_yStem(d)];
+  const el1 = _yEl(dA), el2 = _yEl(dB);
   const yearElScore = calcOhaengCompat(el1, el2);
   const db1 = dA.fullSaju ? dA.fullSaju.dayBranch : calcDayBranch(dA.year, dA.month, dA.day);
   const db2 = dB.fullSaju ? dB.fullSaju.dayBranch : calcDayBranch(dB.year, dB.month, dB.day);
@@ -760,8 +777,8 @@ function calcGunghapData(dA, dB) {
   else if (SANHE3.some(g=>g.includes(db1)&&g.includes(db2))) { dayBiScore=82; dayBiType='三合'; }
   const stemHap = STEM_HAP5.find(p=>(p[0]===ds1&&p[1]===ds2)||(p[1]===ds1&&p[0]===ds2));
   const stemHapScore = stemHap ? 85 : 60;
-  const sipsinAtoB = calcSipsinType(ds1, dB.cultural.stemIdx);
-  const sipsinBtoA = calcSipsinType(ds2, dA.cultural.stemIdx);
+  const sipsinAtoB = calcSipsinType(ds1, _yStem(dB));
+  const sipsinBtoA = calcSipsinType(ds2, _yStem(dA));
   const overall = Math.round(yearElScore*0.25 + dayElScore*0.30 + dayBiScore*0.30 + stemHapScore*0.15);
   const compat = overall>=80?'great':overall>=65?'good':overall>=45?'fair':'challenging';
   return { el1, el2, de1, de2, yearElScore, dayElScore, db1, db2, ds1, ds2, dayBiScore, dayBiType, stemHap, stemHapScore, sipsinAtoB, sipsinBtoA, overall, compat };
@@ -792,8 +809,14 @@ const _CZ_KO={monkey:'원숭이띠',rooster:'닭띠',dog:'개띠',pig:'돼지띠
 const _CZ_JA={monkey:'申年生',rooster:'酉年生',dog:'戌年生',pig:'亥年生',rat:'子年生',ox:'丑年生',tiger:'寅年生',rabbit:'卯年生',dragon:'辰年生',snake:'巳年生',horse:'午年生',goat:'未年生'};
 const _CZ_EN={monkey:'Monkey',rooster:'Rooster',dog:'Dog',pig:'Pig',rat:'Rat',ox:'Ox',tiger:'Tiger',rabbit:'Rabbit',dragon:'Dragon',snake:'Snake',horse:'Horse',goat:'Goat'};
 const _CZ_ID={monkey:'Monyet',rooster:'Ayam',dog:'Anjing',pig:'Babi',rat:'Tikus',ox:'Kerbau',tiger:'Macan',rabbit:'Kelinci',dragon:'Naga',snake:'Ular',horse:'Kuda',goat:'Kambing'};
+const _CZ_DE={monkey:'Affe',rooster:'Hahn',dog:'Hund',pig:'Schwein',rat:'Ratte',ox:'Büffel',tiger:'Tiger',rabbit:'Hase',dragon:'Drache',snake:'Schlange',horse:'Pferd',goat:'Ziege'};
+const _CZ_FR={monkey:'Singe',rooster:'Coq',dog:'Chien',pig:'Cochon',rat:'Rat',ox:'Buffle',tiger:'Tigre',rabbit:'Lapin',dragon:'Dragon',snake:'Serpent',horse:'Cheval',goat:'Chèvre'};
+const _CZ_ES={monkey:'Mono',rooster:'Gallo',dog:'Perro',pig:'Cerdo',rat:'Rata',ox:'Búfalo',tiger:'Tigre',rabbit:'Conejo',dragon:'Dragón',snake:'Serpiente',horse:'Caballo',goat:'Cabra'};
+const _CZ_PT={monkey:'Macaco',rooster:'Galo',dog:'Cão',pig:'Porco',rat:'Rato',ox:'Búfalo',tiger:'Tigre',rabbit:'Coelho',dragon:'Dragão',snake:'Serpente',horse:'Cavalo',goat:'Cabra'};
+const _CZ_IT={monkey:'Scimmia',rooster:'Gallo',dog:'Cane',pig:'Maiale',rat:'Topo',ox:'Bufalo',tiger:'Tigre',rabbit:'Coniglio',dragon:'Drago',snake:'Serpente',horse:'Cavallo',goat:'Capra'};
+const _CZ_NAME_MAPS={ko:_CZ_KO,ja:_CZ_JA,id:_CZ_ID,de:_CZ_DE,fr:_CZ_FR,es:_CZ_ES,pt:_CZ_PT,it:_CZ_IT,en:_CZ_EN};
 function _getCZKey(y){return _CZ_KEYS[((y%12)+12)%12];}
-function _getCZName(y,lang){const k=_getCZKey(y);return lang==='ko'?_CZ_KO[k]:lang==='ja'?_CZ_JA[k]:lang==='id'?_CZ_ID[k]:_CZ_EN[k];}
+function _getCZName(y,lang){const k=_getCZKey(y);return (_CZ_NAME_MAPS[lang]||_CZ_EN)[k];}
 function _getCZBirthYears(y){const ys=[];let s=y;while(s>1951)s-=12;while(s<1951)s+=12;while(s<=2020){ys.push(s);s+=12;}return ys;}
 function _getMoonPhase(){
   const t=new Date();const jd=gregJD(t.getFullYear(),t.getMonth()+1,t.getDate());
@@ -1437,7 +1460,8 @@ function generateLucky(year, month, day, lang, lotteryId, drawDateStr, setIdx, b
     const s = calcNumerology(year, month, day);
     cultural = s; seed = s.seed; systemKey = 'numerology';
     colorData = LIFE_PATH_COLORS[s.lpn] || LIFE_PATH_COLORS[1];
-    dayData   = { ko:'일요일', en: LIFE_PATH_DAYS[s.lpn]||'Sunday', ja:'日曜日', de:'Sonntag', fr:'Dimanche', es:'Domingo', pt:'Domingo', it:'Domenica', id:'Minggu' };
+    const _lpDayIdx = LIFE_PATH_DAY_IDX[s.lpn] ?? 0;
+    dayData = Object.fromEntries(Object.keys(DAY_NAMES_FULL).map(l => [l, DAY_NAMES_FULL[l][_lpDayIdx]]));
     if (dy) {
       const udn = calcUDN(dy, dm, dd);
       drawEnergy = { type:'numerology', lpn:s.lpn, udn };
@@ -1598,7 +1622,8 @@ function renderResults(data) {
   } else if (data.systemKey === 'jawanese') {
     culturalHtml = `<span class="cultural-pill">Weton: ${PASARAN[data.cultural.pasaranIdx]}</span>`;
   } else {
-    culturalHtml = `<span class="cultural-pill">Life Path: ${data.cultural.lpn}</span>`;
+    const LP_LBL = { en:'Life Path', de:'Lebenspfad', fr:'Chemin de Vie', es:'Camino de Vida', pt:'Caminho de Vida', it:'Percorso di Vita', ko:'라이프 패스', ja:'ライフパス', id:'Jalur Hidup' };
+    culturalHtml = `<span class="cultural-pill">${LP_LBL[lang]||LP_LBL.en}: ${data.cultural.lpn}</span>`;
   }
   document.getElementById('cultural-info').innerHTML = culturalHtml;
 
@@ -1890,7 +1915,7 @@ function renderDrawEnergyPanel(data) {
     const baseExplain = {
       saju:      { ko:'연주(年柱) 천간에서 오행을 산출해 전통 행운 숫자에 4배 가중치를 적용했습니다. 추첨일을 입력하면 일진(日辰) 에너지까지 결합해 더 정밀한 번호가 생성됩니다.', en:'Birth year element analyzed via Four Pillars. Add draw date for enhanced precision.', ja:'生年の天干から五行を算出し、伝統的な吉数に4倍の重みを適用しました。' },
       kyusei:    { ko:'본명성(本命星)으로 오행을 산출하고 행운 숫자에 가중치를 부여했습니다. 추첨일을 입력하면 일성(日星)과의 상호작용이 반영됩니다.', en:'Nine Star Ki birth star analyzed. Add draw date to incorporate day star interaction.', ja:'本命星の五行から吉数を算出しました。日付を追加すると日星との相互作用が反映されます。' },
-      numerology:{ ko:'생년월일 합산으로 생명 경로 수(Life Path Number)를 산출하고 공명 숫자에 가중치를 적용했습니다. 추첨일을 입력하면 그 날의 에너지(UDN)가 결합됩니다.', en:'Life Path Number calculated from birthday. Add draw date to combine Universal Day Number.', ja:'誕生日からライフパスナンバーを算出しました。日付を追加すると宇宙の日数が加わります。' },
+      numerology:{ ko:'생년월일 합산으로 생명 경로 수(Life Path Number)를 산출하고 공명 숫자에 가중치를 적용했습니다. 추첨일을 입력하면 그 날의 에너지(UDN)가 결합됩니다.', en:'Life Path Number calculated from birthday. Add draw date to combine Universal Day Number.', ja:'誕生日からライフパスナンバーを算出しました。日付を追加すると宇宙の日数が加わります。', de:'Die Lebenspfadzahl wurde aus Ihrem Geburtsdatum berechnet. Fügen Sie ein Ziehungsdatum hinzu, um die Universelle Tageszahl einzubeziehen.', fr:'Le Nombre du Chemin de Vie a été calculé à partir de votre date de naissance. Ajoutez une date de tirage pour combiner le Nombre Universel du Jour.', es:'El Número del Camino de Vida se calculó a partir de tu fecha de nacimiento. Añade una fecha de sorteo para combinar el Número Universal del Día.', pt:'O Número do Caminho de Vida foi calculado a partir da sua data de nascimento. Adicione uma data de sorteio para combinar o Número Universal do Dia.', it:'Il Numero del Percorso di Vita è stato calcolato dalla tua data di nascita. Aggiungi una data di estrazione per combinare il Numero Universale del Giorno.' },
       jawanese:  { ko:'생년월일의 파사란(Pasaran)을 산출하고 전통 행운 숫자에 가중치를 적용했습니다. 추첨일을 입력하면 당일 파사란이 결합됩니다.', en:'Birth date Pasaran (Weton) calculated. Add draw date to combine draw day Pasaran.', id:'Pasaran hari lahir dihitung. Tambahkan tanggal undian untuk kombinasi Pasaran hari undian.' },
     };
     const txt = baseExplain[data.systemKey]?.[lang] || baseExplain[data.systemKey]?.en || '';
@@ -2840,7 +2865,7 @@ function buildNumerologyDetailHTML(data, lang, L) {
   const moonLbl = L.moonSignLabel || 'Moon Sign';
 
   let html = `<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
-    <div style="font-size:11px;font-weight:700;color:#c4b5fd;margin-bottom:6px;letter-spacing:.5px;">Life Path ${lpn}</div>
+    <div style="font-size:11px;font-weight:700;color:#c4b5fd;margin-bottom:6px;letter-spacing:.5px;">${({en:'Life Path',de:'Lebenspfad',fr:'Chemin de Vie',es:'Camino de Vida',pt:'Caminho de Vida',it:'Percorso di Vita'})[lang]||'Life Path'} ${lpn}</div>
     <div style="font-size:13px;color:#e0e7ff;line-height:1.65;">${trait}</div>
   </div>`;
 
@@ -3885,11 +3910,9 @@ function renderAuspiciousCalendarPanel(data) {
   const days = data.auspiciousDates;
   if (!days || !days.length) return;
   const lang = data.lang, isKo = lang==='ko', isJa = lang==='ja', isId = lang==='id';
-  const title = isKo?'이달의 좋은 날':isJa?'今月の吉日':isId?'Hari Baik Bulan Ini':'Auspicious Days';
-  const DOW_KO = ['일','월','화','수','목','금','토'];
-  const DOW_JA = ['日','月','火','水','木','金','土'];
-  const DOW_EN = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-  const dowLabels = isKo?DOW_KO:isJa?DOW_JA:DOW_EN;
+  const AUSP_TITLE = { ko:'이달의 좋은 날', ja:'今月の吉日', en:'Auspicious Days', de:'Glückstage des Monats', fr:'Jours fastes du mois', es:'Días propicios del mes', pt:'Dias auspiciosos do mês', it:'Giorni propizi del mese', id:'Hari Baik Bulan Ini' };
+  const title = AUSP_TITLE[lang] || AUSP_TITLE.en;
+  const dowLabels = DAY_NAMES_SHORT[lang] || DAY_NAMES_SHORT.en;
 
   const cells = days.slice(0,28).map(day => {
     const clr = day.lv==='great'?'#166534':day.lv==='good'?'#92400e':day.lv==='bad'?'#991b1b':'#6b7280';
@@ -3903,9 +3926,12 @@ function renderAuspiciousCalendarPanel(data) {
   }).join('');
 
   // legend
-  const greatLbl = isKo?'대길':isJa?'大吉':isId?'Sangat Baik':'Great';
-  const goodLbl  = isKo?'길':isJa?'吉':isId?'Baik':'Good';
-  const badLbl   = isKo?'흉':isJa?'凶':'Bad';
+  const AUSP_GREAT = { ko:'대길', ja:'大吉', en:'Great', de:'Top', fr:'Excellent', es:'Excelente', pt:'Excelente', it:'Ottimo', id:'Sangat Baik' };
+  const AUSP_GOOD  = { ko:'길', ja:'吉', en:'Good', de:'Gut', fr:'Bon', es:'Bueno', pt:'Bom', it:'Buono', id:'Baik' };
+  const AUSP_BAD   = { ko:'흉', ja:'凶', en:'Bad', de:'Meiden', fr:'À éviter', es:'Evitar', pt:'Evitar', it:'Da evitare', id:'Hindari' };
+  const greatLbl = AUSP_GREAT[lang] || AUSP_GREAT.en;
+  const goodLbl  = AUSP_GOOD[lang]  || AUSP_GOOD.en;
+  const badLbl   = AUSP_BAD[lang]   || AUSP_BAD.en;
   const legendHtml = `<div style="display:flex;gap:8px;margin-bottom:10px;font-size:10px;font-weight:600;">
     <span style="color:#166534;">● ${greatLbl}</span>
     <span style="color:#92400e;">● ${goodLbl}</span>
@@ -3934,29 +3960,27 @@ function renderNamePanel(nameResult) {
   const lang  = window.LUCKY_CURRENT_LANG || 'ko';
   const isKo  = lang==='ko', isJa=lang==='ja';
   const L     = window.LUCKY_LANG || {};
-  const title = isKo?`"${nameResult.name}" 수리(數理) 분석`:isJa?`"${nameResult.name}" 数理分析`:`Name Numerology: "${nameResult.name}"`;
+  const NAME_TITLES = {
+    ko:`"${nameResult.name}" 수리(數理) 분석`, ja:`"${nameResult.name}" 数理分析`,
+    en:`Name Numerology: "${nameResult.name}"`, de:`Namens-Numerologie: "${nameResult.name}"`,
+    fr:`Numérologie du Nom : "${nameResult.name}"`, es:`Numerología del Nombre: "${nameResult.name}"`,
+    pt:`Numerologia do Nome: "${nameResult.name}"`, it:`Numerologia del Nome: "${nameResult.name}"`,
+    id:`Numerologi Nama: "${nameResult.name}"`,
+  };
+  const title = NAME_TITLES[lang] || NAME_TITLES.en;
 
-  const NUM_DESC_KO = {
-    1:'독립심·개척자·강한 의지력',2:'협동·외교·감수성',3:'창의성·표현력·낙천주의',
-    4:'인내·실용·책임감',5:'자유·변화·모험',6:'조화·봉사·가족애',
-    7:'탐구·지성·신비',8:'야망·성취·물질적 성공',9:'박애·봉사·완성',
-    11:'직관·영감·이상주의',22:'대건설자·실용적 이상',33:'마스터 교사·자비'
+  const NUM_DESC = {
+    ko:{1:'독립심·개척자·강한 의지력',2:'협동·외교·감수성',3:'창의성·표현력·낙천주의',4:'인내·실용·책임감',5:'자유·변화·모험',6:'조화·봉사·가족애',7:'탐구·지성·신비',8:'야망·성취·물질적 성공',9:'박애·봉사·완성',11:'직관·영감·이상주의',22:'대건설자·실용적 이상',33:'마스터 교사·자비'},
+    en:{1:'Independence, leadership, willpower',2:'Cooperation, diplomacy, sensitivity',3:'Creativity, expression, optimism',4:'Patience, practicality, responsibility',5:'Freedom, change, adventure',6:'Harmony, service, family',7:'Inquiry, intellect, mystery',8:'Ambition, achievement, success',9:'Philanthropy, completion, wisdom',11:'Intuition, inspiration, idealism',22:'Master builder, practical idealist',33:'Master teacher, compassion'},
+    ja:{1:'独立・開拓・強い意志',2:'協調・外交・感受性',3:'創造性・表現力・楽観主義',4:'忍耐・実用・責任感',5:'自由・変化・冒険',6:'調和・奉仕・家族愛',7:'探求・知性・神秘',8:'野望・達成・物質的成功',9:'博愛・奉仕・完成',11:'直感・インスピレーション・理想主義',22:'大建設者・実用的理想',33:'マスター教師・慈悲'},
+    de:{1:'Unabhängigkeit, Führung, Willenskraft',2:'Kooperation, Diplomatie, Sensibilität',3:'Kreativität, Ausdruck, Optimismus',4:'Geduld, Praxissinn, Verantwortung',5:'Freiheit, Wandel, Abenteuer',6:'Harmonie, Hilfsbereitschaft, Familie',7:'Forschergeist, Intellekt, Mystik',8:'Ehrgeiz, Erfolg, Wohlstand',9:'Menschenliebe, Vollendung, Weisheit',11:'Intuition, Inspiration, Idealismus',22:'Großer Baumeister, praktischer Idealist',33:'Meisterlehrer, Mitgefühl'},
+    fr:{1:'Indépendance, leadership, volonté',2:'Coopération, diplomatie, sensibilité',3:'Créativité, expression, optimisme',4:'Patience, pragmatisme, responsabilité',5:'Liberté, changement, aventure',6:'Harmonie, service, famille',7:'Curiosité, intellect, mystère',8:'Ambition, réussite, succès',9:'Altruisme, accomplissement, sagesse',11:'Intuition, inspiration, idéalisme',22:'Grand bâtisseur, idéaliste pragmatique',33:'Maître enseignant, compassion'},
+    es:{1:'Independencia, liderazgo, voluntad',2:'Cooperación, diplomacia, sensibilidad',3:'Creatividad, expresión, optimismo',4:'Paciencia, practicidad, responsabilidad',5:'Libertad, cambio, aventura',6:'Armonía, servicio, familia',7:'Curiosidad, intelecto, misterio',8:'Ambición, logro, éxito',9:'Altruismo, plenitud, sabiduría',11:'Intuición, inspiración, idealismo',22:'Gran constructor, idealista práctico',33:'Maestro, compasión'},
+    pt:{1:'Independência, liderança, força de vontade',2:'Cooperação, diplomacia, sensibilidade',3:'Criatividade, expressão, otimismo',4:'Paciência, praticidade, responsabilidade',5:'Liberdade, mudança, aventura',6:'Harmonia, serviço, família',7:'Curiosidade, intelecto, mistério',8:'Ambição, conquista, sucesso',9:'Altruísmo, plenitude, sabedoria',11:'Intuição, inspiração, idealismo',22:'Grande construtor, idealista prático',33:'Mestre, compaixão'},
+    it:{1:'Indipendenza, leadership, volontà',2:'Cooperazione, diplomazia, sensibilità',3:'Creatività, espressione, ottimismo',4:'Pazienza, praticità, responsabilità',5:'Libertà, cambiamento, avventura',6:'Armonia, servizio, famiglia',7:'Curiosità, intelletto, mistero',8:'Ambizione, realizzazione, successo',9:'Altruismo, completezza, saggezza',11:'Intuizione, ispirazione, idealismo',22:'Gran costruttore, idealista pratico',33:'Maestro, compassione'},
+    id:{1:'Kemandirian, kepemimpinan, kemauan kuat',2:'Kerja sama, diplomasi, kepekaan',3:'Kreativitas, ekspresi, optimisme',4:'Kesabaran, kepraktisan, tanggung jawab',5:'Kebebasan, perubahan, petualangan',6:'Harmoni, pelayanan, keluarga',7:'Rasa ingin tahu, intelek, misteri',8:'Ambisi, pencapaian, kesuksesan',9:'Kedermawanan, kesempurnaan, kebijaksanaan',11:'Intuisi, inspirasi, idealisme',22:'Pembangun besar, idealis praktis',33:'Guru sejati, kasih sayang'},
   };
-  const NUM_DESC_EN = {
-    1:'Independence, leadership, willpower',2:'Cooperation, diplomacy, sensitivity',
-    3:'Creativity, expression, optimism',4:'Patience, practicality, responsibility',
-    5:'Freedom, change, adventure',6:'Harmony, service, family',
-    7:'Inquiry, intellect, mystery',8:'Ambition, achievement, success',
-    9:'Philanthropy, completion, wisdom',11:'Intuition, inspiration, idealism',
-    22:'Master builder, practical idealist',33:'Master teacher, compassion'
-  };
-  const NUM_DESC_JA = {
-    1:'独立・開拓・強い意志',2:'協調・外交・感受性',3:'創造性・表現力・楽観主義',
-    4:'忍耐・実用・責任感',5:'自由・変化・冒険',6:'調和・奉仕・家族愛',
-    7:'探求・知性・神秘',8:'野望・達成・物質的成功',9:'博愛・奉仕・完成',
-    11:'直感・インスピレーション・理想主義',22:'大建設者・実用的理想',33:'マスター教師・慈悲'
-  };
-  const numDesc = isKo ? NUM_DESC_KO : isJa ? NUM_DESC_JA : NUM_DESC_EN;
+  const numDesc = NUM_DESC[lang] || NUM_DESC.en;
 
   const mkRing = (num, clr, lbl) => `
     <div style="text-align:center;flex:1;">
@@ -3965,9 +3989,13 @@ function renderNamePanel(nameResult) {
       <div style="font-size:10px;color:#6b7280;line-height:1.4;">${numDesc[num]||num}</div>
     </div>`;
 
-  const destLbl = isKo?'운명수':isJa?'運命数':'Destiny';
-  const soulLbl = isKo?'영혼수':isJa?'魂数':'Soul Urge';
-  const persLbl = isKo?'외면수':isJa?'外面数':'Personality';
+  const NAME_LBLS = {
+    ko:['운명수','영혼수','외면수'], ja:['運命数','魂数','外面数'], en:['Destiny','Soul Urge','Personality'],
+    de:['Schicksalszahl','Seelenzahl','Persönlichkeit'], fr:['Nombre du Destin',"Élan de l'Âme",'Personnalité'],
+    es:['Número del Destino','Impulso del Alma','Personalidad'], pt:['Número do Destino','Impulso da Alma','Personalidade'],
+    it:['Numero del Destino',"Slancio dell'Anima",'Personalità'], id:['Angka Takdir','Dorongan Jiwa','Kepribadian'],
+  };
+  const [destLbl, soulLbl, persLbl] = NAME_LBLS[lang] || NAME_LBLS.en;
 
   const div = document.createElement('div');
   div.id = 'name-panel';
@@ -4301,10 +4329,13 @@ async function _aiStreamMessage(history, fd, lang) {
         } catch {}
       }
     }
-    if (!fullText && bubble) bubble.textContent = '⚠️ No response received. Please try again.';
+    const _AI_ERR = { ko:'⚠️ 응답을 받지 못했어요. 잠시 후 다시 시도해주세요.', en:'⚠️ No response received. Please try again shortly.', ja:'⚠️ 応答を受け取れませんでした。しばらくしてからもう一度お試しください。', de:'⚠️ Keine Antwort erhalten. Bitte versuchen Sie es gleich erneut.', fr:'⚠️ Aucune réponse reçue. Veuillez réessayer dans un instant.', es:'⚠️ No se recibió respuesta. Inténtalo de nuevo en un momento.', pt:'⚠️ Nenhuma resposta recebida. Tente novamente em instantes.', it:'⚠️ Nessuna risposta ricevuta. Riprova tra poco.', id:'⚠️ Tidak ada respons. Silakan coba lagi sebentar lagi.' };
+    if (!fullText && bubble) bubble.textContent = _AI_ERR[lang] || _AI_ERR.en;
     window._aiHistory = [...history, { role: 'assistant', content: fullText }];
   } catch(e) {
-    if (bubble) bubble.textContent = '⚠️ ' + e.message;
+    const _AI_ERR2 = { ko:'⚠️ 연결에 문제가 생겼어요. 잠시 후 다시 시도해주세요.', en:'⚠️ Connection problem. Please try again shortly.', ja:'⚠️ 接続に問題が発生しました。しばらくしてからお試しください。', de:'⚠️ Verbindungsproblem. Bitte versuchen Sie es gleich erneut.', fr:'⚠️ Problème de connexion. Veuillez réessayer dans un instant.', es:'⚠️ Problema de conexión. Inténtalo de nuevo en un momento.', pt:'⚠️ Problema de conexão. Tente novamente em instantes.', it:'⚠️ Problema di connessione. Riprova tra poco.', id:'⚠️ Masalah koneksi. Silakan coba lagi sebentar lagi.' };
+    if (bubble) bubble.textContent = _AI_ERR2[lang] || _AI_ERR2.en;
+    try { console.warn('lucky-chat error:', e.message); } catch(_) {}
   } finally {
     if (btn) btn.disabled = false;
     if (inp) { inp.disabled = false; inp.focus(); }
@@ -4451,19 +4482,36 @@ function renderDailyEnergyPanel(data) {
   // 달 위상
   const moon = _getMoonPhase();
   const L = window.LUCKY_LANG || {};
-  const MOON_KO = {new:'삭(朔)',waxing_crescent:'초승달',first_quarter:'상현(上弦)',waxing_gibbous:'차는 달',full:'보름달',waning_gibbous:'기우는 달',last_quarter:'하현(下弦)',waning_crescent:'그믐달'};
-  const MOON_JA = {new:'新月',waxing_crescent:'三日月',first_quarter:'上弦の月',waxing_gibbous:'十日夜',full:'満月',waning_gibbous:'十六夜',last_quarter:'下弦の月',waning_crescent:'有明月'};
-  const MOON_EN = {new:'New Moon',waxing_crescent:'Waxing Crescent',first_quarter:'First Quarter',waxing_gibbous:'Waxing Gibbous',full:'Full Moon',waning_gibbous:'Waning Gibbous',last_quarter:'Last Quarter',waning_crescent:'Waning Crescent'};
-  const moonMap = data.lang==='ko'?MOON_KO:data.lang==='ja'?MOON_JA:MOON_EN;
+  const MOON_NAMES = {
+    ko:{new:'삭(朔)',waxing_crescent:'초승달',first_quarter:'상현(上弦)',waxing_gibbous:'차는 달',full:'보름달',waning_gibbous:'기우는 달',last_quarter:'하현(下弦)',waning_crescent:'그믐달'},
+    ja:{new:'新月',waxing_crescent:'三日月',first_quarter:'上弦の月',waxing_gibbous:'十日夜',full:'満月',waning_gibbous:'十六夜',last_quarter:'下弦の月',waning_crescent:'有明月'},
+    en:{new:'New Moon',waxing_crescent:'Waxing Crescent',first_quarter:'First Quarter',waxing_gibbous:'Waxing Gibbous',full:'Full Moon',waning_gibbous:'Waning Gibbous',last_quarter:'Last Quarter',waning_crescent:'Waning Crescent'},
+    de:{new:'Neumond',waxing_crescent:'Zunehmende Sichel',first_quarter:'Erstes Viertel',waxing_gibbous:'Zunehmender Mond',full:'Vollmond',waning_gibbous:'Abnehmender Mond',last_quarter:'Letztes Viertel',waning_crescent:'Abnehmende Sichel'},
+    fr:{new:'Nouvelle lune',waxing_crescent:'Premier croissant',first_quarter:'Premier quartier',waxing_gibbous:'Gibbeuse croissante',full:'Pleine lune',waning_gibbous:'Gibbeuse décroissante',last_quarter:'Dernier quartier',waning_crescent:'Dernier croissant'},
+    es:{new:'Luna nueva',waxing_crescent:'Luna creciente',first_quarter:'Cuarto creciente',waxing_gibbous:'Gibosa creciente',full:'Luna llena',waning_gibbous:'Gibosa menguante',last_quarter:'Cuarto menguante',waning_crescent:'Luna menguante'},
+    pt:{new:'Lua nova',waxing_crescent:'Lua crescente',first_quarter:'Quarto crescente',waxing_gibbous:'Gibosa crescente',full:'Lua cheia',waning_gibbous:'Gibosa minguante',last_quarter:'Quarto minguante',waning_crescent:'Lua minguante'},
+    it:{new:'Luna nuova',waxing_crescent:'Luna crescente',first_quarter:'Primo quarto',waxing_gibbous:'Gibbosa crescente',full:'Luna piena',waning_gibbous:'Gibbosa calante',last_quarter:'Ultimo quarto',waning_crescent:'Luna calante'},
+    id:{new:'Bulan baru',waxing_crescent:'Sabit muda',first_quarter:'Kuartal pertama',waxing_gibbous:'Cembung awal',full:'Purnama',waning_gibbous:'Cembung akhir',last_quarter:'Kuartal akhir',waning_crescent:'Sabit tua'},
+  };
+  const moonMap = MOON_NAMES[data.lang] || MOON_NAMES.en;
   const moonLabel = moonMap[moon.key] || moon.key;
 
   // 오늘의 수비학적 수 (Universal Day Number)
   const udn = [ty,tm,td].join('').split('').reduce((a,c)=>a+parseInt(c),0);
   let udnR = udn;
   while(udnR > 9 && udnR !== 11 && udnR !== 22) udnR = String(udnR).split('').reduce((a,c)=>a+parseInt(c),0);
-  const UDN_EN = ['','Ambition','Balance','Expression','Stability','Change','Harmony','Wisdom','Power','Completion','Master','Master'];
-  const UDN_KO = ['','야망','균형','표현','안정','변화','조화','지혜','파워','완성','마스터','마스터'];
-  const udnLabel = data.lang==='ko' ? UDN_KO[udnR] : UDN_EN[udnR] || '';
+  const UDN_WORDS = {
+    en:['','Ambition','Balance','Expression','Stability','Change','Harmony','Wisdom','Power','Completion','Master','Master'],
+    ko:['','야망','균형','표현','안정','변화','조화','지혜','파워','완성','마스터','마스터'],
+    ja:['','野心','バランス','表現','安定','変化','調和','知恵','パワー','完成','マスター','マスター'],
+    de:['','Ehrgeiz','Balance','Ausdruck','Stabilität','Wandel','Harmonie','Weisheit','Kraft','Vollendung','Meister','Meister'],
+    fr:['','Ambition','Équilibre','Expression','Stabilité','Changement','Harmonie','Sagesse','Puissance','Accomplissement','Maître','Maître'],
+    es:['','Ambición','Equilibrio','Expresión','Estabilidad','Cambio','Armonía','Sabiduría','Poder','Plenitud','Maestro','Maestro'],
+    pt:['','Ambição','Equilíbrio','Expressão','Estabilidade','Mudança','Harmonia','Sabedoria','Poder','Plenitude','Mestre','Mestre'],
+    it:['','Ambizione','Equilibrio','Espressione','Stabilità','Cambiamento','Armonia','Saggezza','Potere','Completezza','Maestro','Maestro'],
+    id:['','Ambisi','Keseimbangan','Ekspresi','Stabilitas','Perubahan','Harmoni','Kebijaksanaan','Kekuatan','Penyelesaian','Master','Master'],
+  };
+  const udnLabel = (UDN_WORDS[data.lang] || UDN_WORDS.en)[udnR] || '';
 
   const TITLE = {ko:'오늘의 기운',ja:'今日のエネルギー',en:"Today's Energy",de:'Heutiger Tag',fr:"Énergie du jour",es:'Energía de hoy',pt:'Energia do dia',it:"L'energia di oggi",id:'Energi Hari Ini'};
   const IL_KO  = STEMS[stemIdx]+BRANCHES[branchIdx];
@@ -4513,16 +4561,16 @@ function renderChineseZodiacBadge(data) {
   const CZ_CLASH = {rat:'horse',horse:'rat',ox:'goat',goat:'ox',tiger:'monkey',monkey:'tiger',rabbit:'rooster',rooster:'rabbit',dragon:'dog',dog:'dragon',snake:'pig',pig:'snake'};
   const CZ_COMPAT = {rat:['dragon','monkey'],ox:['snake','rooster'],tiger:['horse','dog'],rabbit:['goat','pig'],dragon:['rat','monkey'],snake:['ox','rooster'],horse:['tiger','dog'],goat:['rabbit','pig'],monkey:['rat','dragon'],rooster:['ox','snake'],dog:['tiger','horse'],pig:['rabbit','goat']};
 
+  const YN_OWN = { ko:'⚠️ 본명년(本命年) — 변화가 많은 해. 부적·빨간 속옷으로 액막이를 챙기세요.', ja:'⚠️ 本命年 — 変化の多い年。お守りで厄除けを。', en:'⚠️ Your zodiac year — expect big changes. Wear red for luck.', de:'⚠️ Ihr Tierkreisjahr — große Veränderungen möglich. Rot bringt Glück.', fr:'⚠️ Votre année zodiacale — de grands changements en vue. Portez du rouge porte-bonheur.', es:'⚠️ Tu año zodiacal — se esperan grandes cambios. Viste de rojo para la suerte.', pt:'⚠️ Seu ano zodiacal — grandes mudanças à vista. Use vermelho para dar sorte.', it:'⚠️ Il tuo anno zodiacale — grandi cambiamenti in arrivo. Indossa il rosso portafortuna.', id:'⚠️ Tahun shio Anda — banyak perubahan. Kenakan merah untuk keberuntungan.' };
+  const YN_CLASH = { ko:'⚡ 충(沖)의 해 — 올해 건강과 인간관계에 주의가 필요합니다.', ja:'⚡ 冲の年 — 健康と人間関係に注意。', en:'⚡ Clash year — take extra care in health and relationships.', de:'⚡ Konfliktjahr — achten Sie besonders auf Gesundheit und Beziehungen.', fr:'⚡ Année de conflit — prudence avec la santé et les relations.', es:'⚡ Año de choque — cuida especialmente la salud y las relaciones.', pt:'⚡ Ano de conflito — cuide da saúde e dos relacionamentos.', it:'⚡ Anno di conflitto — attenzione a salute e relazioni.', id:'⚡ Tahun bentrok — jaga kesehatan dan hubungan.' };
+  const YN_HARM = { ko:'✨ 삼합(三合)의 해 — 귀인의 도움으로 행운이 따르는 시기입니다.', ja:'✨ 三合の年 — 貴人の助けで運気上昇。', en:'✨ Harmonious year — expect support and good fortune.', de:'✨ Harmonisches Jahr — Unterstützung und Glück begleiten Sie.', fr:'✨ Année harmonieuse — soutien et bonne fortune au rendez-vous.', es:'✨ Año armonioso — apoyo y buena fortuna te acompañan.', pt:'✨ Ano harmonioso — apoio e boa sorte o acompanham.', it:'✨ Anno armonioso — sostegno e buona sorte ti accompagnano.', id:'✨ Tahun harmonis — dukungan dan keberuntungan menyertai Anda.' };
+  const YN_STABLE = { ko:'🌟 평운의 해 — 꾸준히 노력하면 결실을 맺을 수 있습니다.', ja:'🌟 平運の年 — コツコツ努力が実る年。', en:'🌟 Stable year — steady effort brings results.', de:'🌟 Stabiles Jahr — stetige Anstrengung trägt Früchte.', fr:'🌟 Année stable — un effort régulier porte ses fruits.', es:'🌟 Año estable — el esfuerzo constante da frutos.', pt:'🌟 Ano estável — o esforço constante dá frutos.', it:"🌟 Anno stabile — l'impegno costante dà frutti.", id:'🌟 Tahun stabil — usaha konsisten membuahkan hasil.' };
+  const _yn = (m) => m[data.lang] || m.en;
   let yearNote = '';
-  if (czKey === currentKey) {
-    yearNote = data.lang==='ko' ? '⚠️ 본명년(本命年) — 변화가 많은 해. 부적·빨간 속옷으로 액막이를 챙기세요.' : data.lang==='ja' ? '⚠️ 本命年 — 変化の多い年。お守りで厄除けを。' : '⚠️ Your zodiac year — expect big changes. Wear red for luck.';
-  } else if (CZ_CLASH[czKey] === currentKey) {
-    yearNote = data.lang==='ko' ? '⚡ 충(沖)의 해 — 올해 건강과 인간관계에 주의가 필요합니다.' : data.lang==='ja' ? '⚡ 冲の年 — 健康と人間関係に注意。' : '⚡ Clash year — take extra care in health and relationships.';
-  } else if ((CZ_COMPAT[czKey]||[]).includes(currentKey)) {
-    yearNote = data.lang==='ko' ? '✨ 삼합(三合)의 해 — 귀인의 도움으로 행운이 따르는 시기입니다.' : data.lang==='ja' ? '✨ 三合の年 — 貴人の助けで運気上昇。' : '✨ Harmonious year — expect support and good fortune.';
-  } else {
-    yearNote = data.lang==='ko' ? '🌟 평운의 해 — 꾸준히 노력하면 결실을 맺을 수 있습니다.' : data.lang==='ja' ? '🌟 平運の年 — コツコツ努力が実る年。' : '🌟 Stable year — steady effort brings results.';
-  }
+  if (czKey === currentKey) yearNote = _yn(YN_OWN);
+  else if (CZ_CLASH[czKey] === currentKey) yearNote = _yn(YN_CLASH);
+  else if ((CZ_COMPAT[czKey]||[]).includes(currentKey)) yearNote = _yn(YN_HARM);
+  else yearNote = _yn(YN_STABLE);
 
   const COMPAT_NAMES = (CZ_COMPAT[czKey]||[]).map(k=>_getCZName(1900+_CZ_KEYS.indexOf(k)*12,data.lang)).join(', ');
   const CLASH_NAME = CZ_CLASH[czKey] ? _getCZName(1900+_CZ_KEYS.indexOf(CZ_CLASH[czKey])*12,data.lang) : '';
@@ -4586,8 +4634,9 @@ function doShareLine() {
 function doShareCopy(btn) {
   const text = getShareText() + '\n' + getShareUrl();
   navigator.clipboard.writeText(text).then(() => {
+    const L = window.LUCKY_LANG || {};
     const origHtml = btn.innerHTML;
-    btn.innerHTML = '<span>✅</span><span>Copied!</span>';
+    btn.innerHTML = `<span>✅</span><span>${L.btnCopied || 'Copied!'}</span>`;
     setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
   });
 }

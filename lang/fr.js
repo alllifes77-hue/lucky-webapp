@@ -86,7 +86,7 @@ window.LUCKY_LANG = {
     mid:['Les finances coulent régulièrement. Maintenez des habitudes disciplinées.','Consolidez ce que vous avez avant de chercher de nouvelles opportunités.','Examinez votre budget attentivement.','Une approche modérée et constante vous servira bien.'],
     low:['Soyez prudent avec les grandes dépenses.','Des coûts inattendus peuvent survenir — gardez une réserve d\'urgence.','Évitez de cautionner des prêts.','Concentrez-vous sur la protection des actifs actuels.'],
   },
-  fortuneMoneyAdvice:{high:['Recherchez un nouveau produit d\'investissement.','Automatisez 20–30% en épargne.','Réseautez avec des pairs réussis.','Lancez un projet annexe.'],mid:['Suivez chaque dépense une semaine.','Ouvrez un compte épargne dédié.','Lisez un livre de finances.','Révisez les abonnements inutiles.'],low:['Constituez un fonds d\'urgence.','Appliquez la règle des 24h.','Consultez un conseiller financier.','Soldez les petites dettes.']},
+  fortuneMoneyAdvice:{high:['Recherchez un nouveau produit d\'investissement.','Automatisez 20–30% en épargne.','Réseautez avec des pairs qui ont réussi.','Lancez un projet annexe.'],mid:['Suivez chaque dépense une semaine.','Ouvrez un compte épargne dédié.','Lisez un livre de finances.','Révisez les abonnements inutiles.'],low:['Constituez un fonds d\'urgence.','Appliquez la règle des 24h.','Consultez un conseiller financier.','Soldez les petites dettes.']},
   fortuneMoneyLucky:{high:['Portefeuille or','Coffre orienté nord','Secteur finance'],mid:['Accessoires argent','Habitude de tirelire','App de budget'],low:['Trier les reçus','Vérifier abonnements','Lire un blog financier']},
 
   fortuneCareer:{

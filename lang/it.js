@@ -103,10 +103,10 @@ window.LUCKY_LANG = {
   fortuneAchievementLucky:{high:['Ambiente di studio blu-verde','Sessioni mattutine','Libri di sviluppo personale'],mid:['Angolo di lettura tranquillo','Lavagna della visione','Pianificatore di studi'],low:['Meditazione di 5 min','Un giorno di detox digitale','Esplorare un nuovo hobby']},
 
   tipsBySign:[
-    ['Incanalate il vostro spirito pionieristico — inizia qualcosa di nuovo oggi.','Il rosso o l\'arancione potenzia l\'energia del fuoco dell\'Ariete.','Le mattine sono il tuo momento di potenza.'],
+    ['Incanala il tuo spirito pionieristico — inizia qualcosa di nuovo oggi.','Il rosso o l\'arancione potenzia l\'energia del fuoco dell\'Ariete.','Le mattine sono il tuo momento di potenza.'],
     ['Rallenta e apprezza i piaceri sensoriali che ti ancorano.','I toni terrosi e le passeggiate nella natura ricaricano l\'energia del Toro.','La pianificazione finanziaria il venerdì si allinea con la tua energia Venere.'],
     ['Attiva la tua curiosità — leggi, scrivi o inizia una conversazione significativa.','Il giallo e i colori chiari supportano la mente vivace dei Gemelli.','Gli eventi di networking moltiplicano la tua fortuna.'],
-    ['Onora la tua intuizione e crea uno spazio nutriente per te.','L\'argento e la pietra di luna amplificano l\'intuizione del Cancro.','Le serate del lunedì sono propize per la riflessione e la pianificazione.'],
+    ['Onora la tua intuizione e crea uno spazio nutriente per te.','L\'argento e la pietra di luna amplificano l\'intuizione del Cancro.','Le serate del lunedì sono propizie per la riflessione e la pianificazione.'],
     ['Entra sotto i riflettori — il tuo splendore del Leone attira opportunità.','L\'oro e i gialli soleggiati amplificano la tua fiducia naturale.','Le attività creative la domenica ricaricano la tua energia.'],
     ['Precisione e diligenza sono i tuoi superpoteri ora. Organizza il tuo ambiente.','Il verde terroso e il blu navy ancorano l\'energia della Vergine.','Le routine mattutine danno il tono per una giornata ad alte prestazioni.'],
     ['Cerca equilibrio e bellezza — l\'estetica migliora il tuo benessere.','I pastelli blu e rosa rafforzano la natura armoniosa della Bilancia.','La diplomazia sociale apre porte che la sola ambizione non può.'],
