@@ -635,6 +635,133 @@ function bornYearHreflang(year){
   return buildHreflang(e, (y>=1940 && y<=2010) ? `${SITE_URL}/en/born-${y}/` : '');
 }
 
+// ── 다중 주기 운세 페이지 (/tomorrow·/this-week·/this-month) ──────
+// today 와 동일 결정론 엔진, 주기별로 시드 날짜·프레이밍·changefreq 차별 (thin-content 회피)
+function _periodReduce(str){ let s=String(str).replace(/[^0-9]/g,'').split('').reduce((a,c)=>a+ +c,0); while(s>9&&s!==11&&s!==22) s=String(s).split('').reduce((a,c)=>a+ +c,0); return s; }
+function _periodNums(seedStr){ let seed=0; for(const c of seedStr) seed=(seed*31+c.charCodeAt(0))>>>0; const out=[]; while(out.length<6){ seed=(seed*1103515245+12345)>>>0; const n=(seed%45)+1; if(!out.includes(n)) out.push(n);} return out.sort((a,b)=>a-b); }
+
+const PERIOD_COPY = {
+  tomorrow: {
+    title:{ko:`내일의 운세 & 행운 번호 — {date}`,en:`Tomorrow's Lucky Numbers — {date}`,ja:`明日の運勢・幸運の数字 — {date}`,de:`Glückszahlen für morgen — {date}`,fr:`Numéros Chanceux de Demain — {date}`,es:`Números de la Suerte de Mañana — {date}`,pt:`Números da Sorte de Amanhã — {date}`,it:`Numeri Fortunati di Domani — {date}`,id:`Angka Keberuntungan Besok — {date}`},
+    desc:{ko:`내일({date}) 날짜 기반 운세와 행운 번호를 미리 확인하세요. 내일을 준비하는 사람을 위한 무료 운세.`,en:`Plan ahead with tomorrow's lucky numbers and fortune for {date}. Free daily forecast for those who prepare.`,ja:`明日({date})の運勢と幸運の数字を先取り。先を読む人のための無料占い。`,de:`Plane voraus mit den Glückszahlen für morgen, {date}. Kostenlose Vorschau für Vorausschauende.`,fr:`Anticipez avec les numéros chanceux de demain, {date}. Prévision gratuite pour les prévoyants.`,es:`Anticípate con los números de la suerte de mañana, {date}. Pronóstico gratuito.`,pt:`Antecipe-se com os números da sorte de amanhã, {date}. Previsão gratuita.`,it:`Anticipa con i numeri fortunati di domani, {date}. Previsione gratuita.`,id:`Rencanakan dengan angka keberuntungan besok, {date}. Ramalan gratis.`},
+    heading:{ko:`내일의 유니버설 행운 숫자`,en:`Tomorrow's Universal Lucky Numbers`,ja:`明日のユニバーサルラッキーナンバー`,de:`Universelle Glückszahlen für morgen`,fr:`Numéros chanceux universels de demain`,es:`Números de la suerte universales de mañana`,pt:`Números da sorte universais de amanhã`,it:`Numeri fortunati universali di domani`,id:`Angka keberuntungan universal besok`},
+    intro:{ko:`내일({date})의 <strong>유니버설 데이 넘버는 {udn}</strong>입니다. 오늘 미리 내일의 기운을 읽어두면, 중요한 약속·면접·구매 타이밍을 한발 앞서 준비할 수 있습니다. 아래 숫자는 내일 날짜의 수비학 진동에서 도출된 보편 행운 숫자이며, 생년월일을 입력하면 내일에 맞춘 나만의 번호와 운세 점수를 받을 수 있습니다.`,en:`Tomorrow's (<strong>{date}</strong>) Universal Day Number is <strong>{udn}</strong>. Reading tomorrow's energy today helps you prepare a step ahead — for that meeting, interview, or purchase timing. The numbers below come from tomorrow's numerological vibration; enter your birth date for numbers tuned to your day.`,ja:`明日（<strong>{date}</strong>）のユニバーサルデーナンバーは<strong>{udn}</strong>です。明日の気を今日のうちに読むことで、商談・面接・購入のタイミングを一歩先に準備できます。下の数字は明日の数秘術的振動から導かれ、生年月日を入れると明日に合わせた数字が得られます。`,de:`Die Universelle Tageszahl für morgen (<strong>{date}</strong>) ist <strong>{udn}</strong>. Wer die Energie von morgen heute liest, ist einen Schritt voraus — für Termine, Gespräche oder den richtigen Kaufzeitpunkt. Gib dein Geburtsdatum ein für persönliche Zahlen.`,fr:`Le Nombre Universel du Jour de demain (<strong>{date}</strong>) est <strong>{udn}</strong>. Lire l'énergie de demain dès aujourd'hui, c'est avoir une longueur d'avance — pour un rendez-vous, un entretien ou un achat. Entrez votre date de naissance pour des numéros personnalisés.`,es:`El Número Universal del Día de mañana (<strong>{date}</strong>) es <strong>{udn}</strong>. Leer la energía de mañana hoy te da ventaja — para una cita, entrevista o compra. Introduce tu fecha de nacimiento para números personales.`,pt:`O Número Universal do Dia de amanhã (<strong>{date}</strong>) é <strong>{udn}</strong>. Ler a energia de amanhã hoje coloca você um passo à frente — para um encontro, entrevista ou compra. Insira sua data de nascimento para números pessoais.`,it:`Il Numero Universale del Giorno di domani (<strong>{date}</strong>) è <strong>{udn}</strong>. Leggere l'energia di domani oggi ti dà un vantaggio — per un appuntamento, un colloquio o un acquisto. Inserisci la tua data di nascita per numeri personali.`,id:`Angka Universal Hari untuk besok (<strong>{date}</strong>) adalah <strong>{udn}</strong>. Membaca energi besok hari ini membuat Anda selangkah lebih maju — untuk janji, wawancara, atau pembelian. Masukkan tanggal lahir untuk angka pribadi.`},
+    faq:{ko:[{q:'내일의 행운 번호는 오늘과 다른가요?',a:'네. 날짜가 바뀌면 유니버설 데이 넘버가 달라지므로 내일의 번호는 오늘과 다릅니다.'},{q:'언제 확인하는 게 좋나요?',a:'중요한 일정을 앞둔 전날 저녁에 미리 확인하면 다음 날을 준비하기 좋습니다.'}],en:[{q:'Are tomorrow\'s numbers different from today\'s?',a:'Yes. The Universal Day Number changes with the date, so tomorrow\'s numbers differ from today\'s.'},{q:'When should I check?',a:'Checking the evening before an important day helps you prepare ahead.'}],ja:[{q:'明日の数字は今日と違いますか？',a:'はい。日付が変わるとユニバーサルデーナンバーが変わるため、明日の数字は今日と異なります。'},{q:'いつ確認すべき？',a:'大事な予定の前夜に確認すると、翌日の準備に役立ちます。'}],de:[{q:'Sind die Zahlen von morgen anders als heute?',a:'Ja, die Universelle Tageszahl ändert sich mit dem Datum.'},{q:'Wann sollte ich nachsehen?',a:'Am Abend vor einem wichtigen Tag, um vorbereitet zu sein.'}],fr:[{q:'Les numéros de demain diffèrent-ils d\'aujourd\'hui?',a:'Oui, le Nombre Universel du Jour change avec la date.'},{q:'Quand vérifier?',a:'La veille au soir d\'un jour important, pour être prêt.'}],es:[{q:'¿Los números de mañana son distintos a los de hoy?',a:'Sí, el Número Universal del Día cambia con la fecha.'},{q:'¿Cuándo conviene mirar?',a:'La noche anterior a un día importante, para prepararte.'}],pt:[{q:'Os números de amanhã diferem dos de hoje?',a:'Sim, o Número Universal do Dia muda com a data.'},{q:'Quando devo verificar?',a:'Na véspera de um dia importante, para se preparar.'}],it:[{q:'I numeri di domani sono diversi da oggi?',a:'Sì, il Numero Universale del Giorno cambia con la data.'},{q:'Quando controllare?',a:'La sera prima di un giorno importante, per prepararti.'}],id:[{q:'Apakah angka besok berbeda dari hari ini?',a:'Ya, Angka Universal Hari berubah sesuai tanggal.'},{q:'Kapan sebaiknya cek?',a:'Malam sebelum hari penting, agar siap.'}]},
+    cf:'public,max-age=3600', freq:'daily',
+  },
+  'this-week': {
+    title:{ko:`이번 주 운세 & 행운 번호 — {range}`,en:`This Week's Lucky Numbers — {range}`,ja:`今週の運勢・幸運の数字 — {range}`,de:`Glückszahlen dieser Woche — {range}`,fr:`Numéros Chanceux de la Semaine — {range}`,es:`Números de la Suerte de la Semana — {range}`,pt:`Números da Sorte da Semana — {range}`,it:`Numeri Fortunati della Settimana — {range}`,id:`Angka Keberuntungan Minggu Ini — {range}`},
+    desc:{ko:`이번 주({range}) 전체 흐름과 행운 번호. 한 주의 리듬을 잡는 무료 주간 운세.`,en:`Set the rhythm of your week with this week's fortune and lucky numbers ({range}). Free weekly forecast.`,ja:`今週（{range}）の流れと幸運の数字。一週間のリズムを整える無料の週間占い。`,de:`Finde den Rhythmus deiner Woche mit den Glückszahlen ({range}). Kostenlose Wochenvorschau.`,fr:`Donnez le rythme à votre semaine avec les numéros chanceux ({range}). Prévision hebdomadaire gratuite.`,es:`Marca el ritmo de tu semana con los números de la suerte ({range}). Pronóstico semanal gratis.`,pt:`Defina o ritmo da sua semana com os números da sorte ({range}). Previsão semanal gratuita.`,it:`Dai il ritmo alla tua settimana con i numeri fortunati ({range}). Previsione settimanale gratuita.`,id:`Atur ritme minggumu dengan angka keberuntungan ({range}). Ramalan mingguan gratis.`},
+    heading:{ko:`이번 주의 유니버설 행운 숫자`,en:`This Week's Universal Lucky Numbers`,ja:`今週のユニバーサルラッキーナンバー`,de:`Universelle Glückszahlen dieser Woche`,fr:`Numéros chanceux universels de la semaine`,es:`Números de la suerte universales de la semana`,pt:`Números da sorte universais da semana`,it:`Numeri fortunati universali della settimana`,id:`Angka keberuntungan universal minggu ini`},
+    intro:{ko:`이번 주({range})의 <strong>주간 유니버설 넘버는 {udn}</strong>입니다. 하루 단위가 아니라 한 주 전체의 큰 흐름을 읽으면, 어느 요일에 밀어붙이고 어느 날 쉬어갈지 리듬을 설계할 수 있습니다. 아래는 이번 주를 관통하는 보편 행운 숫자이며, 생년월일을 입력하면 한 주 동안 유효한 나만의 번호와 운세 점수를 받을 수 있습니다.`,en:`This week's (<strong>{range}</strong>) Universal Number is <strong>{udn}</strong>. Reading the whole week — not just a day — lets you design your rhythm: when to push and when to rest. The numbers below run through this week; enter your birth date for numbers that hold for the week ahead.`,ja:`今週（<strong>{range}</strong>）のユニバーサル数は<strong>{udn}</strong>です。一日単位ではなく一週間の大きな流れを読むと、どの曜日に攻め、どの日に休むかリズムを設計できます。下は今週を貫く数字で、生年月日を入れると一週間有効な数字が得られます。`,de:`Die Universelle Zahl dieser Woche (<strong>{range}</strong>) ist <strong>{udn}</strong>. Die ganze Woche zu lesen — nicht nur einen Tag — hilft dir, deinen Rhythmus zu planen: wann anpacken, wann ausruhen. Gib dein Geburtsdatum ein für Zahlen, die die Woche über gelten.`,fr:`Le Nombre Universel de cette semaine (<strong>{range}</strong>) est <strong>{udn}</strong>. Lire toute la semaine — pas qu'un jour — vous aide à concevoir votre rythme : quand pousser, quand vous reposer. Entrez votre date de naissance pour des numéros valables toute la semaine.`,es:`El Número Universal de esta semana (<strong>{range}</strong>) es <strong>{udn}</strong>. Leer toda la semana — no solo un día — te ayuda a diseñar tu ritmo: cuándo empujar y cuándo descansar. Introduce tu fecha de nacimiento para números válidos toda la semana.`,pt:`O Número Universal desta semana (<strong>{range}</strong>) é <strong>{udn}</strong>. Ler a semana inteira — não só um dia — ajuda a planejar seu ritmo: quando avançar e quando descansar. Insira sua data de nascimento para números válidos a semana toda.`,it:`Il Numero Universale di questa settimana (<strong>{range}</strong>) è <strong>{udn}</strong>. Leggere l'intera settimana — non solo un giorno — ti aiuta a progettare il ritmo: quando spingere e quando riposare. Inserisci la tua data di nascita per numeri validi tutta la settimana.`,id:`Angka Universal minggu ini (<strong>{range}</strong>) adalah <strong>{udn}</strong>. Membaca seluruh minggu — bukan hanya sehari — membantu Anda merancang ritme: kapan melaju, kapan istirahat. Masukkan tanggal lahir untuk angka yang berlaku sepekan.`},
+    faq:{ko:[{q:'주간 번호는 매일 바뀌나요?',a:'아니요. 한 주(월~일)를 대표하는 번호로, 매주 월요일에 갱신됩니다.'},{q:'일일 번호와 무엇이 다른가요?',a:'일일 번호는 하루의 기운, 주간 번호는 한 주 전체의 큰 흐름을 봅니다.'}],en:[{q:'Do the weekly numbers change daily?',a:'No — they represent the whole week (Mon–Sun) and refresh every Monday.'},{q:'How is this different from daily?',a:'Daily reads one day\'s energy; weekly reads the larger rhythm of the week.'}],ja:[{q:'週間の数字は毎日変わりますか？',a:'いいえ。一週間（月〜日）を代表する数字で、毎週月曜に更新されます。'},{q:'日替わりとの違いは？',a:'日替わりは一日の気、週間は一週間の大きな流れを見ます。'}],de:[{q:'Ändern sich die Wochenzahlen täglich?',a:'Nein, sie stehen für die ganze Woche (Mo–So) und erneuern sich montags.'},{q:'Was ist der Unterschied zu täglich?',a:'Täglich liest einen Tag, wöchentlich den größeren Rhythmus.'}],fr:[{q:'Les numéros de la semaine changent-ils chaque jour?',a:'Non, ils représentent toute la semaine (lun–dim) et se renouvellent le lundi.'},{q:'Quelle différence avec le quotidien?',a:'Le quotidien lit un jour, l\'hebdomadaire le rythme plus large.'}],es:[{q:'¿Los números semanales cambian a diario?',a:'No, representan toda la semana (lun–dom) y se renuevan el lunes.'},{q:'¿En qué se diferencia del diario?',a:'El diario lee un día; el semanal, el ritmo mayor.'}],pt:[{q:'Os números semanais mudam todo dia?',a:'Não, representam a semana toda (seg–dom) e renovam na segunda.'},{q:'Qual a diferença do diário?',a:'O diário lê um dia; o semanal, o ritmo maior.'}],it:[{q:'I numeri settimanali cambiano ogni giorno?',a:'No, rappresentano l\'intera settimana (lun–dom) e si rinnovano il lunedì.'},{q:'Differenza col giornaliero?',a:'Il giornaliero legge un giorno; il settimanale il ritmo più ampio.'}],id:[{q:'Apakah angka mingguan berubah tiap hari?',a:'Tidak, mewakili seminggu (Sen–Min) dan diperbarui tiap Senin.'},{q:'Beda dengan harian?',a:'Harian membaca sehari; mingguan ritme yang lebih besar.'}]},
+    cf:'public,max-age=21600', freq:'weekly',
+  },
+  'this-month': {
+    title:{ko:`이번 달 운세 & 행운 번호 — {range}`,en:`This Month's Lucky Numbers — {range}`,ja:`今月の運勢・幸運の数字 — {range}`,de:`Glückszahlen dieses Monats — {range}`,fr:`Numéros Chanceux du Mois — {range}`,es:`Números de la Suerte del Mes — {range}`,pt:`Números da Sorte do Mês — {range}`,it:`Numeri Fortunati del Mese — {range}`,id:`Angka Keberuntungan Bulan Ini — {range}`},
+    desc:{ko:`이번 달({range})의 큰 그림과 행운 번호. 한 달의 목표를 설계하는 무료 월간 운세.`,en:`See the big picture for this month ({range}) with your monthly fortune and lucky numbers. Free monthly forecast.`,ja:`今月（{range}）の大きな絵と幸運の数字。一ヶ月の目標を描く無料の月間占い。`,de:`Sieh das große Ganze für diesen Monat ({range}) mit Glückszahlen. Kostenlose Monatsvorschau.`,fr:`Voyez la vue d'ensemble du mois ({range}) avec vos numéros chanceux. Prévision mensuelle gratuite.`,es:`Ve el panorama del mes ({range}) con tus números de la suerte. Pronóstico mensual gratis.`,pt:`Veja o panorama do mês ({range}) com seus números da sorte. Previsão mensal gratuita.`,it:`Guarda il quadro del mese ({range}) con i numeri fortunati. Previsione mensile gratuita.`,id:`Lihat gambaran besar bulan ini ({range}) dengan angka keberuntungan. Ramalan bulanan gratis.`},
+    heading:{ko:`이번 달의 유니버설 행운 숫자`,en:`This Month's Universal Lucky Numbers`,ja:`今月のユニバーサルラッキーナンバー`,de:`Universelle Glückszahlen dieses Monats`,fr:`Numéros chanceux universels du mois`,es:`Números de la suerte universales del mes`,pt:`Números da sorte universais do mês`,it:`Numeri fortunati universali del mese`,id:`Angka keberuntungan universal bulan ini`},
+    intro:{ko:`이번 달({range})의 <strong>월간 유니버설 넘버는 {udn}</strong>입니다. 한 달의 큰 그림을 먼저 그리면, 어느 시기에 도전하고 어느 시기에 마무리할지 목표를 설계하기 좋습니다. 아래는 이번 달을 관통하는 보편 행운 숫자이며, 생년월일을 입력하면 이번 달에 맞춘 나만의 번호와 연애·금전·직업·성취운 점수를 받을 수 있습니다.`,en:`This month's (<strong>{range}</strong>) Universal Number is <strong>{udn}</strong>. Drawing the month's big picture first helps you design goals — when to launch and when to wrap up. The numbers below run through this month; enter your birth date for your numbers plus Love, Money, Career, and Achievement scores.`,ja:`今月（<strong>{range}</strong>）のユニバーサル数は<strong>{udn}</strong>です。一ヶ月の大きな絵を先に描くと、いつ挑戦し、いつ仕上げるか目標を設計しやすくなります。下は今月を貫く数字で、生年月日を入れると今月に合わせた数字と恋愛・金運・仕事・達成運のスコアが得られます。`,de:`Die Universelle Zahl dieses Monats (<strong>{range}</strong>) ist <strong>{udn}</strong>. Das große Bild des Monats zuerst zu zeichnen hilft, Ziele zu planen — wann starten, wann abschließen. Gib dein Geburtsdatum ein für deine Zahlen und Werte zu Liebe, Geld, Karriere und Erfolg.`,fr:`Le Nombre Universel de ce mois (<strong>{range}</strong>) est <strong>{udn}</strong>. Dessiner d'abord la vue d'ensemble du mois aide à fixer des objectifs — quand lancer, quand conclure. Entrez votre date de naissance pour vos numéros et vos scores Amour, Argent, Carrière, Réussite.`,es:`El Número Universal de este mes (<strong>{range}</strong>) es <strong>{udn}</strong>. Dibujar primero el panorama del mes ayuda a fijar metas — cuándo lanzar y cuándo cerrar. Introduce tu fecha de nacimiento para tus números y puntuaciones de Amor, Dinero, Carrera y Logros.`,pt:`O Número Universal deste mês (<strong>{range}</strong>) é <strong>{udn}</strong>. Desenhar primeiro o panorama do mês ajuda a definir metas — quando lançar e quando concluir. Insira sua data de nascimento para seus números e pontuações de Amor, Dinheiro, Carreira e Conquistas.`,it:`Il Numero Universale di questo mese (<strong>{range}</strong>) è <strong>{udn}</strong>. Disegnare prima il quadro del mese aiuta a fissare obiettivi — quando lanciare e quando concludere. Inserisci la tua data di nascita per i tuoi numeri e i punteggi di Amore, Denaro, Carriera e Successo.`,id:`Angka Universal bulan ini (<strong>{range}</strong>) adalah <strong>{udn}</strong>. Menggambar dulu gambaran besar bulan ini membantu menyusun tujuan — kapan memulai dan kapan menuntaskan. Masukkan tanggal lahir untuk angka Anda plus skor Cinta, Rezeki, Karier, dan Pencapaian.`},
+    faq:{ko:[{q:'월간 번호는 언제 갱신되나요?',a:'매월 1일에 갱신되며, 그 달 전체를 대표합니다.'},{q:'일일·주간과 무엇이 다른가요?',a:'시야의 크기가 다릅니다 — 일일은 하루, 주간은 한 주, 월간은 한 달의 큰 흐름입니다.'}],en:[{q:'When do the monthly numbers refresh?',a:'On the 1st of each month; they represent the whole month.'},{q:'How is this different from daily/weekly?',a:'It\'s the scale of view — a day, a week, or a month\'s larger arc.'}],ja:[{q:'月間の数字はいつ更新されますか？',a:'毎月1日に更新され、その月全体を代表します。'},{q:'日替わり・週間との違いは？',a:'視野の大きさです — 一日、一週間、一ヶ月の大きな流れ。'}],de:[{q:'Wann erneuern sich die Monatszahlen?',a:'Am 1. jedes Monats; sie stehen für den ganzen Monat.'},{q:'Unterschied zu täglich/wöchentlich?',a:'Die Größe des Blicks — ein Tag, eine Woche oder ein Monat.'}],fr:[{q:'Quand les numéros mensuels se renouvellent-ils?',a:'Le 1er de chaque mois ; ils représentent tout le mois.'},{q:'Différence avec quotidien/hebdo?',a:'L\'échelle de vue — un jour, une semaine ou un mois.'}],es:[{q:'¿Cuándo se renuevan los números mensuales?',a:'El día 1 de cada mes; representan todo el mes.'},{q:'¿Diferencia con diario/semanal?',a:'La escala de la mirada — un día, una semana o un mes.'}],pt:[{q:'Quando os números mensais renovam?',a:'No dia 1 de cada mês; representam o mês todo.'},{q:'Diferença do diário/semanal?',a:'A escala da visão — um dia, uma semana ou um mês.'}],it:[{q:'Quando si rinnovano i numeri mensili?',a:'Il 1° di ogni mese; rappresentano l\'intero mese.'},{q:'Differenza con giornaliero/settimanale?',a:'La scala dello sguardo — un giorno, una settimana o un mese.'}],id:[{q:'Kapan angka bulanan diperbarui?',a:'Setiap tanggal 1; mewakili sebulan penuh.'},{q:'Beda dengan harian/mingguan?',a:'Skala pandangan — sehari, sepekan, atau sebulan.'}]},
+    cf:'public,max-age=43200', freq:'monthly',
+  },
+};
+
+function buildPeriodPage(periodKey, lang) {
+  const P = PERIOD_COPY[periodKey];
+  const TL = LANGS[lang] || LANGS.en;
+  const g = (o)=>o[lang]||o.en;
+  const now = new Date();
+  // 주기별 대표 날짜·범위·시드 (UTC 기준, 엣지 결정론)
+  let seedStr, dateLabel, rangeLabel;
+  if (periodKey === 'tomorrow') {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()+1));
+    seedStr = d.toISOString().slice(0,10); dateLabel = seedStr; rangeLabel = seedStr;
+  } else if (periodKey === 'this-week') {
+    const dow = (now.getUTCDay()+6)%7; // 0=Mon
+    const mon = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()-dow));
+    const sun = new Date(Date.UTC(mon.getUTCFullYear(), mon.getUTCMonth(), mon.getUTCDate()+6));
+    seedStr = mon.toISOString().slice(0,10); rangeLabel = `${mon.toISOString().slice(0,10)} ~ ${sun.toISOString().slice(0,10)}`; dateLabel = rangeLabel;
+  } else { // this-month
+    const ym = `${now.getUTCFullYear()}-${String(now.getUTCMonth()+1).padStart(2,'0')}`;
+    seedStr = ym + '-01'; rangeLabel = ym; dateLabel = ym;
+  }
+  const udn = _periodReduce(seedStr);
+  const nums = _periodNums(seedStr);
+  const fill = (s)=>s.replace(/\{date\}/g, dateLabel).replace(/\{range\}/g, rangeLabel).replace(/\{udn\}/g, udn);
+
+  const canonical = `${SITE_URL}/${lang}/${periodKey}/`;
+  const title = fill(g(P.title));
+  const desc  = fill(g(P.desc));
+  const intro = fill(g(P.intro));
+  const heading = g(P.heading);
+  const faq = g(P.faq);
+  const hreflang = buildHreflang(ALL_LANGS.map(l=>({lang:l,url:`${SITE_URL}/${l}/${periodKey}/`})), `${SITE_URL}/en/${periodKey}/`);
+  const numBalls = nums.map(n=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;font-weight:900;font-size:17px;margin:3px;">${n}</span>`).join('');
+  const faqHtml = faq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
+  const faqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":faq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
+  const iframe = `${APP_URL}/?lang=${lang}`;
+  const periodNav = ['today','tomorrow','this-week','this-month'].filter(p=>p!==periodKey).map(p=>{
+    const lbl = { today:{ko:'오늘',en:'Today',ja:'今日',de:'Heute',fr:'Aujourd\'hui',es:'Hoy',pt:'Hoje',it:'Oggi',id:'Hari Ini'}, tomorrow:{ko:'내일',en:'Tomorrow',ja:'明日',de:'Morgen',fr:'Demain',es:'Mañana',pt:'Amanhã',it:'Domani',id:'Besok'}, 'this-week':{ko:'이번 주',en:'This Week',ja:'今週',de:'Diese Woche',fr:'Cette semaine',es:'Esta semana',pt:'Esta semana',it:'Questa settimana',id:'Minggu Ini'}, 'this-month':{ko:'이번 달',en:'This Month',ja:'今月',de:'Dieser Monat',fr:'Ce mois',es:'Este mes',pt:'Este mês',it:'Questo mese',id:'Bulan Ini'} }[p];
+    return `<a href="${SITE_URL}/${lang}/${p}/" style="text-decoration:none;color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe;border-radius:50px;padding:6px 14px;font-size:12px;font-weight:600;">${(lbl[lang]||lbl.en)}</a>`;
+  }).join('');
+  const periodNavLbl = {ko:'다른 기간 운세',en:'Other periods',ja:'他の期間の運勢',de:'Andere Zeiträume',fr:'Autres périodes',es:'Otros periodos',pt:'Outros períodos',it:'Altri periodi',id:'Periode lain'};
+
+  const html = `<!DOCTYPE html><html lang="${lang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${ADS_TAG}
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<link rel="canonical" href="${esc(canonical)}">
+${hreflang}
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${esc(canonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${lang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;}
+.hero{background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;padding:32px 20px;text-align:center;}
+.hero .today-date{font-size:13px;color:#818cf8;margin-bottom:6px;}
+.hero h1{font-size:clamp(18px,4vw,30px);font-weight:900;margin-bottom:8px;}
+.hero p{font-size:13px;color:#c4b5fd;max-width:520px;margin:0 auto;}
+.start-btn{display:inline-block;background:#d97706;color:#fff;font-weight:800;font-size:15px;padding:12px 28px;border-radius:50px;text-decoration:none;margin-top:16px;}
+.intro-card{max-width:640px;margin:20px auto 0;padding:20px 22px;background:#fff;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.06);font-size:14px;color:#44403c;line-height:1.9;}
+.intro-card strong{color:#4c1d95;}
+.faq-wrap{max-width:640px;margin:20px auto;padding:0 16px 24px;}
+.faq-wrap h2{font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:12px;}
+.faq-item{border-bottom:1px solid #e7e5e4;}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{list-style:none;padding:14px 0;font-size:14px;font-weight:700;color:#1c1917;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'＋';font-size:17px;color:#d97706;margin-left:10px;flex-shrink:0;}
+.faq-item[open] summary::after{content:'－';}
+.faq-a{font-size:13px;color:#78716c;line-height:1.75;padding-bottom:14px;}
+iframe{width:100%;border:none;display:block;height:560px;}
+${NAV_FOOTER_CSS}
+</style>
+</head><body>
+<div class="hero">
+  <div class="today-date">${esc(dateLabel)}</div>
+  <h1>${esc(title)}</h1>
+  <p>${esc(desc.length>120 ? desc.slice(0,120).replace(/\s+\S*$/,'')+'…' : desc)}</p>
+  <a class="start-btn" href="#period-frame">${esc((TL.start)||'Start')}</a>
+</div>
+<div class="intro-card" style="text-align:center;">
+  <div style="font-size:13px;font-weight:800;color:#4c1d95;margin-bottom:10px;">🍀 ${esc(heading)} — ${esc(rangeLabel)}</div>
+  <div style="margin-bottom:12px;">${numBalls}</div>
+  <p style="font-size:12.5px;color:#6b7280;line-height:1.8;text-align:left;">${intro}</p>
+</div>
+<section style="max-width:640px;margin:16px auto 0;padding:0 16px;"><div style="font-size:13px;font-weight:700;color:#1e1b4b;margin-bottom:8px;">${periodNavLbl[lang]||periodNavLbl.en}</div><div style="display:flex;flex-wrap:wrap;gap:7px;">${periodNav}</div></section>
+<div class="faq-wrap"><h2>${esc(TL.faqH2||'FAQ')}</h2>${faqHtml}</div>
+<iframe id="period-frame" src="${esc(iframe)}" scrolling="no" title="${esc(title)}" loading="lazy"></iframe>
+<script>(function(){var f=document.getElementById('period-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${buildNavFooter(lang,'lucky')}
+</body></html>`;
+  return new Response(html, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':P.cf,'X-Robots-Tag':'index,follow'}});
+}
+
 // ── Main fetch handler ───────────────────────────────────
 export default {
   async fetch(request, env) {
@@ -667,6 +794,8 @@ export default {
         ...['en','ja','de','fr','es','pt','it','id'].map(l => ({ lang:l, loc:`${SITE_URL}/${l}/lucky/`, priority:'0.9' })),
         // Today pages for all 9 langs (매일 콘텐츠 갱신 → lastmod 동적)
         ...ALL_LANGS.map(l => ({ lang:l, loc:`${SITE_URL}/${l}/today/`, priority:'0.8', lm: todayStr })),
+        // 다중 주기 페이지 (내일/이번주/이번달) — 9 langs × 3
+        ...ALL_LANGS.flatMap(l => ['tomorrow','this-week','this-month'].map(p => ({ lang:l, loc:`${SITE_URL}/${l}/${p}/`, priority:'0.75', lm: todayStr }))),
         // Angel number pages (en/de/fr/es/pt/it × 10 numbers)
         ...['en','de','fr','es','pt','it'].flatMap(l => {
           const pfx={en:'angel',de:'engel',fr:'ange',es:'angel',pt:'anjo',it:'angelo'};
@@ -1407,6 +1536,12 @@ ${tDailyHtml}
 ${buildNavFooter(tLang,'lucky')}
 </body></html>`;
       return new Response(tHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
+    }
+
+    // ── 다중 주기 페이지 (/{lang}/tomorrow|this-week|this-month/) ──
+    const periodMatch = path.match(/^\/(ko|en|ja|de|fr|es|pt|it|id)\/(tomorrow|this-week|this-month)\/?$/);
+    if (periodMatch) {
+      return buildPeriodPage(periodMatch[2], periodMatch[1]);
     }
 
     // ── Compatibility share pages (/ko/gunghap/, /en/compatibility/, etc.) ─
