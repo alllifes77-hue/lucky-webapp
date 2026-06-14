@@ -1242,6 +1242,11 @@ ${NAV_FOOTER_CSS}
 <div class="faq-wrap"><h2>FAQ</h2>${zFaqHtml}</div>
 <iframe id="zodiac-frame" src="${esc(zIframe)}" scrolling="no" title="${esc(zTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('zodiac-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${(() => {
+  const RL = { en:'All Zodiac Signs', de:'Alle Sternzeichen', fr:'Tous les signes', es:'Todos los signos', pt:'Todos os signos', it:'Tutti i segni' };
+  const links = (ZODIAC_SLUGS[zLang]||[]).map((s,i)=> i===signIdx ? '' : `<a href="${SITE_URL}/${zLang}/${s}/">${ZODIAC_EMOJIS[i]} ${esc((ZODIAC_NAMES[zLang]||ZODIAC_NAMES.en)[i])}</a>`).filter(Boolean).join('');
+  return `<section style="max-width:640px;margin:18px auto 0;padding:0 16px;"><h2 style="font-size:14px;font-weight:800;color:#1e1b4b;margin-bottom:10px;">${RL[zLang]||RL.en}</h2><div style="display:flex;flex-wrap:wrap;gap:7px;">${links.replace(/<a /g,'<a style="text-decoration:none;color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe;border-radius:50px;padding:6px 12px;font-size:12px;font-weight:600;white-space:nowrap;" ')}</div></section>`;
+})()}
 ${buildNavFooter(zLang,'lucky')}
 </body></html>`;
           return new Response(zHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
@@ -1798,6 +1803,12 @@ ${NAV_FOOTER_CSS}
 </div>
 <iframe id="lucky-frame" src="${esc(byIframe)}" scrolling="no" title="${esc(byTitle)}" loading="lazy"></iframe>
 <script>(function(){var f=document.getElementById('lucky-frame');var lastH=560;window.addEventListener('message',function(e){if(e.data&&e.data.type==='lucky-resize'&&e.data.height>100){var h=Math.ceil(e.data.height)+24;if(Math.abs(h-lastH)>4){lastH=h;f.style.height=h+'px';}}});})();</script>
+${(() => {
+  const yrs = []; for (let y=birthYear-4; y<=birthYear+4; y++){ if (y>=1950 && y<=2010 && y!==birthYear) yrs.push(y); }
+  if (!yrs.length) return '';
+  const links = yrs.map(y=>`<a href="${SITE_URL}/${y}/" style="text-decoration:none;color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe;border-radius:50px;padding:6px 12px;font-size:12px;font-weight:600;white-space:nowrap;">${y}년생</a>`).join('');
+  return `<section style="max-width:640px;margin:18px auto 0;padding:0 16px;"><h2 style="font-size:14px;font-weight:800;color:#1e1b4b;margin-bottom:10px;">다른 출생연도 운세</h2><div style="display:flex;flex-wrap:wrap;gap:7px;">${links}</div></section>`;
+})()}
 ${buildNavFooter('ko', 'lucky')}
 </body></html>`;
           return new Response(byHtml, {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=7200','X-Robots-Tag':'index,follow'}});
