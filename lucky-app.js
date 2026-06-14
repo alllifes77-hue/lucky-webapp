@@ -1625,7 +1625,21 @@ function renderResults(data) {
     const LP_LBL = { en:'Life Path', de:'Lebenspfad', fr:'Chemin de Vie', es:'Camino de Vida', pt:'Caminho de Vida', it:'Percorso di Vita', ko:'라이프 패스', ja:'ライフパス', id:'Jalur Hidup' };
     culturalHtml = `<span class="cultural-pill">${LP_LBL[lang]||LP_LBL.en}: ${data.cultural.lpn}</span>`;
   }
-  document.getElementById('cultural-info').innerHTML = culturalHtml;
+  // ── 희귀 등급/퍼센타일 라벨 (오늘 시드 결정론, 재미 톤) ──
+  const _t = new Date();
+  const _dn = Math.floor(Date.UTC(_t.getFullYear(), _t.getMonth(), _t.getDate()) / 86400000);
+  const _pct = 1 + (Math.abs((data.seed || 1) * 9301 + _dn * 49297 + 233) % 99); // 1..99 (낮을수록 희귀)
+  const RARITY = {
+    legend:{ ko:n=>`🌟 전설급 행운일 · 상위 ${n}%`, en:n=>`🌟 Legendary luck day · Top ${n}%`, ja:n=>`🌟 伝説級の幸運日 · 上位${n}%`, de:n=>`🌟 Legendärer Glückstag · Top ${n}%`, fr:n=>`🌟 Jour de chance légendaire · Top ${n}%`, es:n=>`🌟 Día de suerte legendario · Top ${n}%`, pt:n=>`🌟 Dia de sorte lendário · Top ${n}%`, it:n=>`🌟 Giorno fortunato leggendario · Top ${n}%`, id:n=>`🌟 Hari hoki legendaris · Top ${n}%` },
+    rare:{ ko:n=>`✨ 희귀한 행운일 · 상위 ${n}%`, en:n=>`✨ Rare lucky day · Top ${n}%`, ja:n=>`✨ 珍しい幸運日 · 上位${n}%`, de:n=>`✨ Seltener Glückstag · Top ${n}%`, fr:n=>`✨ Jour chanceux rare · Top ${n}%`, es:n=>`✨ Día de suerte raro · Top ${n}%`, pt:n=>`✨ Dia de sorte raro · Top ${n}%`, it:n=>`✨ Raro giorno fortunato · Top ${n}%`, id:n=>`✨ Hari hoki langka · Top ${n}%` },
+    good:{ ko:()=>`🍀 좋은 기운이 흐르는 날`, en:()=>`🍀 A day of good energy`, ja:()=>`🍀 良い気が流れる日`, de:()=>`🍀 Ein Tag guter Energie`, fr:()=>`🍀 Un jour de bonne énergie`, es:()=>`🍀 Un día de buena energía`, pt:()=>`🍀 Um dia de boa energia`, it:()=>`🍀 Un giorno di buona energia`, id:()=>`🍀 Hari berenergi baik` },
+    calm:{ ko:()=>`🌱 차분히 다지기 좋은 날`, en:()=>`🌱 A calm day for grounding`, ja:()=>`🌱 静かに整えるのに良い日`, de:()=>`🌱 Ein ruhiger Tag zum Erden`, fr:()=>`🌱 Un jour calme pour se recentrer`, es:()=>`🌱 Un día tranquilo para asentarse`, pt:()=>`🌱 Um dia calmo para se firmar`, it:()=>`🌱 Un giorno calmo per radicarsi`, id:()=>`🌱 Hari tenang untuk membumi` },
+  };
+  const _tier = _pct <= 8 ? 'legend' : _pct <= 30 ? 'rare' : _pct <= 65 ? 'good' : 'calm';
+  const _rarFn = (RARITY[_tier][lang] || RARITY[_tier].en);
+  const _rarText = _rarFn(_pct);
+  const _rarChip = `<span class="cultural-pill" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;font-weight:800;border:none;">${_rarText}</span>`;
+  document.getElementById('cultural-info').innerHTML = _rarChip + culturalHtml;
 
   // ── Clean previous dynamic sections ──────────────────────
   ['detailed-reading-panel','seun-panel','woluun-panel','hapchong-panel','shinsal-panel',
@@ -3604,6 +3618,55 @@ function renderWoluunPanel(data) {
 
 // ── 궁합(相性) 패널 ──────────────────────────────────────
 // 궁합 패널 9개 언어 사전 (verdict: 종합판정 / bars: 분석항목 / sipsin: 십신 / biTypes: 일지 합충 / elements: 오행 표기)
+// 궁합 서사 — 점수 대신 강점(s)/도전(c)/타이밍(t) 이야기로 (The Pattern식). tier: great/good/fair/challenging
+const GUNGHAP_NARR = {
+  ko:{ sLbl:'강점', cLbl:'도전', tLbl:'타이밍',
+    great:{s:'서로를 끌어올리는 인연 — 가치관이 닮아 신뢰가 쉽게 쌓입니다.',c:'편안함이 유일한 함정. 함께 계속 성장하려는 노력을 잊지 마세요.',t:'약속과 큰 계획을 세우기 좋은 시기입니다.'},
+    good:{s:'서로의 부족함을 채우는 보완적 조합입니다.',c:'솔직한 대화가 작은 틈을 메웁니다.',t:'관계를 깊게 하고 함께할 루틴을 만들기 좋은 때.'},
+    fair:{s:'분명한 끌림이 있어요 — 가꿀수록 좋아지는 사이입니다.',c:'차이에는 인내가 필요합니다. 반응보다 경청을 먼저.',t:'천천히. 큰 결정 전에 신뢰를 충분히 쌓으세요.'},
+    challenging:{s:'다름이 가장 큰 배움을 줍니다 — 성장의 여지가 있어요.',c:'서로를 이해하는 데 노력이 듭니다. 차이를 존중하세요.',t:'현재에 집중하고, 성급한 약속은 피하세요.'} },
+  en:{ sLbl:'Strength', cLbl:'Challenge', tLbl:'Timing',
+    great:{s:'You amplify each other — shared values make trust easy.',c:'Comfort is the only risk; keep growing together.',t:'A strong season for commitment and big plans.'},
+    good:{s:'Complementary strengths — you balance each other well.',c:'Communicate openly; honesty closes small gaps.',t:'Good time to deepen and build routines together.'},
+    fair:{s:'Real chemistry is here, waiting to be nurtured.',c:'Differences need patience — listen before reacting.',t:'Go slow; let trust build before big decisions.'},
+    challenging:{s:'Opposites teach the most — there is growth here.',c:'Understanding takes effort; respect the differences.',t:'Focus on the present; avoid rushing commitments.'} },
+  ja:{ sLbl:'強み', cLbl:'課題', tLbl:'タイミング',
+    great:{s:'互いを高め合う縁 — 価値観が似て信頼が育ちやすい。',c:'唯一の落とし穴は慣れ。共に成長し続けて。',t:'約束や大きな計画に良い時期です。'},
+    good:{s:'足りない部分を補い合う相補的な組み合わせ。',c:'率直な対話が小さなずれを埋めます。',t:'関係を深め、習慣を作るのに良い時。'},
+    fair:{s:'確かな惹かれ合いがあります — 育てるほど良くなる仲。',c:'違いには忍耐を。反応より傾聴を先に。',t:'ゆっくりと。大きな決断の前に信頼を積んで。'},
+    challenging:{s:'違いこそ最大の学び — 成長の余地があります。',c:'理解には努力が要ります。違いを尊重して。',t:'今に集中し、性急な約束は避けて。'} },
+  de:{ sLbl:'Stärke', cLbl:'Herausforderung', tLbl:'Timing',
+    great:{s:'Ihr verstärkt euch — gemeinsame Werte schaffen Vertrauen.',c:'Bequemlichkeit ist das einzige Risiko; wachst weiter.',t:'Eine starke Phase für Bindung und große Pläne.'},
+    good:{s:'Ergänzende Stärken — ihr gleicht euch gut aus.',c:'Sprecht offen; Ehrlichkeit schließt kleine Lücken.',t:'Gute Zeit, um Routinen aufzubauen und zu vertiefen.'},
+    fair:{s:'Echte Anziehung ist da und will gepflegt werden.',c:'Unterschiede brauchen Geduld — erst zuhören.',t:'Langsam vorgehen; Vertrauen vor großen Schritten.'},
+    challenging:{s:'Gegensätze lehren am meisten — hier steckt Wachstum.',c:'Verständnis kostet Mühe; achtet die Unterschiede.',t:'Auf das Jetzt konzentrieren; nichts überstürzen.'} },
+  fr:{ sLbl:'Force', cLbl:'Défi', tLbl:'Moment',
+    great:{s:'Vous vous élevez mutuellement — des valeurs communes.',c:'Le confort est le seul risque ; continuez à grandir.',t:'Une belle période pour l’engagement et les grands projets.'},
+    good:{s:'Forces complémentaires — vous vous équilibrez bien.',c:'Parlez ouvertement ; la sincérité comble les écarts.',t:'Bon moment pour approfondir et créer des habitudes.'},
+    fair:{s:'Une vraie alchimie est là, à cultiver.',c:'Les différences demandent de la patience — écoutez.',t:'Allez lentement ; bâtissez la confiance d’abord.'},
+    challenging:{s:'Les opposés enseignent le plus — il y a du potentiel.',c:'Se comprendre demande des efforts ; respectez les écarts.',t:'Restez dans le présent ; ne précipitez rien.'} },
+  es:{ sLbl:'Fortaleza', cLbl:'Reto', tLbl:'Momento',
+    great:{s:'Se potencian mutuamente — valores afines, confianza fácil.',c:'La comodidad es el único riesgo; sigan creciendo.',t:'Una buena temporada para el compromiso y los planes.'},
+    good:{s:'Fortalezas complementarias — se equilibran bien.',c:'Hablen con franqueza; la sinceridad cierra las brechas.',t:'Buen momento para profundizar y crear rutinas.'},
+    fair:{s:'Hay química real, esperando ser cultivada.',c:'Las diferencias piden paciencia — escuchen primero.',t:'Vayan despacio; construyan confianza antes de decidir.'},
+    challenging:{s:'Los opuestos enseñan más — aquí hay crecimiento.',c:'Entenderse cuesta; respeten las diferencias.',t:'Enfóquense en el presente; sin prisas.'} },
+  pt:{ sLbl:'Força', cLbl:'Desafio', tLbl:'Momento',
+    great:{s:'Vocês se elevam — valores afins tornam a confiança fácil.',c:'O conforto é o único risco; continuem crescendo.',t:'Uma boa fase para compromisso e grandes planos.'},
+    good:{s:'Forças complementares — equilibram-se bem.',c:'Falem abertamente; a sinceridade fecha as lacunas.',t:'Bom momento para aprofundar e criar rotinas.'},
+    fair:{s:'Há química real, à espera de ser cultivada.',c:'Diferenças pedem paciência — ouçam primeiro.',t:'Vão devagar; construam confiança antes de decidir.'},
+    challenging:{s:'Os opostos ensinam mais — há crescimento aqui.',c:'Entender-se exige esforço; respeitem as diferenças.',t:'Foquem no presente; sem pressa.'} },
+  it:{ sLbl:'Forza', cLbl:'Sfida', tLbl:'Tempismo',
+    great:{s:'Vi elevate a vicenda — valori affini, fiducia facile.',c:'La comodità è l’unico rischio; continuate a crescere.',t:'Una stagione forte per impegno e grandi progetti.'},
+    good:{s:'Forze complementari — vi bilanciate bene.',c:'Parlate apertamente; la sincerità colma le distanze.',t:'Buon momento per approfondire e creare routine.'},
+    fair:{s:'C’è vera chimica, da coltivare.',c:'Le differenze chiedono pazienza — ascoltate prima.',t:'Andate piano; costruite fiducia prima di decidere.'},
+    challenging:{s:'Gli opposti insegnano di più — qui c’è crescita.',c:'Capirsi richiede impegno; rispettate le differenze.',t:'Concentratevi sul presente; nessuna fretta.'} },
+  id:{ sLbl:'Kekuatan', cLbl:'Tantangan', tLbl:'Waktu',
+    great:{s:'Kalian saling menguatkan — nilai serupa, percaya mudah.',c:'Kenyamanan satu-satunya risiko; teruslah bertumbuh.',t:'Musim yang kuat untuk komitmen dan rencana besar.'},
+    good:{s:'Kekuatan saling melengkapi — kalian seimbang.',c:'Bicaralah terbuka; kejujuran menutup celah kecil.',t:'Waktu baik untuk mendalami dan membangun rutinitas.'},
+    fair:{s:'Ada kecocokan nyata, menunggu dipupuk.',c:'Perbedaan butuh kesabaran — dengarkan dulu.',t:'Pelan-pelan; bangun kepercayaan sebelum memutuskan.'},
+    challenging:{s:'Yang berbeda paling banyak mengajarkan — ada ruang tumbuh.',c:'Saling memahami butuh usaha; hormati perbedaan.',t:'Fokus pada saat ini; jangan terburu-buru.'} },
+};
+
 const GUNGHAP_T = {
   ko: { title:'두 사람 궁합(相性) 분석', pts:'점', tenGods:'십신 관계', branchPrefix:'일지',
     verdict:{great:'천생연분 — 매우 좋은 궁합입니다 ♡',good:'좋은 인연 — 상호 보완적입니다',fair:'보통 — 노력으로 좋아집니다',challenging:'도전적 — 서로 이해와 배려가 필요합니다'},
@@ -3760,6 +3823,15 @@ function renderGunghapPanel(data) {
     </div>
     ${dayBiLbl ? `<div style="text-align:center;margin-bottom:8px;"><span style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;color:#9d174d;">${dayBiLbl}</span></div>` : ''}
     ${vsHtml}
+    ${(() => {
+      const NA = GUNGHAP_NARR[lang] || GUNGHAP_NARR.en;
+      const n = NA[gh.compat] || NA.good;
+      const row = (lbl,txt,clr) => `<div style="display:flex;gap:9px;align-items:flex-start;margin-bottom:8px;">
+        <span style="flex-shrink:0;font-size:10px;font-weight:800;color:#fff;background:${clr};border-radius:6px;padding:3px 8px;min-width:54px;text-align:center;">${lbl}</span>
+        <span style="font-size:12px;line-height:1.55;color:#374151;">${txt}</span></div>`;
+      return `<div style="margin-top:12px;background:#fff;border:1px solid #fbcfe8;border-radius:14px;padding:13px 14px;">
+        ${row(NA.sLbl, n.s, '#16a34a')}${row(NA.cLbl, n.c, '#d97706')}${row(NA.tLbl, n.t, '#7c3aed')}</div>`;
+    })()}
     <div style="margin-top:12px;text-align:center;background:${compatClr}10;border:1px solid ${compatClr}40;border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;color:${compatClr};">${compatStr}</div>`;
 
   const fortuneCats = document.querySelector('.fortune-cats-section');
@@ -4441,6 +4513,81 @@ function _saveBirthAndHistory(data) {
   } catch(e) {}
 }
 
+// ── 행운 스트릭(연속 출석) — Duolingo식 리텐션 (localStorage, 로컬 자정 기준) ──
+const _LS_STREAK = 'lucky_streak_v1';
+function _ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function _updateStreak() {
+  try {
+    const today = _ymd(new Date());
+    const y = new Date(); y.setDate(y.getDate()-1);
+    const yest = _ymd(y);
+    let s = JSON.parse(localStorage.getItem(_LS_STREAK) || 'null') || { last:'', count:0, best:0 };
+    if (s.last === today) { /* 오늘 이미 카운트됨 */ }
+    else if (s.last === yest) { s.count += 1; }
+    else { s.count = 1; }
+    s.last = today;
+    s.best = Math.max(s.best || 0, s.count);
+    localStorage.setItem(_LS_STREAK, JSON.stringify(s));
+    return s;
+  } catch(e) { return null; }
+}
+function _renderStreak() {
+  try {
+    const wrap = document.getElementById('lucky-streak');
+    if (!wrap) return;
+    const s = _updateStreak();
+    if (!s || s.count < 1) { wrap.style.display = 'none'; return; }
+    const lang = window.LUCKY_CURRENT_LANG || 'ko';
+    const days = s.count;
+    const nextMile = days < 3 ? 3 : days < 7 ? 7 : days < 14 ? 14 : days < 30 ? 30 : days < 100 ? 100 : null;
+    // 복수형 안전: 숫자+단어 분리
+    const DAYW = { ko:'일', ja:'日間', en:days===1?'day':'days', de:days===1?'Tag':'Tage', fr:days===1?'jour':'jours', es:days===1?'día':'días', pt:days===1?'dia':'dias', it:days===1?'giorno':'giorni', id:'hari' };
+    const STREAK_T = {
+      ko:`🔥 ${days}${DAYW.ko} 연속 방문`, ja:`🔥 ${days}${DAYW.ja}連続`, en:`🔥 ${days}-${DAYW.en} streak`,
+      de:`🔥 ${days} ${DAYW.de} in Folge`, fr:`🔥 ${days} ${DAYW.fr} d'affilée`, es:`🔥 ${days} ${DAYW.es} seguidos`,
+      pt:`🔥 ${days} ${DAYW.pt} seguidos`, it:`🔥 ${days} ${DAYW.it} di fila`, id:`🔥 ${days} ${DAYW.id} beruntun`,
+    };
+    let mileHtml = '';
+    if (nextMile) {
+      const left = nextMile - days;
+      const LEFT_T = {
+        ko:`${nextMile}일까지 ${left}일`, ja:`あと${left}日で${nextMile}日`, en:`${left} to ${nextMile}`,
+        de:`noch ${left} bis ${nextMile}`, fr:`${left} avant ${nextMile}`, es:`${left} para ${nextMile}`,
+        pt:`${left} para ${nextMile}`, it:`${left} ai ${nextMile}`, id:`${left} lagi ke ${nextMile}`,
+      };
+      const prog = Math.round((days/nextMile)*100);
+      mileHtml = `<div style="flex:1;min-width:120px;">
+        <div style="height:6px;background:rgba(0,0,0,.08);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${prog}%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:3px;"></div></div>
+        <div style="font-size:10px;color:var(--text3,#a8a29e);margin-top:4px;">${LEFT_T[lang]||LEFT_T.en}</div>
+      </div>`;
+    }
+    wrap.style.display = '';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:12px;max-width:500px;margin:0 auto 18px;background:#fff;border:1.5px solid var(--border,#e7e5e4);border-radius:14px;padding:11px 16px;';
+    wrap.innerHTML = `<span style="font-size:13px;font-weight:800;color:#ea580c;white-space:nowrap;">${STREAK_T[lang]||STREAK_T.en}</span>${mileHtml}`;
+  } catch(e) {}
+}
+
+// 정직한 신뢰 신호 — 데이터는 브라우저에만 저장(서버DB 없음)·무가입·무료
+function _renderPrivacyNote() {
+  try {
+    const el = document.getElementById('privacy-note');
+    if (!el) return;
+    const lang = window.LUCKY_CURRENT_LANG || 'ko';
+    const T = {
+      ko:'🔒 입력 정보는 브라우저에만 저장돼요 · 가입 없이 100% 무료 · 9개 언어 지원',
+      en:'🔒 Your data stays in your browser · 100% free, no signup · 9 languages',
+      ja:'🔒 入力情報はブラウザ内のみに保存 · 登録不要・完全無料 · 9言語対応',
+      de:'🔒 Deine Daten bleiben im Browser · 100% kostenlos, ohne Anmeldung · 9 Sprachen',
+      fr:'🔒 Vos données restent dans votre navigateur · 100% gratuit, sans inscription · 9 langues',
+      es:'🔒 Tus datos quedan en tu navegador · 100% gratis, sin registro · 9 idiomas',
+      pt:'🔒 Seus dados ficam no navegador · 100% grátis, sem cadastro · 9 idiomas',
+      it:'🔒 I tuoi dati restano nel browser · 100% gratis, senza registrazione · 9 lingue',
+      id:'🔒 Data Anda tetap di browser · 100% gratis, tanpa daftar · 9 bahasa',
+    };
+    el.textContent = T[lang] || T.en;
+  } catch(e) {}
+}
+
 function _restoreBirthInfo() {
   try {
     const s = JSON.parse(localStorage.getItem(_LS_BIRTH) || 'null');
@@ -4580,6 +4727,19 @@ function getShareUrl() {
 function getShareText() { return lastResult ? buildShareText(lastResult) : ''; }
 
 // ── 오늘의 기운 패널 ─────────────────────────────────────────
+// 데일리 시그니처 한 줄 (Co-Star식) — 날짜 시드로 매일 결정론적 변경, 9개 언어 의역
+const DAILY_SIGNATURE = {
+  en:["Today rewards the bold — make the call you've been avoiding.","Small moves, big momentum. Start before you feel ready.","The universe is listening. Be specific about what you want.","Luck favors the prepared today. Tidy one corner of your life.","A quiet day for planning — plant a seed you'll harvest later.","Your energy is magnetic right now. Reach out to someone.","Trust the timing. What's delayed isn't denied.","Say yes to the unexpected — today's detour is the point.","Protect your focus. One thing finished beats ten half-started.","Fortune flows to open hands. Give a little, gain a lot."],
+  ko:["오늘은 용기에 보상이 따른다 — 미뤄둔 그 연락을 해보세요.","작은 한 걸음이 큰 흐름을 만든다. 준비되기 전에 시작하세요.","우주가 듣고 있다. 원하는 걸 구체적으로 말하세요.","준비된 자에게 운이 온다. 삶의 한 구석을 정돈해보세요.","계획에 좋은 조용한 날 — 나중에 거둘 씨앗을 심으세요.","지금 당신의 기운은 자석 같다. 먼저 손 내밀어보세요.","타이밍을 믿으세요. 늦어진 것은 거절된 게 아닙니다.","예상 밖의 일에 '예'라고 해보세요. 오늘의 우회로가 정답입니다.","집중을 지키세요. 끝낸 하나가 시작만 한 열보다 낫습니다.","행운은 열린 손으로 흐른다. 조금 베풀면 크게 돌아옵니다."],
+  ja:["今日は勇気が報われる — 後回しにした連絡をしてみて。","小さな一歩が大きな流れを生む。準備が整う前に始めよう。","宇宙は聞いている。望みを具体的に言葉にして。","備えある人に運は訪れる。生活の片隅を整えてみて。","計画に向く静かな日 — のちに実る種を蒔こう。","今のあなたは磁石のよう。自分から声をかけてみて。","タイミングを信じて。遅れは拒否ではない。","予想外の出来事に「はい」を。今日の寄り道こそが鍵。","集中を守ろう。終えた一つは、始めただけの十に勝る。","幸運は開いた手に流れる。少し与えれば大きく返る。"],
+  de:["Heute belohnt der Mut — wage den Anruf, den du aufschiebst.","Kleine Schritte, großer Schwung. Fang an, bevor du dich bereit fühlst.","Das Universum hört zu. Sei genau in dem, was du willst.","Das Glück liebt die Vorbereiteten. Räum eine Ecke deines Lebens auf.","Ein stiller Tag zum Planen — säe, was du später erntest.","Deine Energie ist gerade magnetisch. Geh auf jemanden zu.","Vertraue dem Timing. Verzögert heißt nicht verwehrt.","Sag Ja zum Unerwarteten — der Umweg von heute ist der Sinn.","Schütze deinen Fokus. Eins fertig schlägt zehn halb begonnen.","Glück fließt in offene Hände. Gib etwas, gewinne viel."],
+  fr:["Aujourd'hui récompense l'audace — passe l'appel que tu évites.","De petits pas, un grand élan. Commence avant de te sentir prêt.","L'univers écoute. Sois précis sur ce que tu veux.","La chance aime ceux qui se préparent. Range un coin de ta vie.","Un jour calme pour planifier — sème ce que tu récolteras plus tard.","Ton énergie est magnétique en ce moment. Fais le premier pas.","Fais confiance au timing. Retardé ne veut pas dire refusé.","Dis oui à l'imprévu — le détour d'aujourd'hui est l'essentiel.","Protège ta concentration. Une chose finie vaut dix à moitié.","La chance va aux mains ouvertes. Donne un peu, reçois beaucoup."],
+  es:["Hoy premia a los audaces — haz esa llamada que evitas.","Pasos pequeños, gran impulso. Empieza antes de sentirte listo.","El universo escucha. Sé específico con lo que deseas.","La suerte favorece a los preparados. Ordena un rincón de tu vida.","Un día tranquilo para planear — siembra lo que cosecharás luego.","Tu energía es magnética ahora. Da el primer paso con alguien.","Confía en el momento. Lo aplazado no es negado.","Di sí a lo inesperado — el desvío de hoy es el punto.","Protege tu enfoque. Una cosa terminada vale por diez a medias.","La fortuna fluye a manos abiertas. Da un poco, gana mucho."],
+  pt:["Hoje recompensa a ousadia — faça aquela ligação que evita.","Passos pequenos, grande impulso. Comece antes de se sentir pronto.","O universo escuta. Seja específico sobre o que deseja.","A sorte favorece os preparados. Arrume um canto da sua vida.","Um dia calmo para planejar — plante o que vai colher depois.","Sua energia está magnética agora. Dê o primeiro passo.","Confie no tempo certo. O adiado não é negado.","Diga sim ao inesperado — o desvio de hoje é o ponto.","Proteja seu foco. Uma coisa concluída vale por dez pela metade.","A fortuna flui para mãos abertas. Dê um pouco, ganhe muito."],
+  it:["Oggi premia il coraggio — fai quella chiamata che eviti.","Piccoli passi, grande slancio. Inizia prima di sentirti pronto.","L'universo ascolta. Sii preciso su ciò che desideri.","La fortuna ama chi è pronto. Riordina un angolo della tua vita.","Un giorno tranquillo per pianificare — semina ciò che raccoglierai.","La tua energia è magnetica ora. Fai tu il primo passo.","Fidati del tempismo. Ciò che tarda non è negato.","Di' sì all'imprevisto — la deviazione di oggi è il senso.","Proteggi la tua concentrazione. Una cosa finita vale dieci a metà.","La fortuna va alle mani aperte. Dai un po', ricevi molto."],
+  id:["Hari ini memihak yang berani — lakukan panggilan yang kau hindari.","Langkah kecil, momentum besar. Mulai sebelum merasa siap.","Semesta mendengar. Spesifiklah tentang yang kau inginkan.","Keberuntungan menyukai yang siap. Rapikan satu sudut hidupmu.","Hari tenang untuk merencana — tanam benih yang kelak kau panen.","Energimu sedang magnetis. Sapa seseorang lebih dulu.","Percayai waktunya. Yang tertunda bukan berarti ditolak.","Katakan ya pada hal tak terduga — belokan hari ini justru intinya.","Jaga fokusmu. Satu yang selesai mengalahkan sepuluh yang separuh.","Rezeki mengalir ke tangan terbuka. Beri sedikit, dapat banyak."],
+};
+
 function renderDailyEnergyPanel(data) {
   const existing = document.getElementById('daily-energy-panel');
   if (existing) existing.remove();
@@ -4636,11 +4796,28 @@ function renderDailyEnergyPanel(data) {
                 : data.lang==='ja' ? `${IL_KO}の日`
                 : `${STEMS[stemIdx]}${BRANCHES[branchIdx]}`;
 
+  // 데일리 시그니처 한 줄 (날짜 시드 → 매일 변경)
+  const sigPool = DAILY_SIGNATURE[data.lang] || DAILY_SIGNATURE.en;
+  const sigLine = sigPool[((jd % sigPool.length) + sigPool.length) % sigPool.length];
+
+  // 천체 이벤트 배너 (신월/보름 ±1일) + 행동 팁
+  const CELEBR = {
+    new:{ ko:{t:'🌑 신월(新月) — 새 출발과 소원 적기 좋은 날',tip:'이루고 싶은 목표를 한 문장으로 적어보세요.'}, en:{t:'🌑 New Moon — a fresh start, perfect for intentions',tip:'Write down one goal you want to begin.'}, ja:{t:'🌑 新月 — 新しい始まりと願い事に最適',tip:'叶えたい目標を一文で書いてみて。'}, de:{t:'🌑 Neumond — ein Neuanfang, ideal für Vorsätze',tip:'Schreib ein Ziel auf, das du beginnen willst.'}, fr:{t:'🌑 Nouvelle lune — un nouveau départ, idéal pour les intentions',tip:'Note un objectif que tu veux lancer.'}, es:{t:'🌑 Luna nueva — un nuevo comienzo, ideal para intenciones',tip:'Escribe una meta que quieras iniciar.'}, pt:{t:'🌑 Lua nova — um recomeço, ideal para intenções',tip:'Escreva uma meta que deseja começar.'}, it:{t:'🌑 Luna nuova — un nuovo inizio, ideale per i propositi',tip:'Scrivi un obiettivo che vuoi iniziare.'}, id:{t:'🌑 Bulan baru — awal segar, pas untuk niat',tip:'Tulis satu tujuan yang ingin kau mulai.'} },
+    full:{ ko:{t:'🌕 보름달 — 결실과 감사, 비움의 날',tip:'고마운 사람에게 마음을 전해보세요.'}, en:{t:'🌕 Full Moon — fruition, gratitude, and release',tip:'Thank someone who helped you lately.'}, ja:{t:'🌕 満月 — 実り・感謝・手放しの日',tip:'お世話になった人に感謝を伝えて。'}, de:{t:'🌕 Vollmond — Ernte, Dankbarkeit und Loslassen',tip:'Danke jemandem, der dir geholfen hat.'}, fr:{t:'🌕 Pleine lune — aboutissement, gratitude et lâcher-prise',tip:'Remercie quelqu’un qui t’a aidé récemment.'}, es:{t:'🌕 Luna llena — culminación, gratitud y soltar',tip:'Agradece a alguien que te ayudó.'}, pt:{t:'🌕 Lua cheia — realização, gratidão e soltar',tip:'Agradeça a alguém que o ajudou.'}, it:{t:'🌕 Luna piena — compimento, gratitudine e lasciar andare',tip:'Ringrazia qualcuno che ti ha aiutato.'}, id:{t:'🌕 Purnama — buah hasil, syukur, dan melepaskan',tip:'Ucapkan terima kasih pada yang membantumu.'} },
+  };
+  const celeb = CELEBR[moon.key] && CELEBR[moon.key][data.lang] ? CELEBR[moon.key][data.lang] : (CELEBR[moon.key] ? CELEBR[moon.key].en : null);
+  const celebHtml = celeb ? `<div style="background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:10px;padding:9px 12px;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:800;">${celeb.t}</div>
+      <div style="font-size:10.5px;color:#ddd6fe;margin-top:3px;">💡 ${celeb.tip}</div>
+    </div>` : '';
+
   const panel = document.createElement('div');
   panel.id = 'daily-energy-panel';
   panel.style.cssText = 'background:linear-gradient(135deg,#1e293b,#0f172a);border-radius:16px;padding:16px;margin:16px 0;color:#fff;';
   panel.innerHTML = `
     <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#94a3b8;margin-bottom:10px;text-transform:uppercase;">${TITLE[data.lang]||TITLE.en}</div>
+    ${celebHtml}
+    <div style="font-size:14px;font-weight:700;line-height:1.55;color:#fef3c7;background:rgba(251,191,36,.08);border-left:3px solid #fbbf24;border-radius:0 10px 10px 0;padding:11px 14px;margin-bottom:12px;">“${sigLine}”</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center;">
       <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 6px;">
         <div style="font-size:22px;font-weight:900;color:${elColor};">${IL_KO}</div>
@@ -5296,5 +5473,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 편의 기능 초기화 (생일 복원 + 최근 기록 칩) ──────────────
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => { _restoreBirthInfo(); _renderHistoryChips(); }, 50);
+  setTimeout(() => { _restoreBirthInfo(); _renderHistoryChips(); _renderStreak(); _renderPrivacyNote(); }, 50);
 });

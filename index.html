@@ -275,6 +275,8 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 
   <div class="home-content">
     <div class="container">
+      <!-- 행운 스트릭(연속 출석) — JS 로 채워짐 -->
+      <div id="lucky-streak" style="display:none;"></div>
       <div class="input-card">
         <!-- 카테고리 선택 -->
         <div class="cat-select-section">
@@ -411,6 +413,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           <span id="txt-btn-generate">행운의 번호 뽑기</span>
         </button>
         <p class="input-note" id="txt-input-note">생년월일로 사주를 분석해 나만의 행운 번호를 뽑아드립니다</p>
+        <p id="privacy-note" style="font-size:11px;color:var(--text3,#a8a29e);text-align:center;margin-top:8px;line-height:1.6;"></p>
 
         <!-- 최근 운세 기록 (localStorage, JS 로 채워짐) -->
         <div id="recent-history" style="display:none;margin-top:18px;text-align:left;"></div>
@@ -540,7 +543,7 @@ if (window.self === window.top) {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2/astronomy.browser.min.js" defer></script>
-<script src="lucky-app.js?v=20260612e" defer></script>
+<script src="lucky-app.js?v=20260613a" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () =>
