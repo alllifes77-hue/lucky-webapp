@@ -560,7 +560,7 @@ function buildNavFooter(lang, activePage) {
     const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
     return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
   }).join('');
-  return `${ADS_UNIT}${lang==='ko'?COUPANG_WIDGET:''}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/${lang}/about/">${({ko:'소개',ja:'紹介',en:'About',de:'Über',fr:'À propos',es:'Acerca de',pt:'Sobre',it:'Chi siamo',id:'Tentang'})[lang]||'About'}</a> · <a href="${SITE_URL}/${lang}/method/">${({ko:'분석 방법',ja:'分析方法',en:'Method',de:'Methode',fr:'Méthode',es:'Método',pt:'Método',it:'Metodo',id:'Metode'})[lang]||'Method'}</a> · <a href="${SITE_URL}/lucky-sitemap.xml">${({ko:'사이트맵',ja:'サイトマップ',en:'Sitemap',de:'Seitenübersicht',fr:'Plan du site',es:'Mapa del sitio',pt:'Mapa do site',it:'Mappa del sito',id:'Peta situs'})[lang]||'Sitemap'}</a></footer>`;
+  return `${_aeStrip(lang)}${ADS_UNIT}${lang==='ko'?COUPANG_WIDGET:''}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/${lang}/about/">${({ko:'소개',ja:'紹介',en:'About',de:'Über',fr:'À propos',es:'Acerca de',pt:'Sobre',it:'Chi siamo',id:'Tentang'})[lang]||'About'}</a> · <a href="${SITE_URL}/${lang}/method/">${({ko:'분석 방법',ja:'分析方法',en:'Method',de:'Methode',fr:'Méthode',es:'Método',pt:'Método',it:'Metodo',id:'Metode'})[lang]||'Method'}</a> · <a href="${SITE_URL}/lucky-sitemap.xml">${({ko:'사이트맵',ja:'サイトマップ',en:'Sitemap',de:'Seitenübersicht',fr:'Plan du site',es:'Mapa del sitio',pt:'Mapa do site',it:'Mappa del sito',id:'Peta situs'})[lang]||'Sitemap'}</a></footer>`;
 }
 
 
@@ -615,6 +615,35 @@ function renderAffSlot(lang){
   if (!offers || !offers.length) return '';
   const cards = offers.map(o=>`<a class="aff-card" href="${o.url}" target="_blank" rel="sponsored nofollow noopener"><span class="aff-icon">${o.icon||'⭐'}</span><span class="aff-body"><strong>${esc(o.title)}</strong><span>${esc(o.desc||'')}</span></span><span class="aff-cta">${esc(o.cta||'→')}</span></a>`).join('');
   return `<div class="aff-slot"><div class="aff-label">${AFF_LABELS[lang]||AFF_LABELS.en}</div>${cards}</div>`;
+}
+
+// ── AliExpress 어필리에이트 상품 띠 (전 SEO 페이지 본문 — 지속 노출) ──
+// /ko/aff-products 엣지캐시 엔드포인트를 클라이언트에서 호출해 가로 스크롤 카드 렌더.
+// 홈(index.html)은 buildNavFooter 미사용 → 자동 제외. rel="sponsored nofollow"·의무 고지문.
+const AE_STRIP_L = {
+  ko:{t:'🧧 행운 아이템 추천 · 광고', d:'AliExpress 파트너스 활동으로 일정액의 수수료를 받을 수 있습니다.'},
+  en:{t:'🧧 Lucky Charm Picks · Ad', d:'As an AliExpress affiliate, we may earn a commission from qualifying purchases.'},
+  ja:{t:'🧧 開運アイテム · 広告', d:'AliExpressアフィリエイトにより、購入に応じて手数料を受け取る場合があります。'},
+  de:{t:'🧧 Glücksbringer-Auswahl · Anzeige', d:'Als AliExpress-Partner verdienen wir ggf. an qualifizierten Käufen.'},
+  fr:{t:'🧧 Porte-bonheur · Pub', d:'En tant que partenaire AliExpress, nous pouvons percevoir une commission sur les achats éligibles.'},
+  es:{t:'🧧 Amuletos de la suerte · Anuncio', d:'Como afiliados de AliExpress, podemos recibir una comisión por compras elegibles.'},
+  pt:{t:'🧧 Amuletos da sorte · Anúncio', d:'Como afiliados do AliExpress, podemos receber comissão por compras qualificadas.'},
+  it:{t:'🧧 Portafortuna · Annuncio', d:'In qualità di affiliati AliExpress, potremmo ricevere una commissione sugli acquisti idonei.'},
+  id:{t:'🧧 Jimat keberuntungan · Iklan', d:'Sebagai afiliasi AliExpress, kami dapat menerima komisi dari pembelian yang memenuhi syarat.'},
+};
+function _aeStrip(lang){
+  const lb = AE_STRIP_L[lang] || AE_STRIP_L.en;
+  return `<div class="ae-strip" style="max-width:780px;margin:18px auto 0;padding:0 16px;display:none;">
+  <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:10px;">${lb.t}</div>
+  <div class="ae-strip-cards" style="display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;"></div>
+  <p style="font-size:9.5px;color:#a8a29e;margin:6px 0 0;line-height:1.5;">${lb.d}</p>
+</div>
+<script>(function(){var box=document.currentScript.previousElementSibling;var w=box.querySelector('.ae-strip-cards');
+fetch('${SITE_URL}/ko/aff-products?lang=${lang}').then(function(r){return r.json();}).then(function(j){
+  if(!j||!j.ok||!j.products||!j.products.length)return;
+  w.innerHTML=j.products.map(function(p){return '<a href="'+p.url+'" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:#1c1917;background:#fff;border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;"><img src="'+p.img+'" alt="" loading="lazy" style="width:122px;height:122px;object-fit:cover;display:block;"><div style="padding:7px 8px 9px;"><div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:#44403c;">'+(p.t||'').replace(/</g,'&lt;').slice(0,60)+'</div><div style="font-size:12px;font-weight:800;color:#d97706;margin-top:4px;">'+p.price+' '+p.cur+'</div></div></a>';}).join('');
+  box.style.display='block';
+}).catch(function(){});})();</script>`;
 }
 
 // ── Escape HTML ──────────────────────────────────────────
