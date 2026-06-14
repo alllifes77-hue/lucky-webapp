@@ -1646,7 +1646,8 @@ function renderResults(data) {
    'sipiunsung-panel','iljuron-panel','today-ilchin-section','fortune-cats-section',
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
-   'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel'].forEach(id => {
+   'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1722,6 +1723,12 @@ function renderResults(data) {
   if (personName) renderNamePanel(calcNameNumerology(personName));
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
+  // ── 신규 행운요소 5종 (모든 언어 결과화면 공통 노출) ──
+  renderSunSignPanel(data);
+  renderBiorhythmPanel(data);
+  renderTarotPanel(data);
+  renderBirthstonePanel(data);
+  renderLuckyFourPanel(data);
   renderAliExpressPanel(data);
   renderShareBtns(data);
   renderAIChat(data);
@@ -5021,6 +5028,184 @@ function renderDailyEnergyPanel(data) {
   const shareSec = document.querySelector('.share-section');
   if (shareSec) shareSec.parentNode.insertBefore(panel, shareSec);
   else document.getElementById('s-result').appendChild(panel);
+}
+
+// ══════════════════════════════════════════════════════════
+// 신규 행운요소 5종 (바이오리듬·탄생석/화·서양별자리·타로·행운의4요소)
+// 콘텐츠: window.LUX[lang] (luck-elements.js, 9개 언어 네이티브)
+// 모든 값은 생일·seed·오늘날짜 기반 결정론
+// ══════════════════════════════════════════════════════════
+function _luxGet(lang){ return (window.LUX && (window.LUX[lang] || window.LUX.en)) || null; }
+function _luxDayNum(){ const t=new Date(); return Math.floor(Date.UTC(t.getFullYear(),t.getMonth(),t.getDate())/86400000); }
+function _luxPick(seed, salt, n){ return Math.floor(mkRng((seed||1) + _luxDayNum()*salt + salt)() * n); }
+function _luxInsert(panel){
+  const shareSec = document.querySelector('.share-section');
+  if (shareSec) shareSec.parentNode.insertBefore(panel, shareSec);
+  else { const r=document.getElementById('s-result'); if (r) r.appendChild(panel); }
+}
+// 서양 태양궁 인덱스 0=양자리..11=물고기
+function _sunSignIdx(m, d){
+  const t = m*100 + d;
+  if (t>=321 && t<=419) return 0;
+  if (t>=420 && t<=520) return 1;
+  if (t>=521 && t<=620) return 2;
+  if (t>=621 && t<=722) return 3;
+  if (t>=723 && t<=822) return 4;
+  if (t>=823 && t<=922) return 5;
+  if (t>=923 && t<=1022) return 6;
+  if (t>=1023 && t<=1121) return 7;
+  if (t>=1122 && t<=1221) return 8;
+  if (t>=1222 || t<=119) return 9;
+  if (t>=120 && t<=218) return 10;
+  return 11;
+}
+const _SIGN_EMJ = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+const _SIGN_ELEMCOL = ['#ef4444','#16a34a','#06b6d4','#3b82f6','#ef4444','#16a34a','#06b6d4','#3b82f6','#ef4444','#16a34a','#06b6d4','#3b82f6'];
+
+// ── 1) 바이오리듬 ──────────────────────────────────────────
+function renderBiorhythmPanel(data){
+  const old=document.getElementById('biorhythm-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.biorhythm) return;
+  const B=X.biorhythm;
+  const bd=gregJD(data.year,data.month,data.day);
+  const t=new Date(); const td=gregJD(t.getFullYear(),t.getMonth()+1,t.getDate());
+  const days=td-bd;
+  const v=(p)=>Math.round(Math.sin(2*Math.PI*days/p)*100);
+  const phys=v(23), emo=v(28), intel=v(33);
+  const row=(name,val)=>{
+    const st = val>30?B.band.high : val<-30?B.band.low : B.band.mid;
+    const col = val>30?'#16a34a' : val<-30?'#dc2626' : '#d97706';
+    const w=Math.min(100,Math.abs(val));
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;gap:8px;">
+        <span style="font-weight:700;color:#3730a3;">${escHtml(name)}</span>
+        <span style="color:${col};font-weight:800;white-space:nowrap;">${val>0?'+':''}${val}% · ${escHtml(st)}</span></div>
+      <div style="height:8px;background:#e0e7ff;border-radius:4px;overflow:hidden;"><div style="height:100%;width:${w}%;background:${col};border-radius:4px;"></div></div>
+    </div>`;
+  };
+  const avg=(phys+emo+intel)/3;
+  const tip = avg>=0 ? B.tipUp : B.tipDown;
+  const panel=document.createElement('div');
+  panel.id='biorhythm-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#4338ca;margin-bottom:12px;text-transform:uppercase;">📈 ${escHtml(B.title)}</div>
+    ${row(B.cycles.physical,phys)}
+    ${row(B.cycles.emotional,emo)}
+    ${row(B.cycles.intellectual,intel)}
+    <div style="background:rgba(67,56,202,.08);border-radius:10px;padding:9px 12px;font-size:12px;color:#3730a3;line-height:1.5;margin-top:10px;">💡 ${escHtml(tip)}</div>
+    <div style="font-size:10px;color:#6366f1;margin-top:7px;line-height:1.4;">${escHtml(B.note)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── 2) 탄생석 · 탄생화 ─────────────────────────────────────
+function renderBirthstonePanel(data){
+  const old=document.getElementById('birthstone-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.birthstone) return;
+  const S=X.birthstone; const mi=Math.max(0,Math.min(11,(data.month||1)-1));
+  const m=S.months[mi]; if(!m) return;
+  const panel=document.createElement('div');
+  panel.id='birthstone-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#fff1f2,#ffe4e6);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#be123c;margin-bottom:12px;text-transform:uppercase;">💎 ${escHtml(S.title)}</div>
+    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:120px;background:rgba(255,255,255,.6);border-radius:12px;padding:12px;text-align:center;">
+        <div style="font-size:30px;line-height:1;margin-bottom:6px;">💎</div>
+        <div style="font-size:10px;color:#9f1239;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">${escHtml(S.stoneLabel)}</div>
+        <div style="font-size:16px;font-weight:900;color:#881337;margin-top:2px;">${escHtml(m.stone)}</div></div>
+      <div style="flex:1;min-width:120px;background:rgba(255,255,255,.6);border-radius:12px;padding:12px;text-align:center;">
+        <div style="font-size:30px;line-height:1;margin-bottom:6px;">🌸</div>
+        <div style="font-size:10px;color:#9f1239;font-weight:700;text-transform:uppercase;letter-spacing:.04em;">${escHtml(S.flowerLabel)}</div>
+        <div style="font-size:16px;font-weight:900;color:#881337;margin-top:2px;">${escHtml(m.flower)}</div></div>
+    </div>
+    <div style="background:rgba(190,18,60,.07);border-radius:10px;padding:9px 12px;font-size:12px;color:#9f1239;line-height:1.5;">✨ ${escHtml(m.meaning)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── 3) 서양 별자리 (태양궁) 오늘의 운세 ─────────────────────
+function renderSunSignPanel(data){
+  const old=document.getElementById('sunsign-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.sunSign) return;
+  const S=X.sunSign; const si=_sunSignIdx(data.month||1, data.day||1);
+  const sign=S.signs[si]; if(!sign) return;
+  const daily=S.daily[_luxPick(data.seed,3, S.daily.length)] || S.daily[0];
+  const love = 55 + _luxPick(data.seed, 13, 45);
+  const money= 52 + _luxPick(data.seed, 17, 47);
+  const elemCol=_SIGN_ELEMCOL[si];
+  const bar=(lbl,val)=>`<div style="flex:1;min-width:120px;">
+    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span style="color:#6b21a8;font-weight:700;">${escHtml(lbl)}</span><span style="color:#7e22ce;font-weight:800;">${val}%</span></div>
+    <div style="height:7px;background:#ede9fe;border-radius:4px;overflow:hidden;"><div style="height:100%;width:${val}%;background:linear-gradient(90deg,#a855f7,#7e22ce);border-radius:4px;"></div></div></div>`;
+  const panel=document.createElement('div');
+  panel.id='sunsign-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#faf5ff,#f3e8ff);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#7e22ce;margin-bottom:12px;text-transform:uppercase;">${_SIGN_EMJ[si]} ${escHtml(S.title)}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+      <div style="font-size:46px;line-height:1;">${_SIGN_EMJ[si]}</div>
+      <div style="flex:1;">
+        <div style="font-size:20px;font-weight:900;color:#581c87;">${escHtml(sign.name)}</div>
+        <div style="font-size:11px;color:#7e22ce;margin-top:2px;">${escHtml(sign.range)} · <span style="color:${elemCol};font-weight:700;">${escHtml(sign.element)}</span></div>
+      </div></div>
+    <div style="font-size:12px;color:#6b21a8;line-height:1.5;margin-bottom:10px;">${escHtml(sign.trait)}</div>
+    <div style="background:rgba(126,34,206,.07);border-radius:10px;padding:10px 12px;font-size:12px;color:#581c87;line-height:1.55;margin-bottom:12px;"><b>${escHtml(S.overallLabel)}</b> · ${escHtml(daily)}</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">${bar(S.loveLabel,love)}${bar(S.moneyLabel,money)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── 4) 오늘의 타로 (메이저 아르카나) ────────────────────────
+function renderTarotPanel(data){
+  const old=document.getElementById('tarot-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.tarot) return;
+  const T=X.tarot; const ci=_luxPick(data.seed,7, T.cards.length);
+  const card=T.cards[ci]; if(!card) return;
+  const panel=document.createElement('div');
+  panel.id='tarot-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;padding:16px;margin:16px 0;color:#e0e7ff;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c7d2fe;margin-bottom:6px;text-transform:uppercase;">🔮 ${escHtml(T.title)}</div>
+    <div style="font-size:11px;color:#a5b4fc;margin-bottom:12px;line-height:1.4;">${escHtml(T.intro)}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+      <div style="width:62px;height:96px;flex-shrink:0;border-radius:10px;background:linear-gradient(160deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 4px 14px rgba(0,0,0,.35);border:2px solid #fcd34d;">🃏</div>
+      <div style="flex:1;">
+        <div style="font-size:19px;font-weight:900;color:#fff;line-height:1.2;">${escHtml(card.name)}</div>
+        <div style="display:inline-block;margin-top:6px;background:rgba(251,191,36,.2);color:#fcd34d;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;">${escHtml(T.uprightLabel)} · ${escHtml(card.keyword)}</div>
+      </div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#e0e7ff;line-height:1.6;">${escHtml(card.line)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── 5) 행운의 4요소 (색·숫자·방위·시간) ─────────────────────
+function renderLuckyFourPanel(data){
+  const old=document.getElementById('luckyfour-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.luckyFour) return;
+  const F=X.luckyFour; const L=window.LUCKY_LANG||{};
+  const colorHex=(data.colorData&&data.colorData.hex)||'#f59e0b';
+  const colorName=(data.colorData)?((L.colorNames&&L.colorNames[data.colorData.en])||data.colorData.en):'—';
+  const num=1+_luxPick(data.seed,11,9);
+  const dirIdx=_luxPick(data.seed,5,8);
+  const dir=F.directions[dirIdx]||F.directions[0];
+  const hourStart=_luxPick(data.seed,19,12)*2;
+  const pad=(n)=>(n<10?'0':'')+n;
+  const timeWin=`${pad(hourStart)}:00–${pad((hourStart+2)%24)}:00`;
+  const cell=(icon,lbl,val,extra)=>`<div style="flex:1;min-width:calc(50% - 5px);background:rgba(255,255,255,.65);border-radius:12px;padding:11px;text-align:center;">
+    <div style="font-size:22px;line-height:1;margin-bottom:5px;">${icon}</div>
+    <div style="font-size:10px;color:#0e7490;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">${escHtml(lbl)}</div>
+    <div style="font-size:15px;font-weight:900;color:#155e75;margin-top:2px;">${extra||''}${escHtml(String(val))}</div></div>`;
+  const swatch=`<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${colorHex};vertical-align:middle;margin-right:5px;border:1px solid rgba(0,0,0,.1);"></span>`;
+  const panel=document.createElement('div');
+  panel.id='luckyfour-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#ecfeff,#cffafe);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#0e7490;margin-bottom:12px;text-transform:uppercase;">🧭 ${escHtml(F.title)}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      ${cell('🎨',F.colorLabel,colorName,swatch)}
+      ${cell('🔢',F.numberLabel,num)}
+      ${cell('🧭',F.directionLabel,dir)}
+      ${cell('⏰',F.timeLabel,timeWin)}
+    </div>
+    <div style="background:rgba(14,116,144,.08);border-radius:10px;padding:9px 12px;font-size:12px;color:#155e75;line-height:1.5;margin-top:10px;">🍀 ${escHtml(F.tip)}</div>`;
+  _luxInsert(panel);
 }
 
 // ── 십이지 (Chinese Zodiac) 배지 패널 ───────────────────────

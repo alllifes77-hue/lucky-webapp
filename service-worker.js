@@ -1,9 +1,10 @@
 // Lucky Numbers PWA Service Worker
-// v5: 경로 수정(/lucky/ 스코프), HTML 은 network-first 로 변경 (업데이트 즉시 반영)
-const CACHE_NAME = 'lucky-v5';
+// v6: 행운요소 5종 콘텐츠(luck-elements.js) precache 추가
+const CACHE_NAME = 'lucky-v6';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
+  '/lucky/luck-elements.js',
   '/lucky/lucky-app.js',
   '/lucky/lang/ko.js',
   '/lucky/lang/en.js',
