@@ -364,7 +364,7 @@ const LANGS = {
 };
 
 // ── OG Image Generator ───────────────────────────────────
-function generateOGImage(numbers, lang) {
+function generateOGImage(numbers, lang, sub) {
   const L = LANGS[lang] || LANGS.en;
   const nums = (numbers || '7 15 22 31 38 42').split(/[\s,]+/).filter(Boolean).slice(0, 7);
 
@@ -420,6 +420,7 @@ function generateOGImage(numbers, lang) {
 <text x="600" y="248" font-family="Arial Black,Arial" font-size="38" font-weight="900" fill="white" text-anchor="middle">${appName[lang] || appName.en}</text>
 <text x="600" y="296" font-family="Arial,Helvetica" font-size="18" fill="#c4b5fd" text-anchor="middle" opacity="0.9">${tagline[lang] || tagline.en}</text>
 ${ballsSvg}
+${sub ? `<text x="600" y="492" font-family="Arial,Helvetica" font-size="22" font-weight="700" fill="#fbbf24" text-anchor="middle" opacity="0.95">${esc(String(sub))}</text>` : ''}
 <rect x="0" y="618" width="1200" height="12" fill="#d97706" opacity="0.3"/>
 </svg>`;
 }
@@ -921,10 +922,12 @@ ${urlsXml}
 </urlset>`, { headers:{'Content-Type':'application/xml;charset=UTF-8','Cache-Control':'public,max-age=86400'} });
     }
 
-    // ── OG Image (/lucky-og?numbers=7,15,22&lang=ko) ────
-    if (path === '/lucky-og' || path === '/lucky-og/') {
+    // ── 동적 OG 이미지 (/lucky-og·/og?numbers=7,15,22&lang=ko&sub=2026-06-13) ──
+    // 결과별 동적 SVG 카드. (참고: 소셜 크롤러 다수가 SVG OG 미지원 → 일반 페이지는
+    // 정적 PNG 유지. 본 라우트는 직접보기·Discord·X 일부 + 향후 PNG 파이프라인 대비)
+    if (path === '/lucky-og' || path === '/lucky-og/' || path === '/og' || path === '/og/') {
       const p = url.searchParams;
-      const svg = generateOGImage(p.get('numbers') || '', p.get('lang') || 'en');
+      const svg = generateOGImage(p.get('numbers') || '', p.get('lang') || 'en', p.get('sub') || '');
       return new Response(svg, {
         headers: { 'Content-Type':'image/svg+xml', 'Cache-Control':'public,max-age=3600', 'Access-Control-Allow-Origin':'*' }
       });
@@ -2336,7 +2339,7 @@ ${buildNavFooter(btLang, 'lucky')}
     if (isShare && sharedNums) {
       ogTitle = (L.ogResultTitle || '🍀 Lucky Numbers: {numbers}').replace('{numbers}', sharedNums);
       ogDesc  = L.ogResultDesc || L.desc;
-      ogImage = `${SITE_URL}/lucky-og?numbers=${encodeURIComponent(sharedNums)}&lang=${lang}`;
+      ogImage = `${SITE_URL}/lucky-og?numbers=${encodeURIComponent(sharedNums)}&lang=${lang}&sub=${new Date().toISOString().slice(0,10)}`;
     } else {
       ogTitle = L.title;
       ogDesc  = L.desc;
