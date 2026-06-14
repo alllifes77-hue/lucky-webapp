@@ -1038,27 +1038,36 @@ ${urlsXml}
           return new Response(JSON.stringify({ ok:false, reason:'no-creds' }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
         }
         const affLang = (url.searchParams.get('lang') || 'en').toLowerCase();
-        // 언어별 마켓 설정: 배송국가/통화/표시언어 (상품 제목이 현지어로 옴)
-        const AFF_MARKET = {
-          ko:{ ship:'KR', cur:'KRW', tl:'ko' }, en:{ ship:'US', cur:'USD', tl:'en' },
-          ja:{ ship:'JP', cur:'JPY', tl:'ja' }, de:{ ship:'DE', cur:'EUR', tl:'de' },
-          fr:{ ship:'FR', cur:'EUR', tl:'fr' }, es:{ ship:'ES', cur:'EUR', tl:'es' },
-          pt:{ ship:'BR', cur:'BRL', tl:'pt' }, it:{ ship:'IT', cur:'EUR', tl:'it' },
-          id:{ ship:'ID', cur:'IDR', tl:'id' },
-        };
-        const mk = AFF_MARKET[affLang] || AFF_MARKET.en;
+        // 상품 제목 표시언어 = 페이지 언어 (가독성)
+        const LANG_TL = { ko:'ko', en:'en', ja:'ja', de:'de', fr:'fr', es:'es', pt:'pt', it:'it', id:'id' };
+        const tlPrimary = LANG_TL[affLang] || 'en';
 
-        // 엣지 캐시 조회 (언어별 키)
+        // ★ 지오 최적화: 배송국가/통화는 "페이지 언어"가 아니라 "방문자 실제 국가 IP"(Cloudflare geo)로 결정.
+        //   한국 방문자는 영어 페이지든 어디든 KR 배송 가능한 KRW 상품을 받음 → 클릭 시 "미배송" 404 방지.
+        //   미지원/불명 국가는 US 로 폴백해 노출은 유지.
+        const COUNTRY_CUR = {
+          KR:'KRW', US:'USD', JP:'JPY', CN:'USD', GB:'GBP', BR:'BRL', ID:'IDR', RU:'RUB',
+          CA:'CAD', AU:'AUD', SG:'SGD', HK:'HKD', TW:'USD', IN:'USD', TH:'USD', VN:'USD',
+          PH:'USD', MY:'USD', MX:'USD', TR:'USD', SA:'USD', AE:'USD', PL:'PLN',
+          DE:'EUR', FR:'EUR', ES:'EUR', IT:'EUR', NL:'EUR', BE:'EUR', AT:'EUR', IE:'EUR',
+          PT:'EUR', FI:'EUR', GR:'EUR', SK:'EUR', SI:'EUR', LT:'EUR', LV:'EUR', EE:'EUR', LU:'EUR', CY:'EUR', MT:'EUR',
+        };
+        const geo = (request.cf && request.cf.country) ? String(request.cf.country).toUpperCase() : '';
+        const shipPrimary = /^[A-Z]{2}$/.test(geo) ? geo : 'US';   // 국가 불명 → US 폴백
+        const curPrimary = COUNTRY_CUR[shipPrimary] || 'USD';
+
+        // 엣지 캐시 조회 (언어+국가별 키 — 같은 페이지라도 방문자 국가별로 배송/통화가 다름)
+        const debug = url.searchParams.get('debug') === '1';
         const cache = caches.default;
-        const cacheKey = new Request(`https://ae-aff.cache/${affLang}`);
-        const hit = await cache.match(cacheKey);
+        const cacheKey = new Request(`https://ae-aff.cache/v2-${affLang}-${shipPrimary}`);
+        const hit = url.searchParams.get('debug') ? null : await cache.match(cacheKey);
         if (hit) {
           const cachedBody = await hit.text();
           return new Response(cachedBody, { headers: jsonHeaders });
         }
 
         // TOP /sync 서명: 파라미터 ASCII 정렬 → key+value 연결 → HMAC-SHA256(secret) → 대문자 hex
-        const aeCall = async (tl, ship) => {
+        const aeCall = async (tl, ship, cur, kw) => {
           const params = {
             app_key: env.AE_APP_KEY,
             method: 'aliexpress.affiliate.product.query',
@@ -1066,8 +1075,8 @@ ${urlsXml}
             timestamp: String(Date.now()),
             format: 'json',
             v: '2.0',
-            keywords: 'lucky charm bracelet feng shui',
-            target_currency: mk.cur,
+            keywords: kw || 'lucky charm',
+            target_currency: cur,
             target_language: tl,
             tracking_id: 'luckynum',
             page_size: '10',
@@ -1083,44 +1092,61 @@ ${urlsXml}
           return apiResp.json().catch(() => null);
         };
 
-        // 폴백 체인: (현지어,배송국) → (en,배송국) → (현지어,무배송국) → (en,무배송국)
-        // 일부 언어(target_language)·국가(ship_to_country: KR/ID 등)는 API 미지원이라 단계적 완화
+        // 폴백 체인: 방문자 국가(현지어→en) 우선 → 실패 시 US 배송으로 완화(노출 유지)
         const extract = (resp) => {
           const r = resp && resp.aliexpress_affiliate_product_query_response
             && resp.aliexpress_affiliate_product_query_response.resp_result
             && resp.aliexpress_affiliate_product_query_response.resp_result.result;
           return (r && r.products && r.products.product) || [];
         };
+        // 키워드는 테마 유지하며 점진 확장: 좁은 다단어("lucky charm bracelet feng shui")는
+        // KR 등 일부 배송국 재고가 0 → "lucky charm"(KR 8개)·"feng shui"(KR 6개)로 넓혀 폴백.
+        const KW_PRIMARY = 'lucky charm';
+        const KW_WIDE = 'feng shui';
+        // 폴백 체인 [tl, ship, cur, keyword]: 방문자 국가(키워드 확장) 우선 → 실패 시 US 배송
         const attempts = [];
-        attempts.push([mk.tl, mk.ship]);
-        if (mk.tl !== 'en') attempts.push(['en', mk.ship]);
-        attempts.push([mk.tl, null]);
-        if (mk.tl !== 'en') attempts.push(['en', null]);
-        let j = null, list = [];
-        for (const [tl, ship] of attempts) {
-          j = await aeCall(tl, ship);
-          list = extract(j);
-          if (list.length) break;
+        attempts.push([tlPrimary, shipPrimary, curPrimary, KW_PRIMARY]);
+        if (tlPrimary !== 'en') attempts.push(['en', shipPrimary, curPrimary, KW_PRIMARY]);
+        attempts.push(['en', shipPrimary, curPrimary, KW_WIDE]);   // 같은 배송국, 키워드 확장
+        if (shipPrimary !== 'US') {                                // 방문자 국가서 다 비면 US 배송으로 폴백(노출 유지)
+          attempts.push([tlPrimary, 'US', 'USD', KW_PRIMARY]);
+          if (tlPrimary !== 'en') attempts.push(['en', 'US', 'USD', KW_PRIMARY]);
+        }
+        let j = null, list = [], usedShip = shipPrimary, usedCur = curPrimary;
+        const dbgLog = [];
+        for (const [tl, ship, cur, kw] of attempts) {
+          j = await aeCall(tl, ship, cur, kw);
+          const got = extract(j);
+          if (debug) {
+            const er = (j && j.error_response) ? (j.error_response.msg || j.error_response.code)
+              : (j && j.aliexpress_affiliate_product_query_response && j.aliexpress_affiliate_product_query_response.resp_result)
+                ? j.aliexpress_affiliate_product_query_response.resp_result.resp_msg : 'no-resp';
+            dbgLog.push({ tl, ship, cur, kw, cnt: got.length, msg: String(er).slice(0,90) });
+          }
+          list = got;
+          if (list.length) { usedShip = ship; usedCur = cur; break; }
         }
 
         if (!list.length) {
           const detail = (j && j.error_response && (j.error_response.msg || j.error_response.code))
             || (j && j.aliexpress_affiliate_product_query_response && j.aliexpress_affiliate_product_query_response.resp_result && j.aliexpress_affiliate_product_query_response.resp_result.resp_msg)
             || 'empty';
-          return new Response(JSON.stringify({ ok:false, reason:String(detail).slice(0,200) }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+          return new Response(JSON.stringify({ ok:false, reason:String(detail).slice(0,200), geo, shipPrimary, attempts: debug?dbgLog:undefined }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
         }
 
         const products = list.slice(0, 8).map(p => ({
           t: p.product_title,
           img: p.product_main_image_url,
           price: p.target_sale_price || p.sale_price || '',
-          cur: p.target_sale_price_currency || p.sale_price_currency || mk.cur,
+          cur: p.target_sale_price_currency || p.sale_price_currency || usedCur,
           url: p.promotion_link,
         })).filter(p => p.url && p.img);
 
-        const body = JSON.stringify({ ok:true, lang: affLang, products });
-        await cache.put(cacheKey, new Response(body, { headers: { 'Cache-Control':'public, max-age=21600' } }));
-        return new Response(body, { headers: jsonHeaders });
+        const body = JSON.stringify(debug
+          ? { ok:true, lang: affLang, country: usedShip, geo, shipPrimary, attempts: dbgLog, products }
+          : { ok:true, lang: affLang, country: usedShip, products });
+        if (!debug) await cache.put(cacheKey, new Response(body, { headers: { 'Cache-Control':'public, max-age=21600' } }));
+        return new Response(body, { headers: debug ? { ...jsonHeaders, 'Cache-Control':'no-store' } : jsonHeaders });
       } catch (e) {
         return new Response(JSON.stringify({ ok:false, reason:'error' }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
       }
