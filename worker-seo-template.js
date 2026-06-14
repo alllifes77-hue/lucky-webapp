@@ -1045,12 +1045,17 @@ ${urlsXml}
         // ★ 지오 최적화: 배송국가/통화는 "페이지 언어"가 아니라 "방문자 실제 국가 IP"(Cloudflare geo)로 결정.
         //   한국 방문자는 영어 페이지든 어디든 KR 배송 가능한 KRW 상품을 받음 → 클릭 시 "미배송" 404 방지.
         //   미지원/불명 국가는 US 로 폴백해 노출은 유지.
+        // 국가→통화: 전부 AliExpress target_currency 수용 확인됨(debug=ccy 검증). 미등재국은 USD.
         const COUNTRY_CUR = {
           KR:'KRW', US:'USD', JP:'JPY', CN:'USD', GB:'GBP', BR:'BRL', ID:'IDR', RU:'RUB',
-          CA:'CAD', AU:'AUD', SG:'SGD', HK:'HKD', TW:'USD', IN:'USD', TH:'USD', VN:'USD',
-          PH:'USD', MY:'USD', MX:'USD', TR:'USD', SA:'USD', AE:'USD', PL:'PLN',
+          CA:'CAD', AU:'AUD', NZ:'NZD', SG:'SGD', HK:'HKD', TW:'TWD', IN:'INR', TH:'THB',
+          VN:'VND', PH:'PHP', MY:'MYR', MX:'MXN', TR:'TRY', SA:'SAR', AE:'AED', ZA:'ZAR',
+          IL:'ILS', UA:'UAH', CL:'CLP', CO:'COP', AR:'ARS', PE:'PEN', CH:'CHF',
+          PL:'PLN', SE:'SEK', NO:'NOK', DK:'DKK', CZ:'CZK', HU:'HUF',
+          // 유로존
           DE:'EUR', FR:'EUR', ES:'EUR', IT:'EUR', NL:'EUR', BE:'EUR', AT:'EUR', IE:'EUR',
-          PT:'EUR', FI:'EUR', GR:'EUR', SK:'EUR', SI:'EUR', LT:'EUR', LV:'EUR', EE:'EUR', LU:'EUR', CY:'EUR', MT:'EUR',
+          PT:'EUR', FI:'EUR', GR:'EUR', SK:'EUR', SI:'EUR', LT:'EUR', LV:'EUR', EE:'EUR',
+          LU:'EUR', CY:'EUR', MT:'EUR', HR:'EUR', RO:'EUR', BG:'EUR',
         };
         const geo = (request.cf && request.cf.country) ? String(request.cf.country).toUpperCase() : '';
         const shipPrimary = /^[A-Z]{2}$/.test(geo) ? geo : 'US';   // 국가 불명 → US 폴백
@@ -1059,7 +1064,7 @@ ${urlsXml}
         // 엣지 캐시 조회 (언어+국가별 키 — 같은 페이지라도 방문자 국가별로 배송/통화가 다름)
         const debug = url.searchParams.get('debug') === '1';
         const cache = caches.default;
-        const cacheKey = new Request(`https://ae-aff.cache/v2-${affLang}-${shipPrimary}`);
+        const cacheKey = new Request(`https://ae-aff.cache/v3-${affLang}-${shipPrimary}`);
         const hit = url.searchParams.get('debug') ? null : await cache.match(cacheKey);
         if (hit) {
           const cachedBody = await hit.text();
