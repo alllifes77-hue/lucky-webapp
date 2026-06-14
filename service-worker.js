@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v6: 행운요소 5종 콘텐츠(luck-elements.js) precache 추가
-const CACHE_NAME = 'lucky-v6';
+// v7: 결과화면 광고(AdSense 상·중단 + ko 쿠팡) 추가
+const CACHE_NAME = 'lucky-v7';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

@@ -1656,6 +1656,9 @@ function renderResults(data) {
   const fortuneCard    = document.querySelector('.fortune-card');
   const fsg            = document.getElementById('fortune-summary-grid');
 
+  // 결과 상단 광고 — 핵심 결과(번호/점수) 바로 아래, 가장 잘 보이는 위치
+  _resultAdSense('ad-result-top', 360);
+
   // ══ LUCKY: 행운 번호 전용 ════════════════════════════════
   if (cat === 'lucky') {
     if (lotterySection) lotterySection.style.display = '';
@@ -1729,6 +1732,9 @@ function renderResults(data) {
   renderTarotPanel(data);
   renderBirthstonePanel(data);
   renderLuckyFourPanel(data);
+  // 결과 중간 광고 + ko 쿠팡 — 패널들 사이에 한 번 더 노출
+  _resultAdSense('ad-result-mid', 400);
+  _resultCoupang(lang);
   renderAliExpressPanel(data);
   renderShareBtns(data);
   renderAIChat(data);
@@ -5206,6 +5212,46 @@ function renderLuckyFourPanel(data){
     </div>
     <div style="background:rgba(14,116,144,.08);border-radius:10px;padding:9px 12px;font-size:12px;color:#155e75;line-height:1.5;margin-top:10px;">🍀 ${escHtml(F.tip)}</div>`;
   _luxInsert(panel);
+}
+
+// ══ 결과화면 광고 (AdSense + ko 쿠팡) ══════════════════════
+// 단독 접속(iframe 아님)에서만, 1회 생성(재렌더 시 중복/재push 방지),
+// .share-section 앞에 삽입. 크기는 축소(콘텐츠 가독성 우선).
+function _resultAdSense(id, maxW){
+  if (window.self !== window.top) return;            // iframe 내 삽입 금지(AdSense 정책)
+  if (document.getElementById(id)) return;           // 이미 있으면 재생성 안 함
+  const share = document.querySelector('.share-section');
+  if (!share) return;
+  const w = document.createElement('div');
+  w.id = id;
+  w.style.cssText = 'max-width:'+(maxW||360)+'px;margin:14px auto;min-height:1px;';
+  w.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+  share.parentNode.insertBefore(w, share);
+  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+}
+function _resultCoupang(lang){
+  if (window.self !== window.top) return;
+  if (lang !== 'ko') return;
+  if (document.getElementById('coupang-result')) return;
+  const share = document.querySelector('.share-section');
+  if (!share) return;
+  const wrap = document.createElement('div');
+  wrap.id = 'coupang-result';
+  wrap.style.cssText = 'max-width:712px;margin:14px auto;text-align:center;';
+  share.parentNode.insertBefore(wrap, share);
+  try {
+    var cpW = Math.min(680, Math.max(300, document.documentElement.clientWidth - 32));
+    var cpF = document.createElement('iframe');
+    cpF.src = 'https://ads-partners.coupang.com/widgets.html?id=996633&template=carousel&trackingCode=AF4227535&subId=&width=' + cpW + '&height=140&tsource=';
+    cpF.style.cssText = 'width:' + cpW + 'px;max-width:100%;height:140px;border:0;display:block;margin:0 auto;';
+    cpF.scrolling = 'no'; cpF.loading = 'lazy'; cpF.referrerPolicy = 'unsafe-url';
+    cpF.title = '쿠팡 파트너스 추천 상품';
+    wrap.appendChild(cpF);
+    var p = document.createElement('p');
+    p.style.cssText = 'font-size:10px;color:#9ca3af;margin-top:7px;line-height:1.5;';
+    p.textContent = '이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.';
+    wrap.appendChild(p);
+  } catch(e){}
 }
 
 // ── 십이지 (Chinese Zodiac) 배지 패널 ───────────────────────
