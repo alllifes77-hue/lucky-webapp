@@ -595,6 +595,9 @@ function buildFortuneSystemPrompt(lang, d) {
 // ── AdSense (모든 SEO 페이지 공통) ──────────────────────────
 // ADS_TAG: head 로더 스크립트 / ADS_UNIT: 수동 디스플레이 광고 단위 (all-life-webapp, slot 8233374508)
 const ADS_TAG = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378943893051810" crossorigin="anonymous"></script>`;
+// 파비콘 — 워커 SEO 페이지 전용. 절대 URL(/lucky/)이라 /en/today/·/saju/ 등 어느 경로에서도 정상.
+// (미선언 시 브라우저가 도메인 루트 /favicon.ico = 블로그 파비콘으로 폴백하던 문제 해결)
+const FAVICON_TAGS = `<link rel="icon" type="image/png" sizes="32x32" href="${APP_URL}/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="${APP_URL}/favicon-16x16.png"><link rel="shortcut icon" href="${APP_URL}/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="${APP_URL}/apple-touch-icon.png">`;
 const ADS_UNIT = `<div class="ads-unit-wrap"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
 
 // ── 어필리에이트 슬롯 (링크 확보 시 AFF_OFFERS 만 채우면 전 페이지에 표시) ──
@@ -739,6 +742,7 @@ function buildPeriodPage(periodKey, lang) {
 
   const html = `<!DOCTYPE html><html lang="${lang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
@@ -839,6 +843,7 @@ function buildInfoPage(pageKey, lang, todayStr) {
   const startBtn = (TL.start)||'Start';
   const html = `<!DOCTYPE html><html lang="${lang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
@@ -1170,6 +1175,7 @@ ${urlsXml}
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378943893051810" crossorigin="anonymous"></script>
 <title>${esc(CM.title)}</title>
 <meta name="description" content="${esc(CM.desc)}">
@@ -1293,6 +1299,7 @@ ${buildNavFooter(catLang, catKey)}
           const aFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":aFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const aHtml = `<!DOCTYPE html><html lang="${aLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(aTitle)}</title>
 <meta name="description" content="${esc(aDesc)}">
@@ -1437,6 +1444,7 @@ ${buildNavFooter(aLang,'lucky')}
           const zFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":zFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const zHtml = `<!DOCTYPE html><html lang="${zLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(zTitle)}</title>
 <meta name="description" content="${esc(zDesc)}">
@@ -1600,6 +1608,7 @@ ${buildNavFooter(zLang,'lucky')}
       const tIframe = `${APP_URL}/?lang=${tLang}`;
       const tHtml = `<!DOCTYPE html><html lang="${tLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(tTitle)}</title>
 <meta name="description" content="${esc(tDesc)}">
@@ -1683,6 +1692,7 @@ ${buildNavFooter(tLang,'lucky')}
         }
         const cHtml = `<!DOCTYPE html><html lang="${cLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(ogT)}</title>
 <meta name="description" content="${esc(ogD)}">
@@ -1752,6 +1762,7 @@ iframe{width:100%;border:none;display:block;height:560px;}</style>
           const kFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":kFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const kHtml = `<!DOCTYPE html><html lang="ja"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(kTitle)}</title>
 <meta name="description" content="${esc(kDesc)}">
@@ -1898,6 +1909,7 @@ ${buildNavFooter('ja','lucky')}
 
         const czHtml = `<!DOCTYPE html><html lang="${czLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(czTitleMap[czLang]||czTitleMap.en)}</title>
 <meta name="description" content="${esc(czDescMap[czLang]||czDescMap.en)}">
@@ -2003,6 +2015,7 @@ ${buildNavFooter(czLang, 'lucky')}
 
           const byHtml = `<!DOCTYPE html><html lang="ko"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(byTitle)}</title>
 <meta name="description" content="${esc(byDesc)}">
@@ -2096,6 +2109,7 @@ ${buildNavFooter('ko', 'lucky')}
           const enFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":enFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const enByHtml = `<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(enTitle)}</title>
 <meta name="description" content="${esc(enDesc)}">
@@ -2183,6 +2197,7 @@ ${buildNavFooter('en','lucky')}
           const jaFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":jaFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
           const jaNenHtml = `<!DOCTYPE html><html lang="ja"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(jaTitle)}</title>
 <meta name="description" content="${esc(jaDesc)}">
@@ -2286,6 +2301,7 @@ ${buildNavFooter('ja','lucky')}
             const btIframe = `${APP_URL}/?lang=${btLang}`;
             const btHtml = `<!DOCTYPE html><html lang="${btLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 ${ADS_TAG}
 <title>${esc(btTitle)}</title>
 <meta name="description" content="${esc(btDesc)}">
@@ -2437,6 +2453,7 @@ ${buildNavFooter(btLang, 'lucky')}
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378943893051810" crossorigin="anonymous"></script>
 <title>${esc(ogTitle)}</title>
 <meta name="description" content="${esc(ogDesc)}">
