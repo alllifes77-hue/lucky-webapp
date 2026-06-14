@@ -4248,6 +4248,11 @@ function renderShareBtns(data) {
   const copyLinkLabel = L.btnCopyLink || '🔗 Link';
   const saveImgLabel  = L.btnSaveImage || '📷 Save';
 
+  // 세로 공유 카드 (Spotify Wrapped식) — 맨 앞 강조 버튼
+  const CARD_BTN = { ko:'공유 카드', en:'Share Card', ja:'シェアカード', de:'Share-Karte', fr:'Carte à partager', es:'Tarjeta', pt:'Cartão', it:'Card', id:'Kartu' };
+  container.insertAdjacentHTML('beforeend',
+    `<button class="share-btn copy" onclick="renderShareCard()" style="background:linear-gradient(135deg,#4c1d95,#7c3aed);border:none;color:#fff;font-weight:800;"><span class="sb-icon">✨</span><span>${CARD_BTN[lang]||CARD_BTN.en}</span></button>`);
+
   // 모바일 OS 공유시트 (지원 브라우저에서만)
   if (navigator.share) {
     const NS = { ko:'공유하기', en:'Share', ja:'共有', de:'Teilen', fr:'Partager', es:'Compartir', pt:'Compartilhar', it:'Condividi', id:'Bagikan' };
@@ -4292,6 +4297,88 @@ function renderShareBtns(data) {
       <span class="sb-icon">📷</span><span>${saveImgLabel}</span>
     </button>
   `);
+}
+
+// ── 세로 공유 카드 (Spotify Wrapped식) — 순수 canvas 2D, 9:16 (1080×1920) ──
+const SHARECARD_T = {
+  app:{ko:'행운의 번호',en:'Lucky Numbers',ja:'幸運の数字',de:'Glückszahlen',fr:'Numéros Chanceux',es:'Números de la Suerte',pt:'Números da Sorte',it:'Numeri Fortunati',id:'Angka Keberuntungan'},
+  numbers:{ko:'나의 행운 번호',en:'MY LUCKY NUMBERS',ja:'私の幸運の数字',de:'MEINE GLÜCKSZAHLEN',fr:'MES NUMÉROS CHANCEUX',es:'MIS NÚMEROS DE LA SUERTE',pt:'MEUS NÚMEROS DA SORTE',it:'I MIEI NUMERI FORTUNATI',id:'ANGKA KEBERUNTUNGANKU'},
+  cta:{ko:'나만의 번호 뽑기',en:'Get yours free',ja:'あなたの数字も無料で',de:'Hol dir deine — gratis',fr:'Obtenez les vôtres',es:'Consigue los tuyos gratis',pt:'Descubra os seus grátis',it:'Scopri i tuoi gratis',id:'Dapatkan milikmu gratis'},
+};
+function renderShareCard() {
+  try {
+    const data = lastResult;
+    if (!data || !data.mainNums || !data.mainNums.length) return;
+    const lang = data.lang || window.LUCKY_CURRENT_LANG || 'ko';
+    const T = SHARECARD_T;
+    const W = 1080, H = 1920;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const x = cv.getContext('2d');
+    const CJK = "'Apple SD Gothic Neo','Noto Sans KR','Noto Sans JP','Malgun Gothic','Segoe UI',sans-serif";
+    const cx = W/2;
+
+    // 배경 그라데이션
+    const bg = x.createLinearGradient(0,0,W,H);
+    bg.addColorStop(0,'#1e1b4b'); bg.addColorStop(.5,'#312e81'); bg.addColorStop(1,'#4c1d95');
+    x.fillStyle = bg; x.fillRect(0,0,W,H);
+    // 장식 원
+    x.fillStyle = 'rgba(124,58,237,.18)'; x.beginPath(); x.arc(930,260,300,0,7); x.fill();
+    x.fillStyle = 'rgba(217,119,6,.14)'; x.beginPath(); x.arc(120,1500,260,0,7); x.fill();
+    x.textAlign = 'center';
+
+    // 헤더
+    x.font = `120px ${CJK}`; x.fillText('🍀', cx, 330);
+    x.fillStyle = '#fff'; x.font = `900 76px ${CJK}`; x.fillText(T.app[lang]||T.app.en, cx, 450);
+    // 생년월일 + 카테고리
+    const cats = (window.LUCKY_LANG && window.LUCKY_LANG.catNames) || [];
+    const catIdx = {lucky:0,saju:1,love:2,money:3,career:4,achievement:5,gunghap:6}[window.LUCKY_SELECTED_CAT||'lucky']||0;
+    const catLabel = cats[catIdx] || '';
+    const bdStr = `${data.year}.${String(data.month).padStart(2,'0')}.${String(data.day).padStart(2,'0')}`;
+    x.fillStyle = '#c4b5fd'; x.font = `44px ${CJK}`;
+    x.fillText(catLabel ? `${bdStr} · ${catLabel}` : bdStr, cx, 540);
+
+    // "나의 행운 번호" 라벨
+    x.fillStyle = '#fbbf24'; x.font = `800 40px ${CJK}`;
+    x.fillText(T.numbers[lang]||T.numbers.en, cx, 720);
+
+    // 행운 번호 6개 — 2행 3열 큰 볼
+    const nums = data.mainNums.slice(0,6);
+    const COL = [['#d97706','#92400e'],['#1d4ed8','#1e3a8a'],['#dc2626','#7f1d1d'],['#059669','#064e3b'],['#7c3aed','#4c1d95'],['#db2777','#831843']];
+    const r = 118, gapX = 320, startX = cx - gapX, rowY = [930, 1280];
+    nums.forEach((n,i) => {
+      const col = i % 3, row = Math.floor(i/3);
+      const bx = startX + col*gapX, by = rowY[row];
+      const grad = x.createRadialGradient(bx-30,by-40,20,bx,by,r);
+      grad.addColorStop(0, COL[i%6][0]); grad.addColorStop(1, COL[i%6][1]);
+      x.fillStyle = grad; x.beginPath(); x.arc(bx,by,r,0,7); x.fill();
+      x.fillStyle = 'rgba(255,255,255,.25)'; x.beginPath(); x.arc(bx-38,by-46,30,0,7); x.fill();
+      x.fillStyle = '#fff'; x.font = `900 ${String(n).length>1?86:96}px ${CJK}`; x.textBaseline='middle';
+      x.fillText(String(n), bx, by+4); x.textBaseline='alphabetic';
+    });
+
+    // 띠 이모지 + 오행
+    const czEmj = (typeof _CZ_EMJ!=='undefined' && _CZ_EMJ[data.czKey]) ? _CZ_EMJ[data.czKey] : '✨';
+    x.font = `110px ${CJK}`; x.fillText(czEmj, cx, 1560);
+
+    // 푸터 CTA + 도메인
+    x.fillStyle = '#fbbf24'; x.font = `800 46px ${CJK}`; x.fillText(`👉 ${T.cta[lang]||T.cta.en}`, cx, 1720);
+    x.fillStyle = '#a5b4fc'; x.font = `700 40px ${CJK}`; x.fillText('all-lifes.com/lucky', cx, 1790);
+    x.fillStyle = '#d97706'; x.fillRect(0,0,W,10); x.fillRect(0,H-10,W,10);
+
+    cv.toBlob(async (blob) => {
+      if (!blob) return;
+      const fname = 'lucky-numbers.png';
+      const file = new File([blob], fname, { type:'image/png' });
+      const L = window.LUCKY_LANG || {};
+      if (navigator.canShare && navigator.canShare({ files:[file] })) {
+        try { await navigator.share({ files:[file], text: (L.shareText ? L.shareText.replace('{numbers}', nums.join(', ')) : '') }); return; } catch(e) { if (e && e.name === 'AbortError') return; }
+      }
+      // 폴백: 다운로드
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = fname; document.body.appendChild(a); a.click();
+      setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+    }, 'image/png');
+  } catch(e) {}
 }
 
 // ══════════════════════════════════════════════════════════
@@ -4585,6 +4672,104 @@ function _renderPrivacyNote() {
       id:'🔒 Data Anda tetap di browser · 100% gratis, tanpa daftar · 9 bahasa',
     };
     el.textContent = T[lang] || T.en;
+  } catch(e) {}
+}
+
+// ── 특정 날짜 길흉 계산기 (Astro-Seek식 도구형 진입점) ──────
+// 단일 날짜 길흉 판정 (calcAuspiciousDates 로직 미러, 충일은 bad 로 surface)
+function _dateLuckOne(data, y, m, dd) {
+  const CHONG = {0:6,1:7,2:8,3:9,4:10,5:11,6:0,7:1,8:2,9:3,10:4,11:5};
+  const sheng = {'木':'水','火':'木','土':'火','金':'土','水':'金'};
+  const d  = new Date(y, m-1, dd);
+  const jd = gregJD(y, m, dd);
+  if (data.systemKey === 'saju') {
+    const daySi = calcDayStemIdx(y, m, dd), dayEl = ELEMENTS[daySi];
+    const yongsin = (data.fullSaju && data.fullSaju.yongsin) || data.cultural.element;
+    const dayBranch = calcDayBranch(y, m, dd);
+    const birthDayBr = data.fullSaju ? data.fullSaju.dayBranch : null;
+    const hasChong = birthDayBr !== null && CHONG[dayBranch] === birthDayBr;
+    const isGood = (dayEl === yongsin || sheng[yongsin] === dayEl) && !hasChong;
+    return { lv: hasChong ? 'bad' : (isGood ? 'good' : 'neutral'), detail: STEMS[daySi]+BRANCHES[dayBranch] };
+  } else if (data.systemKey === 'kyusei') {
+    const rokuyo = getRokuyo(y, m, dd);
+    const lv = rokuyo===4?'great':rokuyo===0||rokuyo===1?'good':rokuyo===3?'bad':'neutral';
+    return { lv, detail: ['先勝','友引','先負','仏滅','大安','赤口'][rokuyo] };
+  } else if (data.systemKey === 'jawanese') {
+    const pasaranIdx = ((jd - 2451551) % 5 + 5) % 5;
+    const birthNeptu = (data.cultural && data.cultural.neptu) ? data.cultural.neptu : 10;
+    const dayNeptu = WETON_DAY_NEPTU[d.getDay()], pasNeptu = WETON_PAS_NEPTU[pasaranIdx];
+    const combined = birthNeptu + dayNeptu + pasNeptu;
+    const lv = combined>=25?'great':combined>=20?'good':'neutral';
+    return { lv, detail: PASARAN[pasaranIdx] };
+  } else {
+    const udn = calcUDN(y, m, dd);
+    const lp = (data.cultural && (data.cultural.lifePathNum || data.cultural.lpn)) || 1;
+    const lvN = (udn===lp||udn===(lp===9?1:lp+1)||udn===(lp===1?9:lp-1))?'good':'neutral';
+    return { lv: lvN, detail: 'UDN '+udn };
+  }
+}
+
+const DATELUCK_UI = {
+  title:{ko:'🗓️ 특정 날짜 길흉 보기',en:'🗓️ Lucky Day Checker',ja:'🗓️ 日取りの吉凶チェック',de:'🗓️ Glückstag-Prüfer',fr:'🗓️ Vérificateur de jour',es:'🗓️ Comprobador de día',pt:'🗓️ Verificador de dia',it:'🗓️ Verifica del giorno',id:'🗓️ Cek Hari Baik'},
+  hint:{ko:'결혼·계약·시험 등 중요한 날의 길흉을 미리 확인하세요',en:'Check the luck of an important date — wedding, exam, contract',ja:'結婚・契約・試験など大事な日の吉凶を事前にチェック',de:'Prüfe die Gunst eines wichtigen Datums — Hochzeit, Prüfung, Vertrag',fr:'Vérifiez la chance d’une date importante — mariage, examen, contrat',es:'Comprueba la suerte de una fecha importante — boda, examen, contrato',pt:'Veja a sorte de uma data importante — casamento, prova, contrato',it:'Verifica la fortuna di una data importante — matrimonio, esame, contratto',id:'Cek keberuntungan tanggal penting — nikah, ujian, kontrak'},
+  dateLabel:{ko:'날짜 선택',en:'Pick a date',ja:'日付を選択',de:'Datum wählen',fr:'Choisir une date',es:'Elegir fecha',pt:'Escolher data',it:'Scegli data',id:'Pilih tanggal'},
+  btn:{ko:'길흉 확인',en:'Check',ja:'チェック',de:'Prüfen',fr:'Vérifier',es:'Comprobar',pt:'Verificar',it:'Verifica',id:'Cek'},
+  need:{ko:'먼저 위에 생년월일을 입력해주세요',en:'Please enter your birth date above first',ja:'先に上で生年月日を入力してください',de:'Bitte zuerst oben dein Geburtsdatum eingeben',fr:'Veuillez d’abord saisir votre date de naissance ci-dessus',es:'Primero introduce tu fecha de nacimiento arriba',pt:'Primeiro insira sua data de nascimento acima',it:'Inserisci prima la tua data di nascita sopra',id:'Masukkan dulu tanggal lahir Anda di atas'},
+  luckyLabel:{ko:'그날의 행운 번호',en:'Lucky numbers for that day',ja:'その日の幸運の数字',de:'Glückszahlen für diesen Tag',fr:'Numéros chanceux du jour',es:'Números de la suerte del día',pt:'Números da sorte do dia',it:'Numeri fortunati del giorno',id:'Angka keberuntungan hari itu'},
+};
+const DATELUCK_LV = {
+  great:{c:'#16a34a',ko:{b:'대길(大吉)',r:'아주 길한 날 — 중요한 일을 진행하기 좋습니다.'},en:{b:'Excellent',r:'A highly auspicious day — great for important plans.'},ja:{b:'大吉',r:'とても良い日 — 大事な事を進めるのに最適。'},de:{b:'Ausgezeichnet',r:'Ein sehr günstiger Tag — ideal für wichtige Vorhaben.'},fr:{b:'Excellent',r:'Un jour très favorable — idéal pour les projets importants.'},es:{b:'Excelente',r:'Un día muy propicio — ideal para planes importantes.'},pt:{b:'Excelente',r:'Um dia muito auspicioso — ótimo para planos importantes.'},it:{b:'Eccellente',r:'Un giorno molto propizio — ideale per progetti importanti.'},id:{b:'Sangat Baik',r:'Hari sangat baik — pas untuk rencana penting.'}},
+  good:{c:'#4f46e5',ko:{b:'길(吉)',r:'좋은 기운의 날 — 무난하게 추진할 수 있습니다.'},en:{b:'Favorable',r:'A day of good energy — smooth to move forward.'},ja:{b:'吉',r:'良い気の日 — 無難に進められます。'},de:{b:'Günstig',r:'Ein Tag guter Energie — gut, um voranzukommen.'},fr:{b:'Favorable',r:'Un jour de bonne énergie — propice pour avancer.'},es:{b:'Favorable',r:'Un día de buena energía — propicio para avanzar.'},pt:{b:'Favorável',r:'Um dia de boa energia — tranquilo para avançar.'},it:{b:'Favorevole',r:'Un giorno di buona energia — adatto per procedere.'},id:{b:'Baik',r:'Hari berenergi baik — lancar untuk melangkah.'}},
+  neutral:{c:'#6b7280',ko:{b:'평(平)',r:'평이한 날 — 큰 변수 없이 차분하게.'},en:{b:'Neutral',r:'A balanced day — steady, no big surprises.'},ja:{b:'平',r:'平穏な日 — 大きな波なく落ち着いて。'},de:{b:'Neutral',r:'Ein ausgeglichener Tag — ruhig, ohne Überraschungen.'},fr:{b:'Neutre',r:'Un jour équilibré — calme, sans surprises.'},es:{b:'Neutral',r:'Un día equilibrado — tranquilo, sin sorpresas.'},pt:{b:'Neutro',r:'Um dia equilibrado — calmo, sem surpresas.'},it:{b:'Neutro',r:'Un giorno equilibrato — calmo, senza sorprese.'},id:{b:'Netral',r:'Hari seimbang — tenang, tanpa kejutan.'}},
+  bad:{c:'#dc2626',ko:{b:'주의(注意)',r:'변동의 기운 — 중요한 결정은 신중히 하세요.'},en:{b:'Caution',r:'A day of flux — make big decisions carefully.'},ja:{b:'注意',r:'変動の気 — 大事な決断は慎重に。'},de:{b:'Vorsicht',r:'Ein Tag des Wandels — große Entscheidungen mit Bedacht.'},fr:{b:'Prudence',r:'Un jour de fluctuations — décidez avec prudence.'},es:{b:'Precaución',r:'Un día de cambios — decide con cuidado.'},pt:{b:'Cuidado',r:'Um dia de mudanças — decida com cautela.'},it:{b:'Attenzione',r:'Un giorno di cambiamenti — decidi con prudenza.'},id:{b:'Hati-hati',r:'Hari penuh perubahan — putuskan dengan hati-hati.'}},
+};
+
+function _renderDateLuckTool() {
+  try {
+    const lang = window.LUCKY_CURRENT_LANG || 'ko';
+    const U = DATELUCK_UI;
+    const g = (o)=>o[lang]||o.en;
+    const t = document.getElementById('dl-title'); if (t) t.textContent = g(U.title);
+    const h = document.getElementById('dl-hint'); if (h) h.textContent = g(U.hint);
+    const dl = document.getElementById('dl-date-label'); if (dl) dl.textContent = g(U.dateLabel);
+    const b = document.getElementById('dl-btn'); if (b) b.textContent = g(U.btn);
+    const di = document.getElementById('dl-date');
+    if (di && !di.value) {
+      const tm = new Date(); tm.setDate(tm.getDate()+1);
+      di.min = new Date().toISOString().slice(0,10);
+      di.value = tm.toISOString().slice(0,10);
+    }
+  } catch(e) {}
+}
+
+function checkDateLuck() {
+  try {
+    const lang = window.LUCKY_CURRENT_LANG || 'ko';
+    const out = document.getElementById('dl-result');
+    const by = parseInt((document.getElementById('bday-year')||{}).value)||0;
+    const bm = parseInt((document.getElementById('bday-month')||{}).value)||0;
+    const bd = parseInt((document.getElementById('bday-day')||{}).value)||0;
+    if (!by || !bm || !bd) { if (out){ out.style.display='block'; out.innerHTML = `<span style="color:#dc2626;font-size:12px;">${(DATELUCK_UI.need[lang]||DATELUCK_UI.need.en)}</span>`; } return; }
+    const dv = (document.getElementById('dl-date')||{}).value;
+    if (!dv) return;
+    const [ty,tmo,tdd] = dv.split('-').map(Number);
+    const base = generateLucky(by, bm, bd, lang);
+    const lvInfo = _dateLuckOne(base, ty, tmo, tdd);
+    const lvT = (DATELUCK_LV[lvInfo.lv]||DATELUCK_LV.neutral);
+    const lvL = lvT[lang]||lvT.en;
+    const numData = generateLucky(by, bm, bd, lang, 'lotto645', `${ty}-${String(tmo).padStart(2,'0')}-${String(tdd).padStart(2,'0')}`);
+    const nums = (numData.mainNums||[]).slice(0,6);
+    const balls = nums.map(n=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;font-weight:900;font-size:13px;margin:2px;">${n}</span>`).join('');
+    const dateStr = new Date(ty, tmo-1, tdd).toLocaleDateString(lang==='ko'?'ko-KR':lang, {year:'numeric',month:'long',day:'numeric',weekday:'short'});
+    if (out) {
+      out.style.display='block';
+      out.innerHTML = `
+        <div style="text-align:center;margin-bottom:10px;font-size:13px;font-weight:700;color:var(--text2,#78716c);">${dateStr}</div>
+        <div style="text-align:center;margin-bottom:8px;"><span style="background:${lvT.c};color:#fff;font-weight:800;font-size:14px;padding:6px 18px;border-radius:50px;">${lvL.b}</span></div>
+        <p style="text-align:center;font-size:13px;color:var(--text,#1c1917);line-height:1.6;margin-bottom:12px;">${lvL.r}</p>
+        <div style="text-align:center;font-size:11px;font-weight:700;color:var(--text3,#a8a29e);margin-bottom:6px;">${DATELUCK_UI.luckyLabel[lang]||DATELUCK_UI.luckyLabel.en}</div>
+        <div style="text-align:center;">${balls}</div>`;
+    }
   } catch(e) {}
 }
 
@@ -5473,5 +5658,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── 편의 기능 초기화 (생일 복원 + 최근 기록 칩) ──────────────
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => { _restoreBirthInfo(); _renderHistoryChips(); _renderStreak(); _renderPrivacyNote(); }, 50);
+  setTimeout(() => { _restoreBirthInfo(); _renderHistoryChips(); _renderStreak(); _renderPrivacyNote(); _renderDateLuckTool(); }, 50);
 });

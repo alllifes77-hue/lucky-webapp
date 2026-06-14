@@ -422,6 +422,18 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
       <!-- AdSense 디스플레이 — 홈(입력) 화면, iframe 임베드 시 미삽입 (하단 스크립트가 주입) -->
       <div id="ad-home" style="max-width:500px;margin:0 auto 24px;"></div>
 
+      <!-- 특정 날짜 길흉 계산기 (Astro-Seek식 도구) -->
+      <div class="input-card" style="max-width:500px;margin:0 auto 24px;">
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px;" id="dl-title">🗓️ 특정 날짜 길흉 보기</div>
+        <p style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;" id="dl-hint">결혼·계약·시험 등 중요한 날의 길흉을 미리 확인하세요</p>
+        <label style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.3px;" id="dl-date-label">날짜 선택</label>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <input type="date" id="dl-date" style="flex:1;padding:12px;border:2px solid var(--border2);border-radius:12px;font-size:15px;font-family:inherit;color:var(--text);background:#fff;outline:none;">
+          <button type="button" onclick="checkDateLuck()" id="dl-btn" style="background:linear-gradient(135deg,#b45309,#d97706);color:#fff;border:none;border-radius:12px;padding:0 22px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;">길흉 확인</button>
+        </div>
+        <div id="dl-result" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"></div>
+      </div>
+
       <div class="method-section">
         <div class="method-card" id="method-card">
           <div class="method-title" id="txt-method-title">🔮 사주팔자(四柱八字) 분석</div>
@@ -543,7 +555,7 @@ if (window.self === window.top) {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2/astronomy.browser.min.js" defer></script>
-<script src="lucky-app.js?v=20260613a" defer></script>
+<script src="lucky-app.js?v=20260613b" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () =>
