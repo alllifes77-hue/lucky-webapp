@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v7: 결과화면 광고(AdSense 상·중단 + ko 쿠팡) 추가
-const CACHE_NAME = 'lucky-v7';
+// v8: 알리 어필 통화/지오 + 클라 캐시버스트(&v=3)
+const CACHE_NAME = 'lucky-v8';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

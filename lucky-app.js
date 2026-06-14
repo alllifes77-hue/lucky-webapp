@@ -4852,15 +4852,15 @@ async function renderAliExpressPanel(data) {
     const lang = data.lang || window.LUCKY_CURRENT_LANG || 'ko';
     const lb = AE_AFF_L[lang] || AE_AFF_L.en;
 
-    // 세션 캐시 3시간 (엣지 캐시와 별개로 클라 재호출 절약)
-    const ck = 'ae_aff_' + lang;
+    // 세션 캐시 3시간 (엣지 캐시와 별개로 클라 재호출 절약). v3=지오/통화 변경 캐시버스트
+    const ck = 'ae_aff_v3_' + lang;
     let payload = null;
     try {
       const c = JSON.parse(sessionStorage.getItem(ck) || 'null');
       if (c && (Date.now() - c.t) < 3*3600*1000) payload = c.d;
     } catch(_) {}
     if (!payload) {
-      const res = await fetch('https://all-lifes.com/ko/aff-products?lang=' + lang);
+      const res = await fetch('https://all-lifes.com/ko/aff-products?lang=' + lang + '&v=3');
       if (!res.ok) return;
       payload = await res.json();
       try { sessionStorage.setItem(ck, JSON.stringify({ t: Date.now(), d: payload })); } catch(_) {}

@@ -644,7 +644,7 @@ function _aeStrip(lang){
   <p style="font-size:9.5px;color:#a8a29e;margin:6px 0 0;line-height:1.5;">${lb.d}</p>
 </div>
 <script>(function(){var box=document.currentScript.previousElementSibling;var w=box.querySelector('.ae-strip-cards');
-fetch('${SITE_URL}/ko/aff-products?lang=${lang}').then(function(r){return r.json();}).then(function(j){
+fetch('${SITE_URL}/ko/aff-products?lang=${lang}&v=3').then(function(r){return r.json();}).then(function(j){
   if(!j||!j.ok||!j.products||!j.products.length)return;
   w.innerHTML=j.products.map(function(p){return '<a href="'+p.url+'" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:#1c1917;background:#fff;border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;"><img src="'+p.img+'" alt="" loading="lazy" style="width:122px;height:122px;object-fit:cover;display:block;"><div style="padding:7px 8px 9px;"><div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:#44403c;">'+(p.t||'').replace(/</g,'&lt;').slice(0,60)+'</div><div style="font-size:12px;font-weight:800;color:#d97706;margin-top:4px;">'+p.price+' '+p.cur+'</div></div></a>';}).join('');
   box.style.display='block';
