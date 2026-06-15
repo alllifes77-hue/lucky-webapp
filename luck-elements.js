@@ -1,5 +1,5 @@
-// luck-elements.js — 행운요소 9개 언어 콘텐츠
-// 5종 + Wave 확장(sunSign 호로스코프·tarot 정역분야·numerology 라이프패스·cz 오행띠/연간·compat 4축/겉궁합).
+// luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 best-in-class)
+// 5종 + Wave 확장(호로스코프·타로정역·라이프패스·오행띠/연간·궁합4축/겉궁합·꿈해몽·엔젤넘버).
 // 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON(아포스트로피 안전). 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -825,6 +825,163 @@ window.LUX = {
     "neutral": "무난한 사이",
     "clash": "상극 원소 — 조율이 필요한 사이"
    }
+  },
+  "dream": {
+   "title": "꿈해몽",
+   "intro": "꿈속에 나타난 상징이 전하는 길흉과 메시지를 전통 해몽으로 풀어 드립니다.",
+   "symbols": [
+    {
+     "name": "돼지",
+     "meaning": "돼지꿈은 예로부터 으뜸가는 재물운의 상징입니다. 뜻밖의 횡재나 사업·금전의 좋은 소식이 찾아올 수 있는 대표적 길몽으로 여겨집니다."
+    },
+    {
+     "name": "뱀",
+     "meaning": "뱀꿈은 재물과 귀한 인연, 그리고 태몽으로 풀이되는 대표적 길몽입니다. 다만 뱀에게 쫓긴다면 건강을 한 번 살펴보라는 신호일 수 있습니다."
+    },
+    {
+     "name": "물",
+     "meaning": "맑은 물은 재물과 마음의 안정을, 흐린 물은 근심을 뜻합니다. 물의 맑고 흐림에 따라 운의 흐름을 가늠해 보세요."
+    },
+    {
+     "name": "이빨 빠지는 꿈",
+     "meaning": "이빨이 빠지는 꿈은 전통적으로 구설수나 가까운 이와의 이별, 변화를 암시합니다. 말과 인간관계를 조금만 조심하면 무탈하게 넘어갑니다."
+    },
+    {
+     "name": "불",
+     "meaning": "활활 타오르는 불은 번창과 큰 재물, 열정의 상징입니다. 다만 집이나 몸을 태우는 불은 과욕을 경계하라는 뜻으로 보기도 합니다."
+    },
+    {
+     "name": "똥",
+     "meaning": "똥꿈은 더럽게 느껴지기 쉽지만 실은 재물이 들어오는 대표적 길몽입니다. 똥을 만지거나 뒤집어쓰면 더 큰 행운으로 풀이됩니다."
+    },
+    {
+     "name": "금·돈",
+     "meaning": "금이나 돈을 줍거나 받는 꿈은 재물운 상승과 결실을 뜻합니다. 다만 돈을 잃거나 빼앗기는 꿈은 지출 관리에 신경 쓰라는 신호입니다."
+    },
+    {
+     "name": "용",
+     "meaning": "용꿈은 최고의 길몽으로 출세·성공, 그리고 귀한 자식의 태몽을 상징합니다. 큰 뜻을 펼치고 명예를 얻을 기운이 함께합니다."
+    },
+    {
+     "name": "아기",
+     "meaning": "아기꿈은 새로운 시작과 결실, 풍요로운 태몽으로 풀이됩니다. 다만 우는 아기는 사소한 근심거리가 생길 수 있음을 알려 줍니다."
+    },
+    {
+     "name": "하늘을 나는 꿈",
+     "meaning": "하늘을 자유롭게 나는 꿈은 발전과 성취, 막힌 일이 풀릴 길조입니다. 시야가 트이고 한 단계 도약하려는 마음을 비춰 줍니다."
+    },
+    {
+     "name": "쫓기는 꿈",
+     "meaning": "누군가에게 쫓기는 꿈은 마음의 압박이나 미뤄 둔 과제를 암시합니다. 피하기보다 마주하면 의외로 좋은 전환점이 됩니다."
+    },
+    {
+     "name": "홍수",
+     "meaning": "큰물이 밀려오는 꿈은 큰 재물이 한꺼번에 들어오는 길몽이 되기도 합니다. 다만 물살에 휩쓸린다면 감정과 일에 휘둘리지 않도록 살피세요."
+    },
+    {
+     "name": "호랑이",
+     "meaning": "호랑이꿈은 권세·귀인·든든한 후원의 상징이며, 영웅 같은 자식의 태몽으로도 풀이됩니다. 위엄과 좋은 기회가 함께 다가옵니다."
+    },
+    {
+     "name": "새",
+     "meaning": "새가 날아드는 꿈은 반가운 소식과 좋은 인연을 전합니다. 다만 새를 놓치는 꿈은 기회를 잘 붙들라는 가벼운 당부로 봅니다."
+    },
+    {
+     "name": "꽃",
+     "meaning": "활짝 핀 꽃은 사랑·인연·결실의 기쁜 소식을 뜻하는 길몽입니다. 시드는 꽃이라면 건강과 마음을 돌보라는 신호일 수 있습니다."
+    },
+    {
+     "name": "결혼·반지",
+     "meaning": "결혼이나 반지 꿈은 새로운 인연, 약속, 인생의 전환을 상징합니다. 좋은 결합과 결실의 기운이 다가오고 있음을 알려 줍니다."
+    },
+    {
+     "name": "자동차",
+     "meaning": "자동차 꿈은 인생의 방향과 추진력을 나타냅니다. 시원하게 달리면 일이 순조롭고, 멈추거나 사고가 나면 속도 조절이 필요하다는 뜻입니다."
+    },
+    {
+     "name": "집",
+     "meaning": "집꿈은 가정·기반·안정의 상징입니다. 새 집이나 큰 집은 재물과 발전을, 무너지는 집은 기반을 다시 점검하라는 신호로 봅니다."
+    },
+    {
+     "name": "피",
+     "meaning": "피꿈은 놀랍게도 재물과 생명력의 상징으로 길몽에 속합니다. 다만 피를 많이 흘리는 꿈은 건강과 에너지를 살피라는 당부입니다."
+    },
+    {
+     "name": "귀신",
+     "meaning": "귀신꿈은 두렵게 느껴지지만 묵은 근심이나 풀리지 않은 마음을 비추는 경우가 많습니다. 귀신을 쫓아내면 액운이 물러가는 좋은 전환이 됩니다."
+    },
+    {
+     "name": "무지개",
+     "meaning": "무지개꿈은 희망·행운·소원 성취의 아름다운 길몽입니다. 어려움 끝에 좋은 결실과 밝은 변화가 찾아올 기운을 전합니다."
+    },
+    {
+     "name": "별",
+     "meaning": "별꿈은 꿈의 실현, 귀인의 등장, 빛나는 명예를 상징합니다. 밝게 빛나는 별일수록 소망과 운이 함께 무르익는 길조입니다."
+    },
+    {
+     "name": "물고기",
+     "meaning": "물고기꿈은 재물과 풍요, 귀한 자식의 태몽으로 풀이되는 길몽입니다. 큰 물고기를 잡으면 그만큼 큰 행운이 찾아온다고 봅니다."
+    },
+    {
+     "name": "죽음·장례",
+     "meaning": "죽음이나 장례 꿈은 끝이 아니라 묵은 것을 보내고 새롭게 시작한다는 상징입니다. 오히려 재물과 길운이 따르는 반전의 꿈으로 봅니다."
+    }
+   ]
+  },
+  "angel": {
+   "title": "엔젤넘버",
+   "intro": "엔젤넘버는 반복되는 숫자를 통해 우주가 당신에게 전한다고 여겨지는 응원과 안내의 메시지입니다.",
+   "todayLabel": "오늘의 엔젤넘버",
+   "numbers": [
+    {
+     "keyword": "새로운 시작",
+     "meaning": "당신의 생각이 현실로 빚어지는 시점입니다. 마음속 바람에 집중하면 새로운 문이 열리고 길이 펼쳐집니다."
+    },
+    {
+     "keyword": "균형과 신뢰",
+     "meaning": "지금 걷는 길을 믿어도 좋다는 신호입니다. 조화를 잃지 않고 한 걸음씩 나아가면 흐름이 당신 편이 됩니다."
+    },
+    {
+     "keyword": "응원과 성장",
+     "meaning": "보이지 않는 응원이 당신을 둘러싸고 있습니다. 재능을 펼치며 성장하라는 따뜻한 격려의 메시지입니다."
+    },
+    {
+     "keyword": "보호와 기반",
+     "meaning": "든든한 보호 속에 단단한 기반을 다지는 때입니다. 묵묵히 쌓아 온 노력이 안정된 결실로 이어집니다."
+    },
+    {
+     "keyword": "변화의 바람",
+     "meaning": "큰 변화가 다가오고 있습니다. 두려워 말고 흐름에 몸을 맡기면 더 나은 자리로 인도받게 됩니다."
+    },
+    {
+     "keyword": "재정비와 조화",
+     "meaning": "마음과 일상의 균형을 다시 맞출 때입니다. 물질과 마음의 조화를 회복하면 평온이 찾아옵니다."
+    },
+    {
+     "keyword": "행운과 영성",
+     "meaning": "행운과 깊은 영적 깨달음이 함께하는 축복의 숫자입니다. 당신이 옳은 길 위에 있음을 알려 줍니다."
+    },
+    {
+     "keyword": "풍요와 결실",
+     "meaning": "노력의 열매가 풍성하게 맺히는 시기입니다. 물질과 마음 모두의 풍요가 당신에게로 흘러옵니다."
+    },
+    {
+     "keyword": "완성과 전환",
+     "meaning": "한 장이 마무리되고 새로운 장이 열립니다. 미련을 내려놓으면 더 큰 사명으로 나아갈 수 있습니다."
+    },
+    {
+     "keyword": "각성과 정렬",
+     "meaning": "내면의 목소리가 또렷해지는 각성의 순간입니다. 당신의 진정한 길과 마음이 하나로 정렬되고 있습니다."
+    },
+    {
+     "keyword": "강력한 발현",
+     "meaning": "소망이 빠르게 현실이 되는 강력한 문이 열렸습니다. 긍정의 마음을 품으면 기적 같은 변화가 시작됩니다."
+    },
+    {
+     "keyword": "도약과 신뢰",
+     "meaning": "한 단계 더 도약하라는 우주의 초대입니다. 자신과 흐름을 믿고 나아가면 새로운 차원이 펼쳐집니다."
+    }
+   ]
   }
  },
  "en": {
@@ -1650,6 +1807,163 @@ window.LUX = {
     "neutral": "Neutral - Easygoing",
     "clash": "Opposing Elements - Needs Tuning"
    }
+  },
+  "dream": {
+   "title": "Dream Interpretation",
+   "intro": "Dreams speak in symbols, so see what your subconscious may be whispering about your fortune, relationships, and the road ahead.",
+   "symbols": [
+    {
+     "name": "Pig",
+     "meaning": "A pig is one of the most celebrated symbols of wealth and abundance, often hinting that money, prosperity, or a lucky financial windfall may be drawing near."
+    },
+    {
+     "name": "Snake",
+     "meaning": "A snake points to transformation, hidden wisdom, and renewal as it sheds its skin, and in many traditions it also signals wealth or news of a coming pregnancy."
+    },
+    {
+     "name": "Water",
+     "meaning": "Clear, calm water reflects emotional peace and good fortune flowing toward you, while murky or rushing water suggests it may be wise to settle unsettled feelings first."
+    },
+    {
+     "name": "Teeth falling out",
+     "meaning": "Losing teeth in a dream often mirrors anxiety about change, gossip, or letting go, gently inviting you to release what no longer serves and protect your peace."
+    },
+    {
+     "name": "Fire",
+     "meaning": "Fire blazes with passion, energy, and rapid change, and a bright, controlled flame can foretell rising success, while a raging one suggests tempering strong emotions."
+    },
+    {
+     "name": "Feces",
+     "meaning": "Far from unpleasant, feces are a classic emblem of unexpected money and good luck, so this earthy dream may surprisingly herald financial gain or a fortunate turn."
+    },
+    {
+     "name": "Gold and Money",
+     "meaning": "Dreaming of gold or money speaks of self-worth, opportunity, and abundance, often encouraging you to recognize your value and stay open to prosperity arriving soon."
+    },
+    {
+     "name": "Dragon",
+     "meaning": "A dragon is a majestic sign of power, ambition, and great fortune, frequently foretelling remarkable success, a sudden rise in status, or the arrival of an extraordinary opportunity."
+    },
+    {
+     "name": "Baby",
+     "meaning": "A baby symbolizes new beginnings, fresh ideas, and tender potential, suggesting that a project, relationship, or part of yourself is ready to be lovingly nurtured."
+    },
+    {
+     "name": "Flying",
+     "meaning": "Soaring through the sky reflects freedom, ambition, and rising above limits, a joyful sign that you are gaining confidence and breaking free from what once held you down."
+    },
+    {
+     "name": "Being chased",
+     "meaning": "Being chased usually points to a worry or responsibility you are avoiding, nudging you to turn, face the issue, and reclaim your sense of control."
+    },
+    {
+     "name": "Flood",
+     "meaning": "A flood reflects overwhelming emotions or sweeping change, yet receding waters often clear the way for renewal, so consider what feelings may be asking for release."
+    },
+    {
+     "name": "Tiger",
+     "meaning": "A tiger embodies courage, authority, and protective strength, and meeting one can signal a powerful ally, a bold opportunity, or your own fierce confidence awakening."
+    },
+    {
+     "name": "Bird",
+     "meaning": "Birds carry messages of freedom, hope, and good news, and seeing one take flight often suggests uplifting developments or a long-held wish beginning to take wing."
+    },
+    {
+     "name": "Flower",
+     "meaning": "A blooming flower signals love, growth, and happy news unfolding, a gentle promise that beauty, romance, or a fresh chapter is quietly coming into bloom."
+    },
+    {
+     "name": "Wedding or Ring",
+     "meaning": "A wedding or ring reflects union, commitment, and lasting bonds, often pointing to deepening relationships, a meaningful promise, or harmony arriving in your life."
+    },
+    {
+     "name": "Car",
+     "meaning": "A car represents your direction and drive in life, and a smooth ride suggests progress on track, while difficulty steering hints you may want to reconsider your course."
+    },
+    {
+     "name": "House",
+     "meaning": "A house mirrors your inner self and security, so spacious, bright rooms suggest growth and stability, while exploring new rooms reveals untapped parts of who you are."
+    },
+    {
+     "name": "Blood",
+     "meaning": "Though startling, blood symbolizes vital energy, family ties, and deep emotion, and in many traditions it surprisingly signals money or renewed strength rather than harm."
+    },
+    {
+     "name": "Ghost",
+     "meaning": "A ghost often represents unfinished matters or memories asking for closure, a gentle reminder to honor the past and let lingering feelings find peace at last."
+    },
+    {
+     "name": "Rainbow",
+     "meaning": "A rainbow is a radiant promise of hope, reconciliation, and reward after hardship, suggesting that brighter days and a happy resolution are beautifully on their way."
+    },
+    {
+     "name": "Star",
+     "meaning": "A star shines with hope, guidance, and destiny, often encouraging you to follow your dreams and trust that your wishes are quietly being noticed by the universe."
+    },
+    {
+     "name": "Fish",
+     "meaning": "A fish is a beloved sign of abundance, fertility, and good fortune, and catching one in a dream can foretell prosperity, opportunity, or wonderful news arriving soon."
+    },
+    {
+     "name": "Death or Funeral",
+     "meaning": "Despite its solemn face, a death or funeral usually means transformation rather than loss, marking the end of one chapter and the welcome beginning of a fresh start."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Angel Numbers",
+   "intro": "Angel numbers are repeating number sequences believed to carry gentle, uplifting messages of guidance and encouragement from the universe.",
+   "todayLabel": "Today's Angel Number",
+   "numbers": [
+    {
+     "keyword": "New Beginnings",
+     "meaning": "111 is a powerful sign of fresh starts and manifestation, reminding you that your thoughts are taking shape, so focus on what you truly wish to create."
+    },
+    {
+     "keyword": "Balance and Trust",
+     "meaning": "222 brings harmony and reassurance, encouraging you to trust your path, nurture your relationships, and believe that everything is gently falling into place."
+    },
+    {
+     "keyword": "Support and Growth",
+     "meaning": "333 carries warm encouragement and creative energy, a reminder that you are supported and guided as you express yourself and grow toward your potential."
+    },
+    {
+     "keyword": "Protection and Foundation",
+     "meaning": "444 offers steady protection and reassurance, letting you know you are safe, grounded, and supported as you build solid foundations for your future."
+    },
+    {
+     "keyword": "Change Ahead",
+     "meaning": "555 announces exciting change and transformation, inviting you to embrace new opportunities with an open heart and trust that this shift leads somewhere good."
+    },
+    {
+     "keyword": "Realign and Harmonize",
+     "meaning": "666 gently nudges you to rebalance and realign, releasing worry over material concerns and returning your focus to love, harmony, and inner peace."
+    },
+    {
+     "keyword": "Luck and Spirit",
+     "meaning": "777 is a joyful sign of good fortune and spiritual alignment, affirming that you are on the right path and blessings are flowing your way."
+    },
+    {
+     "keyword": "Abundance and Reward",
+     "meaning": "888 signals abundance and well-earned reward, reminding you that your efforts are bearing fruit and prosperity is moving steadily toward you."
+    },
+    {
+     "keyword": "Completion and Transition",
+     "meaning": "999 marks the meaningful close of a chapter, encouraging you to release what is finished and step forward into a fresh and hopeful new phase."
+    },
+    {
+     "keyword": "Awakening and Alignment",
+     "meaning": "1010 sparks spiritual awakening and alignment, inviting you to trust your inner growth and stay open as the universe guides you toward your purpose."
+    },
+    {
+     "keyword": "Powerful Manifestation",
+     "meaning": "1111 is a potent doorway of manifestation, a vivid reminder that your intentions are aligning, so hold positive thoughts as new possibilities open before you."
+    },
+    {
+     "keyword": "Leap and Trust",
+     "meaning": "1212 inspires a confident leap forward, encouraging you to trust your journey, rise above doubt, and keep moving toward the bright future taking shape."
+    }
+   ]
   }
  },
  "ja": {
@@ -2475,6 +2789,163 @@ window.LUX = {
     "neutral": "無難な相性",
     "clash": "相剋の元素・調整が必要"
    }
+  },
+  "dream": {
+   "title": "夢占い",
+   "intro": "夢に現れたシンボルが暗示する運気の流れを、やさしく読み解いてみましょう。",
+   "symbols": [
+    {
+     "name": "豚",
+     "meaning": "豚の夢は古くから金運や豊かさの象徴とされ、思わぬ収入や仕事の好転が訪れる兆しと言われています。"
+    },
+    {
+     "name": "蛇",
+     "meaning": "蛇は金運や生命力を表す吉兆とされ、白蛇なら特に幸運や妊娠を告げる縁起のよい夢と伝えられています。"
+    },
+    {
+     "name": "水",
+     "meaning": "澄んだ水は心の安らぎと豊かさ、濁った水は迷いや疲れの暗示とされます。感情の状態を映す鏡のような夢です。"
+    },
+    {
+     "name": "歯が抜ける",
+     "meaning": "歯が抜ける夢は環境の変化や人間関係の節目を示すとされ、心構えをしておくと変化を穏やかに受け止められる暗示とも言われます。"
+    },
+    {
+     "name": "火",
+     "meaning": "勢いよく燃える火は情熱や繁栄の象徴とされ、運気の高まりを告げる吉夢。ただし燃え広がる火は焦りへの注意とも言われます。"
+    },
+    {
+     "name": "排泄物",
+     "meaning": "意外にも糞尿の夢は古来より金運上昇の吉兆とされ、臨時収入や幸運が舞い込む前触れと伝えられています。"
+    },
+    {
+     "name": "金・お金",
+     "meaning": "金や財宝の夢は豊かさへの願望と運気上昇を示すとされますが、拾う夢はかえって出費への注意を促す場合もあります。"
+    },
+    {
+     "name": "龍",
+     "meaning": "龍は最上級の吉夢とされ、出世や大きな成功、願いの成就を告げる象徴。天に昇る龍なら飛躍の前兆と言われます。"
+    },
+    {
+     "name": "赤ちゃん",
+     "meaning": "赤ちゃんの夢は新たな始まりや可能性、純粋な希望の象徴とされ、創造的なチャンスや幸せの芽生えを暗示します。"
+    },
+    {
+     "name": "空を飛ぶ",
+     "meaning": "空を飛ぶ夢は自由への憧れや願望の達成を示すとされ、高く飛べるほど運気の伸びがよい兆しと言われています。"
+    },
+    {
+     "name": "追われる",
+     "meaning": "何かに追われる夢はプレッシャーや向き合うべき課題の暗示とされます。立ち止まる勇気が状況を好転させる合図かもしれません。"
+    },
+    {
+     "name": "洪水",
+     "meaning": "洪水の夢は感情の高ぶりや大きな変化の予兆とされますが、水が引いた後は再生や運気の好転を意味するとも言われます。"
+    },
+    {
+     "name": "虎",
+     "meaning": "虎は力強さや権威、勇気の象徴とされ、目標達成や自信の高まりを示す吉夢。母性や守護を表す場合もあります。"
+    },
+    {
+     "name": "鳥",
+     "meaning": "鳥の夢は自由や良い知らせの象徴とされ、空を舞う姿は希望や新しい縁の訪れを暗示します。"
+    },
+    {
+     "name": "花",
+     "meaning": "花が咲く夢は幸福や恋愛運の高まり、才能の開花を象徴するとされ、人生に彩りと喜びが訪れる吉兆と言われます。"
+    },
+    {
+     "name": "結婚・指輪",
+     "meaning": "結婚や指輪の夢は約束や新たな結びつき、心の充足を象徴するとされ、人間関係の進展や幸せな転機を暗示します。"
+    },
+    {
+     "name": "車",
+     "meaning": "車の夢は人生の方向性や行動力の象徴とされ、快調に走る夢は順調な前進、運転の乱れは焦りへの注意とされます。"
+    },
+    {
+     "name": "家",
+     "meaning": "家の夢は自分自身の心や安らぎ、生活基盤の象徴とされ、立派な家や新居は運気上昇や安定を暗示する吉夢です。"
+    },
+    {
+     "name": "血",
+     "meaning": "血の夢は意外にも生命力や金運の象徴とされ、再生やエネルギーの高まりを示す場合があるとも伝えられています。"
+    },
+    {
+     "name": "幽霊",
+     "meaning": "幽霊の夢は心残りや向き合えていない感情の暗示とされます。過去を手放し前へ進むよう促すメッセージかもしれません。"
+    },
+    {
+     "name": "虹",
+     "meaning": "虹の夢は幸運の訪れや願いの成就、困難を乗り越えた先の希望を象徴するとされ、運気の好転を告げる吉兆です。"
+    },
+    {
+     "name": "星",
+     "meaning": "星の夢は希望や夢の実現、導きの象徴とされ、輝く星は願いが叶う兆しや幸運の訪れを暗示すると言われています。"
+    },
+    {
+     "name": "魚",
+     "meaning": "魚の夢は金運や豊かさ、幸運の象徴とされ、大きな魚を捕る夢は思わぬ幸運や成功が舞い込む吉兆と言われます。"
+    },
+    {
+     "name": "死・葬式",
+     "meaning": "死や葬式の夢は終わりではなく再生や新たな出発の象徴とされ、古いものを手放し運気が好転する前触れと言われます。"
+    }
+   ]
+  },
+  "angel": {
+   "title": "エンジェルナンバー",
+   "intro": "ふと目に留まる数字は、天使からあなたへ送られるメッセージだと言われています。",
+   "todayLabel": "今日のエンジェルナンバー",
+   "numbers": [
+    {
+     "keyword": "新たな始まり",
+     "meaning": "思い描いたことが現実になり始める合図です。前向きな思考を大切にすれば、新しい扉が開かれていくでしょう。"
+    },
+    {
+     "keyword": "調和と信頼",
+     "meaning": "今は信じて待つとき。物事はちょうど良いバランスで進んでいます。焦らず流れに身をゆだねてみましょう。"
+    },
+    {
+     "keyword": "応援と成長",
+     "meaning": "高次の存在があなたを温かく見守り、後押ししています。自分を信じて一歩進む勇気が、成長へと導いてくれます。"
+    },
+    {
+     "keyword": "守護と基盤",
+     "meaning": "あなたは見えない力にしっかりと守られています。今築いている土台は確かなもの。安心して歩みを進めましょう。"
+    },
+    {
+     "keyword": "変化の訪れ",
+     "meaning": "人生の流れが大きく動き出す前触れです。訪れる変化を恐れず受け入れることで、より良い未来が開けていきます。"
+    },
+    {
+     "keyword": "再調整と調和",
+     "meaning": "心のバランスを整えるときが来ています。物質より大切なものへ意識を向ければ、穏やかな調和が戻ってくるでしょう。"
+    },
+    {
+     "keyword": "幸運と霊性",
+     "meaning": "あなたの歩みは正しい方向へ向かっています。幸運の流れに乗っている今、内なる声を信じて進んでいきましょう。"
+    },
+    {
+     "keyword": "豊かさと結実",
+     "meaning": "これまでの努力が実を結び、豊かさが循環し始める兆しです。受け取る心を開いて、流れを楽しんでください。"
+    },
+    {
+     "keyword": "完成と転換",
+     "meaning": "一つの章が幕を閉じ、新たな段階へ進むときです。役目を終えたものを手放せば、次の扉が開かれていきます。"
+    },
+    {
+     "keyword": "目覚めと整列",
+     "meaning": "意識が高まり、本来の自分と調和し始める合図です。直感を信じれば、進むべき道が自然と見えてくるでしょう。"
+    },
+    {
+     "keyword": "強い顕現",
+     "meaning": "願いが形になりやすい特別なときです。思考が現実を引き寄せる力を持つ今、明るい未来へ意識を向けましょう。"
+    },
+    {
+     "keyword": "飛躍と信頼",
+     "meaning": "新たな成長へと飛躍するときが訪れています。宇宙の流れを信じて踏み出せば、道は明るく開かれていくでしょう。"
+    }
+   ]
   }
  },
  "de": {
@@ -3300,6 +3771,163 @@ window.LUX = {
     "neutral": "Unkompliziert",
     "clash": "Gegensätzliches Element — braucht Abstimmung"
    }
+  },
+  "dream": {
+   "title": "Traumdeutung",
+   "intro": "Träume spiegeln oft verborgene Gefühle und feine Hinweise wider, daher findest du hier eine sanfte Deutung der häufigsten Traumsymbole.",
+   "symbols": [
+    {
+     "name": "Schwein",
+     "meaning": "Ein Schwein gilt in vielen Kulturen als Glücksbote und deutet auf Wohlstand, Fülle und unerwartete finanzielle Chancen hin, die du bald nutzen könntest."
+    },
+    {
+     "name": "Schlange",
+     "meaning": "Die Schlange steht für Wandlung, Heilung und verborgenes Wissen; sie kann neue Lebenskraft ankündigen, mahnt dich aber auch zu Vorsicht im Umgang mit anderen."
+    },
+    {
+     "name": "Wasser",
+     "meaning": "Klares Wasser deutet meist auf innere Ruhe und Gefühlsklarheit hin, während trübes Wasser dir nahelegt, ungeklärte Emotionen behutsam anzuschauen."
+    },
+    {
+     "name": "Ausfallende Zähne",
+     "meaning": "Ausfallende Zähne spiegeln oft die Sorge vor Veränderung oder Kontrollverlust wider; sie laden dich ein, Ängste loszulassen und auf deine innere Stärke zu vertrauen."
+    },
+    {
+     "name": "Feuer",
+     "meaning": "Feuer steht für Leidenschaft, Energie und Erneuerung; es kann einen Neubeginn ankündigen, mahnt dich aber, deine Kräfte mit Bedacht einzusetzen."
+    },
+    {
+     "name": "Kot",
+     "meaning": "So überraschend es klingt, gilt Kot im Traum traditionell als Zeichen für Geld und Glück, das dir bald zufließen und unerwartete Erleichterung bringen könnte."
+    },
+    {
+     "name": "Gold und Geld",
+     "meaning": "Gold und Geld im Traum deuten häufig auf inneren Reichtum, Selbstwert und kommende Fülle hin, erinnern dich aber auch an wahre, nicht nur materielle Werte."
+    },
+    {
+     "name": "Drache",
+     "meaning": "Der Drache verkörpert Kraft, Glück und großes Potenzial; er kann eine bedeutende Chance ankündigen, die deinen Mut und deine Entschlossenheit belohnt."
+    },
+    {
+     "name": "Baby",
+     "meaning": "Ein Baby steht für Neuanfang, Unschuld und keimende Möglichkeiten; es deutet darauf hin, dass etwas Wertvolles in deinem Leben heranwächst."
+    },
+    {
+     "name": "Fliegen",
+     "meaning": "Zu fliegen spiegelt Freiheit, Zuversicht und das Lösen von Lasten wider; es kann zeigen, dass du bereit bist, über alte Grenzen hinauszuwachsen."
+    },
+    {
+     "name": "Verfolgt werden",
+     "meaning": "Verfolgt zu werden deutet oft auf vermiedene Aufgaben oder Gefühle hin; der Traum lädt dich freundlich ein, dich dem zu stellen, was du noch meidest."
+    },
+    {
+     "name": "Überschwemmung",
+     "meaning": "Eine Überschwemmung steht für überwältigende Gefühle, kann aber auch reinigende Erneuerung bedeuten; nimm dir Zeit, dein Inneres in Ruhe zu ordnen."
+    },
+    {
+     "name": "Tiger",
+     "meaning": "Der Tiger verkörpert Mut, Würde und Schutzkraft; er kann andeuten, dass du deine eigene Stärke anerkennen und selbstbewusst für dich einstehen darfst."
+    },
+    {
+     "name": "Vogel",
+     "meaning": "Ein Vogel gilt als Bote guter Nachrichten und steht für Hoffnung, Freiheit und gute Aussichten; achte auf Botschaften, die bald zu dir gelangen."
+    },
+    {
+     "name": "Blume",
+     "meaning": "Eine Blume spiegelt Schönheit, Wachstum und zarte Freude wider; sie deutet darauf hin, dass sich etwas in deinem Leben liebevoll entfaltet."
+    },
+    {
+     "name": "Hochzeit und Ring",
+     "meaning": "Hochzeit oder Ring stehen für Verbindung, Treue und neue Bündnisse; der Traum kann eine vertiefte Beziehung oder einen wichtigen Lebensbund ankündigen."
+    },
+    {
+     "name": "Auto",
+     "meaning": "Ein Auto symbolisiert deinen Lebensweg und deine Eigenständigkeit; die Fahrt zeigt, wie sehr du gerade selbst die Richtung deines Lebens bestimmst."
+    },
+    {
+     "name": "Haus",
+     "meaning": "Ein Haus steht für dein Inneres und dein Geborgenheitsgefühl; ein gepflegtes Haus deutet auf Stabilität, neue Räume auf wachsende Möglichkeiten hin."
+    },
+    {
+     "name": "Blut",
+     "meaning": "Blut verkörpert Lebenskraft, Familie und tiefe Emotionen; der Traum kann auf Vitalität hindeuten, lädt dich aber auch ein, achtsam mit deiner Energie umzugehen."
+    },
+    {
+     "name": "Geist",
+     "meaning": "Ein Geist spiegelt oft unverarbeitete Erinnerungen oder Botschaften wider; statt Furcht lädt er dich ein, Vergangenes sanft anzuschauen und loszulassen."
+    },
+    {
+     "name": "Regenbogen",
+     "meaning": "Der Regenbogen gilt als wunderbares Zeichen für Hoffnung, Versöhnung und glückliche Wendungen, die nach schwierigen Zeiten Licht in dein Leben bringen."
+    },
+    {
+     "name": "Stern",
+     "meaning": "Ein Stern steht für Hoffnung, Führung und erfüllbare Wünsche; er erinnert dich daran, deinen Träumen zu folgen und auf deinen inneren Kompass zu vertrauen."
+    },
+    {
+     "name": "Fisch",
+     "meaning": "Ein Fisch deutet traditionell auf Glück, Fülle und gute Fügung hin; viele oder lebhafte Fische gelten als besonders erfreuliches Zeichen für kommende Chancen."
+    },
+    {
+     "name": "Tod und Beerdigung",
+     "meaning": "So beunruhigend es wirkt, steht der Tod im Traum meist für Abschluss und Neubeginn; er deutet darauf hin, dass ein Lebensabschnitt einem frischen Anfang weicht."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Engelszahlen",
+   "intro": "Engelszahlen sind sich wiederholende Zahlenfolgen, in denen viele Menschen sanfte, ermutigende Botschaften für ihren Lebensweg erkennen.",
+   "todayLabel": "Deine Engelszahl des Tages",
+   "numbers": [
+    {
+     "keyword": "Neuanfang",
+     "meaning": "Die 111 deutet auf einen frischen Beginn hin und erinnert dich daran, dass deine Gedanken gerade kraftvoll Wirklichkeit werden lassen."
+    },
+    {
+     "keyword": "Gleichgewicht und Vertrauen",
+     "meaning": "Die 222 lädt dich ein, auf Harmonie zu vertrauen; alles fügt sich, bleib geduldig und glaube an den richtigen Zeitpunkt."
+    },
+    {
+     "keyword": "Ermutigung und Wachstum",
+     "meaning": "Die 333 bringt liebevolle Unterstützung; deine Fähigkeiten dürfen sich entfalten, und du bist auf deinem Weg nicht allein."
+    },
+    {
+     "keyword": "Schutz und Halt",
+     "meaning": "Die 444 deutet auf festen Boden und stille Geborgenheit hin; ein schützendes Fundament trägt dich, also gehe deinen Weg zuversichtlich weiter."
+    },
+    {
+     "keyword": "Wandel",
+     "meaning": "Die 555 kündigt erfrischende Veränderung an; öffne dich für Neues und vertraue darauf, dass dieser Wandel dich weiterführt."
+    },
+    {
+     "keyword": "Neuausrichtung und Einklang",
+     "meaning": "Die 666 lädt dich ein, deine Prioritäten sanft neu zu ordnen und wieder mehr Einklang zwischen Alltag, Herz und Seele zu finden."
+    },
+    {
+     "keyword": "Glück und Spiritualität",
+     "meaning": "Die 777 gilt als wunderbares Zeichen für Glück und inneres Erwachen; du bist im Einklang mit deinem Weg und darfst es genießen."
+    },
+    {
+     "keyword": "Fülle und Ernte",
+     "meaning": "Die 888 deutet auf Fülle und reife Früchte hin; deine Mühe trägt Ertrag, also empfange das Kommende mit offenem Herzen."
+    },
+    {
+     "keyword": "Vollendung und Wende",
+     "meaning": "Die 999 markiert einen Abschluss und eine sanfte Wende; ein Kapitel rundet sich, damit Raum für etwas Neues entstehen kann."
+    },
+    {
+     "keyword": "Erwachen und Ausrichtung",
+     "meaning": "Die 1010 lädt dich zu klarem Bewusstsein ein; richte dich auf dein wahres Ziel aus, denn du bist im Fluss des Lebens."
+    },
+    {
+     "keyword": "Kraftvolle Manifestation",
+     "meaning": "Die 1111 gilt als kraftvolles Zeichen offener Türen; ein Wunschmoment ist da, also halte deine Gedanken hell und voller Hoffnung."
+    },
+    {
+     "keyword": "Aufschwung und Vertrauen",
+     "meaning": "Die 1212 ermutigt dich zum nächsten Schritt nach vorn; vertraue deinem Weg, denn du bewegst dich auf etwas Schönes zu."
+    }
+   ]
   }
  },
  "fr": {
@@ -4125,6 +4753,163 @@ window.LUX = {
     "neutral": "Entente paisible et sans tension",
     "clash": "Éléments contrastés — un peu d'ajustement à prévoir"
    }
+  },
+  "dream": {
+   "title": "Interprétation des rêves",
+   "intro": "Découvrez la signification symbolique de vos rêves et les présages qu'ils pourraient annoncer.",
+   "symbols": [
+    {
+     "name": "Cochon",
+     "meaning": "Le cochon est un symbole de richesse, de prospérité et de chance financière. Ce rêve annoncerait souvent une rentrée d'argent ou une réussite matérielle prochaine."
+    },
+    {
+     "name": "Serpent",
+     "meaning": "Le serpent évoque la transformation, la sagesse cachée et parfois une grossesse à venir. Il invite à rester attentif aux changements profonds qui se préparent."
+    },
+    {
+     "name": "Eau",
+     "meaning": "L'eau claire reflète vos émotions et votre vie intérieure. Limpide, elle annonce sérénité et renouveau ; trouble, elle conseille de clarifier vos sentiments."
+    },
+    {
+     "name": "Chute des dents",
+     "meaning": "Perdre ses dents traduirait une peur du changement, des tensions dans les relations ou une période de transition. C'est une invitation à lâcher prise en douceur."
+    },
+    {
+     "name": "Feu",
+     "meaning": "Le feu symbolise la passion, l'énergie créatrice et la purification. Maîtrisé, il annonce un élan nouveau ; il invite aussi à canaliser vos ardeurs."
+    },
+    {
+     "name": "Excréments",
+     "meaning": "Contrairement aux apparences, ce rêve est traditionnellement un puissant présage de richesse et de chance. Il annoncerait un gain inattendu ou une libération bénéfique."
+    },
+    {
+     "name": "Or et argent",
+     "meaning": "Voir de l'or ou de l'argent reflète vos désirs de réussite et votre estime de vous-même. Ce rêve encourage à reconnaître votre valeur et vos talents."
+    },
+    {
+     "name": "Dragon",
+     "meaning": "Le dragon est un symbole majeur de puissance, d'ascension et de grande réussite. Ce rêve annoncerait honneurs, protection et accomplissement d'un projet important."
+    },
+    {
+     "name": "Bébé",
+     "meaning": "Un bébé évoque un nouveau départ, un projet naissant ou un potentiel à cultiver. Ce rêve apporte tendresse, espoir et promesse de renouveau."
+    },
+    {
+     "name": "Voler",
+     "meaning": "Voler dans les airs exprime liberté, ambition et désir de dépasser vos limites. Ce rêve invite à croire en vos capacités et à viser plus haut."
+    },
+    {
+     "name": "Être poursuivi",
+     "meaning": "Cette poursuite refléterait une situation que vous évitez ou une pression intérieure. Le rêve vous encourage à affronter calmement ce qui vous préoccupe."
+    },
+    {
+     "name": "Inondation",
+     "meaning": "Une inondation traduit un trop-plein d'émotions ou de changements à gérer. Elle conseille de prendre du recul et de protéger ce qui compte vraiment."
+    },
+    {
+     "name": "Tigre",
+     "meaning": "Le tigre incarne le courage, la force intérieure et l'autorité. Ce rêve annoncerait une affirmation de soi et la victoire face à un défi important."
+    },
+    {
+     "name": "Oiseau",
+     "meaning": "Un oiseau symbolise les bonnes nouvelles, la liberté et l'élévation spirituelle. Ce rêve apporterait un message heureux ou une opportunité à saisir."
+    },
+    {
+     "name": "Fleur",
+     "meaning": "La fleur évoque l'épanouissement, l'amour et la beauté qui éclôt. Ce rêve annonce une période douce, propice aux rencontres et au bonheur naissant."
+    },
+    {
+     "name": "Mariage et bague",
+     "meaning": "Un mariage ou une bague symbolise l'union, l'engagement et l'harmonie. Ce rêve annoncerait un lien renforcé ou une promesse sincère dans votre vie."
+    },
+    {
+     "name": "Voiture",
+     "meaning": "La voiture représente votre parcours et la maîtrise de votre vie. Roulant avec aisance, elle reflète une avancée sereine vers vos objectifs personnels."
+    },
+    {
+     "name": "Maison",
+     "meaning": "La maison reflète votre intimité, votre sécurité et votre famille. Vaste et lumineuse, elle annoncerait stabilité, prospérité et harmonie dans votre foyer."
+    },
+    {
+     "name": "Sang",
+     "meaning": "Le sang évoque l'énergie vitale, les liens familiaux et parfois une émotion forte. Selon la tradition, il annoncerait aussi un gain ou une vitalité retrouvée."
+    },
+    {
+     "name": "Fantôme",
+     "meaning": "Un fantôme refléterait un souvenir ou une émotion non résolue qui ressurgit. Ce rêve vous invite avec douceur à apaiser le passé et à avancer."
+    },
+    {
+     "name": "Arc-en-ciel",
+     "meaning": "L'arc-en-ciel est un présage lumineux d'espoir, de chance et de réconciliation. Il annonce qu'une période plus sereine et heureuse se dessine devant vous."
+    },
+    {
+     "name": "Étoile",
+     "meaning": "L'étoile symbolise vos espoirs, votre guidance intérieure et un destin favorable. Ce rêve encourage à suivre vos aspirations avec confiance et clarté."
+    },
+    {
+     "name": "Poisson",
+     "meaning": "Le poisson est un symbole d'abondance, de chance et de prospérité. Ce rêve annoncerait souvent une bonne fortune, une réussite ou une heureuse surprise."
+    },
+    {
+     "name": "Mort et funérailles",
+     "meaning": "Loin d'être négatif, ce rêve symbolise la fin d'un cycle et un renouveau profond. Il annoncerait une transformation libératrice et un nouveau départ."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Nombres angéliques",
+   "intro": "Les nombres angéliques sont des séquences répétées que l'univers utiliserait pour vous transmettre un message bienveillant.",
+   "todayLabel": "Votre nombre angélique du jour",
+   "numbers": [
+    {
+     "keyword": "Nouveau départ",
+     "meaning": "Le 111 annonce un puissant nouveau commencement. Vos pensées se manifestent rapidement, alors concentrez-vous sur ce que vous désirez vraiment créer."
+    },
+    {
+     "keyword": "Équilibre et confiance",
+     "meaning": "Le 222 vous invite à garder foi et harmonie. Restez patient et confiant : vos efforts trouvent peu à peu leur juste équilibre."
+    },
+    {
+     "keyword": "Soutien et croissance",
+     "meaning": "Le 333 témoigne du soutien des forces bienveillantes. Vous êtes encouragé à exprimer vos talents et à grandir avec assurance."
+    },
+    {
+     "keyword": "Protection et fondations",
+     "meaning": "Le 444 vous entoure de protection et de stabilité. Vos bases sont solides : avancez sereinement, vous êtes guidé et soutenu."
+    },
+    {
+     "keyword": "Changement",
+     "meaning": "Le 555 annonce une transformation positive en chemin. Accueillez le changement avec ouverture, il ouvre la voie à un renouveau bienvenu."
+    },
+    {
+     "keyword": "Réajustement et harmonie",
+     "meaning": "Le 666 invite à rééquilibrer vos priorités. Recentrez-vous sur l'essentiel et retrouvez l'harmonie entre le matériel et le spirituel."
+    },
+    {
+     "keyword": "Chance et spiritualité",
+     "meaning": "Le 777 est un signe de chance et d'éveil intérieur. Vous êtes sur la bonne voie : continuez à suivre votre lumière avec confiance."
+    },
+    {
+     "keyword": "Abondance et récolte",
+     "meaning": "Le 888 annonce abondance et accomplissement. Vos efforts portent leurs fruits, et une belle prospérité se prépare à entrer dans votre vie."
+    },
+    {
+     "keyword": "Achèvement et transition",
+     "meaning": "Le 999 marque la fin d'un cycle important. Quelque chose s'achève pour laisser place à un chapitre neuf et prometteur."
+    },
+    {
+     "keyword": "Éveil et alignement",
+     "meaning": "Le 1010 invite à l'éveil et à l'alignement spirituel. Restez positif et confiant, vous êtes parfaitement guidé sur votre chemin."
+    },
+    {
+     "keyword": "Manifestation puissante",
+     "meaning": "Le 1111 est une porte qui s'ouvre, signe d'une manifestation intense. Veillez à vos pensées, car elles façonnent puissamment votre réalité."
+    },
+    {
+     "keyword": "Élan et confiance",
+     "meaning": "Le 1212 vous encourage à avancer avec foi. Sortez de votre zone de confort : un bel élan vous porte vers votre épanouissement."
+    }
+   ]
   }
  },
  "es": {
@@ -4950,6 +5735,163 @@ window.LUX = {
     "neutral": "Neutral: convivencia llevadera",
     "clash": "Elementos opuestos: piden ajuste"
    }
+  },
+  "dream": {
+   "title": "Interpretación de los sueños",
+   "intro": "Descubre el mensaje simbólico que tu sueño podría estar revelándote sobre tu vida y tu camino.",
+   "symbols": [
+    {
+     "name": "Cerdo",
+     "meaning": "Soñar con un cerdo suele anunciar prosperidad, abundancia y buena fortuna económica; es una señal alentadora de que tus esfuerzos pronto darán frutos."
+    },
+    {
+     "name": "Serpiente",
+     "meaning": "La serpiente simboliza transformación, sabiduría oculta y renovación; en varias tradiciones orientales también anticipa riqueza inesperada o un cambio profundo y necesario."
+    },
+    {
+     "name": "Agua",
+     "meaning": "El agua refleja tus emociones y tu estado interior; si fluye clara y serena, sugiere paz y lucidez, invitándote a confiar en tu intuición."
+    },
+    {
+     "name": "Caída de dientes",
+     "meaning": "Que se caigan los dientes suele asociarse con cambios, inseguridades o malentendidos pasajeros; tómalo como una invitación a cuidar tus palabras y tu autoestima."
+    },
+    {
+     "name": "Fuego",
+     "meaning": "El fuego representa pasión, energía y purificación; cuando arde controlado anuncia inspiración y nuevos comienzos, y a la vez te recuerda canalizar tus impulsos con prudencia."
+    },
+    {
+     "name": "Excremento",
+     "meaning": "Aunque sorprenda, soñar con excremento se interpreta tradicionalmente como un presagio de dinero y buena suerte; libérate de lo viejo para recibir aquello que llega."
+    },
+    {
+     "name": "Oro y dinero",
+     "meaning": "El oro o el dinero reflejan tus deseos de seguridad y valía personal; pueden anunciar oportunidades, aunque la verdadera riqueza nace de tu interior."
+    },
+    {
+     "name": "Dragón",
+     "meaning": "El dragón simboliza poder, protección y grandes logros; su aparición sugiere fuerza espiritual y la llegada de un período próspero y memorable en tu vida."
+    },
+    {
+     "name": "Bebé",
+     "meaning": "Un bebé en sueños representa nuevos comienzos, pureza e ilusión; anuncia proyectos que nacen, posibilidades frescas y una etapa cargada de esperanza y ternura."
+    },
+    {
+     "name": "Volar",
+     "meaning": "Volar expresa libertad, ambición y deseo de superar límites; es un sueño positivo que te anima a elevarte por encima de tus preocupaciones cotidianas."
+    },
+    {
+     "name": "Ser perseguido",
+     "meaning": "Sentirte perseguido refleja una situación o emoción que prefieres evitar; tu mente te invita con suavidad a afrontar aquello que llevas posponiendo."
+    },
+    {
+     "name": "Inundación",
+     "meaning": "Una inundación señala sentimientos que te desbordan o circunstancias que escapan a tu control; tras el desbordamiento, abre la posibilidad de limpiar y renovar lo estancado."
+    },
+    {
+     "name": "Tigre",
+     "meaning": "El tigre encarna fuerza, valentía y autoridad; soñar con él te recuerda tu poder interior y la importancia de afrontar los retos con coraje."
+    },
+    {
+     "name": "Pájaro",
+     "meaning": "Los pájaros simbolizan libertad, buenas noticias y aspiraciones elevadas; verlos volar anuncia mensajes alentadores y un espíritu que anhela expandirse sin ataduras."
+    },
+    {
+     "name": "Flor",
+     "meaning": "Una flor representa belleza, amor y crecimiento personal; verla florecer en sueños anuncia alegría, nuevos afectos y una etapa de plenitud emocional muy gratificante."
+    },
+    {
+     "name": "Boda o anillo",
+     "meaning": "Soñar con una boda o un anillo simboliza compromiso, unión y armonía; refleja tu deseo de conexión o el inicio de un vínculo significativo."
+    },
+    {
+     "name": "Coche",
+     "meaning": "El coche representa el rumbo de tu vida y tu capacidad de control; conducir con calma sugiere que avanzas con confianza hacia tus metas."
+    },
+    {
+     "name": "Casa",
+     "meaning": "La casa simboliza tu mundo interior y tu sensación de seguridad; sus habitaciones reflejan distintos aspectos de ti, invitándote a habitar tu vida con bienestar."
+    },
+    {
+     "name": "Sangre",
+     "meaning": "La sangre representa energía vital, lazos familiares y emociones profundas; aunque impacte, suele señalar vitalidad y la necesidad de atender lo que de verdad importa."
+    },
+    {
+     "name": "Fantasma",
+     "meaning": "Un fantasma refleja recuerdos o asuntos del pasado que aún resuenan en ti; te invita con delicadeza a soltar lo que ya cumplió su ciclo."
+    },
+    {
+     "name": "Arcoíris",
+     "meaning": "El arcoíris es un símbolo luminoso de esperanza, reconciliación y promesas cumplidas; anuncia que, tras la dificultad, llega una etapa de armonía y dicha."
+    },
+    {
+     "name": "Estrella",
+     "meaning": "La estrella simboliza guía, destino e inspiración; soñar con ella ilumina tu camino y te recuerda que vale la pena perseguir aquello con lo que sueñas."
+    },
+    {
+     "name": "Pez",
+     "meaning": "El pez se asocia con abundancia, fertilidad y oportunidades que fluyen; en muchas culturas, sobre todo orientales, anuncia prosperidad y buenas noticias por llegar."
+    },
+    {
+     "name": "Muerte o funeral",
+     "meaning": "Lejos de ser negativo, este sueño simboliza el fin de una etapa y un renacer; anuncia transformación y la apertura de un nuevo comienzo."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Números de los ángeles",
+   "intro": "Los números de los ángeles son secuencias repetidas que el universo emplea para enviarte mensajes de guía y aliento.",
+   "todayLabel": "Tu número angelical de hoy",
+   "numbers": [
+    {
+     "keyword": "Nuevos comienzos",
+     "meaning": "El 111 anuncia un poderoso despertar: tus pensamientos se manifiestan con rapidez, así que enfoca tu mente en aquello que de verdad deseas crear."
+    },
+    {
+     "keyword": "Equilibrio y confianza",
+     "meaning": "El 222 te invita a mantener la fe y el equilibrio; todo se está alineando, así que confía en el proceso y ten paciencia."
+    },
+    {
+     "keyword": "Apoyo divino",
+     "meaning": "El 333 trae el aliento de los maestros ascendidos; estás acompañado y guiado para crecer y expresar tu verdad con valentía."
+    },
+    {
+     "keyword": "Protección y base",
+     "meaning": "El 444 es señal de protección y firmeza; los ángeles sostienen tus cimientos para que avances con seguridad y confianza renovada."
+    },
+    {
+     "keyword": "Cambio en camino",
+     "meaning": "El 555 anuncia transformaciones significativas; abre tu corazón al cambio, pues nuevas oportunidades llegan para llevarte hacia una etapa más plena."
+    },
+    {
+     "keyword": "Reequilibrio interior",
+     "meaning": "El 666 te invita a reordenar tus prioridades y reencontrar la armonía; suelta las preocupaciones materiales y reconecta con lo que de verdad te nutre."
+    },
+    {
+     "keyword": "Suerte y espíritu",
+     "meaning": "El 777 es un signo afortunado de alineación espiritual; vas por buen camino, y el universo celebra tu sabiduría y tu evolución interior."
+    },
+    {
+     "keyword": "Abundancia y logro",
+     "meaning": "El 888 anuncia prosperidad y recompensas merecidas; tus esfuerzos dan fruto y la abundancia fluye hacia ti de muchas formas distintas."
+    },
+    {
+     "keyword": "Cierre y renovación",
+     "meaning": "El 999 marca la culminación de un ciclo; suelta lo que ya cumplió su propósito para abrir espacio a una nueva y luminosa etapa."
+    },
+    {
+     "keyword": "Despertar y alineación",
+     "meaning": "El 1010 te impulsa hacia un despertar espiritual; estás alineado con tu propósito, así que confía en tu intuición y avanza con plena conciencia."
+    },
+    {
+     "keyword": "Manifestación poderosa",
+     "meaning": "El 1111 es un portal abierto de manifestación; pide un deseo, pues tus pensamientos cobran forma con una fuerza extraordinaria en este momento."
+    },
+    {
+     "keyword": "Impulso y fe",
+     "meaning": "El 1212 te anima a dar un salto hacia tus sueños; mantén pensamientos elevados y confía en que avanzas hacia tu mayor bien."
+    }
+   ]
   }
  },
  "pt": {
@@ -5775,6 +6717,163 @@ window.LUX = {
     "neutral": "Relação tranquila",
     "clash": "Elementos opostos: pedem ajuste"
    }
+  },
+  "dream": {
+   "title": "Interpretação dos Sonhos",
+   "intro": "Descubra o que os símbolos dos seus sonhos podem estar revelando sobre o seu momento de vida.",
+   "symbols": [
+    {
+     "name": "Porco",
+     "meaning": "Sonhar com porco costuma ser um sinal positivo de prosperidade e fartura, indicando que boas oportunidades financeiras podem estar a caminho da sua vida."
+    },
+    {
+     "name": "Cobra",
+     "meaning": "A cobra carrega significados ambíguos: pode anunciar transformação e renovação, mas também pede cautela com pessoas falsas ou situações que merecem mais atenção."
+    },
+    {
+     "name": "Água",
+     "meaning": "Água limpa e calma reflete paz emocional e renovação interior, enquanto águas turvas costumam apontar sentimentos confusos que merecem ser observados com carinho."
+    },
+    {
+     "name": "Queda de dentes",
+     "meaning": "Sonhar que os dentes caem geralmente reflete inseguranças, medo de perdas ou ansiedade diante de mudanças, convidando você a cuidar da autoconfiança neste período."
+    },
+    {
+     "name": "Fogo",
+     "meaning": "O fogo simboliza paixão, energia intensa e transformação profunda; pode anunciar tanto renovação criativa quanto a necessidade de lidar com emoções fortes."
+    },
+    {
+     "name": "Fezes",
+     "meaning": "Por mais estranho que pareça, sonhar com fezes é tradicionalmente associado a dinheiro inesperado e boa sorte financeira chegando à sua vida."
+    },
+    {
+     "name": "Ouro e Dinheiro",
+     "meaning": "Sonhar com ouro ou dinheiro reflete desejos de segurança e valor próprio, podendo indicar abundância a caminho ou um convite a valorizar o que já possui."
+    },
+    {
+     "name": "Dragão",
+     "meaning": "O dragão representa poder, força interior e proteção; sonhar com ele costuma anunciar grandes conquistas e a coragem para enfrentar desafios importantes."
+    },
+    {
+     "name": "Bebê",
+     "meaning": "Sonhar com bebê simboliza novos começos, projetos nascendo e renovação; é um sinal carinhoso de pureza, esperança e oportunidades surgindo na sua vida."
+    },
+    {
+     "name": "Voar",
+     "meaning": "Voar nos sonhos representa a sensação de liberdade e a superação de limites; costuma refletir um momento em que você se sente capaz de ir além e confiar no próprio crescimento."
+    },
+    {
+     "name": "Ser perseguido",
+     "meaning": "Sentir-se perseguido geralmente revela medos ou responsabilidades que você vem evitando, sugerindo que talvez seja hora de encarar essa situação com calma e de frente."
+    },
+    {
+     "name": "Enchente",
+     "meaning": "A enchente pode indicar emoções avassaladoras pedindo espaço, mas também aponta para uma grande limpeza interior e renovação após momentos turbulentos."
+    },
+    {
+     "name": "Tigre",
+     "meaning": "O tigre simboliza coragem, força e poder pessoal; sonhar com ele pode anunciar a chegada de uma fase mais ousada ou pedir respeito aos seus próprios limites."
+    },
+    {
+     "name": "Pássaro",
+     "meaning": "Pássaros nos sonhos costumam trazer boas notícias e mensagens inesperadas; vê-los voando alto é um sinal de que algo positivo se aproxima da sua vida."
+    },
+    {
+     "name": "Flor",
+     "meaning": "As flores representam beleza, afeto e momentos de florescimento; sonhar com elas costuma anunciar alegrias, recomeços no campo amoroso e harmonia no coração."
+    },
+    {
+     "name": "Casamento e Aliança",
+     "meaning": "Sonhar com casamento ou aliança simboliza união, compromissos e novas fases; pode refletir desejos do coração ou laços importantes se fortalecendo."
+    },
+    {
+     "name": "Carro",
+     "meaning": "O carro representa o rumo da sua vida e o controle sobre seu caminho; dirigir tranquilo indica direção clara, enquanto dificuldades ao volante pedem mais atenção."
+    },
+    {
+     "name": "Casa",
+     "meaning": "A casa reflete o seu mundo interior e a sua segurança emocional; cômodos novos ou amplos costumam anunciar crescimento pessoal e descobertas sobre você mesmo."
+    },
+    {
+     "name": "Sangue",
+     "meaning": "O sangue simboliza vitalidade, laços familiares e emoções profundas; embora possa impressionar, muitas vezes representa renovação de energia e força para recomeçar."
+    },
+    {
+     "name": "Fantasma",
+     "meaning": "Sonhar com fantasma costuma refletir lembranças, mágoas ou assuntos do passado que ainda pedem atenção, convidando você a se libertar deles com leveza."
+    },
+    {
+     "name": "Arco-íris",
+     "meaning": "O arco-íris é um dos sinais mais bonitos dos sonhos: anuncia recompensas após dificuldades e a promessa de dias mais luminosos pela frente."
+    },
+    {
+     "name": "Estrela",
+     "meaning": "A estrela representa sonhos, orientação e propósito; sonhar com ela costuma inspirar confiança no seu caminho e lembrar que seus desejos podem se realizar."
+    },
+    {
+     "name": "Peixe",
+     "meaning": "O peixe é símbolo tradicional de prosperidade, fertilidade e abundância; sonhar com muitos peixes costuma anunciar boas notícias e fartura chegando."
+    },
+    {
+     "name": "Morte e Funeral",
+     "meaning": "Apesar de impressionar, a morte nos sonhos quase sempre simboliza fim de ciclos e renovação, anunciando transformações importantes e novos começos na sua vida."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Números dos Anjos",
+   "intro": "Os números dos anjos são sequências repetidas que aparecem na sua vida como mensagens espirituais de orientação e incentivo.",
+   "todayLabel": "Número do Anjo de Hoje",
+   "numbers": [
+    {
+     "keyword": "Novo Começo",
+     "meaning": "O 111 anuncia um portal de novos começos e manifestação; seus pensamentos têm grande poder agora, então cultive intenções positivas e siga com fé."
+    },
+    {
+     "keyword": "Equilíbrio e Fé",
+     "meaning": "O 222 traz uma mensagem de equilíbrio, harmonia e confiança; mantenha a paciência, pois tudo está se ajustando no tempo certo da sua vida."
+    },
+    {
+     "keyword": "Apoio e Crescimento",
+     "meaning": "O 333 lembra que você não está sozinho; forças espirituais oferecem apoio e incentivo para que você cresça e expresse o seu verdadeiro potencial."
+    },
+    {
+     "keyword": "Proteção e Base",
+     "meaning": "O 444 é um sinal de proteção e segurança; os anjos estão por perto, sustentando seus alicerces para que você avance com firmeza e tranquilidade."
+    },
+    {
+     "keyword": "Mudança",
+     "meaning": "O 555 anuncia transformações significativas chegando; abrace as mudanças com coragem e abertura, pois elas trazem crescimento e novas oportunidades de vida."
+    },
+    {
+     "keyword": "Reequilíbrio",
+     "meaning": "O 666 convida você a reequilibrar pensamentos e prioridades; reconecte-se com o que realmente importa e busque harmonia entre a vida material e a espiritual."
+    },
+    {
+     "keyword": "Sorte e Espiritualidade",
+     "meaning": "O 777 é um número de sorte e despertar espiritual; você está alinhado com o seu caminho e bênçãos especiais se aproximam da sua jornada."
+    },
+    {
+     "keyword": "Abundância",
+     "meaning": "O 888 traz a energia da abundância e das recompensas; seus esforços estão dando frutos e a prosperidade flui de forma natural para a sua vida."
+    },
+    {
+     "keyword": "Conclusão",
+     "meaning": "O 999 marca o encerramento de um ciclo importante; conclua o que precisa com gratidão, pois novas portas e fases logo se abrirão para você."
+    },
+    {
+     "keyword": "Despertar e Alinhamento",
+     "meaning": "O 1010 sinaliza despertar espiritual e alinhamento; confie na sua intuição e mantenha-se conectado com seus propósitos mais elevados neste momento de expansão."
+    },
+    {
+     "keyword": "Manifestação Poderosa",
+     "meaning": "O 1111 é um dos portais mais potentes de manifestação; uma porta se abre, então concentre seus pensamentos no que realmente deseja atrair para a vida."
+    },
+    {
+     "keyword": "Avanço e Confiança",
+     "meaning": "O 1212 inspira você a avançar com confiança rumo aos seus sonhos; mantenha pensamentos positivos, pois o universo apoia o seu próximo grande salto."
+    }
+   ]
   }
  },
  "it": {
@@ -6600,6 +7699,163 @@ window.LUX = {
     "neutral": "Affinità neutra e tranquilla",
     "clash": "Elementi in contrasto — serve equilibrio"
    }
+  },
+  "dream": {
+   "title": "Interpretazione dei sogni",
+   "intro": "Scopri il messaggio nascosto del tuo sogno con simboli e tradizioni che illuminano la tua giornata.",
+   "symbols": [
+    {
+     "name": "Maiale",
+     "meaning": "Sognare un maiale annuncia prosperità e ricchezza in arrivo: un segno generoso che invita ad accogliere con fiducia le occasioni di guadagno."
+    },
+    {
+     "name": "Serpente",
+     "meaning": "Il serpente porta abbondanza e talvolta annuncia una nuova vita: simbolo di rinascita e fortuna, suggerisce trasformazioni positive che si avvicinano."
+    },
+    {
+     "name": "Acqua",
+     "meaning": "L'acqua limpida riflette serenità ed emozioni in equilibrio; quando è torbida, invita ad ascoltare i tuoi sentimenti con più calma e attenzione."
+    },
+    {
+     "name": "Caduta dei denti",
+     "meaning": "Perdere i denti in sogno richiama pettegolezzi, piccole tensioni o un distacco: è un invito gentile a curare le parole e i legami importanti."
+    },
+    {
+     "name": "Fuoco",
+     "meaning": "Il fuoco rappresenta passione, energia e rinnovamento: spesso annuncia fortuna e slancio, purché tu sappia incanalare questa forza con saggezza."
+    },
+    {
+     "name": "Feci",
+     "meaning": "Per tradizione le feci nel sogno sono un sorprendente segno di ricchezza e fortuna economica: un presagio favorevole che invita ad accogliere l'abbondanza."
+    },
+    {
+     "name": "Oro e denaro",
+     "meaning": "Vedere oro o denaro riflette desideri di sicurezza e valore personale; può annunciare prosperità, ma ricorda di custodire anche i tesori del cuore."
+    },
+    {
+     "name": "Drago",
+     "meaning": "Il drago è simbolo potente di successo, ascesa e grande fortuna: spesso annuncia realizzazioni importanti e un destino luminoso davanti a te."
+    },
+    {
+     "name": "Neonato",
+     "meaning": "Un neonato evoca nuovi inizi, progetti che nascono e speranza: simbolo di purezza, suggerisce che qualcosa di prezioso sta germogliando nella tua vita."
+    },
+    {
+     "name": "Volare",
+     "meaning": "Volare esprime libertà, ambizione e desiderio di superare i limiti: un segno incoraggiante che ti invita a elevarti verso nuove possibilità."
+    },
+    {
+     "name": "Essere inseguiti",
+     "meaning": "Sentirsi inseguiti rivela una tensione o una responsabilità che eviti: è un dolce invito ad affrontare con coraggio ciò che chiede la tua attenzione."
+    },
+    {
+     "name": "Alluvione",
+     "meaning": "Un'alluvione rappresenta emozioni intense che traboccano; per quanto possa sembrare travolgente, annuncia spesso una pulizia interiore e un nuovo inizio più sereno."
+    },
+    {
+     "name": "Tigre",
+     "meaning": "La tigre incarna forza, coraggio e protezione: incontrarla nel sogno suggerisce che hai dentro di te il potere di affrontare ogni sfida con dignità."
+    },
+    {
+     "name": "Uccello",
+     "meaning": "Un uccello porta buone notizie, libertà e messaggi spirituali: simbolo di leggerezza, ti invita a seguire le aspirazioni più sincere del tuo animo."
+    },
+    {
+     "name": "Fiore",
+     "meaning": "Un fiore che sboccia annuncia amore, bellezza e momenti felici: simbolo delicato di crescita, suggerisce che qualcosa di buono sta fiorendo per te."
+    },
+    {
+     "name": "Matrimonio e anello",
+     "meaning": "Sognare nozze o un anello richiama unione, impegno e armonia affettiva: un presagio caldo che parla di legami sinceri e nuove promesse."
+    },
+    {
+     "name": "Automobile",
+     "meaning": "L'automobile riflette il tuo percorso e il senso di controllo sulla vita; guidare con sicurezza suggerisce che stai dirigendo bene il tuo cammino."
+    },
+    {
+     "name": "Casa",
+     "meaning": "La casa rappresenta il tuo mondo interiore e la stabilità: una dimora accogliente nel sogno annuncia serenità familiare e solide fondamenta affettive."
+    },
+    {
+     "name": "Sangue",
+     "meaning": "Il sangue simboleggia vitalità, energia e legami profondi; pur impressionando, nella tradizione può annunciare ricchezza e una rinnovata forza vitale."
+    },
+    {
+     "name": "Fantasma",
+     "meaning": "Un fantasma evoca ricordi o emozioni irrisolte che chiedono ascolto: è un invito gentile a fare pace con il passato e lasciarlo andare con serenità."
+    },
+    {
+     "name": "Arcobaleno",
+     "meaning": "L'arcobaleno è un presagio luminoso di speranza, fortuna e armonia: dopo la pioggia annuncia tempi sereni e desideri che si avverano."
+    },
+    {
+     "name": "Stella",
+     "meaning": "Una stella rappresenta guida, ispirazione e sogni da seguire: simbolo di speranza, ti invita a confidare nel tuo destino e a brillare con autenticità."
+    },
+    {
+     "name": "Pesce",
+     "meaning": "Il pesce è segno tradizionale di prosperità e fertilità: spesso annuncia abbondanza e buone notizie, soprattutto se lo vedi vivace nell'acqua limpida."
+    },
+    {
+     "name": "Morte e funerale",
+     "meaning": "Sognare la morte non spaventa: simboleggia chiusure e rinascita, annunciando spesso un nuovo capitolo e un cambiamento positivo nella tua vita."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Numeri degli angeli",
+   "intro": "I numeri degli angeli sono sequenze ricorrenti che custodiscono messaggi spirituali di guida e incoraggiamento.",
+   "todayLabel": "Il numero angelico di oggi",
+   "numbers": [
+    {
+     "keyword": "Nuovo inizio",
+     "meaning": "Il 111 annuncia un nuovo inizio e il potere di manifestare: i tuoi pensieri prendono forma, quindi coltiva intenzioni luminose e fiduciose."
+    },
+    {
+     "keyword": "Equilibrio e fiducia",
+     "meaning": "Il 222 invita all'equilibrio e alla fiducia: tutto si sta allineando al momento giusto, abbi pazienza e credi nel percorso che si dispiega."
+    },
+    {
+     "keyword": "Sostegno e crescita",
+     "meaning": "Il 333 porta il sostegno degli angeli e ti incoraggia a crescere: esprimi i tuoi talenti con coraggio, sei guidato e profondamente sostenuto."
+    },
+    {
+     "keyword": "Protezione e basi",
+     "meaning": "Il 444 è segno di protezione e solide fondamenta: gli angeli vegliano su di te, continua con dedizione perché stai costruendo bene."
+    },
+    {
+     "keyword": "Cambiamento",
+     "meaning": "Il 555 annuncia un cambiamento significativo: accogli il nuovo con apertura, perché questa trasformazione apre la strada a una crescita preziosa."
+    },
+    {
+     "keyword": "Riequilibrio e armonia",
+     "meaning": "Il 666 invita a riequilibrare pensieri e priorità: torna all'armonia, prenditi cura del tuo benessere e ritrova la giusta misura interiore."
+    },
+    {
+     "keyword": "Fortuna e spiritualità",
+     "meaning": "Il 777 è un numero di fortuna e risveglio spirituale: sei in sintonia con l'universo, continua sul tuo cammino con gratitudine e fiducia."
+    },
+    {
+     "keyword": "Abbondanza e frutti",
+     "meaning": "L'888 annuncia abbondanza e raccolto: i tuoi sforzi portano frutti, accogli la prosperità che arriva con cuore aperto e riconoscente."
+    },
+    {
+     "keyword": "Compimento e svolta",
+     "meaning": "Il 999 segna un compimento e una svolta: un ciclo si chiude per fare spazio al nuovo, lascia andare ciò che ha già servito al tuo cammino."
+    },
+    {
+     "keyword": "Risveglio e allineamento",
+     "meaning": "Il 1010 invita al risveglio e all'allineamento: torna alla tua essenza con consapevolezza, sei perfettamente sintonizzato con il tuo scopo."
+    },
+    {
+     "keyword": "Manifestazione potente",
+     "meaning": "L'1111 è un potente portale di manifestazione: i tuoi desideri trovano una porta aperta, focalizza i pensieri su ciò che davvero ami."
+    },
+    {
+     "keyword": "Slancio e fiducia",
+     "meaning": "Il 1212 incoraggia uno slancio in avanti con fiducia: continua a credere nel tuo percorso, stai salendo verso una versione più luminosa di te."
+    }
+   ]
   }
  },
  "id": {
@@ -7425,6 +8681,163 @@ window.LUX = {
     "neutral": "Netral - Cukup Selaras",
     "clash": "Unsur Bertolak Belakang - Perlu Penyesuaian"
    }
+  },
+  "dream": {
+   "title": "Tafsir Mimpi",
+   "intro": "Mimpi sering kali menjadi cerminan harapan dan perasaan kita sehari-hari. Berikut makna ringan dari simbol-simbol yang umum muncul, untuk direnungkan dengan santai.",
+   "symbols": [
+    {
+     "name": "Babi",
+     "meaning": "Babi kerap dianggap pertanda rezeki dan keberuntungan yang mendekat. Mimpi ini bisa menjadi isyarat agar kamu siap menyambut peluang baik dengan tangan terbuka."
+    },
+    {
+     "name": "Ular",
+     "meaning": "Ular sering dikaitkan dengan rezeki tak terduga atau kabar kelahiran. Maknanya bisa positif, sambil mengingatkanmu untuk tetap waspada dan bijak menyikapi sesuatu."
+    },
+    {
+     "name": "Air",
+     "meaning": "Air jernih biasanya melambangkan ketenangan hati dan kelancaran rezeki. Air keruh bisa menjadi ajakan lembut untuk membenahi perasaan yang sedang gelisah."
+    },
+    {
+     "name": "Gigi Copot",
+     "meaning": "Gigi tanggal sering ditafsirkan sebagai pergunjingan atau perpisahan kecil. Anggap saja pengingat halus untuk menjaga lisan dan merawat hubungan dengan orang terdekat."
+    },
+    {
+     "name": "Api",
+     "meaning": "Api yang terkendali bisa menjadi lambang semangat dan rezeki yang membara. Api yang liar mengajak kita menahan diri agar tidak mudah terbawa amarah."
+    },
+    {
+     "name": "Tinja",
+     "meaning": "Menariknya, mimpi tinja banyak dianggap sebagai pertanda rezeki dan keberuntungan. Bisa jadi ini isyarat ringan bahwa hal baik sedang menghampiri hidupmu."
+    },
+    {
+     "name": "Emas atau Uang",
+     "meaning": "Emas dan uang melambangkan harapan akan kelimpahan serta nilai diri. Mimpi ini bisa menjadi dorongan untuk lebih mensyukuri berkah yang sudah kamu miliki."
+    },
+    {
+     "name": "Naga",
+     "meaning": "Naga adalah lambang kekuatan, kewibawaan, dan keberuntungan besar. Mimpi ini bisa menjadi pertanda semangat dan cita-cita tinggi yang layak kamu kejar."
+    },
+    {
+     "name": "Bayi",
+     "meaning": "Bayi sering melambangkan awal yang baru, harapan, dan rezeki yang bertumbuh. Bisa jadi ini isyarat lembut bahwa babak segar sedang dimulai dalam hidupmu."
+    },
+    {
+     "name": "Terbang",
+     "meaning": "Terbang biasanya menandakan kebebasan, ambisi, dan keinginan melampaui batas. Mimpi ini bisa menjadi semangat untuk berani melangkah lebih tinggi dari sebelumnya."
+    },
+    {
+     "name": "Dikejar",
+     "meaning": "Dikejar kerap mencerminkan tekanan atau hal yang ingin kamu hindari. Anggap saja ajakan lembut untuk menghadapi kekhawatiran dengan kepala tenang."
+    },
+    {
+     "name": "Banjir",
+     "meaning": "Banjir bisa melambangkan luapan emosi atau perubahan besar yang datang. Sebagian orang justru menganggapnya pertanda rezeki melimpah setelah masa yang berat."
+    },
+    {
+     "name": "Harimau",
+     "meaning": "Harimau melambangkan keberanian, wibawa, dan kekuatan diri. Mimpi ini bisa menjadi isyarat agar kamu lebih percaya pada kemampuanmu sendiri."
+    },
+    {
+     "name": "Burung",
+     "meaning": "Burung sering membawa makna kabar baik dan harapan yang terbang tinggi. Bisa jadi ini pertanda ringan bahwa berita menyenangkan sedang menuju kepadamu."
+    },
+    {
+     "name": "Bunga",
+     "meaning": "Bunga yang mekar melambangkan kebahagiaan, cinta, dan awal yang indah. Mimpi ini bisa menjadi isyarat tumbuhnya hal-hal manis dalam hidupmu."
+    },
+    {
+     "name": "Pernikahan atau Cincin",
+     "meaning": "Pernikahan dan cincin melambangkan ikatan, janji, dan babak baru. Bisa jadi ini pertanda harapan akan hubungan yang lebih erat dan bermakna."
+    },
+    {
+     "name": "Mobil",
+     "meaning": "Mobil mencerminkan arah hidup dan kendali atas perjalananmu. Mimpi ini bisa menjadi ajakan untuk menata tujuan dan melaju dengan mantap."
+    },
+    {
+     "name": "Rumah",
+     "meaning": "Rumah melambangkan rasa aman, keluarga, dan diri yang sesungguhnya. Bisa jadi ini isyarat lembut untuk merawat ketenangan batin dan orang-orang tercinta."
+    },
+    {
+     "name": "Darah",
+     "meaning": "Darah sering dikaitkan dengan hubungan keluarga, energi, dan kehidupan. Maknanya beragam, jadi anggaplah sebagai pengingat untuk menjaga kesehatan dan kedekatan."
+    },
+    {
+     "name": "Hantu",
+     "meaning": "Hantu biasanya mencerminkan rasa takut atau kenangan yang belum tuntas. Anggap saja ajakan untuk berdamai dengan hal yang selama ini mengganjal di hati."
+    },
+    {
+     "name": "Pelangi",
+     "meaning": "Pelangi adalah lambang harapan, janji baik, dan kebahagiaan setelah badai. Mimpi ini bisa menjadi pertanda hari-hari yang lebih cerah di depan."
+    },
+    {
+     "name": "Bintang",
+     "meaning": "Bintang melambangkan harapan, cita-cita, dan tuntunan dalam kegelapan. Bisa jadi ini isyarat agar kamu terus mengikuti impian yang kamu yakini."
+    },
+    {
+     "name": "Ikan",
+     "meaning": "Ikan sering ditafsirkan sebagai pertanda rezeki dan kelimpahan. Mimpi menangkap ikan bisa menjadi isyarat peluang baik yang siap kamu raih."
+    },
+    {
+     "name": "Kematian atau Pemakaman",
+     "meaning": "Meski terdengar menakutkan, mimpi ini sering bermakna berakhirnya satu babak dan dimulainya yang baru. Anggap saja pertanda perubahan dan harapan yang segar."
+    }
+   ]
+  },
+  "angel": {
+   "title": "Angel Number",
+   "intro": "Angel number adalah deretan angka berulang yang dipercaya sebagian orang membawa pesan penyemangat dan pengingat positif. Maknanya bisa kamu jadikan renungan ringan sesuai keyakinanmu.",
+   "todayLabel": "Angel Number Hari Ini",
+   "numbers": [
+    {
+     "keyword": "Awal Baru",
+     "meaning": "111 bisa menjadi pengingat lembut bahwa niat dan pikiranmu sedang menemukan arahnya. Jaga harapan tetap positif dan mulailah langkahmu dengan penuh keyakinan."
+    },
+    {
+     "keyword": "Keseimbangan",
+     "meaning": "222 mengajakmu untuk percaya pada proses dan menjaga keselarasan. Bersabarlah, sebab segala sesuatu sedang menemukan tempatnya yang tepat."
+    },
+    {
+     "keyword": "Dukungan",
+     "meaning": "333 terasa seperti pelukan semangat agar kamu terus bertumbuh. Percayalah pada bakatmu dan teruslah melangkah dengan hati yang lapang."
+    },
+    {
+     "keyword": "Perlindungan",
+     "meaning": "444 bisa menjadi pengingat bahwa kamu tidak sendirian dan pijakanmu kokoh. Bangun apa pun dengan tenang, sebab fondasimu sedang dikuatkan."
+    },
+    {
+     "keyword": "Perubahan",
+     "meaning": "555 membawa nuansa perubahan yang menyegarkan dalam hidupmu. Sambutlah hal baru dengan hati terbuka dan keberanian yang tulus."
+    },
+    {
+     "keyword": "Penyelarasan",
+     "meaning": "666 mengajakmu menata ulang dan mengembalikan keseimbangan hidup. Luangkan waktu untuk diri sendiri dan rawat hal-hal yang benar-benar penting."
+    },
+    {
+     "keyword": "Keberuntungan",
+     "meaning": "777 terasa seperti hembusan keberuntungan dan ketenangan batin. Syukuri perjalananmu, sebab kamu sedang berada di jalur yang baik."
+    },
+    {
+     "keyword": "Kelimpahan",
+     "meaning": "888 membawa harapan akan keberkahan dan buah dari kerja kerasmu. Tetaplah bersyukur dan terbuka menyambut hal-hal baik yang datang."
+    },
+    {
+     "keyword": "Penyelesaian",
+     "meaning": "999 menandai berakhirnya satu babak dan dimulainya yang baru. Lepaskan dengan ikhlas, lalu sambut lembaran segar dengan hati yang tenang."
+    },
+    {
+     "keyword": "Kesadaran",
+     "meaning": "1010 mengajakmu lebih sadar dan selaras dengan tujuan sejatimu. Percayalah pada arah hatimu dan melangkahlah dengan mantap."
+    },
+    {
+     "keyword": "Pintu Terbuka",
+     "meaning": "1111 sering terasa seperti momen istimewa yang penuh harapan. Jagalah pikiranmu tetap jernih, sebab peluang baik mungkin sedang terbuka."
+    },
+    {
+     "keyword": "Lompatan",
+     "meaning": "1212 membawa semangat untuk maju dan percaya pada langkahmu. Teruslah bertumbuh dengan optimis, sebab kamu sedang bergerak ke depan."
+    }
+   ]
   }
  }
 };

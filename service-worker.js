@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v12: 중국12지 오행띠/연간운세 + 궁합 4축/겉궁합
-const CACHE_NAME = 'lucky-v12';
+// v13: 신규 요소 꿈해몽(24상징) + 엔젤넘버(오늘의 수)
+const CACHE_NAME = 'lucky-v13';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

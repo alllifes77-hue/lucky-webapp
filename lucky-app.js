@@ -1647,7 +1647,7 @@ function renderResults(data) {
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
-   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel'].forEach(id => {
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1733,6 +1733,8 @@ function renderResults(data) {
   renderTarotPanel(data);
   renderBirthstonePanel(data);
   renderLuckyFourPanel(data);
+  renderDreamPanel(data);
+  renderAngelPanel(data);
   // 결과 중간 광고 + ko 쿠팡 — 패널들 사이에 한 번 더 노출
   _resultAdSense('ad-result-mid', 400);
   _resultCoupang(lang);
@@ -5439,6 +5441,62 @@ function renderLifePathPanel(data){
       </div>
       ${cyc(PD).guidance?`<div style="font-size:11.5px;color:#065f46;line-height:1.5;margin-top:9px;">✨ ${escHtml(cyc(PD).guidance)}</div>`:''}
     </div>`;
+  _luxInsert(panel);
+}
+
+// ── 7) 꿈해몽 (Wave5) — 보편 꿈 상징 24, 탭하면 의미 ──────────
+const _DREAM_EMJ = ['🐷','🐍','💧','🦷','🔥','💩','💰','🐉','👶','✈️','🏃','🌊','🐅','🦅','🌸','💍','🚗','🏠','🩸','👻','🌈','⭐','🐟','⚰️'];
+function _dreamReveal(i, lang){
+  try{ const X=window.LUX&&(window.LUX[lang]||window.LUX.en); const s=X&&X.dream&&X.dream.symbols[i]; if(!s) return;
+    const d=document.getElementById('dream-detail'); if(d) d.innerHTML='<b>'+_DREAM_EMJ[i]+' '+escHtml(s.name)+'</b> — '+escHtml(s.meaning);
+    document.querySelectorAll('[id^=dream-c]').forEach(b=>{b.style.background='rgba(255,255,255,.7)';});
+    const b=document.getElementById('dream-c'+i); if(b) b.style.background='#ddd6fe';
+  }catch(e){}
+}
+function renderDreamPanel(data){
+  const old=document.getElementById('dream-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.dream||!X.dream.symbols||!X.dream.symbols.length) return;
+  const D=X.dream;
+  const chips=D.symbols.map((s,i)=>`<button onclick="_dreamReveal(${i},'${data.lang}')" id="dream-c${i}" style="background:rgba(255,255,255,.7);border:1px solid #e9d5ff;border-radius:10px;padding:7px 3px;cursor:pointer;text-align:center;">
+    <div style="font-size:19px;line-height:1.1;">${_DREAM_EMJ[i]}</div>
+    <div style="font-size:9px;color:#6b21a8;font-weight:600;line-height:1.1;margin-top:2px;">${escHtml(s.name)}</div></button>`).join('');
+  const panel=document.createElement('div');
+  panel.id='dream-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#faf5ff,#ede9fe);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#7c3aed;margin-bottom:6px;text-transform:uppercase;">🌙 ${escHtml(D.title)}</div>
+    <div style="font-size:11px;color:#7c3aed;margin-bottom:11px;line-height:1.4;">${escHtml(D.intro)}</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:11px;">${chips}</div>
+    <div id="dream-detail" style="background:rgba(124,58,237,.08);border-radius:10px;padding:11px 13px;font-size:12px;color:#5b21b6;line-height:1.55;"><b>${_DREAM_EMJ[0]} ${escHtml(D.symbols[0].name)}</b> — ${escHtml(D.symbols[0].meaning)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── 8) 엔젤넘버 (Wave5) — 오늘의 엔젤넘버(결정론) + 참조 12 ──────
+const _ANGEL_NUMS = [111,222,333,444,555,666,777,888,999,1010,1111,1212];
+function _angelReveal(i, lang){
+  try{ const X=window.LUX&&(window.LUX[lang]||window.LUX.en); const n=X&&X.angel&&X.angel.numbers[i]; if(!n) return;
+    const d=document.getElementById('angel-detail'); if(d) d.innerHTML='<b>'+_ANGEL_NUMS[i]+' · '+escHtml(n.keyword)+'</b> — '+escHtml(n.meaning);
+    document.querySelectorAll('[id^=angel-c]').forEach(b=>{b.style.background='rgba(255,255,255,.7)';});
+    const b=document.getElementById('angel-c'+i); if(b) b.style.background='#fde68a';
+  }catch(e){}
+}
+function renderAngelPanel(data){
+  const old=document.getElementById('angel-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.angel||!X.angel.numbers||!X.angel.numbers.length) return;
+  const A=X.angel; const ti=_luxPick(data.seed,53,12); const today=A.numbers[ti]||A.numbers[0];
+  const refs=A.numbers.map((n,i)=>`<button onclick="_angelReveal(${i},'${data.lang}')" id="angel-c${i}" style="background:${i===ti?'#fde68a':'rgba(255,255,255,.7)'};border:1px solid #fcd34d;border-radius:8px;padding:5px 2px;cursor:pointer;font-size:11px;font-weight:800;color:#92400e;">${_ANGEL_NUMS[i]}</button>`).join('');
+  const panel=document.createElement('div');
+  panel.id='angel-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#b45309;margin-bottom:6px;text-transform:uppercase;">😇 ${escHtml(A.title)}</div>
+    <div style="font-size:11px;color:#b45309;margin-bottom:11px;line-height:1.4;">${escHtml(A.intro)}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:11px;">
+      <div style="font-size:32px;font-weight:900;color:#d97706;flex-shrink:0;">${_ANGEL_NUMS[ti]}</div>
+      <div style="flex:1;"><div style="font-size:10px;color:#b45309;font-weight:700;text-transform:uppercase;">${escHtml(A.todayLabel)} · ${escHtml(today.keyword)}</div>
+        <div id="angel-detail" style="font-size:12px;color:#78350f;line-height:1.55;margin-top:3px;">${escHtml(today.meaning)}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;">${refs}</div>`;
   _luxInsert(panel);
 }
 
