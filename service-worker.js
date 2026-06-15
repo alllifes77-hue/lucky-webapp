@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v8: 알리 어필 통화/지오 + 클라 캐시버스트(&v=3)
-const CACHE_NAME = 'lucky-v8';
+// v9: 호로스코프 best-in-class(별자리별 일운·달별자리·점성점수·궁합)
+const CACHE_NAME = 'lucky-v9';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

@@ -5067,6 +5067,24 @@ function _sunSignIdx(m, d){
 }
 const _SIGN_EMJ = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
 const _SIGN_ELEMCOL = ['#ef4444','#16a34a','#06b6d4','#3b82f6','#ef4444','#16a34a','#06b6d4','#3b82f6','#ef4444','#16a34a','#06b6d4','#3b82f6'];
+// 점성 로직: 0=양자리..11=물고기. 원소(불/흙/바람/물)·특성(활동/고정/변통)·극성·수호행성·원소상성
+const _SIGN_ELEM = ['fire','earth','air','water','fire','earth','air','water','fire','earth','air','water'];
+const _ELEM_IDX = { fire:0, earth:1, air:2, water:3 };
+const _ELEM_COMPAT = { fire:{fire:18,air:11,earth:1,water:-8}, earth:{earth:18,water:11,fire:1,air:-8}, air:{air:18,fire:11,water:1,earth:-8}, water:{water:18,earth:11,air:1,fire:-8} };
+const _SIGN_MODALITY = [0,1,2,0,1,2,0,1,2,0,1,2]; // 0 활동 1 고정 2 변통
+const _SIGN_POLARITY = [0,1,0,1,0,1,0,1,0,1,0,1]; // 0 양 1 음
+const _SIGN_PLANET = [0,1,2,3,4,2,1,5,6,7,8,9];    // 화금수달태명목토천해 인덱스
+const _ASTRO_TERMS = {
+  ko:{ planets:['화성','금성','수성','달','태양','명왕성','목성','토성','천왕성','해왕성'], modality:['활동궁','고정궁','변통궁'], polarity:['양(능동)','음(수용)'], elem:['불','흙','바람','물'] },
+  en:{ planets:['Mars','Venus','Mercury','Moon','Sun','Pluto','Jupiter','Saturn','Uranus','Neptune'], modality:['Cardinal','Fixed','Mutable'], polarity:['Positive','Negative'], elem:['Fire','Earth','Air','Water'] },
+  ja:{ planets:['火星','金星','水星','月','太陽','冥王星','木星','土星','天王星','海王星'], modality:['活動宮','固定宮','柔軟宮'], polarity:['陽(能動)','陰(受容)'], elem:['火','地','風','水'] },
+  de:{ planets:['Mars','Venus','Merkur','Mond','Sonne','Pluto','Jupiter','Saturn','Uranus','Neptun'], modality:['Kardinal','Fix','Veränderlich'], polarity:['Positiv','Negativ'], elem:['Feuer','Erde','Luft','Wasser'] },
+  fr:{ planets:['Mars','Vénus','Mercure','Lune','Soleil','Pluton','Jupiter','Saturne','Uranus','Neptune'], modality:['Cardinal','Fixe','Mutable'], polarity:['Positif','Négatif'], elem:['Feu','Terre','Air','Eau'] },
+  es:{ planets:['Marte','Venus','Mercurio','Luna','Sol','Plutón','Júpiter','Saturno','Urano','Neptuno'], modality:['Cardinal','Fijo','Mutable'], polarity:['Positivo','Negativo'], elem:['Fuego','Tierra','Aire','Agua'] },
+  pt:{ planets:['Marte','Vênus','Mercúrio','Lua','Sol','Plutão','Júpiter','Saturno','Urano','Netuno'], modality:['Cardinal','Fixo','Mutável'], polarity:['Positivo','Negativo'], elem:['Fogo','Terra','Ar','Água'] },
+  it:{ planets:['Marte','Venere','Mercurio','Luna','Sole','Plutone','Giove','Saturno','Urano','Nettuno'], modality:['Cardinale','Fisso','Mobile'], polarity:['Positivo','Negativo'], elem:['Fuoco','Terra','Aria','Acqua'] },
+  id:{ planets:['Mars','Venus','Merkurius','Bulan','Matahari','Pluto','Jupiter','Saturnus','Uranus','Neptunus'], modality:['Kardinal','Tetap','Mutable'], polarity:['Positif','Negatif'], elem:['Api','Tanah','Udara','Air'] },
+};
 
 // ── 1) 바이오리듬 ──────────────────────────────────────────
 function renderBiorhythmPanel(data){
@@ -5133,15 +5151,62 @@ function renderBirthstonePanel(data){
 function renderSunSignPanel(data){
   const old=document.getElementById('sunsign-panel'); if(old) old.remove();
   const X=_luxGet(data.lang); if(!X||!X.sunSign) return;
-  const S=X.sunSign; const si=_sunSignIdx(data.month||1, data.day||1);
+  const S=X.sunSign; const lang=data.lang;
+  const si=_sunSignIdx(data.month||1, data.day||1);
   const sign=S.signs[si]; if(!sign) return;
-  const daily=S.daily[_luxPick(data.seed,3, S.daily.length)] || S.daily[0];
-  const love = 55 + _luxPick(data.seed, 13, 45);
-  const money= 52 + _luxPick(data.seed, 17, 47);
+  const L=S.labels||{};
+  const lbl=(k,fb)=>escHtml(L[k]||fb||'');
+  const TERMS=_ASTRO_TERMS[lang]||_ASTRO_TERMS.en;
+
+  // 별자리별 일운 (제너릭 폐기 → dailyBySign[si], 없으면 구버전 daily 폴백)
+  let daily='';
+  if (S.dailyBySign && S.dailyBySign[si] && S.dailyBySign[si].length)
+    daily=S.dailyBySign[si][_luxPick(data.seed,3,S.dailyBySign[si].length)];
+  else if (S.daily && S.daily.length)
+    daily=S.daily[_luxPick(data.seed,3,S.daily.length)];
+
+  // 달별자리(빅2) — data.moonSign(0=양자리..11=물고기) 재사용, 없으면 직접 산출
+  let mi=(data.moonSign!=null && data.moonSign>=0 && data.moonSign<=11)?data.moonSign:null;
+  if(mi==null && typeof getMoonSignPrecise==='function'){
+    try{ const _m=getMoonSignPrecise(data.year, data.month, data.day, data.birthHour); if(_m>=0 && _m<=11) mi=_m; }catch(e){}
+  }
+  const moonName=(mi!=null && S.signs[mi])?S.signs[mi].name:null;
+  const moonTrait=(mi!=null && S.moonTraits && S.moonTraits[mi])?S.moonTraits[mi]:null;
+
+  // 점성 근거 점수: 내 별자리 원소 vs 오늘 원소 상성 + 분야별 시드 변주 (난수 아님)
+  const dn=_luxDayNum();
+  const dayElem=['fire','earth','air','water'][dn%4];
+  const baseC=_ELEM_COMPAT[_SIGN_ELEM[si]][dayElem];
+  const fsc=(salt)=>Math.max(34,Math.min(99, 52+baseC+(_luxPick(data.seed,salt,27)-12)));
+  const sLove=fsc(13),sMoney=fsc(17),sHealth=fsc(23),sCareer=fsc(29),sSocial=fsc(31);
+  const sOverall=Math.round((sLove+sMoney+sHealth+sCareer+sSocial)/5);
+
+  // 오늘의 별자리 궁합: 원소 상성 + 날짜 회전으로 best/caution
+  const msc=(b)=>_ELEM_COMPAT[_SIGN_ELEM[si]][_SIGN_ELEM[b]]*2 + (_luxPick(data.seed,41+b*7,11));
+  let best=-1,bestV=-1e9,worst=-1,worstV=1e9;
+  for(let b=0;b<12;b++){ if(b===si)continue; const v=msc(b); if(v>bestV){bestV=v;best=b;} if(v<worstV){worstV=v;worst=b;} }
+
   const elemCol=_SIGN_ELEMCOL[si];
-  const bar=(lbl,val)=>`<div style="flex:1;min-width:120px;">
-    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;"><span style="color:#6b21a8;font-weight:700;">${escHtml(lbl)}</span><span style="color:#7e22ce;font-weight:800;">${val}%</span></div>
+  const bar=(label,val)=>`<div style="flex:1;min-width:96px;">
+    <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;gap:6px;"><span style="color:#6b21a8;font-weight:700;">${escHtml(label)}</span><span style="color:#7e22ce;font-weight:800;">${val}%</span></div>
     <div style="height:7px;background:#ede9fe;border-radius:4px;overflow:hidden;"><div style="height:100%;width:${val}%;background:linear-gradient(90deg,#a855f7,#7e22ce);border-radius:4px;"></div></div></div>`;
+  const chip=(emj,name,col,bg)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:${bg};color:${col};font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px;">${emj} ${escHtml(name)}</span>`;
+  const meta=(t,v)=>`<span style="background:rgba(126,34,206,.08);color:#6b21a8;font-size:10.5px;padding:3px 9px;border-radius:8px;"><b style="color:#7e22ce;">${escHtml(t)}</b> ${escHtml(v)}</span>`;
+
+  const bigTwo = `
+    <div style="display:flex;gap:9px;margin-bottom:12px;">
+      <div style="flex:1;background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;">
+        <div style="font-size:10px;color:#9333ea;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">☀️ ${lbl('sunLabel','Sun')}</div>
+        <div style="font-size:15px;font-weight:900;color:#581c87;margin-top:1px;">${_SIGN_EMJ[si]} ${escHtml(sign.name)}</div>
+        <div style="font-size:11px;color:#6b21a8;line-height:1.45;margin-top:4px;">${escHtml(sign.trait)}</div>
+      </div>
+      ${moonName?`<div style="flex:1;background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;">
+        <div style="font-size:10px;color:#9333ea;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">🌙 ${lbl('moonLabel','Moon')}</div>
+        <div style="font-size:15px;font-weight:900;color:#581c87;margin-top:1px;">${_SIGN_EMJ[mi]} ${escHtml(moonName)}</div>
+        <div style="font-size:11px;color:#6b21a8;line-height:1.45;margin-top:4px;">${escHtml(moonTrait||'')}</div>
+      </div>`:''}
+    </div>`;
+
   const panel=document.createElement('div');
   panel.id='sunsign-panel';
   panel.style.cssText='background:linear-gradient(135deg,#faf5ff,#f3e8ff);border-radius:16px;padding:16px;margin:16px 0;';
@@ -5150,12 +5215,29 @@ function renderSunSignPanel(data){
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
       <div style="font-size:46px;line-height:1;">${_SIGN_EMJ[si]}</div>
       <div style="flex:1;">
-        <div style="font-size:20px;font-weight:900;color:#581c87;">${escHtml(sign.name)}</div>
+        <div style="font-size:21px;font-weight:900;color:#581c87;">${escHtml(sign.name)}</div>
         <div style="font-size:11px;color:#7e22ce;margin-top:2px;">${escHtml(sign.range)} · <span style="color:${elemCol};font-weight:700;">${escHtml(sign.element)}</span></div>
       </div></div>
-    <div style="font-size:12px;color:#6b21a8;line-height:1.5;margin-bottom:10px;">${escHtml(sign.trait)}</div>
-    <div style="background:rgba(126,34,206,.07);border-radius:10px;padding:10px 12px;font-size:12px;color:#581c87;line-height:1.55;margin-bottom:12px;"><b>${escHtml(S.overallLabel)}</b> · ${escHtml(daily)}</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;">${bar(S.loveLabel,love)}${bar(S.moneyLabel,money)}</div>`;
+    ${L.bigTwoTitle?`<div style="font-size:11px;font-weight:700;color:#7e22ce;margin-bottom:6px;">${lbl('bigTwoTitle')}</div>`:''}
+    ${bigTwo}
+    <div style="background:rgba(126,34,206,.09);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#3b0764;line-height:1.6;margin-bottom:12px;"><b>${lbl('overall',S.overallLabel||'Today')}</b> · ${escHtml(daily)}</div>
+    <div style="display:flex;gap:10px 12px;flex-wrap:wrap;margin-bottom:12px;">
+      ${bar(L.love||S.loveLabel||'Love',sLove)}${bar(L.money||S.moneyLabel||'Money',sMoney)}${bar(L.career||'Career',sCareer)}${bar(L.health||'Health',sHealth)}${bar(L.social||'Social',sSocial)}
+    </div>
+    <div style="background:rgba(255,255,255,.6);border-radius:12px;padding:10px 12px;margin-bottom:10px;">
+      <div style="font-size:10.5px;color:#9333ea;font-weight:700;text-transform:uppercase;margin-bottom:7px;">💞 ${lbl('compatTitle','Compatibility')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        ${chip(_SIGN_EMJ[best],(S.signs[best]&&S.signs[best].name)||'',  '#166534','#dcfce7')}
+        <span style="font-size:10.5px;color:#16a34a;align-self:center;">${lbl('bestToday','Best')}</span>
+        ${chip(_SIGN_EMJ[worst],(S.signs[worst]&&S.signs[worst].name)||'','#92400e','#fef3c7')}
+        <span style="font-size:10.5px;color:#d97706;align-self:center;">${lbl('cautionToday','Caution')}</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      ${meta(lbl('planetLabel','Planet'),TERMS.planets[_SIGN_PLANET[si]])}
+      ${meta(lbl('modalityLabel','Mode'),TERMS.modality[_SIGN_MODALITY[si]])}
+      ${meta(lbl('polarityLabel','Polarity'),TERMS.polarity[_SIGN_POLARITY[si]])}
+    </div>`;
   _luxInsert(panel);
 }
 
