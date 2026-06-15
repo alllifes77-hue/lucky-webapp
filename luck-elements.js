@@ -1,5 +1,5 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠
-// 5종(바이오리듬·탄생석·서양별자리·타로·행운4) + Wave 확장(sunSign 호로스코프·tarot 정역분야·numerology 라이프패스).
+// 5종 + Wave 확장(sunSign 호로스코프·tarot 정역분야·numerology 라이프패스·cz 오행띠/연간·compat 4축/겉궁합).
 // 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON(아포스트로피 안전). 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -757,6 +757,73 @@ window.LUX = {
     "dayLabel": "오늘의 수",
     "masterLabel": "마스터넘버",
     "karmicLabel": "카르마 부채수"
+   }
+  },
+  "cz": {
+   "elements": [
+    "목(木)의 기운을 품은 띠는 성장 지향적이고 따뜻하며, 사람을 보살피고 새 길을 여는 데 진심입니다.",
+    "화(火)의 기운을 품은 띠는 정열적이고 카리스마가 있으며, 사람을 끌어모으는 밝은 에너지가 돋보입니다.",
+    "토(土)의 기운을 품은 띠는 듬직하고 신의가 두터우며, 끝까지 책임지는 안정감으로 주변의 신뢰를 얻습니다.",
+    "금(金)의 기운을 품은 띠는 단단하고 결단력이 있으며, 원칙과 의리를 지키는 곧은 성품이 빛납니다.",
+    "수(水)의 기운을 품은 띠는 지혜롭고 유연하며, 흐름을 읽는 통찰과 깊은 포용력으로 위기를 부드럽게 넘깁니다."
+   ],
+   "areaLabels": {
+    "overall": "종합운",
+    "money": "재물운",
+    "love": "애정운",
+    "health": "건강운"
+   },
+   "annual": {
+    "own": {
+     "overall": "본명년(本命年)을 맞아 변화가 큰 해이니, 무리한 확장보다 내실을 다지는 한 해로 삼아 보세요.",
+     "money": "큰돈을 한 번에 움직이기보다, 안전한 자산에 나눠 두고 액막이하듯 지출을 점검하시길 권합니다.",
+     "love": "감정 기복이 커지기 쉬운 시기이니, 다투기 전에 한 박자 쉬며 마음을 가다듬어 보세요.",
+     "health": "삼재처럼 잔병치레가 잦을 수 있으니, 정기검진과 충분한 휴식으로 몸을 미리 살피시길 바랍니다."
+    },
+    "clash": {
+     "overall": "충(沖)의 해라 변동이 잦으니, 큰 결정은 서두르지 말고 한 발 물러서서 살피는 편이 좋습니다.",
+     "money": "예기치 못한 지출이 생길 수 있으니, 보증이나 충동 투자는 피하고 비상금을 넉넉히 두세요.",
+     "love": "사소한 오해가 다툼으로 번지기 쉬우니, 말보다 경청을 앞세워 관계를 지켜 보시길 권합니다.",
+     "health": "사고와 과로에 특히 주의가 필요한 해이니, 무리한 일정을 줄이고 안전을 우선으로 챙기세요."
+    },
+    "harm": {
+     "overall": "삼합(三合)의 길한 해라 귀인의 도움으로 일이 풀리니, 미뤄 둔 계획을 펼치기 좋은 시기입니다.",
+     "money": "재물운이 상승하는 흐름이니, 그동안 준비한 기회를 신중히 살펴 한 걸음 내디뎌 보세요.",
+     "love": "좋은 인연이 닿기 쉬운 해이니, 마음을 열고 새로운 만남과 깊어지는 관계를 반겨 보시길 바랍니다.",
+     "health": "기운이 살아나는 시기지만, 들뜬 마음에 과식이나 무리를 더하지 않도록 균형을 지켜 보세요."
+    },
+    "stable": {
+     "overall": "큰 굴곡 없는 평운의 해이니, 욕심내기보다 하던 일을 꾸준히 이어 가면 차곡차곡 결실이 쌓입니다.",
+     "money": "급한 변화는 적은 시기이니, 작은 저축과 절약 습관을 다져 두면 다음 해의 든든한 밑천이 됩니다.",
+     "love": "잔잔하게 안정되는 흐름이니, 일상의 작은 배려로 신뢰를 천천히 쌓아 가시길 권합니다.",
+     "health": "비교적 무난한 해이지만, 방심하지 말고 규칙적인 생활과 가벼운 운동을 꾸준히 이어 보세요."
+    }
+   },
+   "annualTitle": "올해의 띠 운세 — 2026 병오년(말띠해)",
+   "matchTitle": "나와 잘 맞는 띠 궁합",
+   "bestMatch": "삼합(三合)으로 잘 맞는 띠",
+   "worstMatch": "충(沖)으로 주의할 띠"
+  },
+  "compat": {
+   "axisTitle": "영역별 궁합",
+   "axes": {
+    "chemistry": "끌림·케미",
+    "stability": "안정·지속",
+    "communication": "소통",
+    "growth": "성장·발전"
+   },
+   "outerTitle": "겉궁합 (띠·별자리)",
+   "zodiacRel": {
+    "triad": "삼합(三合) — 최고의 궁합",
+    "sixHarm": "육합(六合) — 좋은 궁합",
+    "clash": "충(沖) — 노력이 필요한 사이",
+    "neutral": "무난한 사이"
+   },
+   "sunRel": {
+    "same": "같은 원소 — 잘 통하는 사이",
+    "complement": "상생 원소 — 서로를 채워 주는 사이",
+    "neutral": "무난한 사이",
+    "clash": "상극 원소 — 조율이 필요한 사이"
    }
   }
  },
@@ -1516,6 +1583,73 @@ window.LUX = {
     "masterLabel": "Master",
     "karmicLabel": "Karmic"
    }
+  },
+  "cz": {
+   "elements": [
+    "Wood-element signs are growth-driven, warm and idealistic, branching outward to nurture people, ideas and ambitious plans with quiet, steady persistence.",
+    "Fire-element signs blaze with passion and charisma, leading boldly, inspiring crowds and chasing what excites them with restless, magnetic energy.",
+    "Earth-element signs are grounded, dependable and patient, building security step by step and offering steady loyalty that others instinctively lean on.",
+    "Metal-element signs are sharp, disciplined and resolute, valuing integrity and order while pursuing their goals with focused, unbending determination.",
+    "Water-element signs are intuitive, adaptable and deep, reading emotions easily, flowing around obstacles and persuading others with gentle, reflective wisdom."
+   ],
+   "areaLabels": {
+    "overall": "Overall Fortune",
+    "money": "Wealth & Career",
+    "love": "Love & Relationships",
+    "health": "Health & Wellbeing"
+   },
+   "annual": {
+    "own": {
+     "overall": "When the year mirrors your own sign, change and renewal tend to come into focus, so ground yourself and welcome fresh beginnings calmly.",
+     "money": "This can be a year to favor steadiness over impulse; protecting and consolidating what you have often serves you better than chasing quick gains.",
+     "love": "Emotions may run high in your own year, so leaning on patience and honest dialogue can help keep your close bonds steady.",
+     "health": "A protective, balanced routine tends to help; mind your stress levels, rest well and consider a small wellness ritual for reassurance."
+    },
+    "clash": {
+     "overall": "A clash year can invite turbulence, so it may help to move thoughtfully, plan ahead and treat sudden disruptions as lessons rather than disasters.",
+     "money": "It is worth double-checking contracts and big purchases now; a careful, conservative approach can help you sidestep avoidable financial setbacks.",
+     "love": "Tension may surface more easily, so choosing your words gently and giving relationships room to breathe before reacting tends to ease friction.",
+     "health": "This is a good year to listen to your body a little more closely; adequate sleep, moderation and timely check-ups can help keep minor issues small."
+    },
+    "harm": {
+     "overall": "An allied, harmonious year tends to lift you, so stay open to helpful mentors and welcome opportunities as they appear.",
+     "money": "Favorable winds may support career moves and modest investments, though steady judgement still tends to serve you better than overreach.",
+     "love": "Warmth and connection often flow more easily now, making it a kind season to deepen existing ties or begin meaningful new ones.",
+     "health": "Vitality tends to feel buoyant; channel it into healthy habits and enjoyable movement rather than burning the candle at both ends."
+    },
+    "stable": {
+     "overall": "A calm, ordinary year tends to reward consistency, so keep building patiently, as small steady efforts can quietly compound into real progress.",
+     "money": "Steady saving and sensible planning suit this season well; rather than gambling on shortcuts, let your resources grow gradually.",
+     "love": "Relationships tend to benefit from gentle, reliable attention now; ordinary kindness and shared routines can strengthen bonds more than grand gestures.",
+     "health": "With no major upheavals likely, maintaining balanced habits and staying active can turn this stability into lasting wellbeing."
+    }
+   },
+   "matchTitle": "Zodiac Compatibility",
+   "bestMatch": "Most Compatible Sign",
+   "worstMatch": "Sign to Approach with Care",
+   "annualTitle": "Your Zodiac Forecast for the Year"
+  },
+  "compat": {
+   "axisTitle": "Compatibility by Area",
+   "axes": {
+    "chemistry": "Chemistry",
+    "stability": "Stability",
+    "communication": "Communication",
+    "growth": "Growth"
+   },
+   "outerTitle": "Outer Match (Zodiac & Star Sign)",
+   "zodiacRel": {
+    "triad": "Triad Allies - Excellent Match",
+    "sixHarm": "Six Harmony - Strong Match",
+    "clash": "Clash - Needs Effort",
+    "neutral": "Neutral - Easygoing"
+   },
+   "sunRel": {
+    "same": "Same Element - Naturally In Tune",
+    "complement": "Complementary Elements - Balancing",
+    "neutral": "Neutral - Easygoing",
+    "clash": "Opposing Elements - Needs Tuning"
+   }
   }
  },
  "ja": {
@@ -2273,6 +2407,73 @@ window.LUX = {
     "dayLabel": "今日の数",
     "masterLabel": "マスターナンバー",
     "karmicLabel": "カルマ数（負債数）"
+   }
+  },
+  "cz": {
+   "elements": [
+    "木（き）の気をまとう干支は、まっすぐで成長を好み、人を伸びやかに育てる優しさと向上心にあふれる傾向があります。",
+    "火（ひ）の気を宿す干支は、情熱的でカリスマがあり、周囲を照らす明るさと行動力で人を惹きつける傾向があります。",
+    "土（つち）の気を持つ干支は、誠実で面倒見がよく、どっしりと構えた安定感で信頼を集める傾向があります。",
+    "金（きん）の気をまとう干支は、意志が強く筋を通し、磨かれた感性と決断力で物事を整えていく傾向があります。",
+    "水（みず）の気を宿す干支は、柔らかく聡明で、流れに合わせて知恵を巡らせる適応力と深い洞察を持つ傾向があります。"
+   ],
+   "areaLabels": {
+    "overall": "総合運",
+    "money": "金運",
+    "love": "恋愛運",
+    "health": "健康運"
+   },
+   "annual": {
+    "own": {
+     "overall": "本命年にあたる一年は、節目の運気とされます。無理に攻めず、心と環境を整える時期と捉えると良いでしょう。",
+     "money": "大きな勝負より守りが安心な時期かもしれません。家計を見直し、衝動的な出費を控えると流れが安定しそうです。",
+     "love": "気持ちの変化が起きやすい年とされます。焦らず相手と丁寧に向き合えば、関係がより深まっていきそうです。",
+     "health": "本命年は心身が揺れやすいと言われます。睡眠と休息を大切にし、早めの労りを心がけると安心でしょう。"
+    },
+    "clash": {
+     "overall": "午（うま）との沖（ちゅう）が意識される一年です。変化や対立が起きやすいので、柔らかな対応を心がけたいところです。",
+     "money": "予期せぬ出費が増えやすい時期とされます。契約や大きな買い物は一度立ち止まり、慎重に判断すると安心でしょう。",
+     "love": "すれ違いが起きやすい年かもしれません。感情的にならず、言葉を選んで伝えれば誤解を防ぎやすくなりそうです。",
+     "health": "沖の年は無理がたたりやすいと言われます。疲れをため込まず、定期的な健康チェックを意識すると良いでしょう。"
+    },
+    "harm": {
+     "overall": "三合（さんごう）の縁が働きやすい吉の一年とされます。良き協力者に恵まれ、運気が上向きやすい時期でしょう。",
+     "money": "人のご縁から収入の機会が広がりやすい年です。信頼できる相手との協力が、思わぬ実りにつながりそうです。",
+     "love": "出会いや進展に恵まれやすい時期とされます。素直に心を開けば、温かなご縁が育っていくことでしょう。",
+     "health": "気力が満ちやすい一年です。良い流れを活かして、無理のない範囲で体づくりを始めると一層整いそうです。"
+    },
+    "stable": {
+     "overall": "大きな波の少ない平運の一年とされます。地道な積み重ねが実を結びやすく、足場を固めるのに向いた時期でしょう。",
+     "money": "派手さはなくとも堅実に安定しやすい時期です。コツコツとした貯蓄や見直しが、将来の余裕につながりそうです。",
+     "love": "穏やかな関係を育みやすい年とされます。日々の思いやりを重ねれば、安心できる絆が深まっていくでしょう。",
+     "health": "体調が安定しやすい時期です。今のうちに良い生活習慣を整えておくと、これからの健康の支えになりそうです。"
+    }
+   },
+   "matchTitle": "干支の相性",
+   "bestMatch": "好相性の干支",
+   "worstMatch": "注意したい干支",
+   "annualTitle": "今年の干支占い"
+  },
+  "compat": {
+   "axisTitle": "分野別の相性",
+   "axes": {
+    "chemistry": "ときめき",
+    "stability": "安定",
+    "communication": "会話",
+    "growth": "成長"
+   },
+   "outerTitle": "外相性（干支・星座）",
+   "zodiacRel": {
+    "triad": "三合・最高の相性",
+    "sixHarm": "六合・良い相性",
+    "clash": "沖・努力が必要",
+    "neutral": "無難な相性"
+   },
+   "sunRel": {
+    "same": "同じ元素・よく通じ合う",
+    "complement": "相生の元素・補い合う",
+    "neutral": "無難な相性",
+    "clash": "相剋の元素・調整が必要"
    }
   }
  },
@@ -3032,6 +3233,73 @@ window.LUX = {
     "masterLabel": "Meisterzahlen",
     "karmicLabel": "Karmische Zahlen"
    }
+  },
+  "cz": {
+   "elements": [
+    "Tierzeichen mit Holz-Energie (木) wirken wachstumsorientiert, mitfühlend und voller Tatendrang, mit einem natürlichen Sinn für Aufbruch und Erneuerung.",
+    "Tierzeichen mit Feuer-Energie (火) zeigen sich leidenschaftlich, charismatisch und mitreißend, oft spontan, doch mit ansteckender Begeisterung und innerer Wärme.",
+    "Tierzeichen mit Erd-Energie (土) gelten als bodenständig, verlässlich und geduldig, mit ausgeprägtem Sinn für Stabilität, Treue und praktische Fürsorge.",
+    "Tierzeichen mit Metall-Energie (金) treten entschlossen, klar und diszipliniert auf, mit starkem Willen, hohem Anspruch und einem feinen Gespür für Gerechtigkeit.",
+    "Tierzeichen mit Wasser-Energie (水) erscheinen feinfühlig, anpassungsfähig und klug, mit Intuition, diplomatischem Geschick und einer ruhigen, tiefgründigen Ausstrahlung."
+   ],
+   "areaLabels": {
+    "overall": "Gesamttendenz",
+    "money": "Finanzen",
+    "love": "Liebe & Beziehung",
+    "health": "Gesundheit"
+   },
+   "annual": {
+    "own": {
+     "overall": "In deinem eigenen Tierjahr stehen Wandel und Neuanfang im Vordergrund; gehe achtsam und mit Bedacht durch Veränderungen.",
+     "money": "Finanziell empfiehlt sich Zurückhaltung; meide riskante Sprünge und lege lieber Rücklagen für unsichere Phasen an.",
+     "love": "In der Liebe können alte Muster aufbrechen; offene Gespräche und Geduld helfen, Bindungen behutsam zu erneuern.",
+     "health": "Achte besonders auf dein Gleichgewicht; ausreichend Ruhe und kleine Schutzrituale können dir spürbar guttun."
+    },
+    "clash": {
+     "overall": "Im Jahr der Gegenüberstellung (沖) ist mehr Vorsicht ratsam; plane flexibel und vermeide unnötige Konfrontationen.",
+     "money": "Bei Geld und Verträgen lohnt sich genaues Hinsehen; prüfe Details und schiebe große Entscheidungen lieber auf.",
+     "love": "Spannungen können schneller entstehen; mit Verständnis und ruhigem Ton lassen sich Missverständnisse leichter entschärfen.",
+     "health": "Dein Körper braucht in diesem Jahr besondere Aufmerksamkeit; meide Überlastung und gönne dir regelmäßige Erholung."
+    },
+    "harm": {
+     "overall": "Im günstigen Dreierbund-Jahr (三合) wehen Rückenwind und gute Gelegenheiten; nutze die Energie für mutige Schritte.",
+     "money": "Finanziell zeichnen sich Chancen ab; hilfreiche Menschen und kluge Kooperationen können dein Vorankommen begünstigen.",
+     "love": "In der Liebe stehen die Zeichen günstig; Begegnungen vertiefen sich, und bestehende Bindungen gewinnen an Wärme.",
+     "health": "Deine Vitalität tendiert nach oben; mit einer aktiven Lebensweise lässt sich der gute Schwung gut erhalten."
+    },
+    "stable": {
+     "overall": "In einem ruhigen Durchschnittsjahr verläuft vieles stetig; kontinuierliche kleine Schritte bringen verlässlich Fortschritt.",
+     "money": "Finanziell empfiehlt sich solides Haushalten; spare beständig und baue ohne Hast eine sichere Grundlage auf.",
+     "love": "In Beziehungen herrscht angenehme Ruhe; pflege Vertrautheit durch Aufmerksamkeit und gemeinsame, verlässliche Routinen.",
+     "health": "Gesundheitlich verläuft das Jahr ausgeglichen; mit regelmäßigen Gewohnheiten lässt sich dein Wohlbefinden gut bewahren."
+    }
+   },
+   "annualTitle": "Dein Tierkreis-Jahr 2026",
+   "matchTitle": "Partnerschaft der Tierzeichen",
+   "bestMatch": "Harmonisch verbundenes Tierzeichen",
+   "worstMatch": "Tierzeichen zur Vorsicht"
+  },
+  "compat": {
+   "axisTitle": "Partnerschaft nach Bereichen",
+   "axes": {
+    "chemistry": "Anziehung",
+    "stability": "Beständigkeit",
+    "communication": "Kommunikation",
+    "growth": "Gemeinsame Entwicklung"
+   },
+   "outerTitle": "Äußere Harmonie (Tierzeichen & Sternzeichen)",
+   "zodiacRel": {
+    "triad": "Dreierbund (三合) — beste Harmonie",
+    "sixHarm": "Sechserbund (六合) — gute Verbindung",
+    "clash": "Gegenüberstellung (沖) — braucht Mühe",
+    "neutral": "Unkompliziert"
+   },
+   "sunRel": {
+    "same": "Gleiches Element — gutes Einvernehmen",
+    "complement": "Nährendes Element — ergänzend",
+    "neutral": "Unkompliziert",
+    "clash": "Gegensätzliches Element — braucht Abstimmung"
+   }
   }
  },
  "fr": {
@@ -3789,6 +4057,73 @@ window.LUX = {
     "dayLabel": "Jour",
     "masterLabel": "Maître",
     "karmicLabel": "Karmique"
+   }
+  },
+  "cz": {
+   "elements": [
+    "Les signes empreints du Bois (木) tendent vers la croissance et la bienveillance : âmes souples et idéalistes, elles aiment se tourner vers l'avenir.",
+    "Les signes nourris par le Feu (火) rayonnent de passion et de charisme : pleins d'allant et expressifs, ils entraînent volontiers les autres.",
+    "Les signes ancrés dans la Terre (土) inspirent confiance et stabilité : patients et loyaux, ils bâtissent leur vie pierre après pierre.",
+    "Les signes forgés par le Métal (金) allient rigueur et détermination : esprits droits et lucides, attachés à la justice et à la persévérance.",
+    "Les signes portés par l'Eau (水) cultivent l'intuition et la sagesse : profonds et adaptables, ils avancent en douceur, comme une rivière patiente."
+   ],
+   "areaLabels": {
+    "overall": "Tendance générale",
+    "money": "Finances",
+    "love": "Cœur et relations",
+    "health": "Bien-être"
+   },
+   "annual": {
+    "own": {
+     "overall": "L'année de votre signe invite au renouveau : accueillez les changements en douceur plutôt que de les redouter.",
+     "money": "Période propice pour réorganiser votre budget ; mieux vaut éviter les engagements impulsifs et garder une réserve de précaution.",
+     "love": "Quelques remous intérieurs peuvent colorer vos liens ; cultivez la patience et exprimez clairement vos besoins affectifs.",
+     "health": "Année charnière pour votre énergie : ménagez-vous, soignez votre sommeil et restez à l'écoute des signaux de votre corps."
+    },
+    "clash": {
+     "overall": "Année de tension (沖) avec votre signe opposé : avancez avec prudence et, si le doute persiste, mieux vaut différer les décisions importantes.",
+     "money": "Restez attentif aux dépenses imprévues ; prenez le temps de bien lire chaque contrat avant de vous engager.",
+     "love": "Les malentendus peuvent guetter ; privilégiez un dialogue posé et accordez volontiers le bénéfice du doute à l'autre.",
+     "health": "Période à surveiller en douceur : modérez le rythme, évitez les excès et pensez à un bilan de santé préventif."
+    },
+    "harm": {
+     "overall": "Année harmonieuse (三合) et porteuse : des personnes-ressources pourraient soutenir vos projets, alors saisissez les belles occasions.",
+     "money": "Climat favorable aux rentrées et aux investissements réfléchis ; entourez-vous de conseils fiables avant de vous lancer.",
+     "love": "Les rencontres et les retrouvailles sont favorisées ; ouvrez-vous, car la complicité a de quoi s'épanouir cette année.",
+     "health": "Belle vitalité en perspective : profitez-en pour adopter des habitudes durables et bouger régulièrement."
+    },
+    "stable": {
+     "overall": "Année de plateau paisible : misez sur la constance et les petits pas plutôt que sur les grands bouleversements.",
+     "money": "Stabilité financière probable ; épargnez avec régularité et consolidez ce que vous avez patiemment construit.",
+     "love": "Vos relations gagnent en sérénité ; entretenez la flamme par des gestes simples et une attention sincère.",
+     "health": "Équilibre globalement préservé : maintenez vos bonnes routines et accordez-vous aussi de vrais temps de repos."
+    }
+   },
+   "annualTitle": "Votre horoscope chinois de l'année",
+   "matchTitle": "Affinités entre signes chinois",
+   "bestMatch": "Signes en harmonie",
+   "worstMatch": "Signes à concilier avec soin"
+  },
+  "compat": {
+   "axisTitle": "Affinités par domaine",
+   "axes": {
+    "chemistry": "Attirance et alchimie",
+    "stability": "Stabilité et durée",
+    "communication": "Communication",
+    "growth": "Évolution commune"
+   },
+   "outerTitle": "Affinités extérieures (signe chinois et astrologique)",
+   "zodiacRel": {
+    "triad": "Trine (三合) — affinité idéale",
+    "sixHarm": "Union (六合) — belle entente",
+    "clash": "Opposition (沖) — à travailler ensemble",
+    "neutral": "Entente sans heurts"
+   },
+   "sunRel": {
+    "same": "Même élément — vous vous comprenez d'instinct",
+    "complement": "Éléments complémentaires — vous vous équilibrez",
+    "neutral": "Entente paisible et sans tension",
+    "clash": "Éléments contrastés — un peu d'ajustement à prévoir"
    }
   }
  },
@@ -4548,6 +4883,73 @@ window.LUX = {
     "masterLabel": "Números maestros",
     "karmicLabel": "Deudas kármicas"
    }
+  },
+  "cz": {
+   "elements": [
+    "Los signos con energía de Madera (木) son afables, creativos y crecen acompañando a los demás con calidez generosa.",
+    "Los signos con energía de Fuego (火) son apasionados y carismáticos: irradian entusiasmo y contagian a otros con su chispa.",
+    "Los signos con energía de Tierra (土) son estables, leales y prácticos; ofrecen un refugio sereno que inspira confianza.",
+    "Los signos con energía de Metal (金) son firmes, justos y disciplinados, y persiguen sus metas con voluntad y elegancia.",
+    "Los signos con energía de Agua (水) son intuitivos, flexibles y empáticos: fluyen con sabiduría y saben leer el ánimo ajeno."
+   ],
+   "areaLabels": {
+    "overall": "Fortuna general",
+    "money": "Prosperidad",
+    "love": "Amor",
+    "health": "Salud"
+   },
+   "annual": {
+    "own": {
+     "overall": "Tu año zodiacal suele traer cambios profundos; conviene afrontarlos con calma y, si lo deseas, un pequeño gesto de protección.",
+     "money": "Quizá surjan gastos inesperados, así que tal vez te ayude reservar un fondo y evitar inversiones impulsivas.",
+     "love": "Las emociones se remueven este año; sería bueno cuidar las palabras y renovar los vínculos con paciencia.",
+     "health": "Tu energía puede fluctuar, por lo que descansar bien y moverte a diario suele aportar mayor equilibrio."
+    },
+    "clash": {
+     "overall": "Es un año de choque (沖), de modo que la prudencia y evitar decisiones drásticas tienden a protegerte.",
+     "money": "Convendría revisar contratos y firmas con cuidado, pues las prisas podrían traer pérdidas o malentendidos.",
+     "love": "Las tensiones afloran con facilidad; respirar antes de discutir y escuchar de verdad ayudaría mucho.",
+     "health": "Presta atención a tu cuerpo y a tu descanso, ya que el cansancio acumulado podría pasarte factura."
+    },
+    "harm": {
+     "overall": "Año de armonía y triada favorable; es probable que aparezcan personas providenciales y oportunidades de progreso.",
+     "money": "El terreno luce propicio para crecer; tal vez convenga aprovechar alianzas y proyectos que llevabas tiempo madurando.",
+     "love": "El afecto fluye con suavidad este año, así que abrir el corazón podría consolidar o iniciar un vínculo bonito.",
+     "health": "Tu vitalidad acompaña; mantener buenos hábitos ahora suele multiplicar la sensación de bienestar y ánimo."
+    },
+    "stable": {
+     "overall": "Año de fortuna serena y equilibrada; avanzar con constancia y sin sobresaltos tiende a dar buenos frutos.",
+     "money": "La economía se mantiene estable, por lo que ahorrar poco a poco y planear con calma resultaría muy acertado.",
+     "love": "El amor transcurre apacible; dedicar gestos sencillos y tiempo de calidad fortalecería la complicidad cotidiana.",
+     "health": "Tu salud se sostiene bien; conservar rutinas equilibradas ayudaría a mantener este buen tono durante el año."
+    }
+   },
+   "matchTitle": "Compatibilidad entre signos",
+   "bestMatch": "Signo más afín",
+   "worstMatch": "Signo a tener en cuenta",
+   "annualTitle": "Tu fortuna del año según tu signo"
+  },
+  "compat": {
+   "axisTitle": "Compatibilidad por áreas",
+   "axes": {
+    "chemistry": "Química",
+    "stability": "Estabilidad",
+    "communication": "Comunicación",
+    "growth": "Crecimiento"
+   },
+   "outerTitle": "Afinidad externa (signo y horóscopo)",
+   "zodiacRel": {
+    "triad": "Triada: máxima afinidad",
+    "sixHarm": "Armonía: muy buena unión",
+    "clash": "Choque: requiere esfuerzo",
+    "neutral": "Neutral: sin conflicto"
+   },
+   "sunRel": {
+    "same": "Mismo elemento: gran sintonía",
+    "complement": "Elementos que se nutren: se complementan",
+    "neutral": "Neutral: convivencia llevadera",
+    "clash": "Elementos opuestos: piden ajuste"
+   }
   }
  },
  "pt": {
@@ -5305,6 +5707,73 @@ window.LUX = {
     "dayLabel": "Dia",
     "masterLabel": "Mestre",
     "karmicLabel": "Cármico"
+   }
+  },
+  "cz": {
+   "elements": [
+    "Os signos regidos pela Madeira (木) tendem a ser generosos, idealistas e voltados ao crescimento, com raízes firmes e o olhar sempre no futuro.",
+    "Os signos regidos pelo Fogo (火) costumam ser apaixonados, carismáticos e cheios de energia, irradiando entusiasmo e contagiando quem está por perto.",
+    "Os signos regidos pela Terra (土) inclinam-se à estabilidade, à paciência e à lealdade, oferecendo segurança e construindo tudo com os pés no chão.",
+    "Os signos regidos pelo Metal (金) tendem a ser determinados, justos e disciplinados, com forte senso de princípio e uma vontade firme.",
+    "Os signos regidos pela Água (水) costumam ser intuitivos, flexíveis e perspicazes, adaptando-se com fluidez e percebendo o que as palavras não dizem."
+   ],
+   "areaLabels": {
+    "overall": "Panorama geral",
+    "money": "Dinheiro",
+    "love": "Amor",
+    "health": "Saúde"
+   },
+   "annual": {
+    "own": {
+     "overall": "2026 ressoa com o seu próprio signo, um ano de viradas: acolha as mudanças com calma e procure evitar decisões precipitadas.",
+     "money": "Tende a ser um ano de movimento financeiro intenso; vale manter uma reserva e adiar grandes investimentos feitos sem cautela.",
+     "love": "As emoções podem oscilar mais do que o normal; cultivar a paciência e o diálogo aberto ajuda a fortalecer os laços que importam.",
+     "health": "Convém redobrar o cuidado com o corpo e com o descanso; pequenos hábitos de equilíbrio costumam fazer diferença."
+    },
+    "clash": {
+     "overall": "Ano de tensão energética com o seu signo: tende a pedir prudência, então procure evitar atritos e escolhas no impulso.",
+     "money": "Há tendência a gastos imprevistos; vale rever contratos com atenção e desconfiar de promessas fáceis demais.",
+     "love": "Mal-entendidos podem surgir com mais facilidade; respirar antes de responder costuma evitar muitos desgastes.",
+     "health": "Costuma ser o eixo mais sensível do ano; procure dormir bem, moderar os excessos e não ignorar os sinais do corpo."
+    },
+    "harm": {
+     "overall": "Ano de boa sintonia com o seu signo: tende a trazer aliados e portas abertas, então é um bom momento para avançar com confiança.",
+     "money": "O período costuma favorecer ganhos e parcerias; vale aproveitar as oportunidades, sempre com planejamento por trás.",
+     "love": "O clima afetivo tende a fluir leve; pode ser um momento propício para aprofundar vínculos ou dar passos importantes.",
+     "health": "A vitalidade tende a estar em alta; vale canalizar essa energia em hábitos saudáveis que se sustentem ao longo do tempo."
+    },
+    "stable": {
+     "overall": "Ano de ritmo tranquilo com o seu signo: tende a pedir constância, então vale construir aos poucos e sem pressa.",
+     "money": "As finanças inclinam-se à estabilidade; é uma boa fase para poupar, organizar e plantar para colher mais adiante.",
+     "love": "A vida afetiva tende à serenidade; pequenos gestos diários costumam valer mais do que grandes gestos esporádicos.",
+     "health": "A saúde costuma manter-se equilibrada; aproveite para firmar uma rotina de bem-estar que dure o ano todo."
+    }
+   },
+   "annualTitle": "Sua sorte no ano segundo o signo chinês",
+   "matchTitle": "Afinidade entre os signos chineses",
+   "bestMatch": "Signos mais afins a você",
+   "worstMatch": "Signos que pedem mais atenção"
+  },
+  "compat": {
+   "axisTitle": "Afinidade por áreas",
+   "axes": {
+    "chemistry": "Atração",
+    "stability": "Estabilidade",
+    "communication": "Comunicação",
+    "growth": "Crescimento"
+   },
+   "outerTitle": "Afinidade externa (signo chinês e zodíaco)",
+   "zodiacRel": {
+    "triad": "Trígono (三合): afinidade máxima",
+    "sixHarm": "União harmônica (六合): ótima sintonia",
+    "clash": "Confronto (沖): exige esforço",
+    "neutral": "Relação tranquila"
+   },
+   "sunRel": {
+    "same": "Mesmo elemento: entendem-se com facilidade",
+    "complement": "Elementos que se nutrem: complementares",
+    "neutral": "Relação tranquila",
+    "clash": "Elementos opostos: pedem ajuste"
    }
   }
  },
@@ -6064,6 +6533,73 @@ window.LUX = {
     "masterLabel": "Numeri Maestri",
     "karmicLabel": "Debiti Karmici"
    }
+  },
+  "cz": {
+   "elements": [
+    "I segni governati dall'energia del Legno (木) sono espansivi e gentili: crescono con costanza e amano coltivare legami sinceri e progetti destinati a durare nel tempo.",
+    "I segni governati dall'energia del Fuoco (火) sono appassionati e carismatici: irradiano entusiasmo e sanno accendere ogni ambiente con slancio e calore.",
+    "I segni governati dall'energia della Terra (土) sono concreti e affidabili: offrono stabilità, pazienza e quel senso di radici che rassicura chi sta loro accanto.",
+    "I segni governati dall'energia del Metallo (金) sono determinati e lucidi: uniscono disciplina, eleganza e una volontà tenace che li porta lontano.",
+    "I segni governati dall'energia dell'Acqua (水) sono intuitivi e adattabili: fluiscono con saggezza tra le situazioni e sanno leggere in profondità le emozioni altrui."
+   ],
+   "areaLabels": {
+    "overall": "Quadro generale",
+    "money": "Fortuna economica",
+    "love": "Fortuna in amore",
+    "health": "Fortuna nella salute"
+   },
+   "annual": {
+    "own": {
+     "overall": "Nel tuo anno natale (本命年) può presentarsi un ciclo di rinnovamento: prova ad accogliere i cambiamenti con calma e a procedere con prudenza.",
+     "money": "In questa fase di transizione le finanze potrebbero oscillare: meglio evitare le spese impulsive e tenere da parte una piccola riserva.",
+     "love": "In amore conviene chiarire ciò che desideri davvero: piccoli riti di buon auspicio possono aiutarti a sciogliere vecchie tensioni.",
+     "health": "La salute chiede un po' di attenzione in più: cura il riposo, prova ad allentare lo stress e ascolta i segnali del corpo senza trascurarli."
+    },
+    "clash": {
+     "overall": "Nell'anno di opposizione (沖) potresti avvertire qualche attrito in più: muoviti con cautela e cerca di non forzare ciò che oppone resistenza.",
+     "money": "Sul fronte economico è saggio essere prudenti: meglio rimandare gli investimenti rischiosi e verificare con cura ogni accordo prima di firmare.",
+     "love": "In amore potrebbero nascere piccoli malintesi: prova a respirare prima di reagire e a scegliere parole pazienti, così da evitare scontri inutili.",
+     "health": "Vale la pena proteggere la salute con cura: riduci gli strapazzi, guida con attenzione e concediti con regolarità pause rigeneranti."
+    },
+    "harm": {
+     "overall": "In un anno favorevole della triade (三合) il vento sembra soffiare dalla tua parte: prova a cogliere le occasioni con fiducia serena.",
+     "money": "Le entrate potrebbero crescere e potrebbero arrivare appoggi inattesi: investi con criterio e cerca di far fruttare ogni alleanza preziosa.",
+     "love": "In amore l'intesa tende a fiorire: apriti agli incontri e nutri il legame con gesti sinceri e momenti condivisi.",
+     "health": "La vitalità appare in risalita: puoi approfittare di questa energia per consolidare buone abitudini e rafforzare il tuo benessere."
+    },
+    "stable": {
+     "overall": "In un anno tranquillo il ritmo resta regolare: procedi con costanza e potrai raccogliere i frutti del lavoro paziente.",
+     "money": "Le finanze tendono alla stabilità: un piccolo risparmio mensile e scelte misurate possono consolidare la tua serenità economica.",
+     "love": "In amore prevale un'armonia distesa: coltiva la complicità quotidiana e dai valore alle piccole attenzioni sincere.",
+     "health": "La salute si mantiene equilibrata: continua con le tue sane abitudini e concediti un movimento regolare per restare in forma."
+    }
+   },
+   "matchTitle": "Affinità tra i segni dello zodiaco cinese",
+   "bestMatch": "Segni in armonia con te",
+   "worstMatch": "Segni da gestire con attenzione",
+   "annualTitle": "La fortuna del tuo segno quest'anno"
+  },
+  "compat": {
+   "axisTitle": "Affinità per area",
+   "axes": {
+    "chemistry": "Attrazione",
+    "stability": "Stabilità",
+    "communication": "Dialogo",
+    "growth": "Crescita"
+   },
+   "outerTitle": "Affinità esteriore (segno cinese e zodiaco)",
+   "zodiacRel": {
+    "triad": "Triade (三合) — intesa eccellente",
+    "sixHarm": "Armonia (六合) — bella affinità",
+    "clash": "Opposizione (沖) — richiede impegno",
+    "neutral": "Rapporto neutro e sereno"
+   },
+   "sunRel": {
+    "same": "Stesso elemento — vi capite al volo",
+    "complement": "Elementi complementari — vi completate",
+    "neutral": "Affinità neutra e tranquilla",
+    "clash": "Elementi in contrasto — serve equilibrio"
+   }
   }
  },
  "id": {
@@ -6821,6 +7357,73 @@ window.LUX = {
     "dayLabel": "Hari Pribadi",
     "masterLabel": "Angka Master",
     "karmicLabel": "Utang Karmik"
+   }
+  },
+  "cz": {
+   "elements": [
+    "Shio berunsur Kayu (木) cenderung penuh gagasan, berhati lapang, dan tumbuh subur saat membantu serta merangkul orang di sekitarnya.",
+    "Shio berunsur Api (火) cenderung bersemangat dan berkarisma, mampu menyalakan antusiasme orang lain meski sebaiknya menjaga agar emosinya tidak ikut terbakar.",
+    "Shio berunsur Tanah (土) cenderung tenang, setia, dan dapat diandalkan, menjadi pondasi kokoh yang menenangkan setiap orang di dekatnya.",
+    "Shio berunsur Logam (金) cenderung tegas, disiplin, dan berpegang pada prinsip, dengan tekad tajam yang membantunya menuntaskan tujuan secara teratur.",
+    "Shio berunsur Air (水) cenderung lentur, bijak, dan intuitif, mengalir luwes menyesuaikan keadaan sambil tetap menyimpan kedalaman pemikiran."
+   ],
+   "areaLabels": {
+    "overall": "Peruntungan Umum",
+    "money": "Rezeki & Keuangan",
+    "love": "Asmara & Hubungan",
+    "health": "Kesehatan & Energi"
+   },
+   "annual": {
+    "own": {
+     "overall": "Tahun shio kelahiranmu cenderung penuh perubahan; sambutlah dengan hati terbuka dan jaga keseimbangan diri.",
+     "money": "Keuangan mungkin terasa naik-turun, jadi ada baiknya berhemat, menghindari spekulasi besar, dan menyiapkan dana cadangan.",
+     "love": "Hubungan bisa terasa lebih sensitif tahun ini; komunikasi yang lembut dan kesabaran akan banyak membantu.",
+     "health": "Energi cenderung mudah terkuras, jadi sebaiknya jaga pola istirahat, kelola stres, dan lakukan pemeriksaan rutin."
+    },
+    "clash": {
+     "overall": "Tahun ini cenderung berbenturan dengan shio-mu, jadi tetaplah tenang dan hindari keputusan yang terburu-buru.",
+     "money": "Risiko keuangan terasa sedikit meningkat; pertimbangkan untuk menunda investasi berisiko dan teliti setiap perjanjian.",
+     "love": "Gesekan kecil mungkin lebih sering muncul, maka utamakan saling pengertian daripada keinginan menang dalam perdebatan.",
+     "health": "Ada baiknya menjaga kesehatan secara ekstra, terutama saat lelah; cukupkan tidur, makan teratur, dan kurangi memaksakan diri."
+    },
+    "harm": {
+     "overall": "Tahun ini cenderung membawa keberuntungan dan dukungan; manfaatkan peluang yang ada dan jalin relasi yang bermakna.",
+     "money": "Rezeki berpotensi mengalir lebih lancar, namun tetap bijak mengelolanya agar hasil baik ini bertahan lama.",
+     "love": "Suasana asmara cenderung hangat; pertemuan baru atau pendalaman hubungan terasa lebih mudah bila kamu tulus.",
+     "health": "Energi umumnya stabil, jadi inilah saat yang baik untuk membangun kebiasaan sehat dan menambah aktivitas yang menyegarkan."
+    },
+    "stable": {
+     "overall": "Tahun ini cenderung berjalan tenang dan seimbang; langkah perlahan namun konsisten akan terasa membuahkan hasil.",
+     "money": "Keuangan relatif stabil, cocok untuk menabung perlahan dan menata rencana jangka panjang dengan kepala dingin.",
+     "love": "Hubungan cenderung adem dan nyaman; rawat kehangatannya lewat perhatian kecil yang dilakukan secara rutin.",
+     "health": "Kondisi tubuh umumnya baik, maka pertahankan rutinitas sehat dan jangan abaikan sinyal tubuh sekecil apa pun."
+    }
+   },
+   "annualTitle": "Peruntungan Shio Tahun Ini",
+   "matchTitle": "Kecocokan Antarshio",
+   "bestMatch": "Shio yang Paling Serasi",
+   "worstMatch": "Shio yang Perlu Kehati-hatian"
+  },
+  "compat": {
+   "axisTitle": "Kecocokan per Aspek",
+   "axes": {
+    "chemistry": "Ketertarikan",
+    "stability": "Kestabilan",
+    "communication": "Komunikasi",
+    "growth": "Pertumbuhan"
+   },
+   "outerTitle": "Kecocokan Luar (Shio & Zodiak)",
+   "zodiacRel": {
+    "triad": "Trisula (San He) - Sangat Serasi",
+    "sixHarm": "Enam Selaras (Liu He) - Cocok",
+    "clash": "Berbenturan - Perlu Usaha",
+    "neutral": "Netral - Cukup Harmonis"
+   },
+   "sunRel": {
+    "same": "Unsur Sama - Mudah Sehati",
+    "complement": "Unsur Saling Mendukung - Melengkapi",
+    "neutral": "Netral - Cukup Selaras",
+    "clash": "Unsur Bertolak Belakang - Perlu Penyesuaian"
    }
   }
  }

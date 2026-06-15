@@ -3811,6 +3811,35 @@ function renderGunghapPanel(data) {
 
   const dayBiLbl = gh.dayBiType ? `${T.branchPrefix} · ${T.biTypes[gh.dayBiType] || gh.dayBiType}` : '';
 
+  // ── Wave4: 영역별 4축 + 겉궁합(띠·별자리) — LUX compat 콘텐츠 (없으면 폴백 미표시) ──
+  const CPC = ((window.LUX && (window.LUX[lang]||window.LUX.en))||{}).compat;
+  let axesHtml = '', outerHtml = '';
+  if (CPC) {
+    const ax = CPC.axes || {};
+    const cl4 = (v)=> v>=75?'#ec4899':v>=55?'#16a34a':'#d97706';
+    const chem = gh.dayBiScore, stab = Math.round((gh.yearElScore+gh.dayElScore)/2), comm = gh.stemHapScore, grow = Math.round((gh.overall+gh.dayElScore)/2);
+    const abar=(lbl,v)=>`<div style="flex:1;min-width:118px;"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;"><span style="color:#9d174d;font-weight:700;">${escHtml(lbl||'')}</span><span style="color:${cl4(v)};font-weight:800;">${v}</span></div><div style="height:6px;background:#fce7f3;border-radius:3px;overflow:hidden;"><div style="height:100%;width:${v}%;background:${cl4(v)};border-radius:3px;"></div></div></div>`;
+    axesHtml = `<div style="margin-top:12px;"><div style="font-size:10.5px;color:#9d174d;font-weight:700;text-transform:uppercase;margin-bottom:8px;">📊 ${escHtml(CPC.axisTitle||'')}</div><div style="display:flex;gap:10px 14px;flex-wrap:wrap;">${abar(ax.chemistry,chem)}${abar(ax.stability,stab)}${abar(ax.communication,comm)}${abar(ax.growth,grow)}</div></div>`;
+    // 겉궁합: 두 사람 띠 관계(삼합/육합/충/무난) + 별자리 원소 관계
+    const biA=(data.cultural&&data.cultural.branchIdx!=null)?data.cultural.branchIdx:(((data.year-4)%12)+12)%12;
+    const biB=(((pb.year-4)%12)+12)%12;
+    let zr='neutral';
+    if(biA!==biB && (biA%4)===(biB%4)) zr='triad';
+    else if(Math.abs(biA-biB)===6) zr='clash';
+    else { const sh=[[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]]; if(sh.some(p=>(p[0]===biA&&p[1]===biB)||(p[0]===biB&&p[1]===biA))) zr='sixHarm'; }
+    const siA=_sunSignIdx(data.month,data.day), siB=_sunSignIdx(pb.month,pb.day);
+    const eA=_SIGN_ELEM[siA], eB=_SIGN_ELEM[siB];
+    let sr='neutral';
+    if(eA===eB) sr='same';
+    else { const cp={fire:'air',air:'fire',earth:'water',water:'earth'}, ck={fire:'water',water:'fire',earth:'air',air:'earth'}; if(cp[eA]===eB) sr='complement'; else if(ck[eA]===eB) sr='clash'; }
+    const czA=_getCZName(data.year,lang), czB=_getCZName(pb.year,lang);
+    outerHtml = `<div style="margin-top:12px;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:11px 13px;">
+      <div style="font-size:10.5px;color:#9d174d;font-weight:700;text-transform:uppercase;margin-bottom:8px;">🔮 ${escHtml(CPC.outerTitle||'')}</div>
+      <div style="display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:#374151;margin-bottom:6px;flex-wrap:wrap;"><span style="font-weight:700;">${escHtml(czA)} × ${escHtml(czB)}</span><span style="color:#9d174d;">— ${escHtml((CPC.zodiacRel||{})[zr]||'')}</span></div>
+      <div style="display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:#374151;flex-wrap:wrap;"><span style="font-weight:700;">${_SIGN_EMJ[siA]||''} × ${_SIGN_EMJ[siB]||''}</span><span style="color:#9d174d;">— ${escHtml((CPC.sunRel||{})[sr]||'')}</span></div>
+    </div>`;
+  }
+
   const div = document.createElement('div');
   div.id = 'gunghap-section';
   div.style.cssText = 'background:#fff;border:2px solid #fbcfe8;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
@@ -3846,6 +3875,8 @@ function renderGunghapPanel(data) {
       return `<div style="margin-top:12px;background:#fff;border:1px solid #fbcfe8;border-radius:14px;padding:13px 14px;">
         ${row(NA.sLbl, n.s, '#16a34a')}${row(NA.cLbl, n.c, '#d97706')}${row(NA.tLbl, n.t, '#7c3aed')}</div>`;
     })()}
+    ${axesHtml}
+    ${outerHtml}
     <div style="margin-top:12px;text-align:center;background:${compatClr}10;border:1px solid ${compatClr}40;border-radius:14px;padding:10px 14px;font-size:13px;font-weight:700;color:${compatClr};">${compatStr}</div>`;
 
   const fortuneCats = document.querySelector('.fortune-cats-section');
@@ -5473,11 +5504,25 @@ function renderChineseZodiacBadge(data) {
   const YN_HARM = { ko:'✨ 삼합(三合)의 해 — 귀인의 도움으로 행운이 따르는 시기입니다.', ja:'✨ 三合の年 — 貴人の助けで運気上昇。', en:'✨ Harmonious year — expect support and good fortune.', de:'✨ Harmonisches Jahr — Unterstützung und Glück begleiten Sie.', fr:'✨ Année harmonieuse — soutien et bonne fortune au rendez-vous.', es:'✨ Año armonioso — apoyo y buena fortuna te acompañan.', pt:'✨ Ano harmonioso — apoio e boa sorte o acompanham.', it:'✨ Anno armonioso — sostegno e buona sorte ti accompagnano.', id:'✨ Tahun harmonis — dukungan dan keberuntungan menyertai Anda.' };
   const YN_STABLE = { ko:'🌟 평운의 해 — 꾸준히 노력하면 결실을 맺을 수 있습니다.', ja:'🌟 平運の年 — コツコツ努力が実る年。', en:'🌟 Stable year — steady effort brings results.', de:'🌟 Stabiles Jahr — stetige Anstrengung trägt Früchte.', fr:'🌟 Année stable — un effort régulier porte ses fruits.', es:'🌟 Año estable — el esfuerzo constante da frutos.', pt:'🌟 Ano estável — o esforço constante dá frutos.', it:"🌟 Anno stabile — l'impegno costante dà frutti.", id:'🌟 Tahun stabil — usaha konsisten membuahkan hasil.' };
   const _yn = (m) => m[data.lang] || m.en;
-  let yearNote = '';
-  if (czKey === currentKey) yearNote = _yn(YN_OWN);
-  else if (CZ_CLASH[czKey] === currentKey) yearNote = _yn(YN_CLASH);
-  else if ((CZ_COMPAT[czKey]||[]).includes(currentKey)) yearNote = _yn(YN_HARM);
-  else yearNote = _yn(YN_STABLE);
+  let yearNote = '', relType = 'stable';
+  if (czKey === currentKey) { yearNote = _yn(YN_OWN); relType='own'; }
+  else if (CZ_CLASH[czKey] === currentKey) { yearNote = _yn(YN_CLASH); relType='clash'; }
+  else if ((CZ_COMPAT[czKey]||[]).includes(currentKey)) { yearNote = _yn(YN_HARM); relType='harm'; }
+  else { yearNote = _yn(YN_STABLE); relType='stable'; }
+
+  // ── 오행 띠(60갑자) + 연간 4영역 운세 (LUX cz 콘텐츠, 없으면 폴백) ──
+  const _CZ5_ELEM = { ko:['목(木)','화(火)','토(土)','금(金)','수(水)'], en:['Wood','Fire','Earth','Metal','Water'], ja:['木','火','土','金','水'], de:['Holz','Feuer','Erde','Metall','Wasser'], fr:['Bois','Feu','Terre','Métal','Eau'], es:['Madera','Fuego','Tierra','Metal','Agua'], pt:['Madeira','Fogo','Terra','Metal','Água'], it:['Legno','Fuoco','Terra','Metallo','Acqua'], id:['Kayu','Api','Tanah','Logam','Air'] };
+  const _CZ5_COL = ['#16a34a','#dc2626','#d97706','#6b7280','#2563eb'];
+  const ei = Math.floor((((data.year - 4) % 10 + 10) % 10) / 2);  // 연주 천간 오행 0목1화2토3금4수
+  const elemName = (_CZ5_ELEM[data.lang]||_CZ5_ELEM.en)[ei];
+  const CZC = ((window.LUX && (window.LUX[data.lang]||window.LUX.en)) || {}).cz;
+  const elemLine = (CZC && CZC.elements && CZC.elements[ei]) ? CZC.elements[ei] : '';
+  const annual = (CZC && CZC.annual && CZC.annual[relType]) ? CZC.annual[relType] : null;
+  const aLbl = (CZC && CZC.areaLabels) ? CZC.areaLabels : null;
+  const annualHtml = (annual && aLbl) ? `<div style="background:rgba(255,255,255,.55);border-radius:10px;padding:10px 12px;margin-bottom:10px;">
+      <div style="font-size:10.5px;color:#b45309;font-weight:700;text-transform:uppercase;margin-bottom:7px;">📅 ${escHtml(CZC.annualTitle||'')}</div>
+      ${[['🌟',aLbl.overall,annual.overall],['💰',aLbl.money,annual.money],['💕',aLbl.love,annual.love],['🌿',aLbl.health,annual.health]].map(a=>`<div style="display:flex;gap:7px;align-items:flex-start;font-size:11px;line-height:1.5;margin-bottom:5px;"><span style="flex-shrink:0;">${a[0]}</span><span><b style="color:#b45309;">${escHtml(a[1])}</b> <span style="color:#78350f;">${escHtml(a[2])}</span></span></div>`).join('')}
+    </div>` : '';
 
   const COMPAT_NAMES = (CZ_COMPAT[czKey]||[]).map(k=>_getCZName(1900+_CZ_KEYS.indexOf(k)*12,data.lang)).join(', ');
   const CLASH_NAME = CZ_CLASH[czKey] ? _getCZName(1900+_CZ_KEYS.indexOf(CZ_CLASH[czKey])*12,data.lang) : '';
@@ -5494,11 +5539,13 @@ function renderChineseZodiacBadge(data) {
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
       <div style="font-size:52px;line-height:1;">${czEmj}</div>
       <div>
-        <div style="font-size:22px;font-weight:900;color:#78350f;">${czName}</div>
+        <div style="font-size:22px;font-weight:900;color:#78350f;">${elemLine?`<span style="color:${_CZ5_COL[ei]};">${escHtml(elemName)}</span> `:''}${czName}</div>
         <div style="font-size:11px;color:#92400e;margin-top:3px;">${birthYears}</div>
       </div>
     </div>
+    ${elemLine?`<div style="font-size:11.5px;color:#78350f;line-height:1.5;margin-bottom:10px;">${escHtml(elemLine)}</div>`:''}
     <div style="background:rgba(0,0,0,.05);border-radius:10px;padding:10px 12px;font-size:12px;color:#78350f;line-height:1.5;margin-bottom:10px;">${yearNote}</div>
+    ${annualHtml}
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       ${COMPAT_NAMES ? `<span style="background:#dcfce7;color:#166534;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">${LBL_COMPAT[data.lang]||LBL_COMPAT.en}: ${COMPAT_NAMES}</span>` : ''}
       ${CLASH_NAME ? `<span style="background:#fee2e2;color:#991b1b;font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;">${LBL_CLASH[data.lang]||LBL_CLASH.en}: ${CLASH_NAME}</span>` : ''}

@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v11: 수비학 라이프패스 심층풀이 + Personal Year/Month/Day
-const CACHE_NAME = 'lucky-v11';
+// v12: 중국12지 오행띠/연간운세 + 궁합 4축/겉궁합
+const CACHE_NAME = 'lucky-v12';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
