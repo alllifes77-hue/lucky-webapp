@@ -1647,7 +1647,7 @@ function renderResults(data) {
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
-   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel'].forEach(id => {
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1726,8 +1726,9 @@ function renderResults(data) {
   if (personName) renderNamePanel(calcNameNumerology(personName));
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
-  // ── 신규 행운요소 5종 (모든 언어 결과화면 공통 노출) ──
+  // ── 신규 행운요소 (모든 언어 결과화면 공통 노출) ──
   renderSunSignPanel(data);
+  renderLifePathPanel(data);
   renderBiorhythmPanel(data);
   renderTarotPanel(data);
   renderBirthstonePanel(data);
@@ -5353,6 +5354,60 @@ function renderLuckyFourPanel(data){
       ${cell('⏰',F.timeLabel,timeWin)}
     </div>
     <div style="background:rgba(14,116,144,.08);border-radius:10px;padding:9px 12px;font-size:12px;color:#155e75;line-height:1.5;margin-top:10px;">🍀 ${escHtml(F.tip)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── 6) 수비학 라이프패스 심층 + Personal Year/Month/Day (Wave3) ──────
+function renderLifePathPanel(data){
+  const old=document.getElementById('lifepath-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.numerology) return;
+  const N=X.numerology; if(!N.lifePaths||!N.lifePaths.length) return;
+  const L=N.labels||{}; const lbl=(k,fb)=>escHtml(L[k]||fb||'');
+  const ds=(n)=>String(n).split('').reduce((a,c)=>a+(parseInt(c)||0),0);
+  // 라이프패스(마스터넘버 보존) + 카르마 부채 감지
+  let s=ds(data.year)+(data.month||1)+(data.day||1), karmicNum=null;
+  while(s>9 && s!==11 && s!==22 && s!==33){ if(s===13||s===14||s===16||s===19) karmicNum=s; s=ds(s); }
+  const lp=s;
+  const prof=N.lifePaths.find(p=>p.num===lp); if(!prof) return;
+  const isMaster=(lp===11||lp===22||lp===33);
+  // Personal Year/Month/Day (오늘 날짜 기반 — 매일·매달 변경)
+  const r9=(n)=>{ while(n>9) n=ds(n); return n; };
+  const t=new Date();
+  const PY=r9(r9(data.month||1)+r9(data.day||1)+r9(t.getFullYear()));
+  const PM=r9(PY+r9(t.getMonth()+1));
+  const PD=r9(PM+r9(t.getDate()));
+  const cyc=(n)=>N.cycleThemes.find(c=>c.num===n)||{};
+  const row=(ic,label,val)=>`<div style="display:flex;gap:8px;align-items:flex-start;font-size:11.5px;line-height:1.5;margin-bottom:6px;"><span style="flex-shrink:0;">${ic}</span><span><b style="color:#047857;">${escHtml(label)}</b> <span style="color:#065f46;">${escHtml(val)}</span></span></div>`;
+  const cChip=(lab,n)=>{const c=cyc(n);return `<div style="flex:1;min-width:88px;background:rgba(255,255,255,.6);border-radius:10px;padding:9px 6px;text-align:center;"><div style="font-size:9px;color:#0f766e;font-weight:700;text-transform:uppercase;">${escHtml(lab)}</div><div style="font-size:20px;font-weight:900;color:#065f46;">${n}</div><div style="font-size:9.5px;color:#047857;line-height:1.25;margin-top:1px;">${escHtml(c.theme||'')}</div></div>`;};
+  const panel=document.createElement('div');
+  panel.id='lifepath-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#047857;margin-bottom:12px;text-transform:uppercase;">🔢 ${lbl('lifePathTitle','Life Path')}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+      <div style="width:58px;height:58px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#10b981,#047857);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;box-shadow:0 4px 12px rgba(4,120,87,.3);">${lp}</div>
+      <div style="flex:1;">
+        <div style="font-size:18px;font-weight:900;color:#065f46;">${escHtml(prof.archetype)}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">
+          ${isMaster?`<span style="background:#fef3c7;color:#92400e;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">⭐ ${lbl('masterLabel','Master')} ${lp}</span>`:''}
+          ${karmicNum?`<span style="background:#fee2e2;color:#991b1b;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">⚠️ ${lbl('karmicLabel','Karmic')} ${karmicNum}</span>`:''}
+        </div>
+      </div></div>
+    <div style="background:rgba(4,120,87,.08);border-radius:10px;padding:10px 12px;font-size:12.5px;color:#065f46;line-height:1.6;margin-bottom:11px;">${escHtml(prof.essence)}</div>
+    ${row('💪',lbl('strengthLabel','Strength'),prof.strength)}
+    ${row('🌑',lbl('shadowLabel','Shadow'),prof.shadow)}
+    ${row('💕',lbl('loveLabel','Love'),prof.love)}
+    ${row('💼',lbl('careerLabel','Career'),prof.career)}
+    ${row('🎯',lbl('lessonLabel','Lesson'),prof.lesson)}
+    ${isMaster&&N.masterNote?`<div style="font-size:11px;color:#047857;line-height:1.5;margin:8px 0;">⭐ ${escHtml(N.masterNote)}</div>`:''}
+    ${karmicNum&&N.karmic&&N.karmic[String(karmicNum)]?`<div style="font-size:11px;color:#b45309;line-height:1.5;margin:6px 0;">⚠️ ${escHtml(N.karmic[String(karmicNum)])}</div>`:''}
+    <div style="border-top:1px solid rgba(4,120,87,.15);padding-top:11px;margin-top:11px;">
+      <div style="font-size:10.5px;color:#0f766e;font-weight:700;text-transform:uppercase;margin-bottom:8px;">🔄 ${lbl('cycleTitle','Personal Cycles')}</div>
+      <div style="display:flex;gap:8px;">
+        ${cChip(lbl('yearLabel','Year'),PY)}${cChip(lbl('monthLabel','Month'),PM)}${cChip(lbl('dayLabel','Day'),PD)}
+      </div>
+      ${cyc(PD).guidance?`<div style="font-size:11.5px;color:#065f46;line-height:1.5;margin-top:9px;">✨ ${escHtml(cyc(PD).guidance)}</div>`:''}
+    </div>`;
   _luxInsert(panel);
 }
 

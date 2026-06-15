@@ -1,8 +1,6 @@
-// luck-elements.js — 신규 행운요소 5종 9개 언어 콘텐츠
-// (바이오리듬·탄생석/탄생화·서양별자리·오늘의 타로·행운의 4요소)
-// 언어별 네이티브 생성 + 적대적 검증(워크플로) 후 정규화 조립.
-// sunSign=Wave1 호로스코프 확장 / tarot=Wave2 정역·분야·스프레드 확장.
-// 모든 문자열 JSON 호환 더블쿼트 — 아포스트로피 안전. 렌더/결정론은 lucky-app.js.
+// luck-elements.js — 행운요소 9개 언어 콘텐츠
+// 5종(바이오리듬·탄생석·서양별자리·타로·행운4) + Wave 확장(sunSign 호로스코프·tarot 정역분야·numerology 라이프패스).
+// 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON(아포스트로피 안전). 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
   "lang": "ko",
@@ -566,6 +564,199 @@ window.LUX = {
     "planetLabel": "수호행성",
     "modalityLabel": "특성",
     "polarityLabel": "극성"
+   }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "개척자 · 선구자",
+     "essence": "스스로 길을 내며 앞장서는 운명수로, 남이 가지 않은 곳에 첫발을 디뎌 새로운 시작을 만들어내는 것이 당신의 사명입니다.",
+     "strength": "강한 의지와 추진력, 그리고 누구의 도움 없이도 일을 시작하고 끝까지 끌고 가는 독립성이 돋보입니다.",
+     "shadow": "고집과 독선으로 비칠 수 있으니, 가끔은 속도를 늦추고 곁의 사람 목소리에 귀 기울이면 더 멀리 갑니다.",
+     "love": "주도적이고 솔직하게 다가가지만, 상대에게도 주인공의 자리를 내어줄 때 사랑이 깊어집니다.",
+     "career": "창업·기획·리더 등 스스로 결정하고 책임지는 일, 첫 시도가 필요한 분야에서 빛납니다.",
+     "lesson": "혼자 다 짊어지지 않고, 이끄는 힘과 함께하는 따뜻함의 균형을 배우는 것이 평생의 과제입니다."
+    },
+    {
+     "num": 2,
+     "archetype": "조율자 · 평화주의자",
+     "essence": "사람과 사람 사이를 잇고 어우러지게 하는 운명수로, 섬세한 감수성으로 보이지 않는 조화를 만들어내는 것이 당신의 길입니다.",
+     "strength": "상대의 마음을 헤아리는 공감력과 인내심, 갈등을 부드럽게 푸는 중재의 재능이 탁월합니다.",
+     "shadow": "남을 먼저 챙기다 자기 마음을 미루기 쉬우니, 내 욕구를 솔직히 말하는 연습이 성장의 열쇠입니다.",
+     "love": "헌신적이고 다정하지만, 상대에게 기대기보다 함께 서는 관계일 때 가장 안정됩니다.",
+     "career": "상담·협업·외교·파트너십처럼 사람을 잇고 분위기를 살리는 자리에서 진가를 발휘합니다.",
+     "lesson": "남의 기대에 자신을 맞추기보다, 나를 존중하며 관계를 맺는 법을 익히는 것이 과제입니다."
+    },
+    {
+     "num": 3,
+     "archetype": "표현가 · 이야기꾼",
+     "essence": "마음속 빛을 말과 작품으로 풀어내는 운명수로, 사람들에게 즐거움과 영감을 전하며 세상을 밝히는 것이 당신의 사명입니다.",
+     "strength": "타고난 창의력과 화술, 어디서나 분위기를 환하게 만드는 밝은 에너지가 큰 매력입니다.",
+     "shadow": "흥미가 여러 곳으로 흩어지기 쉬우니, 하나에 끝까지 집중하는 힘을 기르면 재능이 결실로 이어집니다.",
+     "love": "유쾌하고 표현이 풍부해 사랑을 듬뿍 주지만, 깊은 속마음도 솔직히 나눌 때 관계가 단단해집니다.",
+     "career": "글·예술·방송·마케팅·강연 등 자신을 표현하고 사람들과 소통하는 일에서 두각을 나타냅니다.",
+     "lesson": "가벼움 속에 깊이를 더하고, 시작한 일을 끝까지 완성하는 꾸준함을 배우는 것이 과제입니다."
+    },
+    {
+     "num": 4,
+     "archetype": "건설자 · 든든한 기둥",
+     "essence": "벽돌을 한 장씩 쌓듯 성실하게 기반을 다지는 운명수로, 흔들리지 않는 토대를 세워 오래 가는 결실을 만드는 것이 당신의 길입니다.",
+     "strength": "근면함과 책임감, 무슨 일이든 체계적으로 끝까지 해내는 신뢰의 힘이 가장 큰 자산입니다.",
+     "shadow": "안정을 추구하다 사고가 굳어질 수 있으니, 변화를 적이 아닌 새 기회로 받아들이면 운이 크게 열립니다.",
+     "love": "말보다 행동으로 한결같이 지키는 사랑이라, 진심이 쌓일수록 깊고 든든한 관계가 됩니다.",
+     "career": "관리·재무·엔지니어링·전문 기술처럼 정확성과 꾸준함이 빛나는 분야가 잘 맞습니다.",
+     "lesson": "노력은 결코 헛되지 않으니, 완벽을 향한 부담을 내려놓고 과정을 즐기는 여유를 배우는 것이 과제입니다."
+    },
+    {
+     "num": 5,
+     "archetype": "자유로운 모험가",
+     "essence": "변화의 바람을 타고 새로운 경험을 찾아 나서는 운명수로, 자유롭게 세상을 누비며 삶의 다채로움을 만끽하는 것이 당신의 사명입니다.",
+     "strength": "뛰어난 적응력과 호기심, 어떤 변화 앞에서도 기회를 발견하는 순발력이 큰 강점입니다.",
+     "shadow": "한 곳에 머물기 어려워 흩어지기 쉬우니, 자유 속에 작은 닻 하나를 내리면 에너지가 결실로 모입니다.",
+     "love": "설렘과 생기를 주는 연인이지만, 자유를 지키면서도 약속을 소중히 할 때 사랑이 오래갑니다.",
+     "career": "여행·영업·미디어·기획처럼 변화가 많고 새로움을 다루는 일에서 활기차게 빛납니다.",
+     "lesson": "자유와 책임은 함께 가는 짝이니, 충동을 다스리고 중심을 잡는 절제를 익히는 것이 과제입니다."
+    },
+    {
+     "num": 6,
+     "archetype": "보호자 · 따뜻한 돌봄이",
+     "essence": "사랑과 책임으로 곁의 사람을 보듬는 운명수로, 가정과 공동체를 따뜻하게 지키며 조화로운 보금자리를 만드는 것이 당신의 길입니다.",
+     "strength": "깊은 책임감과 헌신, 상처를 어루만지고 곁을 든든하게 지켜주는 다정함이 큰 미덕입니다.",
+     "shadow": "다 떠안고 챙기려다 지치기 쉬우니, 완벽한 보호자 대신 나도 돌보는 균형을 찾으면 더 건강해집니다.",
+     "love": "깊고 따뜻한 사랑을 주는 헌신형이라, 서로 의지하되 각자의 자리도 존중할 때 관계가 빛납니다.",
+     "career": "교육·의료·상담·복지처럼 사람을 돌보고 보살피는 일에서 깊은 보람과 인정을 얻습니다.",
+     "lesson": "사랑은 통제가 아닌 신뢰임을 깨닫고, 베푼 만큼 나도 받는 법을 배우는 것이 과제입니다."
+    },
+    {
+     "num": 7,
+     "archetype": "탐구자 · 사색가",
+     "essence": "보이는 너머의 진실을 파고드는 운명수로, 깊은 사색과 통찰로 삶과 세상의 의미를 밝혀내는 것이 당신의 사명입니다.",
+     "strength": "예리한 분석력과 직관, 본질을 꿰뚫어 보는 깊은 통찰과 사색의 힘이 돋보입니다.",
+     "shadow": "혼자만의 세계에 갇히기 쉬우니, 마음의 문을 조금 열고 사람들과 나눌 때 지혜가 더 깊어집니다.",
+     "love": "쉽게 곁을 내주지 않지만, 진심으로 통하는 상대에게는 더없이 깊고 진실한 사랑을 줍니다.",
+     "career": "연구·학문·분석·영성·전문 자문처럼 깊이 파고드는 분야에서 남다른 성취를 이룹니다.",
+     "lesson": "머리로 아는 것과 마음으로 느끼는 것을 잇고, 고독과 연결 사이의 균형을 배우는 것이 과제입니다."
+    },
+    {
+     "num": 8,
+     "archetype": "성취가 · 경영자",
+     "essence": "현실 세계에서 큰 그림을 그리고 이뤄내는 운명수로, 강한 추진력과 판단으로 물질과 영향력의 결실을 거두는 것이 당신의 길입니다.",
+     "strength": "탁월한 경영 감각과 결단력, 목표를 현실의 성과로 바꿔내는 강한 실행력이 큰 무기입니다.",
+     "shadow": "성과와 통제에 매달리다 지칠 수 있으니, 힘을 나누고 베풀 때 더 큰 풍요가 돌아옵니다.",
+     "love": "듬직하게 책임지는 사랑이지만, 일과 마음의 균형을 지키고 약함도 보여줄 때 관계가 깊어집니다.",
+     "career": "경영·금융·사업·투자처럼 큰 자원과 사람을 움직이는 분야에서 크게 성공할 잠재력이 있습니다.",
+     "lesson": "참된 성공은 물질만이 아님을 깨닫고, 힘을 사람과 세상을 위해 쓰는 법을 배우는 것이 과제입니다."
+    },
+    {
+     "num": 9,
+     "archetype": "박애주의자 · 완성자",
+     "essence": "나를 넘어 세상을 품는 운명수로, 넓은 사랑과 이상으로 사람들을 돕고 더 나은 세상을 그리는 것이 당신의 사명입니다.",
+     "strength": "깊은 연민과 포용력, 큰 그림을 보며 사람과 세상을 위해 헌신하는 따뜻한 마음이 가장 큰 빛입니다.",
+     "shadow": "이상과 현실의 간극에 마음이 무거워지기 쉬우니, 떠나보낼 것은 놓아주는 비움의 지혜가 평안을 줍니다.",
+     "love": "조건 없이 베푸는 넓은 사랑을 주지만, 받는 법도 익히고 한 사람에게 집중할 때 관계가 채워집니다.",
+     "career": "예술·인도주의·교육·치유처럼 사람과 세상에 보탬이 되는 일에서 깊은 의미를 찾습니다.",
+     "lesson": "끝맺음은 새 시작의 문임을 받아들이고, 집착을 내려놓는 용서와 비움을 배우는 것이 과제입니다."
+    },
+    {
+     "num": 11,
+     "archetype": "영감의 등불 (마스터넘버)",
+     "essence": "직관과 영감으로 사람들에게 빛을 비추는 마스터넘버로, 높은 깨달음을 전해 세상을 일깨우는 것이 당신의 소명입니다.",
+     "strength": "남다른 직관과 영적 감수성, 사람의 마음을 움직이고 영감을 불어넣는 카리스마가 빼어납니다.",
+     "shadow": "예민한 감각이 불안으로 흐르기 쉬우니, 마음의 중심을 잡고 자신을 믿는 안정이 큰 힘을 깨웁니다.",
+     "love": "영혼으로 깊이 교감하는 사랑을 원하며, 서로의 세계를 존중하는 정신적 동반자와 가장 잘 맞습니다.",
+     "career": "예술·영성·상담·강연처럼 영감을 나누고 사람을 일깨우는 일에서 사명을 빛냅니다.",
+     "lesson": "높은 이상을 현실의 발걸음으로 옮기고, 예민함을 통찰로 다듬어 내는 것이 마스터넘버의 과제입니다."
+    },
+    {
+     "num": 22,
+     "archetype": "마스터 빌더 (마스터넘버)",
+     "essence": "큰 꿈을 현실의 구조물로 세우는 마스터넘버로, 원대한 비전을 모두에게 이로운 결실로 실현하는 것이 당신의 소명입니다.",
+     "strength": "거대한 비전과 그것을 차근차근 실현하는 실행력, 이상과 현실을 잇는 보기 드문 균형이 강점입니다.",
+     "shadow": "큰 사명의 무게에 짓눌리기 쉬우니, 한 걸음씩 나아가며 부담을 동력으로 바꾸는 지혜가 필요합니다.",
+     "love": "묵직하고 믿음직하게 함께 미래를 짓는 사랑이라, 같은 비전을 공유하는 동반자와 깊이 결속됩니다.",
+     "career": "대형 프로젝트·건축·사회 사업·조직 설계처럼 큰 판을 세우는 일에서 비범한 성취를 이룹니다.",
+     "lesson": "재능의 크기만큼 두려움도 크니, 자신을 믿고 비전을 세상에 실현하는 용기를 내는 것이 과제입니다."
+    },
+    {
+     "num": 33,
+     "archetype": "마스터 교사 (마스터넘버)",
+     "essence": "조건 없는 사랑으로 사람을 일으켜 세우는 마스터넘버로, 헌신과 가르침으로 세상을 치유하는 것이 당신의 높은 소명입니다.",
+     "strength": "깊은 자비심과 치유의 기운, 자신을 내어주며 사람들을 보듬고 키워내는 큰 사랑이 빼어납니다.",
+     "shadow": "모두를 구하려다 자신을 잃기 쉬우니, 먼저 나를 채우고 돌볼 때 베푸는 사랑도 오래 갑니다.",
+     "love": "온 마음으로 헌신하는 깊은 사랑을 주며, 함께 성장하고 서로를 살리는 관계에서 가장 빛납니다.",
+     "career": "교육·치유·상담·봉사처럼 사람을 깨우고 보듬는 일에서 마스터의 사명을 완성합니다.",
+     "lesson": "희생과 헌신을 구분하고, 사랑을 베풀되 자신을 잃지 않는 균형을 익히는 것이 마스터넘버의 과제입니다."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "새로운 시작",
+     "guidance": "새 목표를 세우고 첫발을 내딛기에 더없이 좋은 시기이니, 망설이지 말고 씨앗을 심으세요."
+    },
+    {
+     "num": 2,
+     "theme": "관계와 인내",
+     "guidance": "서두르기보다 사람과의 관계를 다지고, 때를 기다리며 협력의 씨앗을 키우기 좋은 시기입니다."
+    },
+    {
+     "num": 3,
+     "theme": "표현과 즐거움",
+     "guidance": "마음을 표현하고 사람들과 어울리며, 창의적인 일과 즐거움에 마음을 활짝 열어보세요."
+    },
+    {
+     "num": 4,
+     "theme": "기반과 노력",
+     "guidance": "차근차근 토대를 다지고 성실히 노력할 때이니, 미루던 일을 체계적으로 정리해 나가세요."
+    },
+    {
+     "num": 5,
+     "theme": "변화와 자유",
+     "guidance": "변화의 바람이 부는 시기이니, 낡은 틀을 벗고 새로운 경험과 기회에 유연하게 다가가세요."
+    },
+    {
+     "num": 6,
+     "theme": "책임과 가정",
+     "guidance": "가족과 가까운 사람을 돌보고 책임을 다하며, 보금자리와 관계를 따뜻하게 가꾸기 좋은 때입니다."
+    },
+    {
+     "num": 7,
+     "theme": "성찰과 휴식",
+     "guidance": "잠시 속도를 늦추고 안으로 눈을 돌려, 배움과 휴식으로 마음을 채우며 자신을 들여다보세요."
+    },
+    {
+     "num": 8,
+     "theme": "성취와 결실",
+     "guidance": "그동안의 노력이 결실로 돌아오는 시기이니, 자신감을 갖고 성과와 보상을 적극적으로 거두세요."
+    },
+    {
+     "num": 9,
+     "theme": "마무리와 정리",
+     "guidance": "한 주기를 정리하고 비워내기 좋은 때이니, 묵은 것을 놓아주며 다음 시작을 위한 자리를 마련하세요."
+    }
+   ],
+   "masterNote": "마스터넘버(11·22·33)는 더 높은 잠재력과 함께 그만큼 큰 도전을 품은 수이니, 조급해하지 말고 자신의 특별한 소명을 천천히 꽃피워 나가세요.",
+   "karmic": {
+    "13": "노력이 더디게 결실 맺는 흐름이니, 지름길을 찾기보다 꾸준히 한 걸음씩 쌓아갈 때 단단한 성취가 찾아옵니다.",
+    "14": "변화와 욕구를 조절하는 배움의 수이니, 자유를 즐기되 절제와 책임의 중심을 잡으면 삶이 한결 평온해집니다.",
+    "16": "예상치 못한 흔들림을 통해 거듭나는 수이니, 자존심을 내려놓고 진실한 마음을 회복할 때 새로운 빛이 열립니다.",
+    "19": "홀로 서는 힘을 기르는 배움의 수이니, 혼자 다 짊어지기보다 주고받는 법을 익히면 더 큰 사람으로 성장합니다."
+   },
+   "labels": {
+    "lifePathTitle": "라이프패스 풀이",
+    "essenceLabel": "본질",
+    "strengthLabel": "강점",
+    "shadowLabel": "그림자",
+    "loveLabel": "연애",
+    "careerLabel": "커리어",
+    "lessonLabel": "인생 과제",
+    "cycleTitle": "올해·이달·오늘의 수",
+    "yearLabel": "올해의 수",
+    "monthLabel": "이달의 수",
+    "dayLabel": "오늘의 수",
+    "masterLabel": "마스터넘버",
+    "karmicLabel": "카르마 부채수"
    }
   }
  },
@@ -1132,6 +1323,199 @@ window.LUX = {
     "modalityLabel": "Modality",
     "polarityLabel": "Polarity"
    }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "The Pioneer",
+     "essence": "You are here to lead, originate, and stand on your own two feet, turning bold ideas into the action others are afraid to begin.",
+     "strength": "Fearless initiative and a natural drive to forge your own path long before anyone hands you permission.",
+     "shadow": "Self-reliance can harden into stubbornness or ego; your growth comes from discovering that asking for help is its own form of courage.",
+     "love": "You love passionately and protectively, and you thrive with a partner who respects your independence rather than competing for control.",
+     "career": "Entrepreneurship, founding ventures, executive leadership, or any field where you set the direction and own the outcome.",
+     "lesson": "Your life lesson is to lead without dominating, balancing fierce independence with genuine collaboration and patience."
+    },
+    {
+     "num": 2,
+     "archetype": "The Peacemaker",
+     "essence": "You are here to connect, harmonize, and bring people together, sensing what others feel and weaving cooperation out of conflict.",
+     "strength": "Deep emotional intelligence and a gift for diplomacy that turns tension into understanding and trust.",
+     "shadow": "Giving endlessly while silencing your own needs can breed quiet resentment; learning to set boundaries is what keeps your gift alive.",
+     "love": "Devoted, tender, and deeply loyal, you flourish in a relationship built on emotional safety and mutual reassurance.",
+     "career": "Counseling, mediation, partnership roles, healthcare, design, or any work where collaboration and sensitivity are valued.",
+     "lesson": "Your life lesson is to honor your own voice and worth as fully as you honor everyone else's."
+    },
+    {
+     "num": 3,
+     "archetype": "The Communicator",
+     "essence": "You are here to express, create, and uplift, translating feeling into words, color, and joy that brighten the world around you.",
+     "strength": "Magnetic charisma and creative imagination that make you a natural storyteller, performer, and lifter of spirits.",
+     "shadow": "Energy can scatter across too many half-finished projects; focus and follow-through are the discipline that finally frees your talent.",
+     "love": "Playful, affectionate, and expressive, you need a partner who appreciates your spark and gives your emotions room to breathe.",
+     "career": "Writing, art, performance, marketing, media, teaching, or any field that rewards vivid expression and original ideas.",
+     "lesson": "Your life lesson is to channel boundless creativity with discipline, and to use words to heal rather than merely impress."
+    },
+    {
+     "num": 4,
+     "archetype": "The Builder",
+     "essence": "You are here to create order, stability, and lasting structures, turning steady effort and honest work into foundations others can rely on.",
+     "strength": "Remarkable discipline, reliability, and patience that let you build what more restless souls only dream about.",
+     "shadow": "Routine can stiffen into rigidity or worry; making room for flexibility and rest keeps your strength from becoming a cage.",
+     "love": "Loyal, grounded, and dependable, you show love through steady commitment and a safe, well-built life shared with your partner.",
+     "career": "Engineering, architecture, finance, project management, skilled trades, or any role rewarding precision and long-term planning.",
+     "lesson": "Your life lesson is to stay open to change and joy, trusting that security can coexist with spontaneity."
+    },
+    {
+     "num": 5,
+     "archetype": "The Free Spirit",
+     "essence": "You are here to explore, adapt, and experience life fully, embracing change and freedom as the very air your spirit breathes.",
+     "strength": "Versatile, quick-witted, and adventurous, you thrive on variety and adapt to almost any situation with ease.",
+     "shadow": "Restlessness can tip into impulsiveness or overindulgence; learning healthy commitment is what turns freedom into lasting fulfillment.",
+     "love": "Exciting and magnetic, you need a partner who shares your love of adventure and never tries to fence you in.",
+     "career": "Travel, sales, journalism, entrepreneurship, the arts, or any dynamic field that rewards adaptability and bold change.",
+     "lesson": "Your life lesson is to find freedom within commitment, channeling your energy with purpose rather than chasing every new thrill."
+    },
+    {
+     "num": 6,
+     "archetype": "The Nurturer",
+     "essence": "You are here to love, protect, and care for others, building harmony in home and community through responsibility and devotion.",
+     "strength": "A warm, generous heart and a deep sense of duty that make you the dependable anchor everyone leans on.",
+     "shadow": "Caretaking can slide into control or self-sacrifice; learning to nurture yourself first keeps your love from quietly draining away.",
+     "love": "Profoundly devoted and protective, you offer deep commitment and thrive when your care is genuinely received and returned.",
+     "career": "Healthcare, teaching, counseling, hospitality, the arts, or any vocation centered on service, beauty, and family.",
+     "lesson": "Your life lesson is to give from abundance rather than obligation, and to let others carry their own share of responsibility."
+    },
+    {
+     "num": 7,
+     "archetype": "The Seeker",
+     "essence": "You are here to question, analyze, and understand the deeper truths of life, blending sharp intellect with quiet spiritual insight.",
+     "strength": "Penetrating analytical and intuitive depth that lets you see through surfaces to the truth beneath.",
+     "shadow": "Solitude can tip into isolation or distrust; opening your inner world to others is what turns wisdom into connection.",
+     "love": "Reserved yet deeply loyal, you need a partner who respects your need for space and meets you in honest, meaningful conversation.",
+     "career": "Research, science, analysis, philosophy, technology, or any field rewarding deep thinking and the pursuit of truth.",
+     "lesson": "Your life lesson is to trust both your mind and your heart, sharing your insight rather than guarding it in solitude."
+    },
+    {
+     "num": 8,
+     "archetype": "The Powerhouse",
+     "essence": "You are here to achieve, lead, and master the material world, turning ambition and vision into tangible abundance and influence.",
+     "strength": "Formidable drive, business acumen, and resilience that let you build real-world success from the ground up.",
+     "shadow": "When ambition eclipses balance, remembering that true power serves rather than dominates is what keeps success from feeling hollow.",
+     "love": "Strong and protective, you offer security and loyalty, and thrive with a partner who is an equal rather than a dependent.",
+     "career": "Business, finance, law, executive leadership, real estate, or any arena where ambition and authority create lasting results.",
+     "lesson": "Your life lesson is to wield power with integrity and generosity, measuring success by impact as much as by gain."
+    },
+    {
+     "num": 9,
+     "archetype": "The Humanitarian",
+     "essence": "You are here to give, heal, and uplift humanity, carrying a wide compassion that sees beyond yourself to the whole of life.",
+     "strength": "Boundless empathy and idealism that inspire you to serve causes greater than your own comfort.",
+     "shadow": "Carrying the world's pain or clinging to what is ending can deplete you; learning to release and to receive restores your strength.",
+     "love": "Compassionate and giving, you love generously and grow most with a partner who shares your ideals and lets you be cared for too.",
+     "career": "Humanitarian work, the arts, counseling, teaching, medicine, or any path devoted to healing and serving the greater good.",
+     "lesson": "Your life lesson is to give without losing yourself, and to gracefully let go of what has completed its purpose."
+    },
+    {
+     "num": 11,
+     "archetype": "The Intuitive Visionary",
+     "essence": "As a master number, you are here to inspire and illuminate, channeling heightened intuition and spiritual insight to light the way for others.",
+     "strength": "Extraordinary sensitivity, vision, and inspirational presence that can awaken and uplift everyone you touch.",
+     "shadow": "Intense energy can rise as anxiety or self-doubt; grounding your gifts in calm and trust transforms nervous tension into clear inspiration.",
+     "love": "Deeply intuitive and idealistic in love, you need a partner who understands your sensitivity and shares your spiritual depth.",
+     "career": "Spiritual guidance, the arts, counseling, teaching, design, or any calling that transmits inspiration and higher awareness.",
+     "lesson": "Your life lesson is to trust and steady your intuition, transforming heightened sensitivity into a beacon rather than a burden."
+    },
+    {
+     "num": 22,
+     "archetype": "The Master Builder",
+     "essence": "As a master number, you are here to turn grand visions into reality, uniting bold ideals with practical mastery to build for the many.",
+     "strength": "A rare blend of visionary imagination and disciplined execution capable of creating something enduring and far-reaching.",
+     "shadow": "The sheer scale of your potential can feel overwhelming; taking steady, practical steps keeps self-pressure from stalling your vision.",
+     "love": "Devoted and dependable, you express love by building a solid shared future with a partner who believes in your mission.",
+     "career": "Large-scale enterprise, architecture, organizational leadership, social innovation, or any field that builds lasting structures for society.",
+     "lesson": "Your life lesson is to believe in your immense capacity and to ground your dreams in patient, real-world action."
+    },
+    {
+     "num": 33,
+     "archetype": "The Master Teacher",
+     "essence": "As a master number, you are here to serve through unconditional love, healing and guiding others with compassion, wisdom, and selfless devotion.",
+     "strength": "An exceptionally nurturing, uplifting presence that teaches and heals simply through the way you live and care.",
+     "shadow": "Boundless giving can lead toward burnout or martyrdom; honoring your own limits is what keeps your compassion sustainable and pure.",
+     "love": "Profoundly loving and selfless, you offer deep devotion and flourish with a partner who nurtures you as fully as you nurture them.",
+     "career": "Teaching, healing, counseling, spiritual or humanitarian leadership, or any vocation that uplifts and transforms lives.",
+     "lesson": "Your life lesson is to love and serve from wholeness, caring for yourself so your light can reach others sustainably."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "New Beginnings",
+     "guidance": "Plant fresh seeds, take initiative, and start the bold projects you have been waiting to begin."
+    },
+    {
+     "num": 2,
+     "theme": "Patience and Connection",
+     "guidance": "Nurture relationships, cooperate with others, and let things unfold gently rather than forcing the pace."
+    },
+    {
+     "num": 3,
+     "theme": "Expression and Joy",
+     "guidance": "Create, socialize, and speak your truth, letting your natural optimism and self-expression flow freely."
+    },
+    {
+     "num": 4,
+     "theme": "Foundations and Effort",
+     "guidance": "Get organized, work steadily, and build the practical structures that will support your long-term goals."
+    },
+    {
+     "num": 5,
+     "theme": "Change and Freedom",
+     "guidance": "Embrace new experiences, stay flexible, and welcome the changes that open doors to fresh opportunity."
+    },
+    {
+     "num": 6,
+     "theme": "Responsibility and Home",
+     "guidance": "Tend to family, relationships, and home, giving and receiving care while honoring your commitments."
+    },
+    {
+     "num": 7,
+     "theme": "Reflection and Rest",
+     "guidance": "Slow down, turn inward, and make space for study, solitude, and quiet spiritual renewal."
+    },
+    {
+     "num": 8,
+     "theme": "Achievement and Power",
+     "guidance": "Step into your authority, pursue your goals with confidence, and reap the rewards of disciplined effort."
+    },
+    {
+     "num": 9,
+     "theme": "Completion and Release",
+     "guidance": "Finish what is ending, let go with gratitude, and clear space for the new cycle about to begin."
+    }
+   ],
+   "masterNote": "As a master number, you carry an amplified potential and a higher calling. These vibrations ask more of you, yet they also offer a rare capacity to inspire and uplift. Honor the gift by growing into it at your own steady pace, without measuring yourself against an impossible ideal.",
+   "karmic": {
+    "13": "Karmic Debt 13 invites you to meet effort with patience. Lasting results come through steady, focused work rather than shortcuts, and discipline becomes the doorway to genuine freedom.",
+    "14": "Karmic Debt 14 calls you to find balance with freedom and change. As you channel restless energy with moderation and purpose, scattered impulses mature into grounded, joyful experience.",
+    "16": "Karmic Debt 16 asks you to release ego and rebuild on humility. As old illusions fall away, you are guided toward deeper authenticity and a more honest, resilient sense of self.",
+    "19": "Karmic Debt 19 teaches you to balance independence with interdependence. Learning to give and receive support transforms hard-won self-reliance into true and lasting strength."
+   },
+   "labels": {
+    "lifePathTitle": "Life Path",
+    "essenceLabel": "Essence",
+    "strengthLabel": "Strength",
+    "shadowLabel": "Shadow",
+    "loveLabel": "Love",
+    "careerLabel": "Career",
+    "lessonLabel": "Life Lesson",
+    "cycleTitle": "Personal Cycles",
+    "yearLabel": "Year",
+    "monthLabel": "Month",
+    "dayLabel": "Day",
+    "masterLabel": "Master",
+    "karmicLabel": "Karmic"
+   }
   }
  },
  "ja": {
@@ -1696,6 +2080,199 @@ window.LUX = {
     "planetLabel": "守護星",
     "modalityLabel": "性質",
     "polarityLabel": "極性"
+   }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "開拓者・リーダー",
+     "essence": "自らの意志で道を切り開き、新しいものを生み出すために生まれてきた、独立心と先駆けの精神を宿す魂です。",
+     "strength": "強い意志と決断力を備え、誰も歩いていない道を恐れずに進んでいける開拓者の力を持っています。",
+     "shadow": "頑固さや孤立に傾きやすい一面がありますが、人を頼り耳を傾けることを覚えると、リーダーシップがいっそう輝きます。",
+     "love": "情熱的にまっすぐ想いを伝える一方で、相手のペースを尊重する余裕を持つと、関係がより長続きします。",
+     "career": "起業・経営・企画・スポーツなど、自分が先頭に立って物事を動かす分野で本領を発揮します。",
+     "lesson": "他者と競うのではなく、自分自身を信じて第一歩を踏み出す勇気を育てることが、人生の課題です。"
+    },
+    {
+     "num": 2,
+     "archetype": "調停者・支え手",
+     "essence": "人と人の間に立ち、調和とつながりを育むために生まれた、繊細な感受性と思いやりにあふれる魂です。",
+     "strength": "相手の気持ちを敏感に察し、対立をやわらげて穏やかな関係を築く、稀有な共感力を持っています。",
+     "shadow": "人に合わせすぎて自分を後回しにしがちですが、自分の本音を大切にすることで、心が軽くなっていきます。",
+     "love": "尽くすことに喜びを感じる愛情深いタイプで、対等に支え合えるパートナーとの相性が抜群です。",
+     "career": "カウンセリング・人事・秘書・外交・チーム調整など、人を支え結びつける役割で力を発揮します。",
+     "lesson": "我慢して尽くすだけでなく、自分の気持ちを正直に伝える勇気を身につけることが、人生の学びです。"
+    },
+    {
+     "num": 3,
+     "archetype": "表現者・ムードメーカー",
+     "essence": "豊かな感性と言葉で人の心を明るく照らし、創造の喜びを世界に広げるために生まれた魂です。",
+     "strength": "ユーモアと表現力で場を華やかにし、周囲に楽しさと希望を分け与える、天性の魅力を持っています。",
+     "shadow": "気が散りやすく物事が長続きしにくい面がありますが、一つを最後までやり遂げる習慣が、才能を花開かせます。",
+     "love": "明るく軽やかな恋を好み、笑い合える相手と一緒にいると、あなたの魅力が最大限に輝きます。",
+     "career": "作家・芸能・デザイン・広報・接客など、自分を表現し人を楽しませる仕事で輝きを放ちます。",
+     "lesson": "楽しさの裏にある不安や深い感情とも向き合い、表現を真の創造へ深めることが、人生の課題です。"
+    },
+    {
+     "num": 4,
+     "archetype": "堅実な建設者",
+     "essence": "こつこつと努力を積み重ね、揺るがない土台を築き上げるために生まれた、誠実で勤勉な魂です。",
+     "strength": "地道な作業を厭わず、責任感と忍耐で着実に成果を形にしていく、信頼の力を持っています。",
+     "shadow": "完璧主義や頑なさに傾きやすい面がありますが、ときに柔軟さと遊び心を取り入れると、視野が広がります。",
+     "love": "誠実で一途な愛を育むタイプで、時間をかけて信頼を深め合う、安定した関係を大切にします。",
+     "career": "技術・建築・経理・管理・職人仕事など、確かな技術と継続が求められる分野で真価を発揮します。",
+     "lesson": "決まりや安定にとらわれすぎず、変化を恐れずに受け入れる柔軟さを学ぶことが、人生の課題です。"
+    },
+    {
+     "num": 5,
+     "archetype": "自由な冒険者",
+     "essence": "変化と自由を愛し、未知の世界を体験しながら人生の幅を広げるために生まれた、好奇心旺盛な魂です。",
+     "strength": "適応力と行動力に富み、どんな環境でも変化を楽しみ、チャンスに変えていく機転を持っています。",
+     "shadow": "飽きやすく一所に留まりにくい面がありますが、自由の中にも一本の軸を持つと、力が大きく実を結びます。",
+     "love": "束縛を嫌い刺激を求めるタイプで、互いの自由を尊重し合える相手と、のびのびと愛を育みます。",
+     "career": "旅行・営業・メディア・通訳・自由業など、変化と人との出会いが多い分野で生き生きと活躍します。",
+     "lesson": "自由を求めるあまり責任から逃げず、選んだ道に深く根を下ろすことを学ぶのが、人生の課題です。"
+    },
+    {
+     "num": 6,
+     "archetype": "愛情深い守護者",
+     "essence": "家族や仲間を慈しみ、愛と責任をもって人を支え育てるために生まれた、温かく面倒見のよい魂です。",
+     "strength": "深い愛情と責任感で周囲を包み込み、安心できる居場所をつくり出す、癒やしの力を持っています。",
+     "shadow": "尽くしすぎて自分を犠牲にしがちですが、まず自分を満たすことが、より大きな愛につながっていきます。",
+     "love": "家庭的で献身的に愛するタイプで、互いを思いやり支え合う温かな関係に、深い幸せを感じます。",
+     "career": "医療・教育・福祉・美容・サービスなど、人を癒やし支え育てる分野で、あなたの愛が活かされます。",
+     "lesson": "世話を焼きすぎて相手を縛らず、適度な距離と自立を尊重するバランスを学ぶことが、課題です。"
+    },
+    {
+     "num": 7,
+     "archetype": "探究者・賢者",
+     "essence": "物事の本質を深く見つめ、真理と精神性を探究するために生まれた、内省的で叡智を宿す魂です。",
+     "strength": "鋭い洞察力と集中力で物事の核心を見抜き、独自の深い世界観を築き上げる、知性を持っています。",
+     "shadow": "心を閉ざし孤立しやすい面がありますが、信頼できる人に内面を分かち合うと、孤独が豊かな静けさに変わります。",
+     "love": "心の深い結びつきを求めるタイプで、知的な対話と静かな信頼を分かち合える相手を大切にします。",
+     "career": "研究・分析・哲学・専門技術・カウンセリングなど、深い探究と専門性を要する分野で輝きます。",
+     "lesson": "理屈や孤独に閉じこもらず、心を開いて人と感情を分かち合うことを学ぶのが、人生の課題です。"
+    },
+    {
+     "num": 8,
+     "archetype": "実現者・経営者",
+     "essence": "現実の世界で大きな成果と豊かさを築き上げるために生まれた、力強い実行力と統率力を宿す魂です。",
+     "strength": "目標達成への強い意志と判断力で、物事を大きなスケールで実現させる、経営者の器を持っています。",
+     "shadow": "成果や物質に偏りやすい面がありますが、目に見えない価値や人への感謝を大切にすると、真の豊かさが訪れます。",
+     "love": "頼りがいのある愛し方をするタイプで、互いに尊敬し高め合えるパートナーとの関係で安定します。",
+     "career": "経営・金融・投資・不動産・大規模な事業など、現実の成果と影響力を生む分野で本領を発揮します。",
+     "lesson": "力やお金を支配の道具とせず、人を活かし豊かさを分かち合う使い方を学ぶことが、人生の課題です。"
+    },
+    {
+     "num": 9,
+     "archetype": "博愛の理想家",
+     "essence": "個を超えた大きな愛で人類や社会に貢献するために生まれた、慈悲深く理想を抱く、完成の魂です。",
+     "strength": "広い視野と深い思いやりで、見返りを求めず人や社会のために尽くす、高潔な精神を持っています。",
+     "shadow": "理想と現実の差に疲れやすい面がありますが、手放すべきものを手放すと、より自由に愛を注げるようになります。",
+     "love": "包容力のある無償の愛を注ぐタイプで、価値観や理想を共有できる相手と、深い絆を育みます。",
+     "career": "福祉・芸術・国際協力・教育・ヒーリングなど、人や社会に貢献する分野で、あなたの理想が花開きます。",
+     "lesson": "すべてを抱え込まず、執着を手放して自分自身の幸福も大切にすることを学ぶのが、人生の課題です。"
+    },
+    {
+     "num": 11,
+     "archetype": "直感の伝道者（マスターナンバー）",
+     "essence": "研ぎ澄まされた直感とインスピレーションで人々の心を照らし、高い理想へ導くために生まれた魂です。",
+     "strength": "鋭い直感と精神的な感受性で、言葉を超えて人を励まし目覚めさせる、稀有な力を持っています。",
+     "shadow": "繊細さゆえに不安や緊張を抱えやすい面がありますが、心身を整え地に足をつけると、本来の輝きが安定します。",
+     "love": "魂レベルの深い結びつきを求めるタイプで、感性や理想を分かち合える相手と、特別な絆を育みます。",
+     "career": "芸術・スピリチュアル・カウンセリング・教育・発信など、人を導き啓発する分野で使命を果たします。",
+     "lesson": "高い感受性に振り回されず、現実の中で直感を形にして人に役立てることが、人生の大きな使命です。"
+    },
+    {
+     "num": 22,
+     "archetype": "マスタービルダー（マスターナンバー）",
+     "essence": "壮大な理想を現実の形に変え、多くの人の役に立つものを築き上げるために生まれた、偉大な魂です。",
+     "strength": "大きなビジョンと確かな実行力を兼ね備え、理想を現実の成果へ昇華させる、類まれな建設力を持ちます。",
+     "shadow": "理想が大きいゆえに重圧を感じやすい面がありますが、一歩ずつ着実に進むと、壮大な夢が確かに実現していきます。",
+     "love": "大きな志を共に歩めるパートナーを求めるタイプで、信頼と協力を土台にした関係に安らぎを感じます。",
+     "career": "大規模な事業・社会基盤・組織づくり・国際的なプロジェクトなど、世界に残るものを築く分野が天職です。",
+     "lesson": "壮大な使命を恐れず受け止め、夢を現実の形にして社会へ還元することが、人生の大きな使命です。"
+    },
+    {
+     "num": 33,
+     "archetype": "マスターティーチャー（マスターナンバー）",
+     "essence": "無条件の愛と奉仕の心で人々を癒やし導くために生まれた、最も高い慈愛の使命を宿す魂です。",
+     "strength": "深い慈愛と包容力で、生き方そのものを通して人々を癒やし高めていく、稀有な徳の力を持っています。",
+     "shadow": "人のために尽くしすぎて疲弊しやすい面がありますが、自分を慈しむことが、より大きな愛を注ぐ源になります。",
+     "love": "見返りを求めない深い愛を注ぐタイプで、精神的に成熟した相手と、魂を高め合う関係を築きます。",
+     "career": "教育・医療・福祉・宗教・人道支援など、愛と奉仕で人を導き癒やす分野で、あなたの使命が花開きます。",
+     "lesson": "理想の愛を自分一人で背負わず、無理なく持続できる形で世界に分かち合うことが、人生の大きな使命です。"
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "新たな始まり",
+     "guidance": "新しい目標を立て、自分の意志で行動を起こす、種まきに最適な時期です。"
+    },
+    {
+     "num": 2,
+     "theme": "協調と忍耐",
+     "guidance": "人との関係を大切に育み、焦らず辛抱強く待つことが、実りを呼ぶ時期です。"
+    },
+    {
+     "num": 3,
+     "theme": "表現と楽しみ",
+     "guidance": "創作や交流を楽しみ、自分を明るく表現することで、運気が広がる時期です。"
+    },
+    {
+     "num": 4,
+     "theme": "基盤づくりと努力",
+     "guidance": "地道にこつこつと土台を固め、健康や生活を整えるのに適した時期です。"
+    },
+    {
+     "num": 5,
+     "theme": "変化と自由",
+     "guidance": "新しい体験や環境の変化を柔軟に受け入れ、行動範囲を広げるとよい時期です。"
+    },
+    {
+     "num": 6,
+     "theme": "責任と家庭",
+     "guidance": "家族や身近な人への思いやりを深め、責任を果たすことで、信頼が育つ時期です。"
+    },
+    {
+     "num": 7,
+     "theme": "内省と休息",
+     "guidance": "立ち止まって自分を見つめ直し、心と体を休めて学びを深めるとよい時期です。"
+    },
+    {
+     "num": 8,
+     "theme": "成就と実り",
+     "guidance": "これまでの努力が形になりやすく、成果や豊かさを受け取るのに適した時期です。"
+    },
+    {
+     "num": 9,
+     "theme": "完結と手放し",
+     "guidance": "一つの区切りをつけ、不要なものを手放して次の循環に備えるとよい時期です。"
+    }
+   ],
+   "masterNote": "マスターナンバー（11・22・33）をお持ちの方は、人より高い使命と感受性を授かっているため、焦らず自分のペースで才能を育てていくことが、本来の輝きを引き出す鍵となります。",
+   "karmic": {
+    "13": "13は、過去に途中で投げ出した経験から「地道に努力を続ける大切さ」を学ぶ数で、近道を求めず一歩ずつ積み重ねることで、道が開けていきます。",
+    "14": "14は、奔放さによる失敗から「自由と節度のバランス」を学ぶ数で、欲望に流されず自制心を育てることで、真の自由が得られます。",
+    "16": "16は、自我や思い込みが崩れる体験を通して「謙虚さと本当のつながり」を学ぶ数で、執着を手放すほど、心が軽くなっていきます。",
+    "19": "19は、独りで抱え込んだ経験から「人と支え合う大切さ」を学ぶ数で、素直に頼り感謝することで、力が何倍にもなります。"
+   },
+   "labels": {
+    "lifePathTitle": "ライフパスナンバー診断",
+    "essenceLabel": "本質",
+    "strengthLabel": "強み",
+    "shadowLabel": "影の側面",
+    "loveLabel": "恋愛",
+    "careerLabel": "仕事・適職",
+    "lessonLabel": "人生の課題",
+    "cycleTitle": "今年・今月・今日の数",
+    "yearLabel": "今年の数",
+    "monthLabel": "今月の数",
+    "dayLabel": "今日の数",
+    "masterLabel": "マスターナンバー",
+    "karmicLabel": "カルマ数（負債数）"
    }
   }
  },
@@ -2262,6 +2839,199 @@ window.LUX = {
     "modalityLabel": "Modalität",
     "polarityLabel": "Polarität"
    }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "Der Pionier",
+     "essence": "Die Eins schwingt in einer Frequenz von Initiative und Selbstbestimmung und kommt, um eigene Wege zu bahnen und mutig voranzugehen.",
+     "strength": "Ausgeprägte Willenskraft, Originalität und der Mut, als Erster eine Idee in die Tat umzusetzen.",
+     "shadow": "Unter Druck kann Eigensinn in Sturheit oder Vereinsamung kippen; wer lernt, auch Schwäche zuzulassen, gewinnt an wahrer Stärke.",
+     "love": "In der Liebe braucht die Eins Eigenständigkeit und eine Partnerschaft auf Augenhöhe, die ihre Freiheit ehrt, statt sie einzuengen.",
+     "career": "Ideal als Gründer, Führungskraft, Selbstständiger oder überall dort, wo Eigeninitiative und Pioniergeist gefragt sind.",
+     "lesson": "Zu lernen, dass echte Führung nicht im Alleingang liegt, sondern darin, andere zu inspirieren und Hilfe anzunehmen."
+    },
+    {
+     "num": 2,
+     "archetype": "Der Diplomat",
+     "essence": "Die Zwei schwingt in einer Frequenz von Verbindung und Feingefühl und ist hier, um Brücken zu bauen und Harmonie zwischen Menschen zu stiften.",
+     "strength": "Tiefe Empathie, Taktgefühl und die seltene Gabe, im Hintergrund Frieden und Ausgleich zu schaffen.",
+     "shadow": "Aus Angst vor Konflikt verleugnet die Zwei oft eigene Bedürfnisse; gesunde Grenzen zu setzen ist ihr Wachstumsweg.",
+     "love": "In der Liebe ist die Zwei treu, zärtlich und ganz dem Wir verschrieben und sehnt sich nach emotionaler Geborgenheit und Verlässlichkeit.",
+     "career": "Ideal in Mediation, Beratung, Teamarbeit, Pflege, Diplomatie oder kreativer Partnerschaft.",
+     "lesson": "Zu lernen, dass Hingabe an andere erst dann trägt, wenn man auch sich selbst Achtung und Stimme gibt."
+    },
+    {
+     "num": 3,
+     "archetype": "Der Künstler",
+     "essence": "Die Drei schwingt in einer Frequenz von Ausdruck und Lebensfreude und ist hier, um Schönheit, Kreativität und Leichtigkeit in die Welt zu tragen.",
+     "strength": "Sprühende Vorstellungskraft, Charme und ein natürliches Talent, Menschen mit Worten und Kunst zu berühren.",
+     "shadow": "Die Drei verzettelt sich leicht und weicht Tiefe durch Oberflächlichkeit aus; Fokus und Durchhaltevermögen lassen ihre Gaben reifen.",
+     "love": "In der Liebe ist die Drei spielerisch, ausdrucksstark und romantisch, braucht aber einen Partner, der ihre Begeisterung teilt.",
+     "career": "Ideal in Kunst, Schreiben, Schauspiel, Marketing, Lehre oder jedem Feld, das Kommunikation und Fantasie verlangt.",
+     "lesson": "Zu lernen, das eigene kreative Talent ernst zu nehmen und mit Disziplin zur vollen Blüte zu bringen."
+    },
+    {
+     "num": 4,
+     "archetype": "Der Baumeister",
+     "essence": "Die Vier schwingt in einer Frequenz von Ordnung und Beständigkeit und ist hier, um mit Fleiß tragfähige Fundamente für die Zukunft zu errichten.",
+     "strength": "Verlässlichkeit, Geduld und die Fähigkeit, große Vorhaben Schritt für Schritt in solide Wirklichkeit zu verwandeln.",
+     "shadow": "Allzu starres Festhalten an Regeln kann den Lebensfluss hemmen; Flexibilität und Vertrauen ins Neue erweitern ihren Horizont.",
+     "love": "In der Liebe ist die Vier treu, bodenständig und beschützend und baut Beziehungen auf Sicherheit und gelebte Verlässlichkeit.",
+     "career": "Ideal in Handwerk, Technik, Architektur, Verwaltung, Finanzen oder überall, wo Struktur und Sorgfalt zählen.",
+     "lesson": "Zu lernen, dass nicht alles kontrollierbar ist und Wachstum auch Loslassen und Spontaneität braucht."
+    },
+    {
+     "num": 5,
+     "archetype": "Der Freiheitssucher",
+     "essence": "Die Fünf schwingt in einer Frequenz von Wandel und Abenteuer und ist hier, um Freiheit zu leben, Grenzen auszuloten und das Leben in Fülle zu erfahren.",
+     "strength": "Anpassungsfähigkeit, Neugier und ein magnetischer Schwung, der Veränderung in Chance verwandelt.",
+     "shadow": "Rastlosigkeit kann zu Zerstreuung oder Maßlosigkeit führen; bewusste Selbstbindung gibt der Freiheit erst Richtung.",
+     "love": "In der Liebe ist die Fünf leidenschaftlich und spontan und braucht Abwechslung und Raum, ohne sich eingeengt zu fühlen.",
+     "career": "Ideal in Reise, Vertrieb, Journalismus, Unternehmertum oder jedem Beruf mit Bewegung und Vielfalt.",
+     "lesson": "Zu lernen, dass wahre Freiheit aus innerer Verantwortung wächst, nicht aus ständiger Flucht vor Bindung."
+    },
+    {
+     "num": 6,
+     "archetype": "Der Beschützer",
+     "essence": "Die Sechs schwingt in einer Frequenz von Liebe und Verantwortung und ist hier, um zu nähren, zu heilen und für das Wohl der Gemeinschaft zu sorgen.",
+     "strength": "Warmherzigkeit, Verlässlichkeit und ein tiefes Gespür für Gerechtigkeit und das Wohl der Nächsten.",
+     "shadow": "Aus Fürsorge wird leicht Aufopferung oder Kontrolle; auch sich selbst zu umsorgen, schafft Balance.",
+     "love": "In der Liebe ist die Sechs hingebungsvoll, häuslich und treu und findet tiefe Erfüllung in Familie und Geborgenheit.",
+     "career": "Ideal in Pflege, Medizin, Pädagogik, Beratung, Gestaltung oder jedem Dienst am Menschen.",
+     "lesson": "Zu lernen, Verantwortung zu tragen, ohne sich selbst zu verlieren, und Hilfe ohne Bedingung zu schenken."
+    },
+    {
+     "num": 7,
+     "archetype": "Der Sucher",
+     "essence": "Die Sieben schwingt in einer Frequenz von Tiefe und Erkenntnis und ist hier, um hinter die Oberfläche zu blicken und Wahrheit und inneren Sinn zu ergründen.",
+     "strength": "Scharfer Verstand, Intuition und die Gabe, durch Stille und Forschung verborgene Zusammenhänge zu erkennen.",
+     "shadow": "Der Rückzug kann in Isolation oder Misstrauen münden; sich anderen zu öffnen, erdet die geistige Tiefe.",
+     "love": "In der Liebe braucht die Sieben Raum, Vertrauen und geistige Nähe und öffnet ihr Herz erst, wenn Tiefe spürbar wird.",
+     "career": "Ideal in Wissenschaft, Forschung, Analyse, Spiritualität, Schreiben oder jedem Feld, das Tiefgang verlangt.",
+     "lesson": "Zu lernen, dem Leben und den Menschen zu vertrauen, statt sich hinter Verstand und Einsamkeit zu verbergen."
+    },
+    {
+     "num": 8,
+     "archetype": "Der Macher",
+     "essence": "Die Acht schwingt in einer Frequenz von Kraft und Verwirklichung und ist hier, um materielle Fülle, Erfolg und gerechte Macht zu meistern.",
+     "strength": "Ausdauer, unternehmerischer Weitblick und die Fähigkeit, Visionen in greifbaren Wohlstand zu verwandeln.",
+     "shadow": "Das Streben nach Erfolg kann zu Machtfixierung oder Härte führen; Großzügigkeit und Demut vollenden ihre Stärke.",
+     "love": "In der Liebe ist die Acht loyal und beschützend, sollte aber lernen, neben Ehrgeiz auch Verletzlichkeit zu zeigen.",
+     "career": "Ideal in Führung, Wirtschaft, Finanzen, Unternehmertum, Recht oder überall, wo Verantwortung und Erfolg sich verbinden.",
+     "lesson": "Zu lernen, dass wahrer Reichtum im Gleichgewicht von materiellem Erfolg und innerer wie ethischer Reife liegt."
+    },
+    {
+     "num": 9,
+     "archetype": "Der Humanist",
+     "essence": "Die Neun schwingt in einer Frequenz von Mitgefühl und Vollendung und ist hier, um selbstlos zu dienen und die Welt mit Weisheit und Liebe zu erhöhen.",
+     "strength": "Großherzigkeit, Weitblick und die seltene Gabe, eigene Belange zugunsten des Größeren zurückzustellen.",
+     "shadow": "Die Neigung zum Idealismus kann zu Enttäuschung oder Selbstverleugnung führen; gesundes Loslassen befreit ihr Herz.",
+     "love": "In der Liebe ist die Neun verständnisvoll, großzügig und romantisch, braucht aber einen Partner, der ihre Ideale teilt.",
+     "career": "Ideal in sozialer Arbeit, Kunst, Heilberufen, Lehre, Wohltätigkeit oder jedem Wirken für das Gemeinwohl.",
+     "lesson": "Zu lernen, loszulassen und zu vergeben, um aus dem Dienen heraus zu eigener Erfüllung zu reifen."
+    },
+    {
+     "num": 11,
+     "archetype": "Der Erleuchter (Meisterzahl)",
+     "essence": "Als Meisterzahl schwingt die Elf in einer Frequenz von Inspiration und höherer Intuition und ist berufen, andere geistig zu erwecken und zu erhellen.",
+     "strength": "Außergewöhnliche Eingebung, Sensibilität und die Kraft, durch Vision und Idealismus Menschen zu bewegen.",
+     "shadow": "Die hohe Schwingung bringt innere Anspannung und Selbstzweifel mit sich; Erdung und Vertrauen verwandeln Nervosität in Klarheit.",
+     "love": "In der Liebe ist die Elf tief empfindsam und seelenverbunden und braucht einen Partner, der ihre geistige Welt versteht.",
+     "career": "Ideal als Lehrer, Heiler, Künstler, Berater oder spiritueller Wegweiser, der inspiriert und Mut macht.",
+     "lesson": "Zu lernen, das eigene Licht ohne Furcht zu zeigen und die hohe Berufung mit innerer Ruhe zu tragen."
+    },
+    {
+     "num": 22,
+     "archetype": "Der Meisterbaumeister (Meisterzahl)",
+     "essence": "Als Meisterzahl schwingt die Zweiundzwanzig in einer Frequenz von Vision und Verwirklichung und ist berufen, große Träume in dauerhafte Wirklichkeit zu gießen.",
+     "strength": "Die seltene Verbindung von hoher Vision und praktischer Umsetzungskraft, die Bleibendes für viele erschafft.",
+     "shadow": "Das Gewicht der eigenen Berufung kann lähmen oder überfordern; Schritt für Schritt zu handeln, macht das Große möglich.",
+     "love": "In der Liebe ist die Zweiundzwanzig verlässlich und tief, braucht aber einen Partner, der ihre großen Ziele mitträgt.",
+     "career": "Ideal als Architekt, Gründer, Visionär, Organisator oder überall, wo große Werke Form und Bestand gewinnen.",
+     "lesson": "Zu lernen, der eigenen Größe zu vertrauen und Vision mit geduldiger, ausdauernder Arbeit zu vereinen."
+    },
+    {
+     "num": 33,
+     "archetype": "Der Meisterlehrer (Meisterzahl)",
+     "essence": "Als Meisterzahl schwingt die Dreiunddreißig in einer Frequenz von bedingungsloser Liebe und ist berufen, durch Hingabe, Heilung und Vorbild zu lehren.",
+     "strength": "Tiefes Mitgefühl, geistige Reife und die Fähigkeit, durch selbstlose Liebe ganze Gemeinschaften zu erheben.",
+     "shadow": "Die hohe Hingabe kann zur Selbstaufgabe werden; eigene Grenzen zu wahren, bewahrt die Kraft zu geben.",
+     "love": "In der Liebe ist die Dreiunddreißig grenzenlos warm und verständnisvoll und liebt eher heilend als besitzend.",
+     "career": "Ideal als Heiler, Lehrer, Seelsorger, Mentor oder in jedem Berufungsfeld des selbstlosen Dienens.",
+     "lesson": "Zu lernen, bedingungslose Liebe zu leben, ohne sich aufzuopfern, und Heilung mit Weisheit zu schenken."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "Neubeginn und Aufbruch",
+     "guidance": "Eine ideale Zeit, um Initiative zu ergreifen, neue Vorhaben zu starten und mutig den Grundstein für die Zukunft zu legen."
+    },
+    {
+     "num": 2,
+     "theme": "Beziehung und Geduld",
+     "guidance": "Eine Zeit, um Verbindungen zu pflegen, geduldig zusammenzuarbeiten und Reifung im stillen Hintergrund geschehen zu lassen."
+    },
+    {
+     "num": 3,
+     "theme": "Ausdruck und Freude",
+     "guidance": "Eine Zeit, um sich kreativ auszudrücken, das Leben zu genießen und Kontakte mit Leichtigkeit und Freude zu knüpfen."
+    },
+    {
+     "num": 4,
+     "theme": "Fundament und Arbeit",
+     "guidance": "Eine Zeit, um diszipliniert zu arbeiten, Ordnung zu schaffen und mit Fleiß tragfähige Grundlagen zu festigen."
+    },
+    {
+     "num": 5,
+     "theme": "Wandel und Freiheit",
+     "guidance": "Eine Zeit, um Veränderung anzunehmen, Neues zu wagen und mit Offenheit neue Erfahrungen und Wege zu erkunden."
+    },
+    {
+     "num": 6,
+     "theme": "Verantwortung und Familie",
+     "guidance": "Eine Zeit, um sich um Heim und Nächste zu kümmern, Verantwortung zu tragen und Beziehungen liebevoll zu nähren."
+    },
+    {
+     "num": 7,
+     "theme": "Besinnung und Ruhe",
+     "guidance": "Eine Zeit, um innezuhalten, sich zurückzuziehen und durch Reflexion und Stille innere Klarheit zu gewinnen."
+    },
+    {
+     "num": 8,
+     "theme": "Erfolg und Ernte",
+     "guidance": "Eine Zeit, um Früchte zu ernten, mutig nach materiellen Zielen zu streben und Verantwortung mit Tatkraft zu tragen."
+    },
+    {
+     "num": 9,
+     "theme": "Abschluss und Loslassen",
+     "guidance": "Eine Zeit, um Abschnitte zu vollenden, loszulassen, was nicht mehr trägt, und mit Mitgefühl Raum für Neues zu schaffen."
+    }
+   ],
+   "masterNote": "Die Meisterzahlen 11, 22 und 33 tragen eine besonders hohe Schwingung und ein großes geistiges Potenzial in sich. Sie bedeuten keine Überlegenheit, sondern eine tiefe Berufung: Wer sie lebt, ist eingeladen, mit Geduld an sich zu wachsen und seine Gaben in den Dienst eines größeren Ganzen zu stellen.",
+   "karmic": {
+    "13": "Die karmische Zahl 13 lädt dazu ein, Disziplin und Ausdauer neu zu lernen. Wo früher Mühe gescheut wurde, liegt nun die Chance, durch beharrliche, ehrliche Arbeit Wandel und stabilen Erfolg zu erschaffen.",
+    "14": "Die karmische Zahl 14 lädt dazu ein, Freiheit mit Maß zu verbinden. Sie ruft zu innerer Mäßigung und Verantwortung, damit aus Wandel und Sinneslust echte, bewusste Lebenskraft wird.",
+    "16": "Die karmische Zahl 16 lädt dazu ein, Ego und Stolz loszulassen und auf eine tiefere Wahrheit zu vertrauen. Aus dem Aufbrechen alter Sicherheiten wächst eine echte, demütige innere Stärke.",
+    "19": "Die karmische Zahl 19 lädt dazu ein, Eigenständigkeit und Mitgefühl zu versöhnen. Sie lehrt, eigene Kraft zu nutzen, ohne andere zu übergehen, und Hilfe ebenso anzunehmen wie zu geben."
+   },
+   "labels": {
+    "lifePathTitle": "Lebenszahl",
+    "essenceLabel": "Wesen",
+    "strengthLabel": "Stärken",
+    "shadowLabel": "Schatten",
+    "loveLabel": "Liebe",
+    "careerLabel": "Beruf",
+    "lessonLabel": "Lebensaufgabe",
+    "cycleTitle": "Persönliche Jahreszyklen",
+    "yearLabel": "Persönliches Jahr",
+    "monthLabel": "Persönlicher Monat",
+    "dayLabel": "Persönlicher Tag",
+    "masterLabel": "Meisterzahlen",
+    "karmicLabel": "Karmische Zahlen"
+   }
   }
  },
  "fr": {
@@ -2826,6 +3596,199 @@ window.LUX = {
     "planetLabel": "Planète maîtresse",
     "modalityLabel": "Modalité",
     "polarityLabel": "Polarité"
+   }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "Le Pionnier",
+     "essence": "Votre vibration porte l'élan du commencement : vous êtes venu ouvrir des voies, affirmer votre volonté et tracer votre propre chemin avec audace.",
+     "strength": "Une volonté ferme, un sens inné de l'initiative et le courage d'avancer seul là où d'autres hésitent.",
+     "shadow": "L'orgueil et l'impatience peuvent vous isoler ; apprendre à écouter et à déléguer transforme la domination en véritable leadership.",
+     "love": "En amour, vous protégez et menez avec ardeur, mais votre partenaire a besoin que vous laissiez aussi de la place à la réciprocité.",
+     "career": "Entrepreneuriat, direction, métiers indépendants ou pionniers où vous décidez et lancez vos propres projets.",
+     "lesson": "Apprendre que la vraie force ne s'oppose pas à la collaboration, mais sait s'appuyer sur les autres sans cesser d'être soi-même."
+    },
+    {
+     "num": 2,
+     "archetype": "Le Diplomate",
+     "essence": "Votre vibration est celle de l'union et de la nuance : vous êtes venu relier les êtres, apaiser les tensions et créer l'harmonie par la sensibilité.",
+     "strength": "Une intuition fine des autres, un tact remarquable et le don de coopérer là où d'autres s'affrontent.",
+     "shadow": "L'hypersensibilité et la peur du conflit peuvent vous faire vous effacer ; affirmer vos besoins est une forme saine de paix.",
+     "love": "En amour, vous êtes tendre, loyal et profondément dévoué, cherchant une fusion douce où chacun se sent vraiment compris.",
+     "career": "Médiation, conseil, partenariats, soins, diplomatie ou tout métier d'écoute et de collaboration en duo.",
+     "lesson": "Apprendre à s'affirmer sans craindre de déranger, car votre paix intérieure compte autant que celle des autres."
+    },
+    {
+     "num": 3,
+     "archetype": "Le Communicant Créatif",
+     "essence": "Votre vibration rayonne d'expression et de joie : vous êtes venu créer, communiquer et illuminer le monde par votre imagination et votre verbe.",
+     "strength": "Une créativité débordante, un charme naturel et une aisance rare à toucher les autres par les mots et l'art.",
+     "shadow": "La dispersion et la superficialité guettent ; canaliser votre énergie sur un projet à la fois révèle tout votre talent.",
+     "love": "En amour, vous êtes enjoué, expressif et charmeur, mais une relation durable demande aussi de la profondeur sous la légèreté.",
+     "career": "Arts, écriture, communication, spectacle, design ou tout domaine où votre expressivité devient une valeur ajoutée.",
+     "lesson": "Apprendre la discipline et la constance pour que votre créativité porte des fruits concrets plutôt que de se disperser."
+    },
+    {
+     "num": 4,
+     "archetype": "Le Bâtisseur",
+     "essence": "Votre vibration est celle de la solidité : vous êtes venu construire des fondations durables par le travail, la méthode et la fiabilité.",
+     "strength": "Une endurance remarquable, un sens de l'organisation et une loyauté qui inspirent une confiance absolue.",
+     "shadow": "La rigidité et la résistance au changement peuvent vous enfermer ; un peu de souplesse ouvre des possibles insoupçonnés.",
+     "love": "En amour, vous êtes stable, fidèle et présent, offrant une sécurité précieuse à qui sait apprécier votre constance.",
+     "career": "Ingénierie, gestion, artisanat, finance, droit ou tout métier exigeant rigueur, structure et fiabilité à long terme.",
+     "lesson": "Apprendre que la sécurité naît aussi de la capacité à s'adapter, et que tout ne se contrôle pas par l'effort."
+    },
+    {
+     "num": 5,
+     "archetype": "L'Aventurier",
+     "essence": "Votre vibration vibre de liberté et de mouvement : vous êtes venu explorer, expérimenter et goûter à toute la richesse de l'existence.",
+     "strength": "Une adaptabilité vive, une curiosité insatiable et un magnétisme qui rend chaque expérience contagieuse.",
+     "shadow": "L'instabilité et l'excès peuvent vous éparpiller ; choisir un ancrage transforme l'agitation en liberté véritable.",
+     "love": "En amour, vous avez besoin d'espace et de nouveauté, et vous vous épanouissez avec un partenaire qui partage votre soif de découverte.",
+     "career": "Voyage, vente, journalisme, entrepreneuriat, médias ou tout métier varié, mobile et riche en contacts humains.",
+     "lesson": "Apprendre que la vraie liberté inclut l'engagement, et que la profondeur naît de ce que l'on choisit d'approfondir."
+    },
+    {
+     "num": 6,
+     "archetype": "Le Protecteur",
+     "essence": "Votre vibration est celle de l'amour responsable : vous êtes venu prendre soin, harmoniser le foyer et servir le bien-être de votre entourage.",
+     "strength": "Un cœur généreux, un sens profond du devoir et une présence rassurante qui guérit et réconforte.",
+     "shadow": "Le sacrifice de soi et le besoin de tout maîtriser peuvent vous épuiser ; aider sans s'oublier est un équilibre essentiel.",
+     "love": "En amour, vous êtes dévoué, attentionné et protecteur, créant un foyer chaleureux où l'autre se sent profondément aimé.",
+     "career": "Enseignement, santé, conseil, métiers du soin, hôtellerie ou tout domaine tourné vers le service et l'accompagnement.",
+     "lesson": "Apprendre à recevoir autant qu'à donner, et à distinguer l'amour véritable du besoin de se rendre indispensable."
+    },
+    {
+     "num": 7,
+     "archetype": "Le Chercheur de Vérité",
+     "essence": "Votre vibration est celle de l'introspection : vous êtes venu comprendre les mystères de la vie par la réflexion, l'étude et l'intuition profonde.",
+     "strength": "Un esprit analytique pénétrant, une intuition spirituelle et une capacité rare à voir au-delà des apparences.",
+     "shadow": "L'isolement et le scepticisme excessif peuvent vous couper des autres ; partager votre sagesse l'enrichit sans la diluer.",
+     "love": "En amour, vous êtes discret et profond, cherchant une connexion authentique et intellectuelle plutôt qu'une démonstration extérieure.",
+     "career": "Recherche, analyse, spiritualité, sciences, psychologie ou tout domaine de connaissance et de quête de sens.",
+     "lesson": "Apprendre à faire confiance et à s'ouvrir, car la vérité se vit aussi dans le lien et non seulement dans la solitude."
+    },
+    {
+     "num": 8,
+     "archetype": "Le Réalisateur",
+     "essence": "Votre vibration porte la puissance de la réussite : vous êtes venu maîtriser le monde matériel, accomplir de grandes choses et exercer une autorité juste.",
+     "strength": "Une ambition lucide, un sens aiguisé de l'organisation et la capacité de transformer une vision en succès tangible.",
+     "shadow": "L'obsession du contrôle et de la réussite matérielle peut éclipser l'essentiel ; l'équilibre entre pouvoir et valeurs vous élève.",
+     "love": "En amour, vous êtes loyal et généreux, mais votre partenaire a besoin de votre présence autant que de votre réussite.",
+     "career": "Direction d'entreprise, finance, immobilier, droit, politique ou tout poste de pouvoir et de grande responsabilité.",
+     "lesson": "Apprendre que la véritable abondance englobe le cœur et l'âme, et que le pouvoir n'a de sens qu'au service du juste."
+    },
+    {
+     "num": 9,
+     "archetype": "L'Humaniste",
+     "essence": "Votre vibration est celle de l'accomplissement universel : vous êtes venu aimer largement, servir l'humanité et incarner la compassion et l'idéal.",
+     "strength": "Une générosité sans frontières, une vision élevée et une compassion qui inspire et élève ceux qui vous entourent.",
+     "shadow": "L'idéalisme et la difficulté à lâcher prise peuvent vous blesser ; accepter l'imperfection du monde apaise votre cœur.",
+     "love": "En amour, vous donnez avec noblesse et tendresse, mais vous devez veiller à recevoir aussi pour ne pas vous épuiser.",
+     "career": "Humanitaire, arts, enseignement, médecine, causes sociales ou tout métier au service d'un idéal plus grand que soi.",
+     "lesson": "Apprendre à lâcher prise et à pardonner, car la vraie complétude vient de l'amour offert sans attente de retour."
+    },
+    {
+     "num": 11,
+     "archetype": "L'Inspirateur Visionnaire",
+     "essence": "Nombre maître, votre vibration unit intuition et idéal élevé : vous êtes venu éveiller, inspirer et éclairer les autres par votre lumière intérieure.",
+     "strength": "Une intuition exceptionnelle, une sensibilité spirituelle rare et le pouvoir d'inspirer et d'élever les consciences.",
+     "shadow": "La tension nerveuse et le doute de soi peuvent vous submerger ; ancrer votre sensibilité dans le concret stabilise votre don.",
+     "love": "En amour, vous êtes profond, idéaliste et intense, cherchant une âme capable de partager votre élan spirituel.",
+     "career": "Enseignement spirituel, arts, conseil, écriture inspirante ou tout rôle où votre vision éveille et guide les autres.",
+     "lesson": "Apprendre à canaliser votre hypersensibilité et à croire en votre mission sans vous laisser paralyser par la peur."
+    },
+    {
+     "num": 22,
+     "archetype": "Le Maître Bâtisseur",
+     "essence": "Nombre maître, votre vibration allie vision et pragmatisme : vous êtes venu concrétiser de grands idéaux en œuvres durables au service du monde.",
+     "strength": "La capacité rare de transformer les rêves les plus vastes en réalités solides et utiles à l'humanité.",
+     "shadow": "Le poids de votre potentiel peut générer pression et autosabotage ; avancer pas à pas révèle votre immense puissance.",
+     "love": "En amour, vous êtes fiable et profond, mais votre grande mission demande un partenaire qui comprend votre engagement.",
+     "career": "Grands projets, architecture, fondation d'institutions, entreprises à impact ou toute œuvre d'envergure collective.",
+     "lesson": "Apprendre à assumer votre potentiel sans vous y écraser, en bâtissant patiemment ce qui servira au-delà de vous-même."
+    },
+    {
+     "num": 33,
+     "archetype": "Le Maître Enseignant",
+     "essence": "Nombre maître, votre vibration est celle de l'amour inconditionnel : vous êtes venu guérir, enseigner et servir par un dévouement spirituel total.",
+     "strength": "Une compassion immense, un don d'enseignement et la capacité d'élever les autres par l'exemple d'un amour désintéressé.",
+     "shadow": "Le poids de tant donner peut mener à l'épuisement ; prendre soin de soi est indispensable pour continuer à rayonner.",
+     "love": "En amour, vous aimez avec une rare profondeur et un dévouement total, donnant sans condition à qui partage votre chemin.",
+     "career": "Enseignement, guérison, accompagnement spirituel, œuvres humanitaires ou tout rôle de guide au service d'autrui.",
+     "lesson": "Apprendre à équilibrer le don de soi et le respect de ses limites, afin que votre amour serve sans se consumer."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "Nouveau départ",
+     "guidance": "C'est le moment idéal pour lancer un projet, prendre une initiative audacieuse et poser les graines de votre prochain cycle."
+    },
+    {
+     "num": 2,
+     "theme": "Relations et patience",
+     "guidance": "Cultivez les liens, coopérez avec douceur et laissez les choses mûrir sans précipitation : la patience portera ses fruits."
+    },
+    {
+     "num": 3,
+     "theme": "Expression et joie",
+     "guidance": "Exprimez votre créativité, soignez vos liens sociaux et accordez-vous des moments de plaisir et de légèreté."
+    },
+    {
+     "num": 4,
+     "theme": "Fondations et effort",
+     "guidance": "Organisez-vous, travaillez avec méthode et construisez des bases solides : l'effort discipliné de cette période sera récompensé."
+    },
+    {
+     "num": 5,
+     "theme": "Changement et liberté",
+     "guidance": "Accueillez la nouveauté, restez flexible et osez sortir de votre routine : c'est une période d'ouverture et de mouvement."
+    },
+    {
+     "num": 6,
+     "theme": "Responsabilité et foyer",
+     "guidance": "Prenez soin de vos proches, harmonisez votre foyer et assumez vos engagements avec cœur : l'amour et le service sont au centre de cette période."
+    },
+    {
+     "num": 7,
+     "theme": "Introspection et sagesse",
+     "guidance": "Ralentissez, accordez-vous du temps pour la réflexion et l'étude, et écoutez votre intuition : cette phase favorise la croissance intérieure."
+    },
+    {
+     "num": 8,
+     "theme": "Réussite et abondance",
+     "guidance": "Concentrez-vous sur vos objectifs concrets, gérez vos ressources avec lucidité et osez viser haut : c'est une période propice aux accomplissements matériels."
+    },
+    {
+     "num": 9,
+     "theme": "Accomplissement et lâcher-prise",
+     "guidance": "Achevez ce qui doit l'être, libérez-vous de ce qui vous pèse et donnez avec générosité : un cycle se referme pour laisser place au renouveau."
+    }
+   ],
+   "masterNote": "En tant que nombre maître, vous portez un potentiel et une vocation d'une intensité particulière. Ce n'est pas un fardeau mais une invitation : avancez à votre rythme, ancrez votre sensibilité dans le concret et rappelez-vous que votre lumière s'épanouit pas à pas, sans pression de tout accomplir d'un coup.",
+   "karmic": {
+    "13": "Le 13 invite à transformer l'évitement de l'effort en discipline joyeuse. En vous engageant avec constance et en menant vos tâches à terme, vous changez la dispersion d'hier en force constructive ; le travail régulier devient ici une véritable libération.",
+    "14": "Le 14 invite à apprivoiser la modération et la maîtrise de soi. En cultivant la liberté responsable plutôt que les excès, vous transformez l'impulsivité en sagesse vivante et faites de l'adaptabilité un atout serein plutôt qu'une fuite.",
+    "16": "Le 16 invite à reconstruire sur des bases d'humilité et d'authenticité. En laissant tomber l'orgueil et les attaches superficielles, vous traversez les remises en question pour renaître plus vrai : chaque épreuve devient ici une porte vers une foi intérieure plus profonde.",
+    "19": "Le 19 invite à trouver l'équilibre entre indépendance et ouverture aux autres. En apprenant à recevoir autant qu'à donner et à ne pas tout porter seul, vous transformez l'isolement en autonomie lumineuse, où votre force se met au service du collectif."
+   },
+   "labels": {
+    "lifePathTitle": "Chemin de Vie",
+    "essenceLabel": "Essence",
+    "strengthLabel": "Force",
+    "shadowLabel": "Ombre",
+    "loveLabel": "Amour",
+    "careerLabel": "Carrière",
+    "lessonLabel": "Leçon de vie",
+    "cycleTitle": "Cycles personnels",
+    "yearLabel": "Année",
+    "monthLabel": "Mois",
+    "dayLabel": "Jour",
+    "masterLabel": "Maître",
+    "karmicLabel": "Karmique"
    }
   }
  },
@@ -3392,6 +4355,199 @@ window.LUX = {
     "modalityLabel": "Modalidad",
     "polarityLabel": "Polaridad"
    }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "El Pionero",
+     "essence": "Naciste para abrir caminos, liderar con valentía y convertir tus ideas originales en proyectos que nadie más se atreve a iniciar.",
+     "strength": "Tu independencia, tu iniciativa y tu coraje te permiten avanzar incluso cuando todos los demás dudan.",
+     "shadow": "Cuida la tendencia a la testarudez o al ego, y recuerda que pedir ayuda no resta fuerza a tu liderazgo.",
+     "love": "En el amor buscas una pareja que respete tu libertad y camine a tu lado sin querer dominarte ni anularte.",
+     "career": "Brillas como emprendedor, fundador, director o en cualquier rol donde puedas tomar decisiones y marcar el rumbo.",
+     "lesson": "Tu gran aprendizaje es liderar con humildad y descubrir que la verdadera fuerza también sabe escuchar y colaborar."
+    },
+    {
+     "num": 2,
+     "archetype": "La Pacificadora",
+     "essence": "Viniste a unir, mediar y crear armonía, percibiendo con delicadeza lo que otros sienten y tejiendo puentes entre las personas.",
+     "strength": "Tu empatía, tu paciencia y tu don diplomático convierten cualquier conflicto en una oportunidad de entendimiento.",
+     "shadow": "Aprende a no perderte en los demás ni a callar tus necesidades por miedo a romper la paz.",
+     "love": "En la pareja eres tierno y leal, y floreces cuando hay reciprocidad emocional y un vínculo de confianza profunda.",
+     "career": "Destacas en la mediación, la psicología, el trabajo en equipo, la diplomacia o cualquier labor que cuide el vínculo humano.",
+     "lesson": "Tu lección es valorarte tanto como valoras a los demás y poner límites sin sentir culpa."
+    },
+    {
+     "num": 3,
+     "archetype": "El Comunicador Creativo",
+     "essence": "Llegaste para expresar, inspirar y contagiar alegría, transformando tus emociones en arte, palabras y belleza que iluminan a otros.",
+     "strength": "Tu creatividad, tu carisma y tu optimismo abren puertas y levantan el ánimo de quienes te rodean.",
+     "shadow": "Vigila la dispersión y la tendencia a evadirte; enfocar tu talento es lo que lo vuelve imparable.",
+     "love": "En el amor eres juguetón y expresivo, y necesitas una pareja con quien reír, conversar y compartir entusiasmo.",
+     "career": "Tu lugar está en la comunicación, el arte, la escritura, el espectáculo, el diseño o cualquier campo que celebre la expresión.",
+     "lesson": "Tu aprendizaje es comprometerte y dar profundidad a tu talento en lugar de dispersarlo en mil direcciones."
+    },
+    {
+     "num": 4,
+     "archetype": "El Constructor",
+     "essence": "Naciste para edificar con paciencia bases sólidas y duraderas, aportando orden, disciplina y seguridad a todo lo que tocas.",
+     "strength": "Tu constancia, tu honestidad y tu sentido práctico convierten los sueños de otros en estructuras reales y confiables.",
+     "shadow": "Evita la rigidez y el exceso de control; un poco de flexibilidad hará tu esfuerzo mucho más liviano.",
+     "love": "En el amor eres fiel y protector, y ofreces una estabilidad en la que tu pareja puede apoyarse sin temor.",
+     "career": "Sobresales en la ingeniería, la administración, las finanzas, la construcción o cualquier oficio que premie el método y el rigor.",
+     "lesson": "Tu lección es aprender a soltar el control y abrirte al cambio sin sentir que pierdes tu seguridad."
+    },
+    {
+     "num": 5,
+     "archetype": "El Aventurero Libre",
+     "essence": "Viniste a explorar, cambiar y experimentar la vida con todos los sentidos, abrazando la libertad como tu mayor tesoro.",
+     "strength": "Tu adaptabilidad, tu curiosidad y tu energía magnética te permiten reinventarte y disfrutar cada nueva experiencia.",
+     "shadow": "Cuida la impaciencia y los excesos; la verdadera libertad nace de elegir con conciencia, no de huir.",
+     "love": "En el amor necesitas movimiento y aire, y conectas con quien comparte tu sed de aventura sin asfixiarte.",
+     "career": "Brillas en los viajes, las ventas, el periodismo, el marketing o cualquier trabajo dinámico que cambie y te mantenga libre.",
+     "lesson": "Tu aprendizaje es encontrar libertad dentro del compromiso y constancia dentro de la aventura."
+    },
+    {
+     "num": 6,
+     "archetype": "El Guardián del Hogar",
+     "essence": "Llegaste para amar, cuidar y sostener a quienes te rodean, creando hogares y comunidades donde reine la armonía y la belleza.",
+     "strength": "Tu responsabilidad, tu calidez y tu sentido de la justicia hacen de ti un refugio para tu familia y tus seres queridos.",
+     "shadow": "Aprende a no cargar con todo ni a controlar por amor; también mereces ser cuidado y recibir.",
+     "love": "En el amor eres entregado y romántico, y das lo mejor de ti en una relación comprometida y profundamente afectuosa.",
+     "career": "Tu vocación florece en la enseñanza, la salud, el cuidado, el asesoramiento o cualquier labor al servicio de los demás.",
+     "lesson": "Tu lección es servir desde el amor sin sacrificarte de más ni esperar que tu valor dependa de cuánto das."
+    },
+    {
+     "num": 7,
+     "archetype": "El Buscador de la Verdad",
+     "essence": "Naciste para investigar, contemplar y comprender los misterios de la vida, buscando la sabiduría que se esconde detrás de lo visible.",
+     "strength": "Tu agudeza mental, tu intuición y tu profundidad te permiten ver lo que otros pasan por alto.",
+     "shadow": "Cuida el aislamiento y el exceso de análisis; abrir tu corazón es tan valioso como afinar tu mente.",
+     "love": "En el amor necesitas espacio e intimidad genuina, y te entregas a quien respeta tu mundo interior y tu silencio.",
+     "career": "Destacas en la ciencia, la investigación, la filosofía, la espiritualidad, la tecnología o cualquier campo que explore lo profundo.",
+     "lesson": "Tu aprendizaje es confiar en la vida y compartir tu sabiduría sin esconderte tras tus murallas."
+    },
+    {
+     "num": 8,
+     "archetype": "El Ejecutivo Poderoso",
+     "essence": "Viniste a materializar la abundancia y a ejercer el poder con integridad, gestionando recursos y proyectos a gran escala.",
+     "strength": "Tu ambición, tu visión estratégica y tu capacidad de organización te convierten en un líder que consigue resultados reales.",
+     "shadow": "Equilibra el afán material con tu vida interior, y recuerda que el éxito sin valores deja un vacío difícil de llenar.",
+     "love": "En el amor eres protector y generoso, y buscas una pareja que comparta tus metas y respete tu intensidad.",
+     "career": "Brillas en los negocios, la dirección de empresas, las finanzas, la política o cualquier rol de mando y gran responsabilidad.",
+     "lesson": "Tu lección es usar tu poder para elevar a otros y entender que la verdadera riqueza también es espiritual y humana."
+    },
+    {
+     "num": 9,
+     "archetype": "El Humanitario",
+     "essence": "Llegaste para amar a la humanidad, cerrar ciclos con sabiduría y servir a una causa más grande que tu propio interés.",
+     "strength": "Tu compasión, tu generosidad y tu visión amplia te permiten inspirar y sanar a quienes encuentras en el camino.",
+     "shadow": "Aprende a soltar el pasado y a no cargar con el peso del mundo; también necesitas recibir y descansar.",
+     "love": "En el amor eres idealista y entregado, y conectas con almas que comparten tu deseo de un mundo más bello y justo.",
+     "career": "Tu vocación florece en el arte, la enseñanza, las causas sociales, la sanación o cualquier labor de impacto humanitario.",
+     "lesson": "Tu aprendizaje es dar sin esperar nada a cambio y aceptar que cada final abre paso a un nuevo comienzo."
+    },
+    {
+     "num": 11,
+     "archetype": "El Visionario Inspirado",
+     "essence": "Como número maestro, viniste a iluminar e inspirar con tu intuición elevada, sirviendo de puente entre lo espiritual y lo terrenal.",
+     "strength": "Tu sensibilidad extraordinaria, tu idealismo y tu luz interior despiertan e inspiran a todos los que se cruzan contigo.",
+     "shadow": "Cuida la ansiedad y la autoexigencia; tu enorme energía necesita calma y confianza para no desbordarte.",
+     "love": "En el amor eres profundo y soñador, y buscas una conexión de alma que comprenda tu mundo espiritual y emocional.",
+     "career": "Brillas como guía, artista, sanador, maestro espiritual o en cualquier camino que canalice inspiración hacia los demás.",
+     "lesson": "Tu lección de maestría es confiar en tu intuición y poner tu luz al servicio del mundo sin dejarte abrumar por el miedo."
+    },
+    {
+     "num": 22,
+     "archetype": "El Maestro Constructor",
+     "essence": "Como número maestro, viniste a convertir grandes sueños en realidades concretas, edificando proyectos que beneficien a la humanidad entera.",
+     "strength": "Unes la visión idealista a una capacidad práctica poco común, lo que te permite materializar lo que otros solo imaginan.",
+     "shadow": "No te dejes abrumar por la magnitud de tu misión; avanza paso a paso y confía en que tu obra tomará forma a su tiempo.",
+     "love": "En el amor eres estable y comprometido, y necesitas una pareja que comprenda tu dedicación a propósitos más grandes.",
+     "career": "Tu lugar está en los grandes proyectos: arquitectura, empresas con impacto, liderazgo de organizaciones o causas a gran escala.",
+     "lesson": "Tu lección de maestría es equilibrar la ambición visionaria con los pies en la tierra para dejar un legado duradero."
+    },
+    {
+     "num": 33,
+     "archetype": "El Maestro del Amor",
+     "essence": "Como número maestro, viniste a encarnar el amor incondicional y la entrega compasiva, elevando y sanando a la humanidad con tu ejemplo.",
+     "strength": "Tu compasión infinita, tu sabiduría y tu vocación de servicio te convierten en una fuente de consuelo y guía para muchos.",
+     "shadow": "Aprende a cuidarte tanto como cuidas a otros; no puedes sostener a los demás si te agotas por completo.",
+     "love": "En el amor eres profundamente generoso y nutricio, y das un afecto sanador que pide reciprocidad para no desgastarte.",
+     "career": "Brillas en la enseñanza, la sanación, el arte, el acompañamiento espiritual o cualquier labor que eleve la conciencia colectiva.",
+     "lesson": "Tu lección de maestría es servir desde un amor que también te incluya a ti, sin caer en el sacrificio que te vacía."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "Nuevos comienzos",
+     "guidance": "Es tiempo de sembrar: inicia proyectos, toma la iniciativa y atrévete a abrir el camino que deseas para tu vida."
+    },
+    {
+     "num": 2,
+     "theme": "Relaciones y paciencia",
+     "guidance": "Cultiva tus vínculos, escucha con calma y deja que las cosas maduren a su propio ritmo sin forzar los resultados."
+    },
+    {
+     "num": 3,
+     "theme": "Expresión y disfrute",
+     "guidance": "Comparte tu creatividad, socializa y permítete disfrutar; tu alegría abrirá puertas inesperadas."
+    },
+    {
+     "num": 4,
+     "theme": "Bases y esfuerzo",
+     "guidance": "Organízate, trabaja con disciplina y construye paso a paso los cimientos que sostendrán tu futuro."
+    },
+    {
+     "num": 5,
+     "theme": "Cambio y libertad",
+     "guidance": "Ábrete a lo nuevo, abraza el cambio y explora con flexibilidad las oportunidades que aparezcan."
+    },
+    {
+     "num": 6,
+     "theme": "Responsabilidad y hogar",
+     "guidance": "Atiende a tu familia y a tus vínculos, asume tus compromisos con amor y crea armonía en tu hogar."
+    },
+    {
+     "num": 7,
+     "theme": "Reflexión y descanso",
+     "guidance": "Tómate un respiro, mira hacia adentro y dedica tiempo a estudiar, meditar y reconectar con tu sabiduría interior."
+    },
+    {
+     "num": 8,
+     "theme": "Logros y cosecha",
+     "guidance": "Es momento de recoger frutos: toma decisiones importantes, gestiona tus recursos y reclama el éxito que has trabajado."
+    },
+    {
+     "num": 9,
+     "theme": "Cierre y culminación",
+     "guidance": "Suelta lo que ya cumplió su ciclo, perdona, ordena lo pendiente y prepárate con gratitud para una nueva etapa que está por nacer."
+    }
+   ],
+   "masterNote": "Los números maestros 11, 22 y 33 no te hacen superior a nadie: son un llamado a un propósito más alto y una vibración más exigente. Si en algún momento su intensidad te supera, puedes vivir desde su versión base (2, 4 y 6) hasta sentirte listo para abrazar plenamente tu misión. Honrar tu número maestro es un camino de crecimiento, no una carga ni una obligación.",
+   "karmic": {
+    "13": "La deuda kármica 13 te invita a transformar la dispersión en disciplina amorosa. No es un castigo, sino una oportunidad: cuando trabajas con constancia y dejas atrás los atajos, descubres que tu esfuerzo enfocado abre las puertas que antes parecían cerradas.",
+    "14": "La deuda kármica 14 te llama a encontrar libertad con conciencia y a equilibrar tus deseos. Lejos de limitarte, te enseña a poner el cambio y la sensualidad al servicio de tu crecimiento, eligiendo la moderación como una forma de cuidarte y no de privarte.",
+    "16": "La deuda kármica 16 te acompaña a soltar el ego y a reconstruir desde la humildad. Cada caída de lo viejo deja espacio para un amor más auténtico y una espiritualidad más honesta; es una invitación a renacer, no un destino de pérdida.",
+    "19": "La deuda kármica 19 te enseña a equilibrar la independencia con la apertura a los demás. Aprender a recibir ayuda y a colaborar no debilita tu fortaleza: la vuelve más sabia, y te muestra que necesitar a otros también es un acto de valentía."
+   },
+   "labels": {
+    "lifePathTitle": "Tu Camino de Vida",
+    "essenceLabel": "Esencia",
+    "strengthLabel": "Fortaleza",
+    "shadowLabel": "Sombra a integrar",
+    "loveLabel": "En el amor",
+    "careerLabel": "Vocación y carrera",
+    "lessonLabel": "Lección de vida",
+    "cycleTitle": "Tu Año Personal",
+    "yearLabel": "Año",
+    "monthLabel": "Mes",
+    "dayLabel": "Día",
+    "masterLabel": "Números maestros",
+    "karmicLabel": "Deudas kármicas"
+   }
   }
  },
  "pt": {
@@ -3956,6 +5112,199 @@ window.LUX = {
     "planetLabel": "Planeta regente",
     "modalityLabel": "Modalidade",
     "polarityLabel": "Polaridade"
+   }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "O Pioneiro",
+     "essence": "Você veio para liderar, abrir caminhos e transformar ideias originais em iniciativas concretas, confiando na própria força de vontade.",
+     "strength": "Coragem para começar, autonomia e uma determinação que inspira os outros a seguirem em frente.",
+     "shadow": "Sob pressão, o ego pode endurecer em teimosia ou isolamento; cultivar a humildade de pedir ajuda é o que liberta a sua força.",
+     "love": "No amor, você é intenso e protetor, mas cresce ao aprender a ceder espaço sem sentir que perde o controle.",
+     "career": "Brilha como empreendedor, fundador, líder de equipe ou em qualquer função que exija iniciativa própria.",
+     "lesson": "Sua grande lição é equilibrar a independência com a cooperação, percebendo que pedir apoio também é uma forma de força."
+    },
+    {
+     "num": 2,
+     "archetype": "O Diplomata",
+     "essence": "Você veio para unir, harmonizar e cuidar dos vínculos, percebendo nuances sutis que escapam à maioria das pessoas.",
+     "strength": "Sensibilidade, paciência e um talento natural para mediar conflitos e criar parcerias duradouras.",
+     "shadow": "O medo da rejeição pode levá-lo a se anular pelo outro; afirmar os próprios limites é um ato de autocuidado, não de egoísmo.",
+     "love": "No amor, você é dedicado e afetuoso, e floresce numa relação de confiança, reciprocidade e diálogo aberto.",
+     "career": "Destaca-se em mediação, psicologia, design, diplomacia e em trabalhos colaborativos nos bastidores.",
+     "lesson": "Sua lição é honrar as próprias necessidades com a mesma gentileza que oferece aos outros."
+    },
+    {
+     "num": 3,
+     "archetype": "O Comunicador Criativo",
+     "essence": "Você veio para expressar, encantar e alegrar o mundo, traduzindo emoções em palavras, arte e conexão genuína.",
+     "strength": "Criatividade transbordante, carisma e a capacidade de levar leveza e otimismo a qualquer ambiente.",
+     "shadow": "A dispersão e a fuga das emoções difíceis podem diluir o seu talento; foco e profundidade transformam o brilho em obra duradoura.",
+     "love": "No amor, você é divertido e expressivo, e precisa de um parceiro que valorize sua espontaneidade sem querer contê-la.",
+     "career": "Realiza-se nas artes, na escrita, na comunicação, no entretenimento e em qualquer palco onde possa criar.",
+     "lesson": "Sua lição é canalizar a energia criativa com disciplina, sem fugir do que dói nem se espalhar demais."
+    },
+    {
+     "num": 4,
+     "archetype": "O Construtor",
+     "essence": "Você veio para edificar bases sólidas, trazendo ordem, método e confiabilidade a tudo que toca no mundo material.",
+     "strength": "Disciplina, lealdade e uma ética de trabalho que transforma sonhos em estruturas duradouras.",
+     "shadow": "A rigidez e o excesso de controle podem sufocar o novo; abrir-se ao improviso e à mudança é o que mantém a sua obra viva.",
+     "love": "No amor, você é fiel e protetor, demonstrando carinho mais por atos constantes do que por palavras.",
+     "career": "Brilha na engenharia, na administração, na contabilidade, na construção e em qualquer função que exija precisão.",
+     "lesson": "Sua lição é flexibilizar, confiando que nem toda segurança vem do controle absoluto das coisas."
+    },
+    {
+     "num": 5,
+     "archetype": "O Aventureiro",
+     "essence": "Você veio para experimentar a vida em sua plenitude, abraçando a liberdade, a mudança e a diversidade das experiências.",
+     "strength": "Adaptabilidade, curiosidade magnética e a coragem de se reinventar sempre que necessário.",
+     "shadow": "A inquietação pode virar dispersão ou excessos; encontrar um centro interno é o que dá rumo à sua liberdade, em vez de limitá-la.",
+     "love": "No amor, você é apaixonado e estimulante, mas precisa de espaço e de um parceiro que abrace a aventura com você.",
+     "career": "Realiza-se em viagens, vendas, marketing, jornalismo e em carreiras dinâmicas e cheias de variedade.",
+     "lesson": "Sua lição é encontrar liberdade com compromisso, percebendo que constância não é o oposto de liberdade."
+    },
+    {
+     "num": 6,
+     "archetype": "O Guardião do Amor",
+     "essence": "Você veio para cuidar, harmonizar e servir, criando lares e comunidades onde todos se sintam acolhidos e amados.",
+     "strength": "Generosidade, senso de responsabilidade e um coração capaz de curar e nutrir quem está ao redor.",
+     "shadow": "O excesso de zelo pode virar controle ou autossacrifício; lembrar de cuidar também de si mantém o seu amor saudável.",
+     "love": "No amor, você é devotado e caloroso, e a família é o centro do seu mundo afetivo e da sua entrega.",
+     "career": "Destaca-se no cuidado, na educação, na saúde, no aconselhamento e em tudo que envolva servir ao próximo.",
+     "lesson": "Sua lição é amar sem se anular, oferecendo apoio sem assumir responsabilidades que não são suas."
+    },
+    {
+     "num": 7,
+     "archetype": "O Buscador",
+     "essence": "Você veio para investigar os mistérios da vida, buscando verdade, sabedoria e uma compreensão profunda do invisível.",
+     "strength": "Mente analítica, intuição aguçada e a capacidade de enxergar além das aparências e do óbvio.",
+     "shadow": "O isolamento e o ceticismo podem afastá-lo dos afetos; abrir o coração junto com a mente é onde nasce a sua paz.",
+     "love": "No amor, você é seletivo e reservado, e precisa de um parceiro que respeite seu espaço e sua profundidade.",
+     "career": "Realiza-se na pesquisa, na ciência, na espiritualidade, na análise e em ofícios que exijam introspecção.",
+     "lesson": "Sua lição é confiar e se conectar emocionalmente, sem se esconder atrás da razão e da solidão."
+    },
+    {
+     "num": 8,
+     "archetype": "O Realizador",
+     "essence": "Você veio para conquistar, administrar e prosperar, dominando o mundo material com visão, poder e responsabilidade.",
+     "strength": "Ambição, capacidade executiva e um faro natural para liderança, negócios e resultados concretos.",
+     "shadow": "A obsessão por poder ou dinheiro pode endurecer o coração; alinhar a conquista a um propósito maior é o que dá sentido ao êxito.",
+     "love": "No amor, você é leal e provedor, mas precisa equilibrar o trabalho com a presença afetiva no relacionamento.",
+     "career": "Brilha em negócios, finanças, gestão, direito e em qualquer posição de liderança e alta responsabilidade.",
+     "lesson": "Sua lição é usar o poder com integridade e generosidade, lembrando que abundância também é aquilo que se compartilha."
+    },
+    {
+     "num": 9,
+     "archetype": "O Humanitário",
+     "essence": "Você veio para servir à humanidade com compaixão, encerrando ciclos e inspirando o mundo com ideais elevados.",
+     "strength": "Generosidade ampla, empatia universal e uma sabedoria que enxerga o bem maior acima dos interesses pessoais.",
+     "shadow": "A tendência a se sacrificar ou a se apegar ao passado pode esgotá-lo; aprender a soltar e a receber renova as suas forças.",
+     "love": "No amor, você é idealista e entregue, mas precisa cuidar para não se perder demais nas causas alheias.",
+     "career": "Realiza-se em causas sociais, artes, ensino, cura e em tudo que beneficie a coletividade.",
+     "lesson": "Sua lição é desapegar com amor, compreendendo que toda finalização abre espaço para um novo recomeço."
+    },
+    {
+     "num": 11,
+     "archetype": "O Visionário Inspirado",
+     "essence": "Como número mestre, você veio para iluminar e inspirar, traduzindo a intuição superior em mensagens que elevam a consciência humana.",
+     "strength": "Intuição luminosa, sensibilidade espiritual e o dom de inspirar e despertar as pessoas ao seu redor.",
+     "shadow": "A enorme sensibilidade pode gerar ansiedade e insegurança; ancorar a sua energia em práticas concretas transforma essa intensidade em força.",
+     "love": "No amor, você busca uma conexão profunda de alma, e a estabilidade emocional é o que sustenta essa entrega sem sobrecarregá-lo.",
+     "career": "Realiza-se como mentor, artista, terapeuta, líder espiritual ou em qualquer caminho que inspire e ilumine.",
+     "lesson": "Sua lição é confiar na intuição e materializá-la, transformando a alta vibração em serviço concreto ao mundo."
+    },
+    {
+     "num": 22,
+     "archetype": "O Mestre Construtor",
+     "essence": "Como número mestre, você veio para transformar grandes visões em realidade tangível, unindo idealismo e capacidade prática em larga escala.",
+     "strength": "Visão grandiosa aliada à disciplina de execução, capaz de erguer projetos que beneficiam multidões.",
+     "shadow": "O peso do próprio potencial pode gerar autocrítica ou paralisia; avançar um passo concreto de cada vez é o que liberta a sua grandeza.",
+     "love": "No amor, você é sólido e comprometido, e prospera com um parceiro que compartilhe sua visão de futuro.",
+     "career": "Brilha em grandes empreendimentos, arquitetura, liderança visionária e projetos de impacto coletivo duradouro.",
+     "lesson": "Sua lição é confiar na própria grandeza e agir, transformando sonhos elevados em legados reais e duradouros."
+    },
+    {
+     "num": 33,
+     "archetype": "O Mestre Professor",
+     "essence": "Como número mestre, você veio para curar e elevar pela compaixão pura, ensinando o amor incondicional através do próprio exemplo.",
+     "strength": "Amor altruísta, sabedoria do coração e uma presença que conforta, cura e inspira quem cruza o seu caminho.",
+     "shadow": "A entrega total pode levar ao esgotamento ou ao martírio; preservar as próprias forças é o que permite servir com plenitude e constância.",
+     "love": "No amor, você é profundamente devotado e acolhedor, e precisa receber tanto cuidado quanto oferece.",
+     "career": "Realiza-se no ensino, na cura, no aconselhamento espiritual e em vocações de serviço guiadas pelo amor.",
+     "lesson": "Sua lição é servir com amor sem se anular, lembrando que cuidar de si é parte essencial da sua missão."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "Novos começos",
+     "guidance": "É hora de plantar sementes, tomar a iniciativa e dar o primeiro passo rumo aos seus objetivos com coragem."
+    },
+    {
+     "num": 2,
+     "theme": "Vínculos e paciência",
+     "guidance": "Cultive parcerias, ouça com atenção e deixe as coisas amadurecerem no próprio tempo, sem forçar resultados."
+    },
+    {
+     "num": 3,
+     "theme": "Expressão e alegria",
+     "guidance": "Comunique-se, crie e celebre a vida, abrindo espaço para a leveza, a arte e os bons encontros."
+    },
+    {
+     "num": 4,
+     "theme": "Bases e esforço",
+     "guidance": "Organize-se, trabalhe com disciplina e construa estruturas sólidas que sustentarão as suas próximas conquistas."
+    },
+    {
+     "num": 5,
+     "theme": "Mudança e liberdade",
+     "guidance": "Abrace o novo, seja flexível e aproveite as oportunidades de movimento, viagem e reinvenção que surgirem."
+    },
+    {
+     "num": 6,
+     "theme": "Responsabilidade e lar",
+     "guidance": "Dedique-se à família, aos relacionamentos e ao cuidado, equilibrando o dar e o receber em casa."
+    },
+    {
+     "num": 7,
+     "theme": "Reflexão e descanso",
+     "guidance": "Recolha-se, estude e cuide da vida interior, buscando respostas no silêncio e no autoconhecimento."
+    },
+    {
+     "num": 8,
+     "theme": "Conquista e colheita",
+     "guidance": "Aja com ambição e foco, pois é tempo de colher frutos, fechar bons negócios e reconhecer o próprio valor."
+    },
+    {
+     "num": 9,
+     "theme": "Encerramento e síntese",
+     "guidance": "Conclua ciclos, solte o que não serve mais e abra espaço, com gratidão, para um novo capítulo nascer."
+    }
+   ],
+   "masterNote": "Ter um número mestre (11, 22 ou 33) indica um potencial elevado e um chamado de alma mais exigente; por isso, tenha paciência consigo: essa energia amadurece com o tempo e pede tanto inspiração quanto ação concreta.",
+   "karmic": {
+    "13": "O número cármico 13 convida você a transformar a tendência à dispersão em foco e trabalho persistente, pois o esforço dedicado se torna a sua maior recompensa.",
+    "14": "O número cármico 14 pede que você canalize a busca por liberdade com moderação e equilíbrio, transformando impulsos em escolhas conscientes.",
+    "16": "O número cármico 16 convida você a soltar o ego e abrir o coração, deixando que relações sinceras renasçam sobre bases mais humildes e verdadeiras.",
+    "19": "O número cármico 19 pede que você equilibre a independência com a colaboração, aprendendo a pedir e a receber apoio com a mesma naturalidade com que oferece."
+   },
+   "labels": {
+    "lifePathTitle": "Caminho de Vida",
+    "essenceLabel": "Essência",
+    "strengthLabel": "Força",
+    "shadowLabel": "Sombra",
+    "loveLabel": "Amor",
+    "careerLabel": "Carreira",
+    "lessonLabel": "Lição",
+    "cycleTitle": "Ciclos Pessoais",
+    "yearLabel": "Ano",
+    "monthLabel": "Mês",
+    "dayLabel": "Dia",
+    "masterLabel": "Mestre",
+    "karmicLabel": "Cármico"
    }
   }
  },
@@ -4522,6 +5871,199 @@ window.LUX = {
     "modalityLabel": "Modalità",
     "polarityLabel": "Polarità"
    }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "Il Pioniere",
+     "essence": "Sei nato per aprire strade nuove: indipendente e determinato, trovi il tuo scopo guidando con coraggio e costruendo qualcosa di tuo.",
+     "strength": "Possiedi un'iniziativa rara e la capacità di trasformare le idee in azione prima degli altri.",
+     "shadow": "Quando la fretta diventa testardaggine, imparare ad ascoltare e a chiedere aiuto ti renderà un leader ancora più solido.",
+     "love": "In amore ami con passione e lealtà, ma fiorisci accanto a un partner che rispetta i tuoi spazi e la tua autonomia.",
+     "career": "Ti realizzi nell'imprenditoria, nella direzione, nelle attività in proprio e in ogni ruolo che premia chi prende l'iniziativa.",
+     "lesson": "La tua lezione è scoprire che la vera forza include la collaborazione, non solo l'andare avanti da solo."
+    },
+    {
+     "num": 2,
+     "archetype": "Il Pacificatore",
+     "essence": "Vivi per creare armonia: sensibile e diplomatico, dai il meglio quando unisci le persone e fai sentire ciascuno compreso.",
+     "strength": "Hai un'empatia profonda e l'intuito per cogliere ciò che gli altri provano ancor prima che lo dicano.",
+     "shadow": "Imparare a esprimere i tuoi bisogni e a non dipendere troppo dall'approvazione altrui ti regalerà una serenità nuova.",
+     "love": "In amore sei tenero, fedele e attentissimo: cerchi un legame profondo in cui sentirti al sicuro e ricambiato.",
+     "career": "Brilli nella mediazione, nella consulenza, nella cura, nella psicologia e in ogni lavoro di squadra che richiede tatto.",
+     "lesson": "Il tuo compito è onorare te stesso quanto onori gli altri, trovando equilibrio tra il dare e il ricevere."
+    },
+    {
+     "num": 3,
+     "archetype": "Il Comunicatore Creativo",
+     "essence": "Sei qui per esprimerti e ispirare gioia: creativo e socievole, illumini ogni ambiente con parole, arte e ottimismo.",
+     "strength": "Possiedi un talento naturale per la comunicazione e la capacità di trasformare le emozioni in bellezza condivisa.",
+     "shadow": "Concentrare la tua energia su pochi progetti, invece di disperderla, ti aiuterà a portare a frutto il tuo enorme potenziale.",
+     "love": "In amore sei spontaneo, affettuoso e giocoso: hai bisogno di un partner che apprezzi la tua leggerezza e le tue parole.",
+     "career": "Trovi la tua strada nell'arte, nella scrittura, nello spettacolo, nel marketing e in ogni campo che valorizza l'espressione.",
+     "lesson": "La tua lezione è coltivare disciplina e profondità, così che il talento diventi un'opera capace di durare."
+    },
+    {
+     "num": 4,
+     "archetype": "Il Costruttore",
+     "essence": "Vieni al mondo per costruire fondamenta solide: pratico e affidabile, dai senso alla vita con ordine, impegno e costanza.",
+     "strength": "Hai una dedizione instancabile e la rara capacità di portare a termine ciò che gli altri si limitano a immaginare.",
+     "shadow": "Concederti flessibilità e qualche pausa dalla rigidità ti permetterà di goderti finalmente i frutti del tuo lavoro.",
+     "love": "In amore sei stabile, leale e protettivo: offri sicurezza e cerchi un legame concreto e duraturo nel tempo.",
+     "career": "Eccelli nell'ingegneria, nell'edilizia, nella finanza, nell'amministrazione e in ogni mestiere che premia metodo e precisione.",
+     "lesson": "Il tuo apprendimento è aprirti al cambiamento, scoprendo che la sicurezza nasce anche dalla fiducia, non solo dal controllo."
+    },
+    {
+     "num": 5,
+     "archetype": "L'Avventuriero Libero",
+     "essence": "Sei nato per esplorare e cambiare: curioso e dinamico, trovi il tuo scopo nella libertà, nel viaggio e nelle esperienze nuove.",
+     "strength": "Possiedi un'adattabilità sorprendente e l'entusiasmo per cogliere ogni occasione che la vita ti offre.",
+     "shadow": "Imparare a restare e a impegnarti ti regalerà radici che renderanno la tua libertà ancora più ricca.",
+     "love": "In amore sei magnetico, appassionato e brioso: hai bisogno di un partner che condivida il tuo desiderio di avventura e di crescita.",
+     "career": "Ti realizzi nei viaggi, nelle vendite, nei media, nell'imprenditoria e in ogni ruolo che offre varietà e movimento.",
+     "lesson": "La tua lezione è scoprire che la vera libertà nasce dalla scelta consapevole, non dalla fuga continua."
+    },
+    {
+     "num": 6,
+     "archetype": "Il Custode Amorevole",
+     "essence": "Vivi per amare e prenderti cura: responsabile e generoso, dai significato all'esistenza creando armonia in casa e nella comunità.",
+     "strength": "Hai un cuore caldo e la dote naturale di nutrire, proteggere e far sentire gli altri amati.",
+     "shadow": "Imparare a porre confini sani e a non sacrificarti oltre misura ti farà amare con più libertà e gioia.",
+     "love": "In amore sei devoto, premuroso e romantico: la famiglia e il legame stabile sono il cuore della tua felicità.",
+     "career": "Brilli nell'insegnamento, nella medicina, nel counseling, nel design e in ogni professione dedicata al benessere altrui.",
+     "lesson": "Il tuo compito è ricordare di prenderti cura anche di te, perché solo così potrai donare senza esaurirti."
+    },
+    {
+     "num": 7,
+     "archetype": "Il Ricercatore Spirituale",
+     "essence": "Sei qui per cercare la verità: riflessivo e profondo, trovi il tuo scopo nello studio, nell'introspezione e nella saggezza interiore.",
+     "strength": "Possiedi una mente analitica e un'intuizione spirituale che ti permettono di vedere ciò che sfugge agli altri.",
+     "shadow": "Aprirti agli altri e condividere il tuo mondo interiore ti libererà dalla solitudine che a volte ti avvolge.",
+     "love": "In amore sei selettivo, sincero e profondo: cerchi un partner che rispetti il tuo silenzio e la tua ricerca di senso.",
+     "career": "Trovi la tua strada nella ricerca, nella scienza, nella filosofia, nella spiritualità e in ogni campo che richiede analisi.",
+     "lesson": "La tua lezione è imparare a fidarti del cuore quanto della mente, unendo il sapere all'esperienza vissuta."
+    },
+    {
+     "num": 8,
+     "archetype": "Il Realizzatore",
+     "essence": "Vieni al mondo per costruire abbondanza: ambizioso e capace, dai senso alla vita attraverso il successo, l'autorità e i risultati concreti.",
+     "strength": "Hai una visione strategica e la forza di trasformare grandi obiettivi in conquiste reali e durature.",
+     "shadow": "Ricordare che il valore non si misura solo in denaro o potere ti porterà un successo più pieno e appagante.",
+     "love": "In amore sei intenso, protettivo e generoso: offri sicurezza e cerchi un partner forte che condivida la tua ambizione.",
+     "career": "Eccelli negli affari, nella finanza, nella direzione aziendale, nella politica e in ogni ruolo che richiede leadership e responsabilità.",
+     "lesson": "Il tuo apprendimento è equilibrare materia e spirito, scoprendo che la vera ricchezza include le relazioni e l'integrità."
+    },
+    {
+     "num": 9,
+     "archetype": "L'Umanitario",
+     "essence": "Sei nato per servire l'umanità: compassionevole e idealista, trovi il tuo scopo nel donare, ispirare e migliorare il mondo.",
+     "strength": "Possiedi una generosità sconfinata e la saggezza di chi sa guardare oltre l'interesse personale.",
+     "shadow": "Imparare a lasciar andare e a ricevere, non solo a dare, ti aiuterà a guarire ferite antiche e a rinnovarti.",
+     "love": "In amore sei romantico, altruista e profondo: ami in modo universale e cerchi un legame che abbia un significato più alto.",
+     "career": "Ti realizzi nel volontariato, nell'arte, nella guarigione, nell'insegnamento e in ogni causa dedicata al bene collettivo.",
+     "lesson": "La tua lezione è completare i cicli con grazia, accogliendo che il lasciar andare apre spazio a una rinascita."
+    },
+    {
+     "num": 11,
+     "archetype": "L'Ispiratore Intuitivo",
+     "essence": "Come Numero Maestro sei un canale di ispirazione: la tua sensibilità altissima è chiamata a illuminare e risvegliare gli altri.",
+     "strength": "Possiedi un'intuizione visionaria e un carisma spirituale capace di toccare profondamente chi ti incontra.",
+     "shadow": "Imparare a gestire l'ansia e l'ipersensibilità trasformerà la tua tensione interiore in una luce stabile e serena.",
+     "love": "In amore sei intenso, empatico e idealista: cerchi un'anima affine che comprenda la tua profondità e i tuoi slanci spirituali.",
+     "career": "Brilli come artista, guida spirituale, insegnante, comunicatore o in ogni ruolo che ispira e illumina le coscienze.",
+     "lesson": "La tua sfida da Maestro è radicare la tua visione nel concreto, così da diventare un faro affidabile per gli altri."
+    },
+    {
+     "num": 22,
+     "archetype": "Il Maestro Costruttore",
+     "essence": "Come Numero Maestro unisci sogno e concretezza: sei chiamato a realizzare grandi progetti che lasciano un segno duraturo nel mondo.",
+     "strength": "Possiedi una visione immensa unita alla rara capacità pratica di trasformarla in opere reali e di valore collettivo.",
+     "shadow": "Credere fino in fondo nel tuo potenziale, senza lasciarti schiacciare dal peso della responsabilità, è la chiave per sbocciare.",
+     "love": "In amore sei dedito, solido e protettivo: cerchi un partner che sostenga la tua missione e cammini al tuo fianco con fiducia.",
+     "career": "Ti realizzi nei grandi progetti, nell'architettura, nell'imprenditoria sociale, nella leadership e in ogni opera di ampio respiro.",
+     "lesson": "La tua sfida da Maestro è avere il coraggio di pensare in grande, mettendo i tuoi doni al servizio dell'umanità."
+    },
+    {
+     "num": 33,
+     "archetype": "Il Maestro d'Amore",
+     "essence": "Come Numero Maestro incarni la compassione più alta: sei chiamato a guarire, insegnare e servire con amore e dedizione totale.",
+     "strength": "Possiedi un amore incondizionato e la rara capacità di elevare gli altri con la tua presenza guaritrice.",
+     "shadow": "Imparare a non caricarti i pesi del mondo intero ti permetterà di servire con gioia, senza sacrificare te stesso.",
+     "love": "In amore sei devoto, generoso e profondamente compassionevole: ami senza riserve e cerchi un legame nutrito da valori condivisi.",
+     "career": "Brilli come educatore, guaritore, guida spirituale, artista o in ogni vocazione dedicata al servizio e alla crescita altrui.",
+     "lesson": "La tua sfida da Maestro è offrire amore mantenendo l'equilibrio, ricordando che anche tu meriti cura e dolcezza."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "Nuovi inizi",
+     "guidance": "È il momento di seminare: avvia progetti, prendi iniziative e segui con coraggio le tue idee."
+    },
+    {
+     "num": 2,
+     "theme": "Relazioni e pazienza",
+     "guidance": "Coltiva i legami, ascolta con sensibilità e lascia maturare le cose senza forzare i tempi."
+    },
+    {
+     "num": 3,
+     "theme": "Espressione e gioia",
+     "guidance": "Dai voce alla tua creatività, socializza e concediti momenti di leggerezza e divertimento."
+    },
+    {
+     "num": 4,
+     "theme": "Fondamenta e impegno",
+     "guidance": "Organizza, lavora con costanza e costruisci basi solide per i tuoi obiettivi futuri."
+    },
+    {
+     "num": 5,
+     "theme": "Cambiamento e libertà",
+     "guidance": "Accogli il nuovo, sii flessibile e cogli le occasioni di viaggio, movimento ed esperienze fresche."
+    },
+    {
+     "num": 6,
+     "theme": "Responsabilità e famiglia",
+     "guidance": "Dedicati alla casa, agli affetti e a chi ami, prendendoti cura con generosità ed equilibrio."
+    },
+    {
+     "num": 7,
+     "theme": "Riflessione e riposo",
+     "guidance": "Rallenta, rientra in te stesso, studia e concediti il silenzio per ascoltare la tua voce interiore."
+    },
+    {
+     "num": 8,
+     "theme": "Successo e raccolto",
+     "guidance": "È tempo di raccogliere i frutti: persegui i tuoi obiettivi con determinazione e gestisci con saggezza le risorse."
+    },
+    {
+     "num": 9,
+     "theme": "Conclusione e bilancio",
+     "guidance": "Chiudi i cicli, lascia andare ciò che non serve più e fai spazio dentro di te per il nuovo che sta per arrivare."
+    }
+   ],
+   "masterNote": "I Numeri Maestri 11, 22 e 33 portano una vibrazione più alta e una vocazione speciale. Sono un dono prezioso e, al tempo stesso, una responsabilità: chiedono di crescere con pazienza per esprimere appieno il loro grande potenziale al servizio degli altri.",
+   "karmic": {
+    "13": "Il Debito Karmico 13 invita a trasformare la dispersione in disciplina: con impegno costante e metodo, il lavoro paziente diventa la chiave del tuo successo.",
+    "14": "Il Debito Karmico 14 ti chiama a riconquistare la libertà attraverso la moderazione: coltivando equilibrio e autodisciplina, trasformi gli eccessi in crescita autentica.",
+    "16": "Il Debito Karmico 16 accompagna la caduta dell'ego verso una rinascita più vera: lasciando andare l'orgoglio, riscopri umiltà, amore autentico e una connessione spirituale profonda.",
+    "19": "Il Debito Karmico 19 insegna l'indipendenza nel suo senso più sano: imparando a chiedere e ad accogliere aiuto, scopri che la vera forza include anche gli altri."
+   },
+   "labels": {
+    "lifePathTitle": "Numero del Sentiero di Vita",
+    "essenceLabel": "Essenza",
+    "strengthLabel": "Punto di forza",
+    "shadowLabel": "Ombra da integrare",
+    "loveLabel": "Amore",
+    "careerLabel": "Carriera",
+    "lessonLabel": "Lezione di vita",
+    "cycleTitle": "Cicli Personali",
+    "yearLabel": "Anno Personale",
+    "monthLabel": "Mese Personale",
+    "dayLabel": "Giorno Personale",
+    "masterLabel": "Numeri Maestri",
+    "karmicLabel": "Debiti Karmici"
+   }
   }
  },
  "id": {
@@ -5086,6 +6628,199 @@ window.LUX = {
     "planetLabel": "Planet",
     "modalityLabel": "Modalitas",
     "polarityLabel": "Polaritas"
+   }
+  },
+  "numerology": {
+   "lifePaths": [
+    {
+     "num": 1,
+     "archetype": "Sang Perintis",
+     "essence": "Anda hadir untuk memimpin dan membuka jalan baru, mengandalkan keberanian serta tekad untuk mengubah gagasan menjadi langkah nyata.",
+     "strength": "Inisiatif yang kuat, percaya diri, dan kemampuan memulai sesuatu dari nol tanpa menunggu arahan orang lain.",
+     "shadow": "Sisi keras kepala atau dorongan untuk selalu menang bisa dilembutkan dengan belajar mendengarkan dan menerima masukan, sehingga kepemimpinan Anda makin matang.",
+     "love": "Dalam cinta Anda tulus dan melindungi, namun perlu memberi ruang agar pasangan merasa setara, bukan sekadar pengikut.",
+     "career": "Cocok di posisi pemimpin, wirausaha, atau bidang apa pun yang menuntut keberanian mengambil keputusan secara mandiri.",
+     "lesson": "Pelajaran hidup Anda adalah menyeimbangkan kemandirian dengan kerja sama, sehingga kekuatan pribadi tidak berubah menjadi kesepian."
+    },
+    {
+     "num": 2,
+     "archetype": "Sang Penjaga Harmoni",
+     "essence": "Anda hadir untuk menyatukan dan menenangkan, dengan kepekaan tinggi membaca perasaan orang lain serta menjembatani perbedaan secara halus.",
+     "strength": "Kelembutan, diplomasi, dan kesabaran yang membuat Anda piawai membangun kepercayaan serta menjaga kedamaian di sekitar Anda.",
+     "shadow": "Kebiasaan terlalu sering mengalah atau memendam keinginan sendiri bisa diatasi dengan berlatih menyuarakan kebutuhan secara jujur dan tenang.",
+     "love": "Anda kekasih yang setia dan penuh perhatian, bahagia ketika bisa mendukung pasangan, asalkan tidak melupakan kebutuhan diri sendiri.",
+     "career": "Berkembang di bidang yang menonjolkan kerja sama, seperti mediasi, konseling, kesehatan, atau peran pendukung dalam tim.",
+     "lesson": "Pelajaran Anda adalah menumbuhkan keberanian dan harga diri, agar harmoni yang Anda ciptakan tidak lahir dari pengorbanan yang berlebihan."
+    },
+    {
+     "num": 3,
+     "archetype": "Sang Penghibur Kreatif",
+     "essence": "Anda hadir untuk mengekspresikan diri dan menyebarkan keceriaan, mengubah gagasan menjadi kata, karya, dan suasana yang menghidupkan orang lain.",
+     "strength": "Kreativitas, pesona, dan kemampuan berkomunikasi yang membuat Anda mudah disukai serta inspiratif di mata banyak orang.",
+     "shadow": "Energi yang mudah tersebar ke banyak arah bisa difokuskan dengan menuntaskan satu hal lebih dahulu sebelum berpindah ke hal berikutnya.",
+     "love": "Hubungan terasa hidup dan penuh tawa bersama Anda, namun kedalaman emosi perlu dirawat sama seriusnya dengan kesenangan.",
+     "career": "Bersinar di dunia seni, penulisan, presentasi, pemasaran, atau profesi apa pun yang merayakan ekspresi dan komunikasi.",
+     "lesson": "Pelajaran Anda adalah menumbuhkan kedisiplinan dan ketekunan, agar bakat yang berlimpah benar-benar berbuah dan tidak berhenti di tengah jalan."
+    },
+    {
+     "num": 4,
+     "archetype": "Sang Pembangun Tangguh",
+     "essence": "Anda hadir untuk menciptakan fondasi yang kokoh, mengubah rencana menjadi struktur nyata lewat ketekunan, ketelitian, dan kerja yang konsisten.",
+     "strength": "Kedisiplinan, kesetiaan, dan ketahanan yang membuat Anda dapat diandalkan untuk menuntaskan hal yang ditinggalkan orang lain.",
+     "shadow": "Kecenderungan kaku atau ragu pada perubahan bisa dilonggarkan dengan membuka diri pada cara baru dan sedikit fleksibilitas.",
+     "love": "Anda pasangan yang stabil dan dapat dipercaya, dan akan terasa semakin hangat bila berlatih mengungkapkan perasaan secara terbuka.",
+     "career": "Unggul di bidang yang menuntut ketelitian dan sistem, seperti teknik, keuangan, administrasi, atau manajemen proyek.",
+     "lesson": "Pelajaran Anda adalah belajar menerima ketidakpastian dengan tenang, sehingga kestabilan tidak berubah menjadi kekakuan yang membatasi."
+    },
+    {
+     "num": 5,
+     "archetype": "Sang Penjelajah Bebas",
+     "essence": "Anda hadir untuk merasakan dan mengalami kehidupan seluas mungkin, mencari kebebasan, perubahan, dan pengalaman baru yang memperkaya jiwa.",
+     "strength": "Keluwesan, rasa ingin tahu, dan keberanian beradaptasi yang membuat Anda cepat belajar dan nyaman menghadapi situasi yang berubah-ubah.",
+     "shadow": "Kecenderungan mudah bosan atau impulsif bisa diarahkan dengan menumbuhkan komitmen pada hal-hal yang benar-benar Anda hargai.",
+     "love": "Anda membutuhkan ruang dan petualangan dalam hubungan, dan akan bahagia bersama pasangan yang menghargai kebebasan sekaligus kesetiaan.",
+     "career": "Cocok di bidang dinamis seperti perjalanan, penjualan, media, kewirausahaan, atau pekerjaan yang menawarkan variasi dan gerak.",
+     "lesson": "Pelajaran Anda adalah menemukan kebebasan sejati lewat fokus dan komitmen, bukan sekadar berpindah dari satu hal ke hal lain."
+    },
+    {
+     "num": 6,
+     "archetype": "Sang Pengasuh Penyayang",
+     "essence": "Anda hadir untuk merawat dan menjaga, menebarkan cinta serta tanggung jawab pada keluarga dan komunitas dengan kehangatan yang tulus.",
+     "strength": "Kepedulian, kesetiaan, dan rasa tanggung jawab yang membuat orang merasa aman, didukung, dan diperhatikan di dekat Anda.",
+     "shadow": "Kecenderungan terlalu ikut campur atau memikul beban orang lain bisa diseimbangkan dengan menjaga batas dan merawat diri sendiri.",
+     "love": "Anda kekasih yang hangat dan berdedikasi, namun perlu memastikan cinta yang diberikan tidak berubah menjadi kontrol atau pengorbanan tanpa batas.",
+     "career": "Berkembang di bidang yang menolong orang lain, seperti pendidikan, kesehatan, konseling, kuliner, atau seni yang menghadirkan keindahan.",
+     "lesson": "Pelajaran Anda adalah belajar memberi tanpa kehilangan diri, dan menerima kasih sayang setulus saat Anda memberikannya."
+    },
+    {
+     "num": 7,
+     "archetype": "Sang Pencari Kebijaksanaan",
+     "essence": "Anda hadir untuk memahami makna di balik segala hal, menyelami pengetahuan, spiritualitas, dan kebenaran dengan kedalaman pikiran yang khas.",
+     "strength": "Kemampuan analisis, intuisi yang tajam, dan kecintaan pada perenungan yang membuat Anda melihat hal yang luput dari perhatian orang lain.",
+     "shadow": "Kecenderungan menyendiri atau terlalu skeptis bisa diimbangi dengan membuka hati dan berbagi dunia batin kepada orang terdekat.",
+     "love": "Anda membutuhkan kedalaman dan ruang yang tenang dalam hubungan, dan paling nyaman bersama pasangan yang menghargai keheningan serta kejujuran emosi.",
+     "career": "Cocok di bidang riset, analisis, teknologi, spiritualitas, atau profesi apa pun yang menghargai keahlian dan pemikiran mendalam.",
+     "lesson": "Pelajaran Anda adalah membangun kepercayaan dan keterbukaan, agar pencarian kebijaksanaan tidak berubah menjadi keterasingan dari sesama."
+    },
+    {
+     "num": 8,
+     "archetype": "Sang Pengelola Kesuksesan",
+     "essence": "Anda hadir untuk mewujudkan ambisi besar di dunia nyata, mengelola sumber daya, pengaruh, dan materi dengan visi serta ketegasan.",
+     "strength": "Naluri bisnis, kepemimpinan, dan ketabahan yang memampukan Anda menetapkan tujuan tinggi lalu mengejarnya hingga tuntas.",
+     "shadow": "Kecenderungan terlalu mengejar materi atau kendali bisa diseimbangkan dengan mengingat nilai integritas dan kemurahan hati.",
+     "love": "Anda pasangan yang melindungi dan suka memberi secara nyata, dan hubungan menguat saat Anda menyeimbangkan ambisi dengan kehadiran emosional.",
+     "career": "Bersinar di dunia bisnis, manajemen, keuangan, hukum, atau peran kepemimpinan yang menuntut keputusan strategis berskala besar.",
+     "lesson": "Pelajaran Anda adalah memahami bahwa kesuksesan sejati menyatukan pencapaian materi dengan keseimbangan batin dan hubungan yang sehat."
+    },
+    {
+     "num": 9,
+     "archetype": "Sang Humanis Mulia",
+     "essence": "Anda hadir untuk melayani dan menginspirasi dalam skala luas, membawa welas asih serta idealisme demi kebaikan bersama yang lebih besar.",
+     "strength": "Empati yang mendalam, kedermawanan, dan pandangan luas yang membuat Anda mudah memahami serta merangkul beragam latar belakang manusia.",
+     "shadow": "Kecenderungan memikul beban dunia atau sulit melepaskan masa lalu bisa diringankan dengan belajar mengikhlaskan dan menetapkan batas yang sehat.",
+     "love": "Anda mencintai dengan tulus dan tanpa pamrih, dan akan paling bahagia bersama pasangan yang berbagi nilai serta cita-cita kemanusiaan.",
+     "career": "Berkembang di bidang sosial, seni, pendidikan, kegiatan kemanusiaan, atau profesi yang memberi dampak luas bagi banyak orang.",
+     "lesson": "Pelajaran Anda adalah belajar menerima dan merawat diri sendiri, sebab kasih untuk dunia bermula dari kasih kepada diri Anda."
+    },
+    {
+     "num": 11,
+     "archetype": "Sang Inspirator (Angka Master)",
+     "essence": "Sebagai angka master, Anda hadir untuk menerangi dan menyadarkan orang lain, memadukan intuisi yang tajam dengan visi spiritual yang menginspirasi.",
+     "strength": "Kepekaan luar biasa, daya inspirasi, dan kemampuan menangkap hal halus yang mampu menggugah serta mengangkat semangat orang di sekitar.",
+     "shadow": "Sensitivitas tinggi yang kadang memicu cemas atau ragu bisa ditenangkan dengan membumi, beristirahat cukup, dan memercayai prosesnya.",
+     "love": "Anda mencintai secara mendalam dan penuh penghayatan, dan paling tenteram bersama pasangan yang sabar serta memahami gejolak batin Anda.",
+     "career": "Cocok di bidang yang menggerakkan dan menginspirasi, seperti seni, penyembuhan, pengajaran spiritual, konseling, atau penulisan yang menyentuh.",
+     "lesson": "Pelajaran Anda sebagai angka master adalah mengubah kepekaan dan visi menjadi karya nyata, tanpa kehilangan ketenangan dan kepercayaan diri."
+    },
+    {
+     "num": 22,
+     "archetype": "Sang Arsitek Agung (Angka Master)",
+     "essence": "Sebagai angka master, Anda hadir untuk mewujudkan mimpi besar menjadi kenyataan, menyatukan visi yang luas dengan kemampuan membangun yang konkret.",
+     "strength": "Perpaduan langka antara cita-cita tinggi dan sikap praktis, yang memampukan Anda merancang serta menuntaskan proyek berdampak besar dan tahan lama.",
+     "shadow": "Beban dari potensi yang besar bisa diringankan dengan memercayai langkah bertahap dan tidak menuntut kesempurnaan dari diri sendiri.",
+     "love": "Anda pasangan yang setia dan berorientasi masa depan, dan hubungan menguat saat Anda menyisihkan waktu di tengah ambisi besar Anda.",
+     "career": "Bersinar di bidang yang membangun sesuatu berskala besar, seperti arsitektur, kepemimpinan organisasi, kewirausahaan, atau gerakan sosial.",
+     "lesson": "Pelajaran Anda sebagai angka master adalah berani mewujudkan visi besar selangkah demi selangkah, tanpa terhambat oleh keraguan atau rasa takut."
+    },
+    {
+     "num": 33,
+     "archetype": "Sang Guru Pengabdi (Angka Master)",
+     "essence": "Sebagai angka master tertinggi, Anda hadir untuk membimbing dan menyembuhkan dengan cinta tanpa syarat, mengangkat orang lain melalui pengabdian yang tulus.",
+     "strength": "Welas asih yang luas, kebijaksanaan yang mendalam, dan keteladanan yang membuat kehadiran Anda menenangkan sekaligus menumbuhkan orang di sekitar.",
+     "shadow": "Kecenderungan memikul beban orang lain hingga melupakan diri bisa diseimbangkan dengan menjaga batas dan merawat kesehatan sendiri.",
+     "love": "Anda mencintai dengan kelembutan dan pengertian yang dalam, dan paling utuh bersama pasangan yang menghormati panggilan mengabdi Anda.",
+     "career": "Berkembang di bidang yang melayani dan mendidik, seperti pengajaran, penyembuhan, bimbingan spiritual, atau kepemimpinan yang penuh empati.",
+     "lesson": "Pelajaran Anda sebagai angka master adalah mengabdi dengan ikhlas sambil tetap menyayangi diri, agar pelayanan menjadi sumber tenaga, bukan kelelahan."
+    }
+   ],
+   "cycleThemes": [
+    {
+     "num": 1,
+     "theme": "Awal Baru",
+     "guidance": "Saat yang tepat untuk memulai babak baru dan menanam benih. Ambil inisiatif, percayai visi Anda, dan langkahkan kaki pertama dengan berani."
+    },
+    {
+     "num": 2,
+     "theme": "Kerja Sama",
+     "guidance": "Waktu untuk bersabar, menjalin hubungan, dan membangun kepercayaan. Dengarkan dengan tulus dan biarkan kemitraan tumbuh secara alami."
+    },
+    {
+     "num": 3,
+     "theme": "Ekspresi Diri",
+     "guidance": "Energi kreativitas dan komunikasi sedang mengalir. Ungkapkan diri, jalin pergaulan, dan bagikan keceriaan Anda kepada sekitar."
+    },
+    {
+     "num": 4,
+     "theme": "Membangun Fondasi",
+     "guidance": "Masa untuk bekerja tekun dan menata yang penting. Disiplin kecil hari ini menjadi struktur kokoh yang menopang masa depan Anda."
+    },
+    {
+     "num": 5,
+     "theme": "Perubahan & Kebebasan",
+     "guidance": "Perubahan dan peluang baru berdatangan. Bersikaplah luwes, sambut petualangan, namun jaga agar fokus tetap pada hal yang berarti."
+    },
+    {
+     "num": 6,
+     "theme": "Tanggung Jawab & Kasih",
+     "guidance": "Perhatian tertuju pada keluarga, rumah, dan orang terkasih. Rawat hubungan dengan tulus sambil tetap menjaga keseimbangan diri."
+    },
+    {
+     "num": 7,
+     "theme": "Perenungan & Pencarian Batin",
+     "guidance": "Waktu untuk hening, merenung, dan mendalami makna. Berikan ruang bagi pertumbuhan batin dan percayai kebijaksanaan dari dalam diri."
+    },
+    {
+     "num": 8,
+     "theme": "Pencapaian & Kelimpahan",
+     "guidance": "Energi untuk berkarya dan menuai hasil sedang menguat. Tetapkan tujuan yang jelas, kelola sumber daya dengan bijak, dan melangkah dengan percaya diri."
+    },
+    {
+     "num": 9,
+     "theme": "Penyelesaian & Pelepasan",
+     "guidance": "Satu siklus mendekati ujungnya. Relakan yang sudah usai dengan lapang hati agar ada ruang lega bagi awal yang baru."
+    }
+   ],
+   "masterNote": "Angka master 11, 22, dan 33 membawa getaran dan potensi yang istimewa. Ia bukan beban, melainkan panggilan untuk bertumbuh lebih dalam. Maknailah ia sebagai undangan untuk mengembangkan diri dengan sabar, satu langkah pada satu waktu, bukan tuntutan akan kesempurnaan.",
+   "karmic": {
+    "13": "Angka karmik 13 mengajak Anda menumbuhkan ketekunan dan disiplin. Ia bukan pertanda buruk, melainkan undangan untuk mengubah kerja keras yang konsisten menjadi pondasi pencapaian yang sejati.",
+    "14": "Angka karmik 14 mendorong Anda belajar menemukan keseimbangan dan moderasi. Ia mengajak menjinakkan dorongan dan godaan dengan kesadaran, sehingga kebebasan tumbuh dari pilihan yang bijak.",
+    "16": "Angka karmik 16 menyiratkan pelajaran tentang kerendahan hati dan kejujuran pada diri sendiri. Ia mengundang Anda merobohkan kepura-puraan dengan lembut, lalu membangun ulang dengan landasan yang lebih tulus.",
+    "19": "Angka karmik 19 mengajarkan kemandirian yang seimbang dengan kepedulian. Ia mengajak Anda berdiri di atas kaki sendiri sambil tetap terbuka menerima dan memberi bantuan, sehingga kekuatan berpadu dengan kasih."
+   },
+   "labels": {
+    "lifePathTitle": "Angka Jalan Hidup",
+    "essenceLabel": "Esensi",
+    "strengthLabel": "Kekuatan",
+    "shadowLabel": "Sisi Bayangan",
+    "loveLabel": "Asmara",
+    "careerLabel": "Karier",
+    "lessonLabel": "Pelajaran Hidup",
+    "cycleTitle": "Siklus Pribadi",
+    "yearLabel": "Tahun Pribadi",
+    "monthLabel": "Bulan Pribadi",
+    "dayLabel": "Hari Pribadi",
+    "masterLabel": "Angka Master",
+    "karmicLabel": "Utang Karmik"
    }
   }
  }

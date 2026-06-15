@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v10: 타로 best-in-class(정/역방향·분야별·3카드 스프레드·AI챗 연동)
-const CACHE_NAME = 'lucky-v10';
+// v11: 수비학 라이프패스 심층풀이 + Personal Year/Month/Day
+const CACHE_NAME = 'lucky-v11';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
