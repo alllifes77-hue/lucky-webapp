@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v9: 호로스코프 best-in-class(별자리별 일운·달별자리·점성점수·궁합)
-const CACHE_NAME = 'lucky-v9';
+// v10: 타로 best-in-class(정/역방향·분야별·3카드 스프레드·AI챗 연동)
+const CACHE_NAME = 'lucky-v10';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

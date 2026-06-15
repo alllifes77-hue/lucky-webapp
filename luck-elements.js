@@ -1,7 +1,7 @@
 // luck-elements.js — 신규 행운요소 5종 9개 언어 콘텐츠
 // (바이오리듬·탄생석/탄생화·서양별자리·오늘의 타로·행운의 4요소)
 // 언어별 네이티브 생성 + 적대적 검증(워크플로) 후 정규화 조립.
-// sunSign 은 Wave1 best-in-class 확장(dailyBySign[12][6]·moonTraits[12]·labels).
+// sunSign=Wave1 호로스코프 확장 / tarot=Wave2 정역·분야·스프레드 확장.
 // 모든 문자열 JSON 호환 더블쿼트 — 아포스트로피 안전. 렌더/결정론은 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -97,114 +97,237 @@ window.LUX = {
     {
      "name": "0. 바보",
      "keyword": "새로운 시작",
-     "line": "두려움 없이 첫걸음을 내딛는 순수한 모험의 기운입니다."
+     "line": "두려움 없이 첫걸음을 내딛는 순수한 모험의 기운입니다.",
+     "reversedKeyword": "성급함·망설임",
+     "reversedLine": "발걸음을 잠시 멈추고 방향을 점검해 보세요. 무모함을 다듬으면 더 안전한 길이 열립니다.",
+     "love": "새로운 만남에 마음을 열어 두면, 예상치 못한 인연이 가볍게 다가올 수 있는 날입니다.",
+     "work": "익숙한 틀을 벗어난 시도가 신선한 기회를 만들어 주니, 두려움 없이 첫발을 떼어 보세요.",
+     "money": "작은 모험심이 새 기회를 부르지만, 충동적인 지출은 한 번 더 생각해 보면 좋습니다."
     },
     {
      "name": "1. 마법사",
      "keyword": "창조와 실행",
-     "line": "가진 재능을 현실로 펼쳐 낼 준비가 된 때입니다."
+     "line": "가진 재능을 현실로 펼쳐 낼 준비가 된 때입니다.",
+     "reversedKeyword": "공회전·자신감 부족",
+     "reversedLine": "재능을 의심하기보다, 흩어진 의욕을 한곳에 모아 차근차근 재정비할 시간입니다.",
+     "love": "솔직한 표현이 마음의 거리를 좁혀 주니, 먼저 다가가 진심을 전해 보는 하루입니다.",
+     "work": "가진 기술과 아이디어를 실행에 옮기기 좋은 때이니, 주저 말고 행동으로 보여 주세요.",
+     "money": "기획한 일을 현실로 만들 추진력이 좋으니, 새 수입원을 차분히 설계해 보세요."
     },
     {
      "name": "2. 여사제",
      "keyword": "직관과 지혜",
-     "line": "마음 깊은 곳의 목소리에 귀 기울여 보세요."
+     "line": "마음 깊은 곳의 목소리에 귀 기울여 보세요.",
+     "reversedKeyword": "혼란·외면한 직관",
+     "reversedLine": "마음의 소리가 흐릿할 땐 조급해하지 말고, 고요히 내면을 정리하며 답을 기다려 보세요.",
+     "love": "말보다 분위기로 전해지는 마음이 있으니, 상대의 미묘한 신호를 따뜻하게 살펴보세요.",
+     "work": "겉으로 드러난 정보 너머의 흐름을 읽으면, 조용한 통찰이 좋은 판단으로 이어집니다.",
+     "money": "서두르지 말고 직관과 정보를 함께 살피면, 신중한 결정이 자산을 지켜 줍니다."
     },
     {
      "name": "3. 여황제",
      "keyword": "풍요와 사랑",
-     "line": "따뜻한 보살핌과 결실이 무르익는 시기입니다."
+     "line": "따뜻한 보살핌과 결실이 무르익는 시기입니다.",
+     "reversedKeyword": "과보호·소진",
+     "reversedLine": "남을 돌보느라 자신을 잊지 않도록, 먼저 스스로의 마음을 따뜻하게 채워 보세요.",
+     "love": "넉넉한 애정과 다정함이 관계를 무르익게 하니, 마음껏 사랑을 표현해도 좋은 날입니다.",
+     "work": "창의력과 협력의 기운이 풍성하니, 함께 키워 온 결실을 거두기 좋은 시기입니다.",
+     "money": "풍요의 흐름이 따르니, 가꾸어 온 노력이 안정된 수확으로 돌아올 수 있습니다."
     },
     {
      "name": "4. 황제",
      "keyword": "안정과 책임",
-     "line": "든든한 기반 위에서 주도적으로 이끌어 갈 때입니다."
+     "line": "든든한 기반 위에서 주도적으로 이끌어 갈 때입니다.",
+     "reversedKeyword": "경직·통제욕",
+     "reversedLine": "원칙을 고집하기보다, 유연하게 한 발 물러서서 균형점을 다시 찾아보면 좋겠습니다.",
+     "love": "든든하고 한결같은 태도가 신뢰를 주니, 안정감 있는 관계를 다져 가기 좋은 날입니다.",
+     "work": "체계와 책임감을 발휘해 주도적으로 이끌면, 흔들림 없는 성과로 이어집니다.",
+     "money": "계획적인 관리와 절제가 빛을 발하니, 탄탄한 기반을 다지기 좋은 시기입니다."
     },
     {
      "name": "5. 교황",
      "keyword": "전통과 가르침",
-     "line": "신뢰할 수 있는 조언과 배움이 길을 밝혀 줍니다."
+     "line": "신뢰할 수 있는 조언과 배움이 길을 밝혀 줍니다.",
+     "reversedKeyword": "형식·고정관념",
+     "reversedLine": "관습에 얽매이기보다 자신만의 기준을 점검하며, 진짜 맞는 길인지 차분히 돌아보세요.",
+     "love": "신뢰와 약속을 소중히 여기는 마음이, 관계를 한층 깊고 안정되게 만들어 줍니다.",
+     "work": "경험 많은 이의 조언과 검증된 방식이, 일을 안전하게 이끌어 주는 하루입니다.",
+     "money": "전통적이고 안정적인 방식의 관리가, 재정에 든든한 버팀목이 되어 줍니다."
     },
     {
      "name": "6. 연인",
      "keyword": "사랑과 선택",
-     "line": "마음을 따르는 소중한 인연과 결정의 순간입니다."
+     "line": "마음을 따르는 소중한 인연과 결정의 순간입니다.",
+     "reversedKeyword": "갈등·선택 미룸",
+     "reversedLine": "마음이 둘로 나뉠 땐, 무엇을 진정 원하는지 솔직히 마주하며 천천히 정리해 보세요.",
+     "love": "진심으로 끌리는 인연과 마주하는 날이니, 마음이 향하는 곳을 솔직히 따라가 보세요.",
+     "work": "함께할 사람이나 방향을 정하는 결정이, 앞으로의 흐름을 좋은 쪽으로 이끕니다.",
+     "money": "가치관에 맞는 선택이 중요하니, 마음이 편안한 쪽으로 자금을 운용해 보세요."
     },
     {
      "name": "7. 전차",
      "keyword": "전진과 의지",
-     "line": "흔들림 없는 의지로 목표를 향해 나아갑니다."
+     "line": "흔들림 없는 의지로 목표를 향해 나아갑니다.",
+     "reversedKeyword": "조급·방향 상실",
+     "reversedLine": "속도를 내기 전에 목표를 다시 또렷이 그리고, 흐트러진 마음의 방향을 가다듬어 보세요.",
+     "love": "주도적으로 다가가는 적극성이 관계를 진전시키니, 망설임을 내려놓아도 좋은 날입니다.",
+     "work": "강한 의지와 집중력으로 밀어붙이면, 목표를 향해 한 걸음 크게 나아갈 수 있습니다.",
+     "money": "결단력 있는 추진이 좋은 결과를 부르니, 계획한 일을 흔들림 없이 진행해 보세요."
     },
     {
      "name": "8. 힘",
      "keyword": "용기와 인내",
-     "line": "부드러운 마음의 힘으로 어려움을 다스립니다."
+     "line": "부드러운 마음의 힘으로 어려움을 다스립니다.",
+     "reversedKeyword": "자기의심·조바심",
+     "reversedLine": "스스로를 다그치기보다, 따뜻한 인내로 마음을 다독이며 천천히 힘을 회복해 보세요.",
+     "love": "부드러운 이해와 포용이 관계를 단단하게 하니, 너그러운 마음으로 다가가 보세요.",
+     "work": "조급함을 다스리는 차분한 끈기가, 어려운 상황을 슬기롭게 풀어내는 힘이 됩니다.",
+     "money": "성급한 판단을 내려놓고 꾸준히 관리하면, 안정된 흐름을 지켜 갈 수 있습니다."
     },
     {
      "name": "9. 은둔자",
      "keyword": "성찰과 탐구",
-     "line": "잠시 멈추어 내면을 들여다보는 고요한 시간입니다."
+     "line": "잠시 멈추어 내면을 들여다보는 고요한 시간입니다.",
+     "reversedKeyword": "고립·단절",
+     "reversedLine": "홀로 깊어지는 것도 좋지만, 마음을 너무 닫지 않도록 적당한 거리를 살펴보세요.",
+     "love": "혼자만의 시간을 통해 마음을 정리하면, 진짜 원하는 관계가 또렷이 보이는 날입니다.",
+     "work": "잠시 거리를 두고 깊이 사색하면, 본질을 꿰뚫는 현명한 답을 얻을 수 있습니다.",
+     "money": "차분히 점검하며 신중을 기하는 자세가, 불필요한 지출을 줄여 주는 시기입니다."
     },
     {
      "name": "10. 운명의 수레바퀴",
      "keyword": "전환과 기회",
-     "line": "운의 흐름이 새롭게 돌아가는 변화의 순간입니다."
+     "line": "운의 흐름이 새롭게 돌아가는 변화의 순간입니다.",
+     "reversedKeyword": "정체·불운감",
+     "reversedLine": "흐름이 더디게 느껴져도, 통제할 수 없는 부분은 내려놓고 할 수 있는 일에 집중해 보세요.",
+     "love": "변화의 바람이 인연의 흐름을 새롭게 하니, 다가오는 기회를 열린 마음으로 맞이하세요.",
+     "work": "예상 밖의 전환이 좋은 기회로 이어질 수 있으니, 변화의 물결에 유연히 올라타 보세요.",
+     "money": "운의 흐름이 돌아가는 시기이니, 좋은 기회가 왔을 때 놓치지 않도록 준비해 두세요."
     },
     {
      "name": "11. 정의",
      "keyword": "균형과 공정",
-     "line": "올바른 판단과 정직함이 좋은 결과로 이어집니다."
+     "line": "올바른 판단과 정직함이 좋은 결과로 이어집니다.",
+     "reversedKeyword": "불공정·책임 회피",
+     "reversedLine": "균형이 흔들릴 땐 누구의 탓을 찾기보다, 스스로의 몫을 정직하게 돌아보면 좋겠습니다.",
+     "love": "솔직하고 공정한 태도가 신뢰를 키우니, 마음을 투명하게 나누기 좋은 하루입니다.",
+     "work": "정확한 판단과 원칙 있는 처신이, 정당한 인정과 좋은 결과로 이어집니다.",
+     "money": "투명하고 합리적인 셈이 중요하니, 계약과 거래를 꼼꼼히 살펴보면 좋습니다."
     },
     {
      "name": "12. 매달린 사람",
      "keyword": "성찰과 내려놓음",
-     "line": "관점을 바꾸어 보면 새로운 길이 보입니다."
+     "line": "관점을 바꾸어 보면 새로운 길이 보입니다.",
+     "reversedKeyword": "고집·헛수고",
+     "reversedLine": "버티기만 하기보다, 잠시 힘을 빼고 관점을 바꾸면 막힌 곳이 자연스레 풀립니다.",
+     "love": "조급한 결론을 잠시 미루고 기다려 주면, 관계가 자연스러운 답을 찾아갑니다.",
+     "work": "잠시 멈추어 다른 시각으로 바라보면, 막혔던 문제의 새로운 실마리가 보입니다.",
+     "money": "당장의 결정을 서두르지 않고 관망하는 여유가, 더 나은 선택을 도와줍니다."
     },
     {
      "name": "13. 죽음",
      "keyword": "끝과 새 출발",
-     "line": "낡은 것을 마무리하고 새로운 시작을 맞이합니다."
+     "line": "낡은 것을 마무리하고 새로운 시작을 맞이합니다.",
+     "reversedKeyword": "집착·변화 거부",
+     "reversedLine": "끝맺음이 두렵더라도, 놓아주어야 할 것을 부드럽게 내려놓으면 새 길이 열립니다.",
+     "love": "지나간 인연을 정리하고 마음을 비우면, 더 잘 맞는 새로운 관계가 찾아옵니다.",
+     "work": "낡은 방식을 마무리하고 새 단계로 넘어가기 좋은, 의미 있는 전환의 시기입니다.",
+     "money": "효율이 떨어진 지출을 정리하면, 자원이 더 가치 있는 곳으로 흐르게 됩니다."
     },
     {
      "name": "14. 절제",
      "keyword": "조화와 균형",
-     "line": "서두르지 않는 절제가 마음의 평온을 가져옵니다."
+     "line": "서두르지 않는 절제가 마음의 평온을 가져옵니다.",
+     "reversedKeyword": "불균형·과욕",
+     "reversedLine": "한쪽으로 치우쳤다면, 무리한 속도를 늦추고 마음과 일상의 균형을 다시 맞춰 보세요.",
+     "love": "서두르지 않는 배려와 조화가, 관계를 편안하고 깊은 신뢰로 이끌어 줍니다.",
+     "work": "여러 일을 조율하는 균형 감각이, 무리 없이 좋은 성과를 만들어 내는 날입니다.",
+     "money": "절제와 균형 잡힌 소비가, 흔들림 없는 재정 흐름을 지켜 주는 시기입니다."
     },
     {
      "name": "15. 악마",
      "keyword": "유혹과 집착",
-     "line": "얽매인 마음을 살피고 가볍게 풀어낼 때입니다."
+     "line": "얽매인 마음을 살피고 가볍게 풀어낼 때입니다.",
+     "reversedKeyword": "해방·집착 자각",
+     "reversedLine": "얽매인 습관이나 관계를 알아차렸다면, 자신을 옥죄던 끈을 천천히 풀어내 보세요.",
+     "love": "끌림과 집착을 구분해 보면, 건강한 거리에서 더 편안한 관계를 가꿀 수 있습니다.",
+     "work": "당장의 유혹보다 멀리 보는 선택이, 일의 흐름을 건강하게 지켜 줍니다.",
+     "money": "충동과 과소비의 고리를 끊으면, 새는 돈을 막고 마음의 여유를 되찾습니다."
     },
     {
      "name": "16. 탑",
      "keyword": "변화와 각성",
-     "line": "예상치 못한 변화가 새로운 깨달음을 줍니다."
+     "line": "예상치 못한 변화가 새로운 깨달음을 줍니다.",
+     "reversedKeyword": "여진·회피",
+     "reversedLine": "갑작스러운 흔들림이 지나갔다면, 무너진 자리를 차분히 살피며 다시 쌓아 가 보세요.",
+     "love": "예상 밖의 변화가 오히려 관계의 진심을 드러내니, 두려워 말고 솔직히 마주하세요.",
+     "work": "흔들리던 구조가 정리되면서, 더 단단한 토대를 세울 기회가 찾아오는 시기입니다.",
+     "money": "갑작스러운 변동에 대비해 두면, 위기를 오히려 정비의 계기로 삼을 수 있습니다."
     },
     {
      "name": "17. 별",
      "keyword": "희망과 영감",
-     "line": "맑은 희망이 마음을 환하게 비추는 시기입니다."
+     "line": "맑은 희망이 마음을 환하게 비추는 시기입니다.",
+     "reversedKeyword": "낙담·자신감 저하",
+     "reversedLine": "희망이 흐려질 땐 스스로를 너무 몰아세우지 말고, 작은 빛부터 천천히 되찾아 보세요.",
+     "love": "맑고 진솔한 마음이 인연을 끌어당기니, 부드러운 기대를 품고 다가가도 좋은 날입니다.",
+     "work": "새로운 영감과 희망이 길을 밝히니, 오래 품어 온 꿈에 다시 도전해 볼 만합니다.",
+     "money": "긍정적인 흐름이 서서히 회복되니, 길게 보고 차분히 계획을 세워 가기 좋습니다."
     },
     {
      "name": "18. 달",
      "keyword": "직관과 상상",
-     "line": "어렴풋한 마음을 차분히 들여다보면 길이 보입니다."
+     "line": "어렴풋한 마음을 차분히 들여다보면 길이 보입니다.",
+     "reversedKeyword": "불안·오해",
+     "reversedLine": "마음이 어수선할 땐 막연한 두려움에 휩쓸리지 말고, 사실과 감정을 차분히 구분해 보세요.",
+     "love": "오해가 생기기 쉬운 때이니, 짐작보다 솔직한 대화로 마음을 확인해 보는 하루입니다.",
+     "work": "불확실함 속에서도 차분히 정보를 살피면, 어렴풋하던 길이 점차 또렷해집니다.",
+     "money": "확실하지 않은 정보에 흔들리지 말고, 신중하게 사실을 확인한 뒤 결정해 보세요."
     },
     {
      "name": "19. 태양",
      "keyword": "기쁨과 성취",
-     "line": "밝은 에너지가 가득한 행복하고 성공적인 때입니다."
+     "line": "밝은 에너지가 가득한 행복하고 성공적인 때입니다.",
+     "reversedKeyword": "지연·들뜸",
+     "reversedLine": "기쁨이 잠시 가려진 듯해도, 조급해하지 말고 작은 즐거움부터 다시 챙겨 보세요.",
+     "love": "밝고 따뜻한 에너지가 관계를 환하게 하니, 솔직한 애정을 마음껏 나누기 좋은 날입니다.",
+     "work": "활기와 자신감이 가득하니, 그동안의 노력이 빛나는 성취로 이어지는 시기입니다.",
+     "money": "긍정적인 흐름이 따르니, 노력의 결실을 즐기되 들뜬 지출은 가볍게 조절해 보세요."
     },
     {
      "name": "20. 심판",
      "keyword": "각성과 부활",
-     "line": "지난날을 돌아보며 새롭게 거듭나는 순간입니다."
+     "line": "지난날을 돌아보며 새롭게 거듭나는 순간입니다.",
+     "reversedKeyword": "자기비판·주저",
+     "reversedLine": "지난 일을 너무 엄히 탓하기보다, 배움으로 받아들이고 새 출발의 용기를 내어 보세요.",
+     "love": "지난 인연을 돌아보며 마음을 정리하면, 한층 성숙한 사랑으로 나아갈 수 있습니다.",
+     "work": "그동안의 경험을 되짚어 보면, 한 단계 도약할 새로운 부름을 알아차리게 됩니다.",
+     "money": "지난 선택을 점검하고 재정비하면, 더 현명한 재정 방향을 다시 세울 수 있습니다."
     },
     {
      "name": "21. 세계",
      "keyword": "완성과 성취",
-     "line": "하나의 여정이 아름답게 완결되는 충만한 시기입니다."
+     "line": "하나의 여정이 아름답게 완결되는 충만한 시기입니다.",
+     "reversedKeyword": "미완·마무리 지연",
+     "reversedLine": "거의 다 왔으니 조급해 말고, 남은 매듭을 차분히 정리하며 끝까지 완성해 보세요.",
+     "love": "함께 쌓아 온 마음이 결실을 맺으니, 관계의 한 단계를 충만하게 완성하는 날입니다.",
+     "work": "오랜 여정이 아름답게 마무리되니, 성취를 누리며 다음 무대를 준비하기 좋습니다.",
+     "money": "노력의 결실이 무르익는 시기이니, 거둔 성과를 안정되게 갈무리하면 좋습니다."
     }
-   ]
+   ],
+   "reversedLabel": "역방향",
+   "fieldLabels": {
+    "love": "연애",
+    "work": "일",
+    "money": "금전"
+   },
+   "spreadTitle": "과거·현재·미래 3카드 스프레드",
+   "positions": [
+    "과거",
+    "현재",
+    "미래"
+   ],
+   "askMore": "이 카드에 대해 더 물어보기"
   },
   "luckyFour": {
    "title": "오늘의 행운 네 가지",
@@ -539,114 +662,237 @@ window.LUX = {
     {
      "name": "The Fool",
      "keyword": "New Beginnings",
-     "line": "A fresh adventure is calling — step forward with an open, trusting heart."
+     "line": "A fresh adventure is calling — step forward with an open, trusting heart.",
+     "reversedKeyword": "Hesitation",
+     "reversedLine": "A good moment to pause and plan before you leap, so your excitement rests on a little practical preparation.",
+     "love": "Approach connection with open curiosity today; lightness and honesty invite a fresh, easy spark.",
+     "work": "A new idea or role is worth exploring, so trust your beginner's energy and start small.",
+     "money": "A fresh financial chapter opens, though it rewards a clear plan more than pure impulse."
     },
     {
      "name": "The Magician",
      "keyword": "Manifestation",
-     "line": "You have all the tools you need; focus your intention and make it real."
+     "line": "You have all the tools you need; focus your intention and make it real.",
+     "reversedKeyword": "Scattered Focus",
+     "reversedLine": "Gather your energy toward one clear intention, and your skills will land with far more impact.",
+     "love": "You have the charm to express what you truly want, so speak from the heart with confidence.",
+     "work": "Your talents are aligned to make things happen, so take focused, decisive action on a goal.",
+     "money": "You have the resourcefulness to improve your situation through a deliberate, well-aimed move."
     },
     {
      "name": "The High Priestess",
      "keyword": "Intuition",
-     "line": "Listen to your inner voice today — it knows more than it lets on."
+     "line": "Listen to your inner voice today — it knows more than it lets on.",
+     "reversedKeyword": "Inner Noise",
+     "reversedLine": "Quiet the outside chatter and reconnect with your intuition, which already knows the next gentle step.",
+     "love": "Listen beneath the words today; unspoken feelings and quiet signals reveal more than open conversation.",
+     "work": "Trust your instincts before acting, and let patient observation guide a wiser professional choice.",
+     "money": "Hold back from rushing; a thoughtful, intuitive read of the situation protects your resources."
     },
     {
      "name": "The Empress",
      "keyword": "Abundance",
-     "line": "Nurture what you love and watch it blossom into something beautiful."
+     "line": "Nurture what you love and watch it blossom into something beautiful.",
+     "reversedKeyword": "Self-Neglect",
+     "reversedLine": "Turn some of your nurturing care inward, replenishing yourself so your warmth can flow freely again.",
+     "love": "Warmth and tenderness deepen your bond today, so let affection and generous attention flow openly.",
+     "work": "Creative, collaborative energy flourishes now, so nurture your ideas and the people growing them alongside you.",
+     "money": "Abundance is supported by patient cultivation, so tend your resources with care rather than haste."
     },
     {
      "name": "The Emperor",
      "keyword": "Structure",
-     "line": "A little order and steady leadership bring stability to your day."
+     "line": "A little order and steady leadership bring stability to your day.",
+     "reversedKeyword": "Rigidity",
+     "reversedLine": "Loosen any overly tight control and invite flexibility, letting steady structure breathe with a little room.",
+     "love": "Stability and reliability strengthen your relationship today, so offer steady presence and dependable support.",
+     "work": "Solid structure and clear leadership move things forward, so organize your plan and lead with confidence.",
+     "money": "Disciplined planning builds lasting security, so set firm boundaries and manage your budget steadily."
     },
     {
      "name": "The Hierophant",
      "keyword": "Tradition",
-     "line": "Lean on trusted wisdom or a mentor's guidance to find your footing."
+     "line": "Lean on trusted wisdom or a mentor's guidance to find your footing.",
+     "reversedKeyword": "Blind Conformity",
+     "reversedLine": "Honor tradition while questioning what no longer fits, so your choices stay genuinely your own.",
+     "love": "Shared values and commitment bring harmony today, so honor the meaning you build together.",
+     "work": "Guidance, mentorship, or proven methods serve you well, so learn from those who walked the path before you.",
+     "money": "Trusted, conventional advice steadies your finances, so lean on established, time-tested approaches."
     },
     {
      "name": "The Lovers",
      "keyword": "Connection",
-     "line": "Harmony and heartfelt choices bring you closer to someone special."
+     "line": "Harmony and heartfelt choices bring you closer to someone special.",
+     "reversedKeyword": "Misalignment",
+     "reversedLine": "Revisit your values before deciding, and realign your choices with what genuinely matters to you.",
+     "love": "A meaningful connection or choice asks for your heart, so choose with honesty and openness.",
+     "work": "An important decision or partnership invites alignment, so commit to what reflects your true values.",
+     "money": "A financial choice is best made from your values, so weigh your options with clarity and integrity."
     },
     {
      "name": "The Chariot",
      "keyword": "Determination",
-     "line": "Stay focused and keep moving — your willpower carries you to victory."
+     "line": "Stay focused and keep moving — your willpower carries you to victory.",
+     "reversedKeyword": "Lost Direction",
+     "reversedLine": "Steady your scattered drive and refocus, so your determination pulls you toward one clear destination.",
+     "love": "Confidence and clear intention move your relationship forward, so steer toward what you genuinely want.",
+     "work": "Focused willpower drives real progress now, so push ahead with discipline and a clear goal.",
+     "money": "Determined, controlled effort improves your finances, so stay the course toward a defined target."
     },
     {
      "name": "Strength",
      "keyword": "Inner Courage",
-     "line": "Gentle patience and quiet confidence overcome any challenge today."
+     "line": "Gentle patience and quiet confidence overcome any challenge today.",
+     "reversedKeyword": "Self-Doubt",
+     "reversedLine": "Be gentle with your own vulnerability, and rebuild confidence through patience rather than forceful pressure.",
+     "love": "Patience and compassion soften any tension today, so lead with gentle strength and understanding.",
+     "work": "Quiet resilience carries you through challenges, so stay calm and persistent under pressure.",
+     "money": "Steady composure helps you handle money matters, so respond with patience rather than panic."
     },
     {
      "name": "The Hermit",
      "keyword": "Reflection",
-     "line": "A quiet moment alone brings the clarity you have been seeking."
+     "line": "A quiet moment alone brings the clarity you have been seeking.",
+     "reversedKeyword": "Isolation",
+     "reversedLine": "Honor your need for solitude, but stay gently connected so reflection does not slip into withdrawal.",
+     "love": "A reflective pause helps you understand your true feelings, so give yourself thoughtful, honest space.",
+     "work": "Step back to gain perspective today, and let careful reflection clarify your next professional move.",
+     "money": "A quiet review of your finances brings insight, so examine your situation calmly and honestly."
     },
     {
      "name": "Wheel of Fortune",
      "keyword": "Lucky Turn",
-     "line": "Fortune is turning in your favor — welcome the change with open arms."
+     "line": "Fortune is turning in your favor — welcome the change with open arms.",
+     "reversedKeyword": "Resistance",
+     "reversedLine": "Work with the shifting tide rather than against it, trusting that cycles turn in their own time.",
+     "love": "A natural turn of fortune brings movement today, so welcome change with an open, hopeful heart.",
+     "work": "Circumstances are shifting in your favor, so stay adaptable and ready to seize a timely opening.",
+     "money": "A change in your financial cycle is unfolding, so remain flexible and open to new opportunity."
     },
     {
      "name": "Justice",
      "keyword": "Fairness",
-     "line": "Honesty and balance guide you toward the right decision today."
+     "line": "Honesty and balance guide you toward the right decision today.",
+     "reversedKeyword": "Imbalance",
+     "reversedLine": "Look honestly at the situation and take accountability, so fairness can be gently restored.",
+     "love": "Honesty and fairness strengthen your bond today, so communicate clearly and keep things balanced.",
+     "work": "Clear, fair decisions move things forward, so weigh the facts carefully and act with integrity.",
+     "money": "Balanced, accountable choices protect your finances, so review your commitments honestly and settle matters fairly."
     },
     {
      "name": "The Hanged Man",
      "keyword": "New Perspective",
-     "line": "Pause and see things from a fresh angle — patience reveals the answer."
+     "line": "Pause and see things from a fresh angle — patience reveals the answer.",
+     "reversedKeyword": "Stalling",
+     "reversedLine": "Release what keeps you stuck and shift your perspective, so a fresh view can set you free.",
+     "love": "A new perspective deepens understanding today, so pause and see your relationship through fresh eyes.",
+     "work": "Surrender to a brief pause and let insight come, then a wiser approach will reveal itself.",
+     "money": "A change of viewpoint reframes your finances, so consider a patient, less conventional approach."
     },
     {
      "name": "Death",
      "keyword": "Transformation",
-     "line": "Let go of what no longer serves you to make room for something new."
+     "line": "Let go of what no longer serves you to make room for something new.",
+     "reversedKeyword": "Clinging",
+     "reversedLine": "Gently allow a natural ending so something new can begin, trusting transformation as a quiet renewal.",
+     "love": "A meaningful transition refreshes your connection today, so release the old and welcome genuine renewal.",
+     "work": "An ending clears space for growth, so let go of what is finished and move forward.",
+     "money": "Closing an old financial chapter makes room for the new, so embrace a clean, fresh start."
     },
     {
      "name": "Temperance",
      "keyword": "Balance",
-     "line": "A calm, measured approach brings harmony to everything you touch."
+     "line": "A calm, measured approach brings harmony to everything you touch.",
+     "reversedKeyword": "Excess",
+     "reversedLine": "Restore a little balance and moderation, blending the pieces of your life back into gentle harmony.",
+     "love": "Patience and balance bring harmony today, so blend your needs with your partner's with grace.",
+     "work": "A calm, measured approach yields the best results, so pace yourself and integrate your efforts smoothly.",
+     "money": "Moderation and steady balance serve your finances, so spend and save with thoughtful proportion."
     },
     {
      "name": "The Devil",
      "keyword": "Release",
-     "line": "Notice what holds you back, and gently free yourself from old habits."
+     "line": "Notice what holds you back, and gently free yourself from old habits.",
+     "reversedKeyword": "Releasing Chains",
+     "reversedLine": "Notice what quietly holds you, and take one honest step toward reclaiming your own freedom.",
+     "love": "Examine any unhealthy patterns today, and choose connection that feels genuinely free and respectful.",
+     "work": "Watch for habits or pressures that bind you, and reclaim your autonomy with honest awareness.",
+     "money": "Be mindful of tempting overcommitment, and free yourself from spending that quietly weighs you down."
     },
     {
      "name": "The Tower",
      "keyword": "Sudden Change",
-     "line": "An unexpected shift clears the way for a stronger, truer foundation."
+     "line": "An unexpected shift clears the way for a stronger, truer foundation.",
+     "reversedKeyword": "Slow Release",
+     "reversedLine": "Even sudden change can clear space for something truer, so steady yourself and rebuild on firmer ground.",
+     "love": "An honest revelation can refresh your relationship today, so welcome the clarity that truth brings.",
+     "work": "An unexpected shift breaks down what no longer holds, so adapt and rebuild on stronger foundations.",
+     "money": "A financial surprise invites honest reassessment, so review your structure and rebuild it more securely."
     },
     {
      "name": "The Star",
      "keyword": "Hope",
-     "line": "Keep your hopes high — brighter days and gentle healing are on the way."
+     "line": "Keep your hopes high — brighter days and gentle healing are on the way.",
+     "reversedKeyword": "Faded Hope",
+     "reversedLine": "Reconnect gently with your hope, letting small moments of faith restore your inner light.",
+     "love": "Hope and openness renew your connection today, so let trust and tenderness guide your heart.",
+     "work": "Inspiration and quiet optimism light your path, so keep faith in your vision and your gifts.",
+     "money": "A hopeful, patient outlook supports recovery, so trust that steady effort will brighten your finances."
     },
     {
      "name": "The Moon",
      "keyword": "Imagination",
-     "line": "Trust your dreams and intuition, even when the path feels unclear."
+     "line": "Trust your dreams and intuition, even when the path feels unclear.",
+     "reversedKeyword": "Confusion",
+     "reversedLine": "Move slowly through uncertainty, and let clarity surface gradually rather than forcing premature conclusions.",
+     "love": "Look beneath the surface today, and give unspoken feelings gentle time to become clear.",
+     "work": "Things may feel unclear right now, so gather more information before committing to a major decision.",
+     "money": "Avoid acting on incomplete information, and wait for clarity before making a financial move."
     },
     {
      "name": "The Sun",
      "keyword": "Joy",
-     "line": "Warmth, success, and pure happiness light up your day — enjoy it fully."
+     "line": "Warmth, success, and pure happiness light up your day — enjoy it fully.",
+     "reversedKeyword": "Dimmed Light",
+     "reversedLine": "Reconnect with simple joys, letting small bright moments gently rekindle your natural optimism.",
+     "love": "Warmth, joy, and openness brighten your relationship today, so celebrate the happiness you share.",
+     "work": "Success and clarity shine on your efforts, so step forward with confidence and genuine enthusiasm.",
+     "money": "A bright, positive phase supports your finances, so enjoy the rewards of your honest work."
     },
     {
      "name": "Judgement",
      "keyword": "Renewal",
-     "line": "A meaningful awakening invites you to rise and embrace a new chapter."
+     "line": "A meaningful awakening invites you to rise and embrace a new chapter.",
+     "reversedKeyword": "Self-Criticism",
+     "reversedLine": "Soften your inner judgment, and listen for the honest call that gently invites your renewal.",
+     "love": "An honest reckoning deepens your bond today, so reflect together and embrace a fresh understanding.",
+     "work": "A moment of clarity calls you to your true path, so answer it with conviction.",
+     "money": "A clear-eyed review of past choices guides better decisions, so reassess and move forward wisely."
     },
     {
      "name": "The World",
      "keyword": "Fulfillment",
-     "line": "A cycle comes to a joyful close — celebrate how far you have come."
+     "line": "A cycle comes to a joyful close — celebrate how far you have come.",
+     "reversedKeyword": "Near Completion",
+     "reversedLine": "Honor the final stretch with patience, tying up loose ends so your accomplishment feels whole.",
+     "love": "A sense of wholeness and fulfillment graces your relationship today, so cherish how far you have come.",
+     "work": "A meaningful achievement comes full circle, so celebrate completion and step toward your next horizon.",
+     "money": "Your financial efforts reach a rewarding milestone, so honor your success and plan the next cycle."
     }
-   ]
+   ],
+   "reversedLabel": "Reversed",
+   "fieldLabels": {
+    "love": "Love",
+    "work": "Work",
+    "money": "Money"
+   },
+   "spreadTitle": "Past, Present, Future: A Three-Card Spread",
+   "positions": [
+    "Past",
+    "Present",
+    "Future"
+   ],
+   "askMore": "Ask more about this card"
   },
   "luckyFour": {
    "title": "Your Four Lucky Charms",
@@ -981,114 +1227,237 @@ window.LUX = {
     {
      "name": "愚者",
      "keyword": "始まり",
-     "line": "まっさらな心で、新しい一歩を踏み出すとき。"
+     "line": "まっさらな心で、新しい一歩を踏み出すとき。",
+     "reversedKeyword": "見切り発車",
+     "reversedLine": "勢いだけで飛び込む前に、足元を確かめて準備を整え直すと安心して進めます。",
+     "love": "肩の力を抜いた自然体の自分が、新しい出会いや関係に良い風を呼び込みます。",
+     "work": "前例にとらわれず、思いついた一歩を気軽に試してみると道が開けていきます。",
+     "money": "新しい使い方やサービスに興味が向く日。小さく試しつつ無理は控えめにしましょう。"
     },
     {
      "name": "魔術師",
      "keyword": "創造",
-     "line": "持っている力を活かせば、望みは形になります。"
+     "line": "持っている力を活かせば、望みは形になります。",
+     "reversedKeyword": "空回り",
+     "reversedLine": "力みすぎて空回りしやすいとき。目的をひとつに絞ると本来の力が戻ってきます。",
+     "love": "気持ちを言葉にして伝える勇気が、関係を一歩先へと進めてくれそうです。",
+     "work": "持っている技術や工夫を惜しまず発揮すれば、成果として形になっていきます。",
+     "money": "計画を立てて動けば、収入につながる行動が実を結びやすい流れにあります。"
     },
     {
      "name": "女教皇",
      "keyword": "直感",
-     "line": "静かな心の声に、そっと耳を傾けてみましょう。"
+     "line": "静かな心の声に、そっと耳を傾けてみましょう。",
+     "reversedKeyword": "直感の曇り",
+     "reversedLine": "情報に振り回されやすいとき。静かな時間をつくり、内なる声に立ち返りましょう。",
+     "love": "焦らず相手の言葉に耳を傾けると、心の距離が静かに縮まっていきます。",
+     "work": "表に出ない情報や人の機微を感じ取る力が、判断の支えになってくれます。",
+     "money": "衝動より直感を信じて、急がず情報を集めてから決めると安心できます。"
     },
     {
      "name": "女帝",
      "keyword": "豊かさ",
-     "line": "愛情と実りに満ちた、穏やかな時間が訪れます。"
+     "line": "愛情と実りに満ちた、穏やかな時間が訪れます。",
+     "reversedKeyword": "過保護",
+     "reversedLine": "与えすぎや甘やかしに偏りがちなとき。自分をいたわる時間も大切にしましょう。",
+     "love": "包み込むような優しさが、相手に安心感を与えて関係を温かく育てます。",
+     "work": "創意と思いやりを注いだ仕事が、まわりから自然と評価されていきます。",
+     "money": "豊かさが巡りやすい時期。心地よく使い、心地よく蓄えるとよいでしょう。"
     },
     {
      "name": "皇帝",
      "keyword": "安定",
-     "line": "確かな意志と行動が、揺るがない基盤を築きます。"
+     "line": "確かな意志と行動が、揺るがない基盤を築きます。",
+     "reversedKeyword": "頑なさ",
+     "reversedLine": "支配や頑固さに傾きやすいとき。一度肩の力を抜いて柔軟さを取り戻しましょう。",
+     "love": "頼れる落ち着きが、相手に安心と信頼を感じさせる魅力になります。",
+     "work": "段取りと責任感をもって臨めば、土台のしっかりした成果につながります。",
+     "money": "計画的な管理が安定を生む日。長い目で見た備えを意識してみましょう。"
     },
     {
      "name": "教皇",
      "keyword": "導き",
-     "line": "信頼できる人の助言が、よい道しるべになります。"
+     "line": "信頼できる人の助言が、よい道しるべになります。",
+     "reversedKeyword": "形式偏重",
+     "reversedLine": "決まりごとに縛られすぎないよう、自分に合うやり方を選び直してみましょう。",
+     "love": "誠実なふるまいや約束を大切にする姿勢が、信頼を深めてくれます。",
+     "work": "経験者の助言や学びの機会が、確かな前進のヒントを与えてくれます。",
+     "money": "堅実で正攻法な選択が、安心できる金銭の流れを支えてくれます。"
     },
     {
      "name": "恋人",
      "keyword": "選択",
-     "line": "心が惹かれる方へ。素直な気持ちが鍵です。"
+     "line": "心が惹かれる方へ。素直な気持ちが鍵です。",
+     "reversedKeyword": "迷い",
+     "reversedLine": "選択に迷うとき。何を大切にしたいかを見つめ直すと心が定まってきます。",
+     "love": "心が惹かれる相手との間に、素直な気持ちで通い合う温もりが生まれます。",
+     "work": "価値観の合う相手との協力が、思いがけない良い結果を引き寄せます。",
+     "money": "大切な選択の前は、自分の本音と向き合ってから決めると後悔しません。"
     },
     {
      "name": "戦車",
      "keyword": "前進",
-     "line": "迷いを手放し、前へ進む勇気が実を結びます。"
+     "line": "迷いを手放し、前へ進む勇気が実を結びます。",
+     "reversedKeyword": "方向のずれ",
+     "reversedLine": "勢いが空回りしやすいとき。進む方向をもう一度確かめると軌道が整います。",
+     "love": "まっすぐな気持ちで向き合う姿勢が、関係を前向きに動かしていきます。",
+     "work": "強い意志と集中力で取り組めば、目標へと着実に近づいていけます。",
+     "money": "目標を明確にして行動すれば、努力が金銭面の前進につながります。"
     },
     {
      "name": "力",
      "keyword": "勇気",
-     "line": "やさしさと内なる強さで、困難をやわらげます。"
+     "line": "やさしさと内なる強さで、困難をやわらげます。",
+     "reversedKeyword": "自信のゆらぎ",
+     "reversedLine": "気持ちがぐらつきやすいとき。焦らず小さな成功を積み、自信を取り戻しましょう。",
+     "love": "穏やかで芯のある優しさが、相手の心をやわらかくほぐしていきます。",
+     "work": "粘り強さと落ち着きが、難しい場面でも信頼を勝ち取る力になります。",
+     "money": "焦らず辛抱強く向き合うことで、無理のない安定へと近づけます。"
     },
     {
      "name": "隠者",
      "keyword": "内省",
-     "line": "ひとりの時間が、大切な答えを照らしてくれます。"
+     "line": "ひとりの時間が、大切な答えを照らしてくれます。",
+     "reversedKeyword": "孤立",
+     "reversedLine": "ひとりに閉じこもりすぎないよう、ときに人とのつながりに心を開きましょう。",
+     "love": "静かに相手を見つめる時間が、本当に大切な気持ちに気づかせてくれます。",
+     "work": "一度立ち止まって考え抜く姿勢が、確かな答えを導いてくれます。",
+     "money": "支出を静かに見直す好機。本当に必要なものを見極めてみましょう。"
     },
     {
      "name": "運命の輪",
      "keyword": "転機",
-     "line": "流れが動き出すとき。変化を前向きに受け入れて。"
+     "line": "流れが動き出すとき。変化を前向きに受け入れて。",
+     "reversedKeyword": "流れの停滞",
+     "reversedLine": "流れが滞るように感じるとき。焦らず次の波を待つ心の余裕を持ちましょう。",
+     "love": "巡ってくる縁の流れに身をゆだねると、思いがけない展開が訪れます。",
+     "work": "変化のタイミングをとらえて動けば、好機をしっかり活かせます。",
+     "money": "運の巡りが変わる時期。無理せず流れに乗ることが幸運の鍵です。"
     },
     {
      "name": "正義",
      "keyword": "公正",
-     "line": "誠実なふるまいが、納得のいく結果を導きます。"
+     "line": "誠実なふるまいが、納得のいく結果を導きます。",
+     "reversedKeyword": "不均衡",
+     "reversedLine": "判断が偏りやすいとき。一度立ち止まり、公平な視点を取り戻しましょう。",
+     "love": "対等で誠実な向き合い方が、信頼に満ちた関係を育てていきます。",
+     "work": "公正な判断と責任ある行動が、納得のいく成果へとつながります。",
+     "money": "収支のバランスを見直すことで、健やかな金銭の流れが整います。"
     },
     {
      "name": "吊るされた男",
      "keyword": "視点",
-     "line": "立ち止まり、見方を変えると新しい発見が。"
+     "line": "立ち止まり、見方を変えると新しい発見が。",
+     "reversedKeyword": "停滞感",
+     "reversedLine": "動けないもどかしさを感じるとき。視点を変えると新しい糸口が見えてきます。",
+     "love": "焦らず待つ余裕が、相手との関係に自然な深まりをもたらします。",
+     "work": "あえて立ち止まり別の角度から眺めると、解決の道が見えてきます。",
+     "money": "今は大きく動かすより、じっくり構える姿勢が安心につながります。"
     },
     {
      "name": "死神",
      "keyword": "再生",
-     "line": "ひとつの区切り。次の始まりへと続く道です。"
+     "line": "ひとつの区切り。次の始まりへと続く道です。",
+     "reversedKeyword": "手放せなさ",
+     "reversedLine": "終わりを受け入れにくいとき。少しずつ手放すことで次の扉が開いていきます。",
+     "love": "過去の区切りを越えた先に、新しい関係の芽生えが待っています。",
+     "work": "古いやり方を見直すことで、より身軽に前へ進めるようになります。",
+     "money": "不要な出費や習慣を整理すると、金銭の流れがすっきり整います。"
     },
     {
      "name": "節制",
      "keyword": "調和",
-     "line": "心地よいバランスが、穏やかな日々を運びます。"
+     "line": "心地よいバランスが、穏やかな日々を運びます。",
+     "reversedKeyword": "ちぐはぐ",
+     "reversedLine": "調子が乱れやすいとき。ペースを整え直すと本来の落ち着きが戻ってきます。",
+     "love": "穏やかで思いやりのある接し方が、心地よい関係を育ててくれます。",
+     "work": "焦らず着実に進める姿勢が、調和のとれた良い成果を生みます。",
+     "money": "無理のない配分を心がければ、ゆったりとした安定が保てます。"
     },
     {
      "name": "悪魔",
      "keyword": "気づき",
-     "line": "縛られている思い込みに、そっと気づくとき。"
+     "line": "縛られている思い込みに、そっと気づくとき。",
+     "reversedKeyword": "執着ほどき",
+     "reversedLine": "縛られていた思いに気づくとき。少し距離を置くと心が軽くなっていきます。",
+     "love": "依存ではなく信頼を大切にすると、健やかな関係が築けていきます。",
+     "work": "惰性のやり方を見直し、本当に望む形へ整え直すとよいでしょう。",
+     "money": "つい欲しくなる気持ちと向き合い、必要なものを選ぶ目を持ちましょう。"
     },
     {
      "name": "塔",
      "keyword": "変化",
-     "line": "思いがけない変化も、新しい景色への入り口に。"
+     "line": "思いがけない変化も、新しい景色への入り口に。",
+     "reversedKeyword": "立て直し",
+     "reversedLine": "揺れを感じるときこそ、慌てず一歩ずつ土台を整え直していきましょう。",
+     "love": "思いがけない変化も、関係を見つめ直す前向きなきっかけになります。",
+     "work": "急な状況の変化が、より確かな仕組みづくりへの入り口になります。",
+     "money": "不意の出費に備えつつ、土台を整え直す好機ととらえてみましょう。"
     },
     {
      "name": "星",
      "keyword": "希望",
-     "line": "明るい希望の光が、あなたの未来を照らします。"
+     "line": "明るい希望の光が、あなたの未来を照らします。",
+     "reversedKeyword": "希望の探し直し",
+     "reversedLine": "希望が見えにくいとき。小さな光を一つずつ見つめると心が満ちてきます。",
+     "love": "素直に未来を信じる気持ちが、関係に明るい彩りを添えてくれます。",
+     "work": "前向きな展望をもって進めば、努力が着実に実を結んでいきます。",
+     "money": "希望を持って計画を立てると、明るい金銭の流れが整っていきます。"
     },
     {
      "name": "月",
      "keyword": "想像",
-     "line": "おぼろげな気持ちも、やがて輪郭を結びます。"
+     "line": "おぼろげな気持ちも、やがて輪郭を結びます。",
+     "reversedKeyword": "もやもや",
+     "reversedLine": "気持ちが揺れやすいとき。事実を一つずつ確かめると不安が和らいでいきます。",
+     "love": "言葉にしにくい思いも、静かに見つめると本心が見えてきます。",
+     "work": "曖昧な点は早めに確認すると、思い違いを防いで安心して進めます。",
+     "money": "はっきりしない条件は確かめてから判断すると、安心して動けます。"
     },
     {
      "name": "太陽",
      "keyword": "喜び",
-     "line": "晴れやかな笑顔があふれる、幸せな一日に。"
+     "line": "晴れやかな笑顔があふれる、幸せな一日に。",
+     "reversedKeyword": "充電",
+     "reversedLine": "勢いが少し陰るとき。無理を控え、自分をいたわると元気が戻ってきます。",
+     "love": "晴れやかな笑顔と素直さが、まわりに温かい縁を引き寄せてくれます。",
+     "work": "明るい前向きさが、まわりの協力と良い成果を呼び込んでくれます。",
+     "money": "順調な流れを楽しみつつ、浮かれすぎない落ち着きも大切にしましょう。"
     },
     {
      "name": "審判",
      "keyword": "再出発",
-     "line": "新たな目覚めのとき。前向きな決意が芽生えます。"
+     "line": "新たな目覚めのとき。前向きな決意が芽生えます。",
+     "reversedKeyword": "迷いの長引き",
+     "reversedLine": "決めかねるとき。過去を責めず、これからできることに目を向けましょう。",
+     "love": "これまでを受け入れ前を向く姿勢が、関係を新たな段階へ導きます。",
+     "work": "過去の経験を糧にすれば、次の挑戦へ前向きに踏み出していけます。",
+     "money": "これまでの使い方を振り返り、新しい方針を立て直す好機です。"
     },
     {
      "name": "世界",
      "keyword": "達成",
-     "line": "ひとつの完成。満ち足りた喜びが訪れます。"
+     "line": "ひとつの完成。満ち足りた喜びが訪れます。",
+     "reversedKeyword": "あと一歩",
+     "reversedLine": "仕上げの直前で力が抜けやすいとき。最後まで丁寧に整えると満ち足ります。",
+     "love": "ひとつの節目を迎え、満ち足りた幸せが関係に訪れていきます。",
+     "work": "やり遂げた達成感が、次の大きな一歩への自信につながります。",
+     "money": "努力が実を結ぶ時期。得た豊かさを次へと上手に活かしましょう。"
     }
-   ]
+   ],
+   "reversedLabel": "逆位置",
+   "fieldLabels": {
+    "love": "恋愛",
+    "work": "仕事",
+    "money": "金運"
+   },
+   "spreadTitle": "過去・現在・未来 3枚スプレッド",
+   "positions": [
+    "過去",
+    "現在",
+    "未来"
+   ],
+   "askMore": "このカードについてもっと聞いてみる"
   },
   "luckyFour": {
    "title": "今日のラッキー要素",
@@ -1423,114 +1792,237 @@ window.LUX = {
     {
      "name": "Der Narr",
      "keyword": "Neubeginn",
-     "line": "Ein unbeschwerter Aufbruch lädt Sie ein, dem Leben offen und neugierig zu begegnen."
+     "line": "Ein unbeschwerter Aufbruch lädt Sie ein, dem Leben offen und neugierig zu begegnen.",
+     "reversedKeyword": "Unbedachtheit",
+     "reversedLine": "Prüfen Sie den nächsten Schritt in Ruhe, damit jugendlicher Schwung nicht zu vorschneller Eile wird.",
+     "love": "Begegnen Sie der Liebe heute offen und leicht, ohne sich gleich unter Druck zu setzen.",
+     "work": "Ein frischer Anfang im Beruf belohnt Mut, solange Sie neugierig und lernbereit bleiben.",
+     "money": "Neue finanzielle Wege locken; gehen Sie sie unbeschwert, aber mit einem klaren Blick."
     },
     {
      "name": "Der Magier",
      "keyword": "Schöpferkraft",
-     "line": "Sie haben alle Mittel in der Hand — vertrauen Sie auf Ihr Können und Ihren Willen."
+     "line": "Sie haben alle Mittel in der Hand — vertrauen Sie auf Ihr Können und Ihren Willen.",
+     "reversedKeyword": "Zerstreuung",
+     "reversedLine": "Sammeln Sie Ihre Kräfte bewusst, bevor Sie viele Ideen gleichzeitig in Bewegung setzen.",
+     "love": "Sprechen Sie aus, was Sie fühlen; Ihre klaren Worte schaffen heute echte Nähe.",
+     "work": "Sie haben alle Mittel zur Hand, um ein Vorhaben tatkräftig und gekonnt umzusetzen.",
+     "money": "Mit Geschick und Initiative lässt sich heute eine günstige Gelegenheit aktiv gestalten."
     },
     {
      "name": "Die Hohepriesterin",
      "keyword": "Intuition",
-     "line": "Ihre innere Stimme weiß mehr, als Worte sagen — hören Sie still in sich hinein."
+     "line": "Ihre innere Stimme weiß mehr, als Worte sagen — hören Sie still in sich hinein.",
+     "reversedKeyword": "Verdrängte Stimme",
+     "reversedLine": "Schenken Sie Ihrer Intuition wieder Raum, statt leise Signale im Alltag zu überhören.",
+     "love": "Hören Sie auf Ihr Gefühl; ungesagte Sehnsüchte dürfen sich heute behutsam zeigen.",
+     "work": "Vertrauen Sie Ihrem Gespür für den richtigen Moment, bevor Sie laut entscheiden.",
+     "money": "Beobachten Sie geduldig und sammeln Sie Wissen, ehe Sie finanziell aktiv werden."
     },
     {
      "name": "Die Herrscherin",
      "keyword": "Fülle",
-     "line": "Eine Zeit des Wachstums und der Fürsorge — pflegen Sie, was Ihnen am Herzen liegt."
+     "line": "Eine Zeit des Wachstums und der Fürsorge — pflegen Sie, was Ihnen am Herzen liegt.",
+     "reversedKeyword": "Selbstvernachlässigung",
+     "reversedLine": "Wenden Sie Ihre Fürsorge auch sich selbst zu, damit Geben und Empfangen im Gleichgewicht bleiben.",
+     "love": "Eine warme, nährende Zeit lädt ein, Zärtlichkeit und Geborgenheit großzügig zu schenken.",
+     "work": "Kreative Fülle umgibt Sie; pflegen Sie ein Projekt geduldig, bis es reif gedeiht.",
+     "money": "Ihre finanzielle Lage darf wachsen; investieren Sie in das, was nachhaltig Frucht trägt."
     },
     {
      "name": "Der Herrscher",
      "keyword": "Struktur",
-     "line": "Klarheit und Verlässlichkeit geben Ihnen jetzt ein starkes Fundament."
+     "line": "Klarheit und Verlässlichkeit geben Ihnen jetzt ein starkes Fundament.",
+     "reversedKeyword": "Starrheit",
+     "reversedLine": "Lockern Sie zu feste Kontrolle behutsam, damit Struktur nicht in Unbeweglichkeit kippt.",
+     "love": "Verlässlichkeit und klare Worte geben Ihrer Beziehung heute ein stabiles Fundament.",
+     "work": "Mit klarer Ordnung und Führung bringen Sie ein Vorhaben sicher auf Kurs.",
+     "money": "Ein durchdachter Plan und feste Grenzen schützen heute Ihre finanzielle Basis."
     },
     {
      "name": "Der Hierophant",
      "keyword": "Tradition",
-     "line": "Bewährtes Wissen und gute Ratgeber weisen Ihnen einen sicheren Weg."
+     "line": "Bewährtes Wissen und gute Ratgeber weisen Ihnen einen sicheren Weg.",
+     "reversedKeyword": "Eigener Weg",
+     "reversedLine": "Prüfen Sie überlieferte Regeln in Ruhe und wählen Sie, was wirklich zu Ihnen passt.",
+     "love": "Gemeinsame Werte und Verlässlichkeit vertiefen heute die Verbindung zu Ihrem Gegenüber.",
+     "work": "Bewährtes Wissen und ein guter Mentor weisen Ihnen jetzt einen sicheren Weg.",
+     "money": "Solide, erprobte Strategien sind heute wertvoller als riskante finanzielle Experimente."
     },
     {
      "name": "Die Liebenden",
      "keyword": "Verbindung",
-     "line": "Eine Herzensentscheidung steht an — folgen Sie dem, was sich aufrichtig anfühlt."
+     "line": "Eine Herzensentscheidung steht an — folgen Sie dem, was sich aufrichtig anfühlt.",
+     "reversedKeyword": "Zwiespalt",
+     "reversedLine": "Klären Sie in Ruhe, was Ihr Herz wirklich möchte, bevor Sie eine Entscheidung treffen.",
+     "love": "Eine Herzensentscheidung reift; folgen Sie dem, was sich aufrichtig und stimmig anfühlt.",
+     "work": "Wählen Sie bewusst zwischen Optionen, die Ihren Werten im Beruf entsprechen.",
+     "money": "Treffen Sie finanzielle Entscheidungen im Einklang mit dem, was Ihnen wirklich wichtig ist."
     },
     {
      "name": "Der Wagen",
      "keyword": "Willenskraft",
-     "line": "Mit Fokus und Entschlossenheit bringen Sie Ihre Ziele voran."
+     "line": "Mit Fokus und Entschlossenheit bringen Sie Ihre Ziele voran.",
+     "reversedKeyword": "Richtungssuche",
+     "reversedLine": "Bündeln Sie Ihre Energie und finden Sie eine klare Richtung, statt in mehrere zugleich zu ziehen.",
+     "love": "Mit Klarheit und gemeinsamer Richtung kommen Sie und Ihr Gegenüber heute gut voran.",
+     "work": "Fokus und Entschlossenheit bringen Ihr berufliches Ziel jetzt spürbar in Bewegung.",
+     "money": "Ein zielgerichteter, disziplinierter Plan trägt Ihre Finanzen heute ein gutes Stück voran."
     },
     {
      "name": "Die Kraft",
      "keyword": "Sanfte Stärke",
-     "line": "Wahre Stärke zeigt sich in Geduld und Mitgefühl — auch mit sich selbst."
+     "line": "Wahre Stärke zeigt sich in Geduld und Mitgefühl — auch mit sich selbst.",
+     "reversedKeyword": "Selbstzweifel",
+     "reversedLine": "Behandeln Sie sich nachsichtig und sammeln Sie Mut langsam wieder aus Ihrer inneren Mitte.",
+     "love": "Begegnen Sie Spannungen mit Geduld und Sanftmut; ruhige Wärme verbindet heute am stärksten.",
+     "work": "Innere Ruhe und Beharrlichkeit meistern berufliche Herausforderungen besser als Druck und Härte.",
+     "money": "Bleiben Sie bei Geldfragen gelassen; besonnene Geduld führt heute weiter als hastiges Handeln."
     },
     {
      "name": "Der Eremit",
      "keyword": "Einkehr",
-     "line": "Ein Moment der Ruhe schenkt Ihnen wertvolle innere Klarheit."
+     "line": "Ein Moment der Ruhe schenkt Ihnen wertvolle innere Klarheit.",
+     "reversedKeyword": "Rückzug",
+     "reversedLine": "Achten Sie darauf, dass nötige Stille nicht unbemerkt in dauerhafte Abschottung übergeht.",
+     "love": "Ein wenig Raum für sich selbst lässt Ihre Gefühle heute klarer und ruhiger werden.",
+     "work": "Ein Moment der Einkehr schenkt Ihnen wertvolle Klarheit für die nächste berufliche Frage.",
+     "money": "Treten Sie kurz zurück und prüfen Sie Ihre Finanzen in Ruhe, bevor Sie handeln."
     },
     {
      "name": "Das Rad des Schicksals",
      "keyword": "Wandel",
-     "line": "Das Leben dreht sich weiter — gute Wendungen sind in Bewegung."
+     "line": "Das Leben dreht sich weiter — gute Wendungen sind in Bewegung.",
+     "reversedKeyword": "Stockung",
+     "reversedLine": "Bleiben Sie geduldig, wenn sich das Rad langsamer dreht; bald öffnet sich neuer Spielraum.",
+     "love": "Das Leben bringt heute Bewegung in Ihre Beziehung; bleiben Sie offen für freundliche Wendungen.",
+     "work": "Ein günstiger Wandel ist in Bewegung; ergreifen Sie die Gelegenheit, sobald sie sich zeigt.",
+     "money": "Finanzielle Umstände verändern sich; flexibel zu bleiben hilft Ihnen, Chancen heute zu nutzen."
     },
     {
      "name": "Die Gerechtigkeit",
      "keyword": "Ausgleich",
-     "line": "Ehrlichkeit und Fairness führen zu einem stimmigen Gleichgewicht."
+     "line": "Ehrlichkeit und Fairness führen zu einem stimmigen Gleichgewicht.",
+     "reversedKeyword": "Unausgewogenheit",
+     "reversedLine": "Sehen Sie ehrlich hin, wo etwas aus dem Gleichgewicht geraten ist, und richten Sie es behutsam neu aus.",
+     "love": "Ehrlichkeit und Fairness schaffen heute ein stimmiges, ausgewogenes Miteinander in Ihrer Beziehung.",
+     "work": "Klare, gerechte Entscheidungen stärken im Beruf Ihre Glaubwürdigkeit und Ihr Ansehen.",
+     "money": "Ein nüchterner, fairer Blick auf Einnahmen und Ausgaben bringt Ihre Finanzen ins Lot."
     },
     {
      "name": "Der Gehängte",
      "keyword": "Perspektivwechsel",
-     "line": "Ein anderer Blickwinkel öffnet überraschend neue Möglichkeiten."
+     "line": "Ein anderer Blickwinkel öffnet überraschend neue Möglichkeiten.",
+     "reversedKeyword": "Festhalten",
+     "reversedLine": "Lassen Sie eine Sache los, die Sie festhält, damit eine frische Sicht wieder fließen kann.",
+     "love": "Ein neuer Blickwinkel öffnet heute überraschend mehr Verständnis für Ihr Gegenüber.",
+     "work": "Innehalten und die Lage anders betrachten bringt im Beruf eine unerwartete Lösung hervor.",
+     "money": "Geduldiges Abwarten kann heute klüger sein als ein vorschneller finanzieller Schritt."
     },
     {
      "name": "Der Tod",
      "keyword": "Wandlung",
-     "line": "Ein Abschnitt geht zu Ende, damit etwas Frisches beginnen kann."
+     "line": "Ein Abschnitt geht zu Ende, damit etwas Frisches beginnen kann.",
+     "reversedKeyword": "Zögern",
+     "reversedLine": "Erlauben Sie sich, einen überfälligen Abschluss sanft anzunehmen, statt am Vertrauten festzuhalten.",
+     "love": "Ein Abschnitt Ihrer Beziehung wandelt sich; geben Sie Raum für eine ehrlichere Form von Nähe.",
+     "work": "Lassen Sie Überholtes im Beruf bewusst los, damit etwas Frisches beginnen kann.",
+     "money": "Ein finanzieller Wandel steht an; das Ende einer alten Gewohnheit macht Platz für Neues."
     },
     {
      "name": "Die Mäßigkeit",
      "keyword": "Harmonie",
-     "line": "Mit Geduld und Maß finden Sie zu einem gesunden Gleichgewicht."
+     "line": "Mit Geduld und Maß finden Sie zu einem gesunden Gleichgewicht.",
+     "reversedKeyword": "Ungeduld",
+     "reversedLine": "Finden Sie bewusst zur Mitte zurück, wenn Eile oder Übermaß die Balance ins Wanken bringen.",
+     "love": "Mit Geduld und Maß finden Sie und Ihr Gegenüber heute zu einem sanften Gleichklang.",
+     "work": "Ausgewogenheit und ruhiges Tempo bringen im Beruf bessere Ergebnisse als hektischer Aktionismus.",
+     "money": "Ein maßvoller Umgang mit Geld schafft heute ein gesundes, tragfähiges Gleichgewicht."
     },
     {
      "name": "Der Teufel",
      "keyword": "Loslösung",
-     "line": "Erkennen Sie alte Muster — Sie haben die Freiheit, sich zu lösen."
+     "line": "Erkennen Sie alte Muster — Sie haben die Freiheit, sich zu lösen.",
+     "reversedKeyword": "Lösung",
+     "reversedLine": "Erkennen Sie ein einengendes Muster und nutzen Sie die Freiheit, sich Schritt für Schritt zu lösen.",
+     "love": "Schauen Sie ehrlich auf Bindungen; bewusste Nähe fühlt sich besser an als heimliche Abhängigkeit.",
+     "work": "Hinterfragen Sie, was Sie im Beruf festhält; Sie haben mehr Wahlfreiheit, als es scheint.",
+     "money": "Prüfen Sie reizvolle, aber bindende Ausgaben; bewusste Entscheidungen schützen heute Ihre Freiheit."
     },
     {
      "name": "Der Turm",
      "keyword": "Befreiung",
-     "line": "Ein plötzlicher Umbruch macht Platz für einen ehrlichen Neuanfang."
+     "line": "Ein plötzlicher Umbruch macht Platz für einen ehrlichen Neuanfang.",
+     "reversedKeyword": "Nachbeben",
+     "reversedLine": "Geben Sie sich nach einer Erschütterung Zeit; aus dem Aufgebrochenen entsteht ruhig ein neuer Grund.",
+     "love": "Ein ehrlicher Umbruch räumt heute auf, was nicht mehr trägt, und schafft Platz für Echtheit.",
+     "work": "Eine plötzliche Wende im Beruf bringt Bewegung; sehen Sie darin die Chance zum Neuaufbau.",
+     "money": "Ordnen Sie nach einem finanziellen Schreck behutsam neu; ein klares Fundament entsteht jetzt."
     },
     {
      "name": "Der Stern",
      "keyword": "Hoffnung",
-     "line": "Ein sanftes Licht der Zuversicht begleitet Sie durch diese Zeit."
+     "line": "Ein sanftes Licht der Zuversicht begleitet Sie durch diese Zeit.",
+     "reversedKeyword": "Mutlosigkeit",
+     "reversedLine": "Lassen Sie ein kleines Licht der Zuversicht zu, auch wenn Hoffnung gerade schwerfällt.",
+     "love": "Ein sanftes Gefühl von Vertrauen und Hoffnung begleitet heute Ihre Beziehung.",
+     "work": "Bleiben Sie zuversichtlich; eine ruhige innere Klarheit weist Ihnen im Beruf den Weg.",
+     "money": "Mit gelassener Hoffnung und einem realistischen Plan klärt sich Ihre finanzielle Lage allmählich."
     },
     {
      "name": "Der Mond",
      "keyword": "Träume",
-     "line": "Gefühle und Fantasie melden sich — vertrauen Sie behutsam Ihrer Ahnung."
+     "line": "Gefühle und Fantasie melden sich — vertrauen Sie behutsam Ihrer Ahnung.",
+     "reversedKeyword": "Verunsicherung",
+     "reversedLine": "Tasten Sie sich im Unklaren behutsam voran und unterscheiden Sie ruhig Ahnung von bloßer Sorge.",
+     "love": "Gefühle und Fantasie melden sich; sprechen Sie Unklares behutsam an, um Missverständnisse zu klären.",
+     "work": "Verlassen Sie sich im Beruf nicht allein auf den ersten Eindruck; prüfen Sie Unklares in Ruhe.",
+     "money": "Verschaffen Sie sich Klarheit, bevor Sie bei undurchsichtigen Geldfragen eine Entscheidung treffen."
     },
     {
      "name": "Die Sonne",
      "keyword": "Lebensfreude",
-     "line": "Wärme, Klarheit und Freude erhellen Ihren Weg."
+     "line": "Wärme, Klarheit und Freude erhellen Ihren Weg.",
+     "reversedKeyword": "Gedämpftes Licht",
+     "reversedLine": "Gönnen Sie sich kleine Lichtblicke, wenn die Freude gerade etwas verhalten scheint.",
+     "love": "Wärme, Offenheit und Freude erhellen heute Ihre Beziehung und bringen Leichtigkeit ins Miteinander.",
+     "work": "Klarheit und gute Laune lassen Sie im Beruf heute mit spürbarem Schwung vorankommen.",
+     "money": "Eine erfreuliche Aussicht hellt Ihre finanzielle Stimmung auf; genießen Sie sie mit Augenmaß."
     },
     {
      "name": "Das Gericht",
      "keyword": "Erneuerung",
-     "line": "Ein innerer Ruf weckt frische Kraft und einen klaren Aufbruch."
+     "line": "Ein innerer Ruf weckt frische Kraft und einen klaren Aufbruch.",
+     "reversedKeyword": "Innerer Aufschub",
+     "reversedLine": "Hören Sie wohlwollend auf den leisen inneren Ruf, statt eine fällige Klärung weiter zu vertagen.",
+     "love": "Ein offenes Gespräch weckt heute frische Kraft und einen ehrlichen Neuanfang in Ihrer Beziehung.",
+     "work": "Ein klarer Entschluss bringt im Beruf neue Energie und ruft Sie zu einem deutlichen Aufbruch.",
+     "money": "Eine ehrliche Bilanz Ihrer Finanzen weckt neue Klarheit für einen frischen Neuanfang."
     },
     {
      "name": "Die Welt",
      "keyword": "Vollendung",
-     "line": "Ein Kreis schließt sich erfüllend — feiern Sie das Erreichte."
+     "line": "Ein Kreis schließt sich erfüllend — feiern Sie das Erreichte.",
+     "reversedKeyword": "Unvollendung",
+     "reversedLine": "Bringen Sie einen letzten offenen Punkt geduldig zu Ende, damit sich der Kreis stimmig schließt.",
+     "love": "Ein erfüllender Abschnitt rundet sich; feiern Sie die gewachsene Verbundenheit mit Ihrem Gegenüber.",
+     "work": "Ein berufliches Vorhaben vollendet sich erfüllend; würdigen Sie in Ruhe, was Sie erreicht haben.",
+     "money": "Ein finanzielles Ziel rückt in greifbare Nähe; ein erfolgreicher Kreis schließt sich."
     }
-   ]
+   ],
+   "reversedLabel": "Umgekehrt",
+   "fieldLabels": {
+    "love": "Liebe",
+    "work": "Beruf",
+    "money": "Finanzen"
+   },
+   "spreadTitle": "Drei-Karten-Legung: Vergangenheit, Gegenwart, Zukunft",
+   "positions": [
+    "Vergangenheit",
+    "Gegenwart",
+    "Zukunft"
+   ],
+   "askMore": "Mehr zu dieser Karte fragen"
   },
   "luckyFour": {
    "title": "Ihre vier Glückselemente",
@@ -1865,114 +2357,237 @@ window.LUX = {
     {
      "name": "Le Mat",
      "keyword": "Liberté",
-     "line": "Un nouveau départ plein de spontanéité : avancez l'esprit léger et ouvert à l'aventure."
+     "line": "Un nouveau départ plein de spontanéité : avancez l'esprit léger et ouvert à l'aventure.",
+     "reversedKeyword": "Imprudence",
+     "reversedLine": "Avant de vous élancer, prenez un instant pour regarder où vous posez le pied.",
+     "love": "Une rencontre légère pourrait éveiller votre cœur ; laissez-vous surprendre sans tout calculer.",
+     "work": "Un nouveau départ s'offre à vous ; osez explorer une voie encore inexplorée.",
+     "money": "Une dépense spontanée reste possible aujourd'hui, mais gardez un œil sur l'essentiel."
     },
     {
      "name": "Le Bateleur",
      "keyword": "Initiative",
-     "line": "Tous vos talents sont à portée de main : c'est le moment de passer à l'action."
+     "line": "Tous vos talents sont à portée de main : c'est le moment de passer à l'action.",
+     "reversedKeyword": "Dispersion",
+     "reversedLine": "Recentrez votre énergie sur une seule intention plutôt que de l'éparpiller partout.",
+     "love": "Vous avez le pouvoir d'exprimer clairement vos sentiments ; les mots justes rapprochent.",
+     "work": "Vos talents sont prêts à se manifester ; passez de l'idée à l'action concrète.",
+     "money": "Une opportunité financière demande votre initiative ; les ressources sont déjà entre vos mains."
     },
     {
      "name": "La Papesse",
      "keyword": "Intuition",
-     "line": "Écoutez votre voix intérieure : la sagesse se trouve dans le silence et la patience."
+     "line": "Écoutez votre voix intérieure : la sagesse se trouve dans le silence et la patience.",
+     "reversedKeyword": "Secrets tus",
+     "reversedLine": "Écoutez davantage votre intuition ; une vérité intérieure attend d'être enfin entendue.",
+     "love": "Laissez le mystère et la patience guider vos sentiments ; tout n'a pas besoin d'être dit.",
+     "work": "Faites confiance à votre intuition avant de décider ; observez ce qui reste dans l'ombre.",
+     "money": "Avant un engagement financier, prenez le temps de comprendre ce qui n'est pas visible."
     },
     {
      "name": "L'Impératrice",
      "keyword": "Abondance",
-     "line": "Créativité et générosité fleurissent : laissez s'épanouir ce que vous semez."
+     "line": "Créativité et générosité fleurissent : laissez s'épanouir ce que vous semez.",
+     "reversedKeyword": "Stagnation",
+     "reversedLine": "Reconnectez-vous à ce qui vous nourrit pour laisser de nouveau fleurir votre créativité.",
+     "love": "La tendresse et la sensualité embellissent vos liens ; accueillez la douceur sans retenue.",
+     "work": "Vos projets entrent dans une phase féconde ; nourrissez-les avec soin et patience.",
+     "money": "L'abondance se cultive ; un investissement réfléchi peut porter de beaux fruits."
     },
     {
      "name": "L'Empereur",
      "keyword": "Stabilité",
-     "line": "Structure et fermeté vous soutiennent : bâtissez sur des bases solides."
+     "line": "Structure et fermeté vous soutiennent : bâtissez sur des bases solides.",
+     "reversedKeyword": "Rigidité",
+     "reversedLine": "Assouplissez vos cadres ; un peu de flexibilité renforcera l'autorité que vous cherchez.",
+     "love": "Une relation gagne en stabilité ; posez ensemble des bases claires et rassurantes.",
+     "work": "La structure et la discipline soutiennent vos ambitions ; organisez avant d'avancer.",
+     "money": "Une gestion rigoureuse de votre budget consolide aujourd'hui votre sécurité matérielle."
     },
     {
      "name": "Le Pape",
      "keyword": "Sagesse",
-     "line": "Un conseil avisé éclaire votre chemin : faites confiance aux valeurs sûres."
+     "line": "Un conseil avisé éclaire votre chemin : faites confiance aux valeurs sûres.",
+     "reversedKeyword": "Conformisme",
+     "reversedLine": "Interrogez les règles reçues ; cherchez votre propre vérité plutôt que de simplement suivre.",
+     "love": "Les valeurs partagées renforcent votre couple ; un engagement sincère prend tout son sens.",
+     "work": "Un mentor ou une tradition éprouvée éclaire votre chemin ; sachez vous laisser guider.",
+     "money": "Suivez des conseils financiers fiables ; la prudence institutionnelle vous protège aujourd'hui."
     },
     {
      "name": "L'Amoureux",
      "keyword": "Choix",
-     "line": "Une décision du cœur s'annonce : suivez ce qui résonne le plus en vous."
+     "line": "Une décision du cœur s'annonce : suivez ce qui résonne le plus en vous.",
+     "reversedKeyword": "Doute",
+     "reversedLine": "Clarifiez vos priorités intérieures avant de vous engager dans un choix important.",
+     "love": "Un choix du cœur se présente ; écoutez vos valeurs profondes pour aimer en accord avec vous-même.",
+     "work": "Une décision demande d'être alignée avec ce qui compte vraiment pour vous.",
+     "money": "Pesez vos options financières selon vos convictions, et non selon la pression extérieure."
     },
     {
      "name": "Le Chariot",
      "keyword": "Élan",
-     "line": "La volonté vous porte vers la victoire : gardez le cap avec confiance."
+     "line": "La volonté vous porte vers la victoire : gardez le cap avec confiance.",
+     "reversedKeyword": "Éparpillement",
+     "reversedLine": "Reprenez les rênes en douceur ; canalisez vos forces vers un cap unique et clair.",
+     "love": "Votre détermination porte la relation ; avancez ensemble avec confiance et élan.",
+     "work": "La volonté et la maîtrise vous mènent à la victoire ; gardez le cap fixé.",
+     "money": "Une démarche déterminée peut débloquer une situation financière ; persévérez avec discipline."
     },
     {
      "name": "La Justice",
      "keyword": "Équilibre",
-     "line": "Honnêteté et équité guident vos pas : chaque action trouve sa juste mesure."
+     "line": "Honnêteté et équité guident vos pas : chaque action trouve sa juste mesure.",
+     "reversedKeyword": "Découragement",
+     "reversedLine": "Soyez doux envers vous-même ; la vraie force se nourrit aussi de patience intérieure.",
+     "love": "La patience et la bienveillance apaisent les tensions ; la douceur triomphe de la force.",
+     "work": "Affrontez les défis avec calme et persévérance ; votre maîtrise intérieure fait la différence.",
+     "money": "Gérez vos finances avec sang-froid ; la modération vous évitera bien des regrets."
     },
     {
      "name": "L'Ermite",
      "keyword": "Introspection",
-     "line": "Un temps de recul éclaire l'essentiel : la réponse se trouve en vous."
+     "line": "Un temps de recul éclaire l'essentiel : la réponse se trouve en vous.",
+     "reversedKeyword": "Isolement",
+     "reversedLine": "Le retrait est utile, mais veillez à ne pas vous couper de ceux qui comptent.",
+     "love": "Un temps de réflexion éclaire vos sentiments ; comprenez votre cœur avant de vous ouvrir.",
+     "work": "Prenez du recul pour retrouver votre cap ; la sagesse naît dans le silence.",
+     "money": "Avant toute décision financière, accordez-vous un temps de réflexion solitaire et lucide."
     },
     {
      "name": "La Roue de Fortune",
      "keyword": "Cycle",
-     "line": "Le vent tourne en votre faveur : accueillez le changement avec sérénité."
+     "line": "Le vent tourne en votre faveur : accueillez le changement avec sérénité.",
+     "reversedKeyword": "Résistance",
+     "reversedLine": "Acceptez en douceur ce qui change ; chaque cycle prépare un renouveau bénéfique.",
+     "love": "Un tournant favorable se dessine ; laissez le destin rapprocher les cœurs qui s'attirent.",
+     "work": "Un cycle tourne en votre faveur ; saisissez sans tarder l'occasion qui se présente.",
+     "money": "La chance financière sourit ; restez attentif aux opportunités qui surgissent naturellement."
     },
     {
      "name": "La Force",
      "keyword": "Courage",
-     "line": "La douceur l'emporte sur la contrainte : votre force tranquille fait des merveilles."
+     "line": "La douceur l'emporte sur la contrainte : votre force tranquille fait des merveilles.",
+     "reversedKeyword": "Déséquilibre",
+     "reversedLine": "Recherchez l'équité avec honnêteté ; rétablissez un juste équilibre dans vos relations.",
+     "love": "L'honnêteté et l'équilibre nourrissent une relation saine ; agissez avec justesse et clarté.",
+     "work": "Une situation se règle équitablement ; assumez vos responsabilités avec intégrité.",
+     "money": "Un contrat ou un règlement se conclut justement ; veillez à la transparence des comptes."
     },
     {
      "name": "Le Pendu",
      "keyword": "Recul",
-     "line": "Un autre point de vue change tout : lâcher prise ouvre de nouvelles voies."
+     "line": "Un autre point de vue change tout : lâcher prise ouvre de nouvelles voies.",
+     "reversedKeyword": "Blocage",
+     "reversedLine": "Si l'attente pèse, changez doucement de perspective pour libérer ce qui est figé.",
+     "love": "Un autre regard sur la relation peut tout éclairer ; laissez le temps faire son œuvre.",
+     "work": "Une pause vous invite à voir les choses autrement ; le lâcher-prise ouvre des voies.",
+     "money": "Suspendez les décisions hâtives ; observez la situation sous un angle nouveau avant d'agir."
     },
     {
      "name": "L'Arcane sans nom",
      "keyword": "Transformation",
-     "line": "Une page se tourne pour mieux renaître : laissez place au renouveau."
+     "line": "Une page se tourne pour mieux renaître : laissez place au renouveau.",
+     "reversedKeyword": "Inertie",
+     "reversedLine": "Laissez partir ce qui pèse encore ; un renouveau profond attend votre consentement.",
+     "love": "Une transformation libère votre cœur ; faites place au nouveau en tournant une page.",
+     "work": "Une fin nécessaire ouvre un cycle inédit ; accueillez le changement comme une renaissance.",
+     "money": "Clôturez ce qui ne sert plus ; cette transition prépare une situation plus saine."
     },
     {
      "name": "Tempérance",
      "keyword": "Harmonie",
-     "line": "Patience et équilibre apaisent tout : le juste milieu porte ses fruits."
+     "line": "Patience et équilibre apaisent tout : le juste milieu porte ses fruits.",
+     "reversedKeyword": "Excès",
+     "reversedLine": "Retrouvez votre mesure intérieure ; un peu de patience rétablira l'harmonie recherchée.",
+     "love": "L'harmonie et le compromis renforcent votre lien ; cultivez la patience et l'écoute mutuelle.",
+     "work": "La modération et la collaboration portent leurs fruits ; avancez à un rythme équilibré.",
+     "money": "Un équilibre financier se construit pas à pas ; évitez les extrêmes et dosez vos dépenses."
     },
     {
      "name": "Le Diable",
      "keyword": "Désir",
-     "line": "Reconnaissez vos passions sans vous y enchaîner : la lucidité libère."
+     "line": "Reconnaissez vos passions sans vous y enchaîner : la lucidité libère.",
+     "reversedKeyword": "Libération",
+     "reversedLine": "Identifiez ce qui vous enchaîne pour vous en délivrer en pleine conscience.",
+     "love": "Examinez les attachements qui pèsent ; une relation s'épanouit dans la liberté, non dans la dépendance.",
+     "work": "Méfiez-vous des compromis qui vous emprisonnent ; gardez votre intégrité et votre liberté.",
+     "money": "Surveillez les tentations et les engagements contraignants ; ne cédez pas au matérialisme excessif."
     },
     {
      "name": "La Maison Dieu",
      "keyword": "Révélation",
-     "line": "Un bouleversement libérateur fait tomber les illusions : place à un nouveau souffle."
+     "line": "Un bouleversement libérateur fait tomber les illusions : place à un nouveau souffle.",
+     "reversedKeyword": "Apaisement",
+     "reversedLine": "Après la secousse, reconstruisez patiemment sur des bases enfin plus solides et sincères.",
+     "love": "Une vérité qui éclate peut libérer la relation ; l'authenticité ouvre un nouvel équilibre.",
+     "work": "Un bouleversement révèle ce qui devait changer ; reconstruisez sur des fondations plus justes.",
+     "money": "Un imprévu financier invite à revoir vos appuis ; rebâtissez avec prudence et lucidité."
     },
     {
      "name": "L'Étoile",
      "keyword": "Espérance",
-     "line": "Une lumière douce vous guide : gardez espoir, vos rêves prennent forme."
+     "line": "Une lumière douce vous guide : gardez espoir, vos rêves prennent forme.",
+     "reversedKeyword": "Désespérance",
+     "reversedLine": "Ravivez doucement votre espérance ; la lumière revient pour qui garde foi en l'avenir.",
+     "love": "L'espoir et la sincérité illuminent vos liens ; ouvrez votre cœur avec confiance et sérénité.",
+     "work": "Une inspiration nouvelle guide vos projets ; gardez foi en votre vision et en vos talents.",
+     "money": "Une éclaircie financière se profile ; gardez espoir et avancez avec un optimisme mesuré."
     },
     {
      "name": "La Lune",
      "keyword": "Imagination",
-     "line": "Suivez votre intuition dans la pénombre : vos émotions ont beaucoup à révéler."
+     "line": "Suivez votre intuition dans la pénombre : vos émotions ont beaucoup à révéler.",
+     "reversedKeyword": "Confusion",
+     "reversedLine": "Distinguez doucement le réel de vos craintes ; la clarté reviendra avec un peu de patience.",
+     "love": "Des émotions troubles méritent d'être éclaircies ; communiquez pour dissiper les malentendus.",
+     "work": "Avancez prudemment dans l'incertitude ; vérifiez les faits avant de vous engager.",
+     "money": "Méfiez-vous des apparences trompeuses ; clarifiez chaque détail avant tout engagement financier."
     },
     {
      "name": "Le Soleil",
      "keyword": "Joie",
-     "line": "La réussite rayonne et réchauffe : savourez ce bonheur partagé."
+     "line": "La réussite rayonne et réchauffe : savourez ce bonheur partagé.",
+     "reversedKeyword": "Voiles",
+     "reversedLine": "Si la joie semble lointaine, accueillez les petites lumières du quotidien pour la raviver.",
+     "love": "Le bonheur et la complicité rayonnent ; savourez pleinement la chaleur de cette relation.",
+     "work": "La réussite et la clarté vous accompagnent ; votre énergie positive attire les belles occasions.",
+     "money": "Une période faste se dessine ; profitez de cette abondance avec gratitude et discernement."
     },
     {
      "name": "Le Jugement",
      "keyword": "Renouveau",
-     "line": "Un appel intérieur vous éveille : c'est l'heure d'un nouveau chapitre."
+     "line": "Un appel intérieur vous éveille : c'est l'heure d'un nouveau chapitre.",
+     "reversedKeyword": "Hésitation",
+     "reversedLine": "Écoutez votre appel intérieur sans vous juger ; le renouveau demande un peu de confiance.",
+     "love": "Un appel du cœur vous invite à pardonner et à renaître ; écoutez cette voix profonde.",
+     "work": "Une vocation se réveille ; répondez à cet appel et embrassez une nouvelle étape de vie.",
+     "money": "Un bilan financier honnête ouvre un renouveau ; tirez les leçons du passé pour avancer."
     },
     {
      "name": "Le Monde",
      "keyword": "Accomplissement",
-     "line": "Un cycle s'achève en plénitude : célébrez ce que vous avez accompli."
+     "line": "Un cycle s'achève en plénitude : célébrez ce que vous avez accompli.",
+     "reversedKeyword": "Inachevé",
+     "reversedLine": "Une boucle reste à fermer ; complétez patiemment ce qui demande encore votre attention.",
+     "love": "Une relation atteint une belle plénitude ; célébrez l'harmonie et l'accomplissement partagés.",
+     "work": "Un projet aboutit avec succès ; savourez cette réalisation avant d'ouvrir un nouveau chapitre.",
+     "money": "Une réussite financière se concrétise ; cet accomplissement récompense vos efforts soutenus."
     }
-   ]
+   ],
+   "reversedLabel": "Inversé",
+   "fieldLabels": {
+    "love": "Amour",
+    "work": "Travail",
+    "money": "Argent"
+   },
+   "spreadTitle": "Tirage en trois cartes : Passé, Présent, Avenir",
+   "positions": [
+    "Passé",
+    "Présent",
+    "Avenir"
+   ],
+   "askMore": "En savoir plus sur cette carte"
   },
   "luckyFour": {
    "title": "Vos quatre porte-bonheur du jour",
@@ -2307,114 +2922,237 @@ window.LUX = {
     {
      "name": "El Loco",
      "keyword": "Comienzos",
-     "line": "Una invitación a empezar de cero con curiosidad y un espíritu libre."
+     "line": "Una invitación a empezar de cero con curiosidad y un espíritu libre.",
+     "reversedKeyword": "Imprudencia",
+     "reversedLine": "Antes de lanzarte, tómate un momento para mirar el terreno y replantear tus pasos con calma.",
+     "love": "Abre el corazón a lo nuevo; un encuentro espontáneo puede regalarte una conexión fresca y sincera.",
+     "work": "Atrévete a proponer esa idea distinta; tu frescura aporta aire nuevo a un proyecto estancado.",
+     "money": "Es buen día para explorar una oportunidad nueva, siempre dando un primer paso pequeño y consciente."
     },
     {
      "name": "El Mago",
      "keyword": "Voluntad",
-     "line": "Tienes las herramientas y el talento para hacer realidad tus ideas."
+     "line": "Tienes las herramientas y el talento para hacer realidad tus ideas.",
+     "reversedKeyword": "Dispersión",
+     "reversedLine": "Reúne tus recursos y enfócate en una sola meta; la energía dispersa pide orden interior y prioridad.",
+     "love": "Tienes el poder de dar el primer paso; un gesto sincero y directo abre la puerta al diálogo.",
+     "work": "Cuentas con el talento y las herramientas para concretar tu idea; pasa de la intención a la acción.",
+     "money": "Tu iniciativa puede transformar un plan en ingreso real; confía en tu capacidad para gestionarlo."
     },
     {
      "name": "La Sacerdotisa",
      "keyword": "Intuición",
-     "line": "Escucha tu voz interior; los misterios se revelan con paciencia."
+     "line": "Escucha tu voz interior; los misterios se revelan con paciencia.",
+     "reversedKeyword": "Voz silenciada",
+     "reversedLine": "Vuelve a escucharte por dentro; quizá callaste una intuición que ahora pide espacio y atención serena.",
+     "love": "Escucha lo que no se dice; la intuición te muestra los sentimientos verdaderos detrás de las palabras.",
+     "work": "Confía en tu olfato antes de decidir; una corazonada bien meditada vale más que la prisa.",
+     "money": "Investiga con paciencia antes de comprometerte; hay detalles ocultos que tu intuición percibe primero."
     },
     {
      "name": "La Emperatriz",
      "keyword": "Abundancia",
-     "line": "Energía fértil y creativa: cuida lo que siembras y florecerá."
+     "line": "Energía fértil y creativa: cuida lo que siembras y florecerá.",
+     "reversedKeyword": "Bloqueo creativo",
+     "reversedLine": "Cuídate y nútrete primero; cuando recuperes tu energía, la creatividad volverá a fluir con naturalidad.",
+     "love": "El cariño florece cuando te muestras receptivo y generoso; nutre el vínculo con ternura cotidiana.",
+     "work": "Tu creatividad da frutos hoy; cultiva con paciencia lo que sembraste y verás cómo madura.",
+     "money": "La abundancia llega cuidando lo que ya tienes; reinvierte con sensatez y crecerá poco a poco."
     },
     {
      "name": "El Emperador",
      "keyword": "Estructura",
-     "line": "La estabilidad y el orden te dan una base firme para avanzar."
+     "line": "La estabilidad y el orden te dan una base firme para avanzar.",
+     "reversedKeyword": "Rigidez",
+     "reversedLine": "Revisa si el control excesivo te está limitando; un poco de flexibilidad abre caminos más sanos.",
+     "love": "La estabilidad y el compromiso firme dan seguridad a la relación; construye sobre bases sólidas.",
+     "work": "Pon orden y estructura en tus tareas; una base firme te permite avanzar con autoridad serena.",
+     "money": "Organiza tus finanzas con disciplina; un presupuesto claro te da control y tranquilidad duradera."
     },
     {
      "name": "El Sumo Sacerdote",
      "keyword": "Tradición",
-     "line": "La sabiduría compartida y los buenos consejos te guían hoy."
+     "line": "La sabiduría compartida y los buenos consejos te guían hoy.",
+     "reversedKeyword": "Dogmatismo",
+     "reversedLine": "Distingue entre la norma útil y la costumbre que ya no sirve; conviene replantear con criterio propio.",
+     "love": "Los valores compartidos fortalecen el vínculo; un consejo sabio o un ritual común os acerca hoy.",
+     "work": "Apóyate en la experiencia de un mentor; seguir un método probado te ahorra tropiezos innecesarios.",
+     "money": "Sigue consejos financieros de confianza; lo tradicional y prudente protege mejor tu patrimonio hoy."
     },
     {
      "name": "Los Enamorados",
      "keyword": "Elección",
-     "line": "Una decisión del corazón pide sinceridad y armonía."
+     "line": "Una decisión del corazón pide sinceridad y armonía.",
+     "reversedKeyword": "Indecisión",
+     "reversedLine": "Aclara tus valores antes de elegir; una decisión apresurada del corazón conviene reconsiderar con calma.",
+     "love": "Una elección sincera del corazón pide honestidad; la armonía nace cuando hablas desde la verdad.",
+     "work": "Tienes que elegir entre dos caminos; decide alineando el proyecto con lo que de verdad valoras.",
+     "money": "Sopesa bien una decisión económica importante; elige con el corazón, pero también con la cabeza."
     },
     {
      "name": "El Carro",
      "keyword": "Determinación",
-     "line": "Con enfoque y voluntad avanzas hacia tu meta con seguridad."
+     "line": "Con enfoque y voluntad avanzas hacia tu meta con seguridad.",
+     "reversedKeyword": "Falta de rumbo",
+     "reversedLine": "Recupera el control de tus riendas; conviene reenfocar la dirección antes de seguir acelerando.",
+     "love": "Con enfoque y voluntad superas los obstáculos en la relación; avanza con seguridad hacia lo que deseas.",
+     "work": "Tu determinación te lleva lejos hoy; mantén el rumbo claro y los resultados llegarán con fuerza.",
+     "money": "La disciplina y el empuje te acercan a tu meta económica; sigue avanzando con foco constante."
     },
     {
      "name": "La Fuerza",
      "keyword": "Coraje",
-     "line": "La fuerza interior y la dulzura superan cualquier dificultad."
+     "line": "La fuerza interior y la dulzura superan cualquier dificultad.",
+     "reversedKeyword": "Inseguridad",
+     "reversedLine": "Sé amable contigo en los momentos de duda; la fuerza vuelve cuando te tratas con paciencia interior.",
+     "love": "La dulzura y la paciencia conquistan más que la presión; ama desde la calma y la confianza.",
+     "work": "Domina la situación con temple, no con prisa; tu fuerza serena inspira respeto y resuelve tensiones.",
+     "money": "Maneja las finanzas con paciencia y autocontrol; evita decisiones impulsivas y mantén la calma."
     },
     {
      "name": "El Ermitaño",
      "keyword": "Introspección",
-     "line": "Un tiempo de calma y búsqueda interior ilumina tu camino."
+     "line": "Un tiempo de calma y búsqueda interior ilumina tu camino.",
+     "reversedKeyword": "Aislamiento",
+     "reversedLine": "Buscar calma es sano, pero no te encierres; conviene equilibrar el retiro con compañía amable.",
+     "love": "Un tiempo de reflexión aclara lo que sientes; conoce tu corazón antes de dar el siguiente paso.",
+     "work": "Tómate un espacio para pensar a fondo; la respuesta que buscas surge desde la calma interior.",
+     "money": "Analiza tus cuentas en soledad y con detalle; la prudencia reflexiva te evita gastos innecesarios."
     },
     {
      "name": "La Rueda de la Fortuna",
      "keyword": "Ciclos",
-     "line": "Todo cambia; abre los brazos a un nuevo giro favorable."
+     "line": "Todo cambia; abre los brazos a un nuevo giro favorable.",
+     "reversedKeyword": "Resistencia al cambio",
+     "reversedLine": "Si algo se atasca, suelta el control y fluye; los ciclos piden adaptarse en vez de forzar.",
+     "love": "La rueda gira a tu favor; abre los brazos a un nuevo giro que renueva la relación.",
+     "work": "Un cambio inesperado trae oportunidad; adáptate con flexibilidad y aprovecha la nueva corriente.",
+     "money": "La fortuna se mueve en tu dirección; mantente atento a una oportunidad que aparece de pronto."
     },
     {
      "name": "La Justicia",
      "keyword": "Equilibrio",
-     "line": "La honestidad y el sentido de la justicia traen claridad."
+     "line": "La honestidad y el sentido de la justicia traen claridad.",
+     "reversedKeyword": "Desequilibrio",
+     "reversedLine": "Revisa si estás siendo justo también contigo; reequilibrar la balanza empieza por dentro.",
+     "love": "La honestidad y el trato justo traen claridad; la relación crece cuando hay equidad y verdad.",
+     "work": "Actúa con transparencia y rectitud; las decisiones justas hoy construyen tu reputación a largo plazo.",
+     "money": "Revisa contratos y cuentas con objetividad; el equilibrio financiero nace de números claros y honestos."
     },
     {
      "name": "El Colgado",
      "keyword": "Nueva perspectiva",
-     "line": "Mirar las cosas de otra forma revela soluciones inesperadas."
+     "line": "Mirar las cosas de otra forma revela soluciones inesperadas.",
+     "reversedKeyword": "Pausa que se resiste",
+     "reversedLine": "Si te sientes en suspenso, deja de forzar la salida; suelta el control y mira la situación desde otro ángulo.",
+     "love": "Mirar la relación desde otra perspectiva revela lo que de verdad importa; la pausa también une.",
+     "work": "Cambia el enfoque ante un bloqueo; una perspectiva nueva revela la solución que no veías.",
+     "money": "Detente antes de decidir; ver tus finanzas desde otro punto de vista abre opciones inesperadas."
     },
     {
      "name": "La Muerte",
      "keyword": "Transformación",
-     "line": "Un cierre da paso a una renovación llena de posibilidades."
+     "line": "Un cierre da paso a una renovación llena de posibilidades.",
+     "reversedKeyword": "Apego al pasado",
+     "reversedLine": "Despedirse cuesta, pero retener lo que ya terminó cansa; conviene soltar con suavidad para renovarte.",
+     "love": "Un cierre da paso a algo más auténtico; deja ir lo que pesa y haz sitio a lo nuevo.",
+     "work": "Termina lo que ya cumplió su ciclo; una transformación profesional abre espacio a algo mejor.",
+     "money": "Cierra un capítulo financiero que ya no rinde; soltar lo viejo libera recursos para lo nuevo."
     },
     {
      "name": "La Templanza",
      "keyword": "Armonía",
-     "line": "La paciencia y el equilibrio te ayudan a encontrar la medida justa."
+     "line": "La paciencia y el equilibrio te ayudan a encontrar la medida justa.",
+     "reversedKeyword": "Excesos",
+     "reversedLine": "Si algo se ha desbordado, busca de nuevo la medida justa; el equilibrio se recupera con calma.",
+     "love": "La paciencia y la mesura encuentran el punto medio; la relación florece con calma y equilibrio.",
+     "work": "Combina ideas y personas con tacto; la moderación y el ritmo justo te dan resultados duraderos.",
+     "money": "Encuentra el equilibrio entre ahorrar y disfrutar; la administración mesurada trae paz financiera."
     },
     {
      "name": "El Diablo",
      "keyword": "Ataduras",
-     "line": "Reconoce qué te limita para recuperar tu libertad con suavidad."
+     "line": "Reconoce qué te limita para recuperar tu libertad con suavidad.",
+     "reversedKeyword": "Liberación",
+     "reversedLine": "Reconoce con suavidad qué hábito o vínculo te ata; nombrarlo es el primer paso para soltarlo.",
+     "love": "Observa si algún patrón te encadena en la relación; reconocerlo con cariño abre la puerta a la libertad.",
+     "work": "Identifica qué te mantiene atado a una rutina que agota; ponerle nombre te devuelve el poder de elegir.",
+     "money": "Revisa hábitos de gasto o deudas que te limitan; tomar conciencia es el inicio de tu libertad económica."
     },
     {
      "name": "La Torre",
      "keyword": "Cambio repentino",
-     "line": "Lo que se sacude deja espacio para construir algo más auténtico."
+     "line": "Lo que se sacude deja espacio para construir algo más auténtico.",
+     "reversedKeyword": "Tensión que cede",
+     "reversedLine": "Si algo se tambalea, deja que caiga lo que ya no sostiene; después construirás con más verdad.",
+     "love": "Lo que se sacude deja sitio a algo más auténtico; una conversación sincera renueva el vínculo.",
+     "work": "Un cambio brusco despeja lo que no funcionaba; reconstruye sobre cimientos más honestos y sólidos.",
+     "money": "Un imprevisto te obliga a revisar tus finanzas; aprovéchalo para rehacerlas sobre bases más firmes."
     },
     {
      "name": "La Estrella",
      "keyword": "Esperanza",
-     "line": "La inspiración y la fe renovada iluminan tu horizonte."
+     "line": "La inspiración y la fe renovada iluminan tu horizonte.",
+     "reversedKeyword": "Esperanza nublada",
+     "reversedLine": "Si la fe flaquea, vuelve a tus fuentes de calma; la esperanza se reaviva cuidando tu interior.",
+     "love": "La inspiración y la fe renovada iluminan el amor; muéstrate auténtico y la conexión brillará.",
+     "work": "Vuelve a confiar en tu visión; un proyecto que ilusiona recupera su rumbo con esperanza renovada.",
+     "money": "El horizonte se aclara poco a poco; mantén la calma y siembra hoy lo que cosecharás mañana."
     },
     {
      "name": "La Luna",
      "keyword": "Imaginación",
-     "line": "Confía en tus sueños e intuiciones; la claridad llegará."
+     "line": "Confía en tus sueños e intuiciones; la claridad llegará.",
+     "reversedKeyword": "Confusión",
+     "reversedLine": "Si las dudas te envuelven, espera a que aclare antes de decidir; la calma disipa los miedos imaginados.",
+     "love": "Confía en tus sueños e intuiciones; lo que hoy parece confuso en el amor pronto cobrará claridad.",
+     "work": "No todo está dicho aún; deja reposar las dudas y la imagen completa se irá revelando con el tiempo.",
+     "money": "Evita decisiones financieras entre la niebla; espera más datos y la claridad llegará por sí sola."
     },
     {
      "name": "El Sol",
      "keyword": "Alegría",
-     "line": "Vitalidad, éxito y calidez: un día para brillar con confianza."
+     "line": "Vitalidad, éxito y calidez: un día para brillar con confianza.",
+     "reversedKeyword": "Brillo atenuado",
+     "reversedLine": "Si te sientes apagado, reconecta con lo que te alegra; tu luz vuelve cuidando los pequeños placeres.",
+     "love": "Vitalidad y calidez para el corazón; es un día luminoso para mostrarte tal como eres y brillar.",
+     "work": "El éxito y el reconocimiento te acompañan; comparte tu energía y los logros se multiplicarán.",
+     "money": "Un día favorable para tus finanzas; la confianza y la claridad atraen buenas noticias económicas."
     },
     {
      "name": "El Juicio",
      "keyword": "Renacimiento",
-     "line": "Un despertar interior te invita a empezar una nueva etapa."
+     "line": "Un despertar interior te invita a empezar una nueva etapa.",
+     "reversedKeyword": "Autocrítica",
+     "reversedLine": "Sé indulgente contigo al hacer balance; el despertar interior pide comprensión, no juicio severo.",
+     "love": "Un despertar interior te invita a una nueva etapa; perdona, suéltate y renueva el vínculo con verdad.",
+     "work": "Escucha esa llamada que pide un cambio profesional; es momento de responder a tu vocación auténtica.",
+     "money": "Haz balance honesto de tus finanzas; reconocer aciertos y errores te impulsa hacia una etapa mejor."
     },
     {
      "name": "El Mundo",
      "keyword": "Plenitud",
-     "line": "Un ciclo se completa con éxito; celebra todo lo logrado."
+     "line": "Un ciclo se completa con éxito; celebra todo lo logrado.",
+     "reversedKeyword": "Cierre pendiente",
+     "reversedLine": "Si sientes que algo queda inconcluso, identifica el último paso; completarlo con calma te dará plenitud.",
+     "love": "Un ciclo se completa con éxito en el amor; celebra lo construido y disfruta de la plenitud lograda.",
+     "work": "Alcanzas la meta de un gran esfuerzo; reconoce tu logro y ábrete con confianza al siguiente reto.",
+     "money": "Un objetivo financiero se cumple; celebra el resultado y planifica con serenidad tu próxima meta."
     }
-   ]
+   ],
+   "reversedLabel": "En posición invertida",
+   "fieldLabels": {
+    "love": "Amor",
+    "work": "Trabajo",
+    "money": "Dinero"
+   },
+   "spreadTitle": "Tirada de tres cartas: pasado, presente y futuro",
+   "positions": [
+    "Pasado",
+    "Presente",
+    "Futuro"
+   ],
+   "askMore": "Pregúntame más sobre esta carta"
   },
   "luckyFour": {
    "title": "Tus cuatro elementos de la suerte",
@@ -2749,114 +3487,237 @@ window.LUX = {
     {
      "name": "O Louco",
      "keyword": "Recomeço",
-     "line": "Um novo começo cheio de liberdade e fé na jornada que se abre."
+     "line": "Um novo começo cheio de liberdade e fé na jornada que se abre.",
+     "reversedKeyword": "Impulsividade",
+     "reversedLine": "Vale a pena pisar com calma antes de saltar; reorganize o plano e ouça sua intuição com atenção.",
+     "love": "Abra o coração para um começo leve; a espontaneidade aproxima você de alguém especial hoje.",
+     "work": "Encare um projeto novo com curiosidade; sua disposição para arriscar abre portas inesperadas.",
+     "money": "Um caminho financeiro novo surge; explore com entusiasmo, mas mantenha um pé no chão."
     },
     {
      "name": "O Mago",
      "keyword": "Manifestação",
-     "line": "Você tem as ferramentas e o talento para transformar ideias em realidade."
+     "line": "Você tem as ferramentas e o talento para transformar ideias em realidade.",
+     "reversedKeyword": "Dispersão",
+     "reversedLine": "Reúna suas energias antes de agir; foque a intenção em uma só meta e os recursos se alinham.",
+     "love": "Você tem o magnetismo para criar conexão; comunique com clareza o que sente e deseja.",
+     "work": "Suas habilidades estão afiadas hoje; reúna as ferramentas certas e transforme ideia em ação.",
+     "money": "É um bom dia para colocar um plano financeiro em prática; sua iniciativa atrai resultados."
     },
     {
      "name": "A Sacerdotisa",
      "keyword": "Intuição",
-     "line": "Confie na sua voz interior; respostas surgem no silêncio e na paciência."
+     "line": "Confie na sua voz interior; respostas surgem no silêncio e na paciência.",
+     "reversedKeyword": "Bloqueio interior",
+     "reversedLine": "Reconecte-se com sua voz interna; reserve um momento de silêncio para reorganizar pensamentos confusos.",
+     "love": "Confie na sua intuição sobre o relacionamento; o que está implícito hoje merece sua escuta atenta.",
+     "work": "Observe antes de decidir; informações nos bastidores guiam você melhor que a pressa.",
+     "money": "Avalie suas finanças com calma e instinto; não revele todos os planos ainda."
     },
     {
      "name": "A Imperatriz",
      "keyword": "Abundância",
-     "line": "Tempo de cuidar, criar e colher frutos com generosidade e afeto."
+     "line": "Tempo de cuidar, criar e colher frutos com generosidade e afeto.",
+     "reversedKeyword": "Excesso de cuidado",
+     "reversedLine": "Cuide de você primeiro; reequilibre o quanto se doa e preserve um espaço só seu.",
+     "love": "O afeto floresce quando você nutre o vínculo com carinho; acolha e seja acolhido hoje.",
+     "work": "Sua criatividade está fértil; cultive ideias com paciência e veja um projeto crescer.",
+     "money": "Abundância chega quando você cuida do que já tem; gerencie seus recursos com generosidade equilibrada."
     },
     {
      "name": "O Imperador",
      "keyword": "Estrutura",
-     "line": "Estabilidade e disciplina constroem bases sólidas para seus planos."
+     "line": "Estabilidade e disciplina constroem bases sólidas para seus planos.",
+     "reversedKeyword": "Rigidez",
+     "reversedLine": "Suavize o controle e abra-se ao diálogo; estrutura ajuda, mas a flexibilidade traz harmonia.",
+     "love": "Um pouco de firmeza e compromisso trazem segurança ao relacionamento; mostre que pode ser confiável.",
+     "work": "Organize prioridades e lidere com serenidade; a disciplina de hoje constrói resultados sólidos.",
+     "money": "Estabeleça uma estrutura clara para suas finanças; planejamento firme protege seu patrimônio."
     },
     {
      "name": "O Hierofante",
      "keyword": "Tradição",
-     "line": "Aprender com mentores e valores compartilhados traz orientação valiosa."
+     "line": "Aprender com mentores e valores compartilhados traz orientação valiosa.",
+     "reversedKeyword": "Dogmatismo",
+     "reversedLine": "Questione regras que já não servem; busque um conselho confiável e reorganize seus próprios valores.",
+     "love": "Valores compartilhados fortalecem o vínculo; busque harmonia entre a tradição e o que vocês desejam.",
+     "work": "Apoie-se na orientação de um mentor; seguir um método comprovado traz estabilidade hoje.",
+     "money": "Confie em conselhos experientes antes de grandes decisões; o caminho convencional é seguro agora."
     },
     {
      "name": "Os Enamorados",
      "keyword": "União",
-     "line": "Escolhas do coração e parcerias harmoniosas iluminam o caminho."
+     "line": "Escolhas do coração e parcerias harmoniosas iluminam o caminho.",
+     "reversedKeyword": "Desalinhamento",
+     "reversedLine": "Reavalie o que realmente importa para você; alinhe suas escolhas com seus valores antes de decidir.",
+     "love": "Uma escolha sincera do coração convida você a se aproximar de alguém; a harmonia favorece os laços hoje.",
+     "work": "Uma parceria ou decisão importante pede o seu sim verdadeiro; alinhe-se com o que valoriza.",
+     "money": "Pondere bem antes de unir finanças com alguém; escolha o que ressoa com seus princípios."
     },
     {
      "name": "O Carro",
      "keyword": "Determinação",
-     "line": "Foco e vontade conduzem você à vitória sobre os obstáculos."
+     "line": "Foco e vontade conduzem você à vitória sobre os obstáculos.",
+     "reversedKeyword": "Dispersão de rumo",
+     "reversedLine": "Retome as rédeas com firmeza e calma; defina uma direção clara antes de acelerar de novo.",
+     "love": "Sua determinação conduz o relacionamento adiante; mantenha o foco no que vocês querem construir.",
+     "work": "Concentre sua força de vontade em uma meta; o avanço firme leva você à vitória hoje.",
+     "money": "Disciplina e foco impulsionam suas finanças; siga o plano e mantenha o rumo definido."
     },
     {
      "name": "A Força",
      "keyword": "Coragem",
-     "line": "A gentileza e a paciência revelam sua verdadeira força interior."
+     "line": "A gentileza e a paciência revelam sua verdadeira força interior.",
+     "reversedKeyword": "Autocrítica",
+     "reversedLine": "Trate-se com gentileza nos momentos difíceis; sua força real nasce da paciência e da autocompaixão.",
+     "love": "Paciência e ternura suavizam qualquer tensão; a coragem gentil aproxima os corações hoje.",
+     "work": "Enfrente os desafios com calma confiança; sua persistência serena supera obstáculos no trabalho.",
+     "money": "Mantenha a serenidade diante de pressões financeiras; o controle emocional protege suas decisões."
     },
     {
      "name": "O Eremita",
      "keyword": "Reflexão",
-     "line": "Um momento de introspecção ilumina o próximo passo da sua jornada."
+     "line": "Um momento de introspecção ilumina o próximo passo da sua jornada.",
+     "reversedKeyword": "Isolamento",
+     "reversedLine": "Solidão demais pode pesar; reequilibre o recolhimento com a busca cuidadosa de boas companhias.",
+     "love": "Um momento de introspecção ilumina o que você busca no amor; respeite seu tempo interior.",
+     "work": "Recue um pouco para refletir; a clareza que você procura no trabalho vem do silêncio.",
+     "money": "Reflita com calma antes de gastar; uma pausa revela onde economizar com sabedoria."
     },
     {
      "name": "A Roda da Fortuna",
      "keyword": "Ciclos",
-     "line": "Mudanças naturais trazem novas oportunidades; flua com o movimento da vida."
+     "line": "Mudanças naturais trazem novas oportunidades; flua com o movimento da vida.",
+     "reversedKeyword": "Resistência à mudança",
+     "reversedLine": "Aceite os ciclos com leveza; quando algo escapa ao seu controle, reorganize-se e siga se adaptando.",
+     "love": "Os ventos giram a seu favor no amor; receba as mudanças do coração de braços abertos.",
+     "work": "Uma virada favorável surge na carreira; aproveite a oportunidade que o momento oferece.",
+     "money": "A sorte financeira muda a seu favor; fique atento às chances que aparecem hoje."
     },
     {
      "name": "A Justiça",
      "keyword": "Equilíbrio",
-     "line": "Decisões justas e verdade trazem clareza e harmonia ao seu caminho."
+     "line": "Decisões justas e verdade trazem clareza e harmonia ao seu caminho.",
+     "reversedKeyword": "Desequilíbrio",
+     "reversedLine": "Reveja onde a balança pendeu; busque honestidade consigo e reorganize o que precisa de justiça.",
+     "love": "Honestidade e equilíbrio guiam suas escolhas afetivas; a verdade fortalece a relação hoje.",
+     "work": "Tome decisões justas e transparentes; a integridade no trabalho traz reconhecimento merecido.",
+     "money": "Equilibre as contas com clareza e justiça; acordos honestos protegem seu dinheiro agora."
     },
     {
      "name": "O Enforcado",
      "keyword": "Nova perspectiva",
-     "line": "Pausar e ver as coisas de outro ângulo revela soluções inesperadas."
+     "line": "Pausar e ver as coisas de outro ângulo revela soluções inesperadas.",
+     "reversedKeyword": "Estagnação",
+     "reversedLine": "Se você se sente preso, talvez seja hora de soltar; reorganize sua perspectiva sem forçar resultados.",
+     "love": "Pause e veja o relacionamento de outro ângulo; a paciência revela o que o coração precisa.",
+     "work": "Mudar o ponto de vista destrava uma solução; entregue-se à reflexão antes de agir.",
+     "money": "Suspenda decisões financeiras apressadas; um novo olhar mostra a saída no momento certo."
     },
     {
      "name": "A Morte",
      "keyword": "Transformação",
-     "line": "Um ciclo se encerra para que algo melhor possa florescer."
+     "line": "Um ciclo se encerra para que algo melhor possa florescer.",
+     "reversedKeyword": "Apego",
+     "reversedLine": "Soltar pode custar, mas é libertador; reorganize-se aos poucos e dê espaço ao que vem renovar.",
+     "love": "Deixe ir o que já não floresce no amor; o fim de um ciclo abre espaço para o novo.",
+     "work": "Encerre o que não serve mais na carreira; uma transformação abre caminho para algo melhor.",
+     "money": "Reavalie hábitos financeiros antigos; abrir mão do que não funciona renova suas finanças."
     },
     {
      "name": "A Temperança",
      "keyword": "Harmonia",
-     "line": "Equilíbrio e moderação trazem paz e renovação ao seu dia."
+     "line": "Equilíbrio e moderação trazem paz e renovação ao seu dia.",
+     "reversedKeyword": "Desequilíbrio interno",
+     "reversedLine": "Reencontre seu centro com paciência; reorganize os excessos e busque de novo o ritmo do meio-termo.",
+     "love": "Uma postura calma e equilibrada traz harmonia ao relacionamento; modere e acolha hoje.",
+     "work": "Combine recursos e talentos com moderação; o equilíbrio rende um trabalho bem feito.",
+     "money": "Administre suas finanças com paciência e medida; o equilíbrio constrói segurança aos poucos."
     },
     {
      "name": "O Diabo",
      "keyword": "Libertação",
-     "line": "Reconhecer apegos é o primeiro passo para se libertar deles."
+     "line": "Reconhecer apegos é o primeiro passo para se libertar deles.",
+     "reversedKeyword": "Libertação",
+     "reversedLine": "Perceba o que prende você e solte-se com gentileza; reorganizar velhos hábitos devolve sua liberdade.",
+     "love": "Observe padrões que aprisionam a relação; reconhecer o que limita liberta o amor hoje.",
+     "work": "Note dependências ou contratos pesados; questionar o que algema renova sua trajetória profissional.",
+     "money": "Examine compromissos financeiros que prendem você; soltar amarras desnecessárias alivia suas contas."
     },
     {
      "name": "A Torre",
      "keyword": "Mudança súbita",
-     "line": "Uma reviravolta abre espaço para reconstruções mais verdadeiras."
+     "line": "Uma reviravolta abre espaço para reconstruções mais verdadeiras.",
+     "reversedKeyword": "Tensão acumulada",
+     "reversedLine": "A mudança brusca já passou; reorganize as bases com cuidado e construa algo mais verdadeiro agora.",
+     "love": "Uma sacudida inesperada limpa o terreno; o que se rompe abre espaço para um vínculo mais sincero.",
+     "work": "Uma reviravolta repentina revela o que precisava ruir; reconstrua sobre alicerces mais firmes.",
+     "money": "Um imprevisto financeiro pede atenção; encare-o como chance de reorganizar bases mais sólidas."
     },
     {
      "name": "A Estrela",
      "keyword": "Esperança",
-     "line": "A inspiração e a fé renovam seus sonhos com luz suave."
+     "line": "A inspiração e a fé renovam seus sonhos com luz suave.",
+     "reversedKeyword": "Desânimo",
+     "reversedLine": "Reacenda a esperança com gentileza; cuide do seu interior e confie que dias mais leves se aproximam.",
+     "love": "Mantenha a esperança viva no amor; cura suave e dias luminosos estão a caminho do coração.",
+     "work": "Confie no seu potencial e siga sonhando; inspiração e renovação iluminam sua carreira hoje.",
+     "money": "A fé serena guia suas finanças; mantenha a calma e oportunidades de cura financeira surgem."
     },
     {
      "name": "A Lua",
      "keyword": "Imaginação",
-     "line": "Confie na intuição diante do que ainda não está totalmente claro."
+     "line": "Confie na intuição diante do que ainda não está totalmente claro.",
+     "reversedKeyword": "Confusão",
+     "reversedLine": "Se algo parece nebuloso, não decida no escuro; reorganize os fatos e dê tempo à clareza chegar.",
+     "love": "Confie nos sonhos e na intuição no amor, mesmo quando o caminho ainda parece incerto.",
+     "work": "Avance com cautela em meio às incertezas do trabalho; sua intuição revela o passo certo.",
+     "money": "Evite decisões financeiras baseadas em suposições; espere a névoa baixar antes de agir."
     },
     {
      "name": "O Sol",
      "keyword": "Alegria",
-     "line": "Vitalidade, sucesso e calor humano iluminam todos os seus passos."
+     "line": "Vitalidade, sucesso e calor humano iluminam todos os seus passos.",
+     "reversedKeyword": "Otimismo contido",
+     "reversedLine": "Reencontre a leveza aos poucos; reorganize as expectativas e deixe a alegria voltar no seu tempo.",
+     "love": "Calor, alegria e felicidade iluminam o amor hoje; viva esse momento radiante plenamente.",
+     "work": "Sucesso e reconhecimento brilham na sua carreira; aproveite a energia positiva do dia.",
+     "money": "Prosperidade e boas notícias aquecem suas finanças; celebre com gratidão o que conquista."
     },
     {
      "name": "O Julgamento",
      "keyword": "Renascimento",
-     "line": "Um despertar interior chama você a recomeçar com mais consciência."
+     "line": "Um despertar interior chama você a recomeçar com mais consciência.",
+     "reversedKeyword": "Autocobrança",
+     "reversedLine": "Perdoe-se pelo passado com bondade; reorganize a autocrítica e ouça com calma o chamado interior.",
+     "love": "Um despertar sincero renova o amor; escute o chamado do coração e abra-se a um novo capítulo.",
+     "work": "Um momento de renovação convida você a recomeçar; responda ao chamado da sua vocação hoje.",
+     "money": "Reavalie seu rumo financeiro com clareza; um recomeço consciente reposiciona seus recursos."
     },
     {
      "name": "O Mundo",
      "keyword": "Realização",
-     "line": "Um ciclo se completa com plenitude, gratidão e conquistas."
+     "line": "Um ciclo se completa com plenitude, gratidão e conquistas.",
+     "reversedKeyword": "Inacabado",
+     "reversedLine": "Falta pouco para fechar um ciclo; reorganize o que ficou pendente e siga com paciência até o fim.",
+     "love": "Uma fase do amor se completa com plenitude; celebre a harmonia e a realização do coração hoje.",
+     "work": "Um ciclo profissional se conclui com sucesso; reconheça sua conquista e abra-se ao próximo passo.",
+     "money": "Suas finanças alcançam um ponto de realização; colha os frutos do que construiu com dedicação."
     }
-   ]
+   ],
+   "reversedLabel": "Invertida",
+   "fieldLabels": {
+    "love": "Amor",
+    "work": "Trabalho",
+    "money": "Dinheiro"
+   },
+   "spreadTitle": "Tiragem de 3 cartas: Passado, Presente e Futuro",
+   "positions": [
+    "Passado",
+    "Presente",
+    "Futuro"
+   ],
+   "askMore": "Perguntar mais sobre esta carta"
   },
   "luckyFour": {
    "title": "Seus Quatro Elementos da Sorte",
@@ -3191,114 +4052,237 @@ window.LUX = {
     {
      "name": "Il Matto",
      "keyword": "Libertà",
-     "line": "Un nuovo inizio ti chiama: segui la curiosità con cuore leggero."
+     "line": "Un nuovo inizio ti chiama: segui la curiosità con cuore leggero.",
+     "reversedKeyword": "Esitazione",
+     "reversedLine": "Un passo affrettato chiede prudenza: prenditi un momento per ritrovare la direzione prima di partire.",
+     "love": "Lasciati sorprendere da un incontro spontaneo: oggi il cuore leggero apre porte inattese in amore.",
+     "work": "Accogli un progetto nuovo con curiosità: la freschezza delle idee conta più dell'esperienza.",
+     "money": "Una piccola spesa per imparare qualcosa di nuovo oggi può rivelarsi un buon investimento per il futuro."
     },
     {
      "name": "Il Mago",
      "keyword": "Volontà",
-     "line": "Hai gli strumenti giusti: trasforma le idee in azioni concrete."
+     "line": "Hai gli strumenti giusti: trasforma le idee in azioni concrete.",
+     "reversedKeyword": "Dispersione",
+     "reversedLine": "Le energie sono sparse: riordina le priorità e concentra la volontà su un solo obiettivo concreto.",
+     "love": "Hai il carisma per esprimerti con sincerità: parla chiaro e crea una connessione autentica oggi.",
+     "work": "Tutti gli strumenti sono nelle tue mani: trasforma un'idea in azione e mostra le tue capacità.",
+     "money": "È il momento giusto per avviare un progetto economico: pianifica con intenzione e agisci con metodo."
     },
     {
      "name": "La Papessa",
      "keyword": "Intuito",
-     "line": "Ascolta la voce interiore: la risposta è già dentro di te."
+     "line": "Ascolta la voce interiore: la risposta è già dentro di te.",
+     "reversedKeyword": "Intuito sopito",
+     "reversedLine": "Stai trascurando la voce interiore: rientra in te stesso e riascolta con calma i segnali sottili.",
+     "love": "Fidati dell'intuito nei rapporti: ciò che senti sotto le parole rivela più di quanto immagini.",
+     "work": "Osserva in silenzio prima di decidere: oggi le risposte migliori arrivano dall'ascolto interiore.",
+     "money": "Non tutto va detto subito: tieni riservate certe scelte finanziarie e lascia maturare i pensieri."
     },
     {
      "name": "L'Imperatrice",
      "keyword": "Abbondanza",
-     "line": "Creatività e calore fioriscono: coltiva ciò che ami."
+     "line": "Creatività e calore fioriscono: coltiva ciò che ami.",
+     "reversedKeyword": "Blocco creativo",
+     "reversedLine": "La cura di te è in pausa: rientra con dolcezza nelle tue passioni e nutri ciò che ti fa fiorire.",
+     "love": "Coltiva tenerezza e calore: gesti affettuosi e premurosi fanno fiorire il legame in modo naturale.",
+     "work": "La tua creatività è feconda: dai forma alle idee e lascia che i progetti crescano con pazienza.",
+     "money": "L'abbondanza arriva nutrendo ciò che ami: investi in ciò che cresce nel tempo, senza fretta."
     },
     {
      "name": "L'Imperatore",
      "keyword": "Stabilità",
-     "line": "Struttura e disciplina ti danno solide fondamenta."
+     "line": "Struttura e disciplina ti danno solide fondamenta.",
+     "reversedKeyword": "Rigidità",
+     "reversedLine": "Un eccesso di controllo irrigidisce: allenta le regole e lascia spazio a un po' di flessibilità serena.",
+     "love": "Offri stabilità e presenza sicura: una relazione cresce quando entrambi si sentono protetti e rispettati.",
+     "work": "Struttura e disciplina danno solide fondamenta: organizza i tuoi compiti e guida con autorevolezza calma.",
+     "money": "Un piano ordinato porta sicurezza: definisci un budget chiaro e mantieni le finanze sotto controllo."
     },
     {
      "name": "Il Papa",
      "keyword": "Saggezza",
-     "line": "Un buon consiglio o una tradizione ti guidano con chiarezza."
+     "line": "Un buon consiglio o una tradizione ti guidano con chiarezza.",
+     "reversedKeyword": "Dogma",
+     "reversedLine": "Le vecchie regole stringono: distingui la tradizione utile dai vincoli superati e scegli con discernimento.",
+     "love": "Valori condivisi rafforzano il legame: cerca chi onora gli stessi principi e costruisci su basi sincere.",
+     "work": "Un consiglio esperto o un mentore ti guidano: affidati alla saggezza di chi ha già percorso la strada.",
+     "money": "Segui metodi collaudati e affidabili: in ambito finanziario, oggi la prudenza tradizionale ti protegge bene."
     },
     {
      "name": "Gli Amanti",
      "keyword": "Scelta",
-     "line": "Una decisione del cuore chiede sincerità e armonia."
+     "line": "Una decisione del cuore chiede sincerità e armonia.",
+     "reversedKeyword": "Squilibrio",
+     "reversedLine": "Un legame chiede chiarezza: ascolta i tuoi valori e ricomponi l'armonia con sincerità, senza forzare le scelte.",
+     "love": "Una scelta del cuore chiede sincerità: scegli con onestà chi risuona davvero con i tuoi valori profondi.",
+     "work": "Una decisione importante richiede coerenza: allinea le scelte professionali a ciò in cui credi davvero.",
+     "money": "Valuta con il cuore e con la testa: una scelta economica condivisa oggi porta armonia e fiducia."
     },
     {
      "name": "Il Carro",
      "keyword": "Determinazione",
-     "line": "Con volontà e direzione, superi ogni ostacolo."
+     "line": "Con volontà e direzione, superi ogni ostacolo.",
+     "reversedKeyword": "Direzione incerta",
+     "reversedLine": "Le forze tirano in direzioni opposte: ritrova il centro e definisci una meta chiara prima di accelerare.",
+     "love": "Con determinazione serena conquisti ciò che vuoi: mostra una direzione e il legame avanza con sicurezza.",
+     "work": "Concentrazione e volontà ti portano lontano: mantieni la rotta e supererai ogni ostacolo sul cammino.",
+     "money": "La disciplina ti premia: con obiettivi chiari e costanza, i tuoi sforzi finanziari prendono slancio."
     },
     {
      "name": "La Forza",
      "keyword": "Coraggio",
-     "line": "La vera forza è gentile: dominati con dolcezza e fiducia."
+     "line": "La vera forza è gentile: dominati con dolcezza e fiducia.",
+     "reversedKeyword": "Insicurezza",
+     "reversedLine": "La fiducia vacilla un poco: tratta te stesso con gentilezza e riconquista la calma interiore un passo alla volta.",
+     "love": "La vera forza è dolce: con pazienza e tenerezza superi le tensioni e rafforzi un legame autentico.",
+     "work": "La calma vince la fretta: affronta le sfide con fiducia tranquilla e la situazione si distende.",
+     "money": "Gestisci il denaro con sangue freddo: oggi la pazienza e l'autocontrollo evitano scelte impulsive."
     },
     {
      "name": "L'Eremita",
      "keyword": "Riflessione",
-     "line": "Un momento di solitudine illumina la tua strada."
+     "line": "Un momento di solitudine illumina la tua strada.",
+     "reversedKeyword": "Isolamento",
+     "reversedLine": "La solitudine pesa: la riflessione è preziosa, ma ricordati di riaprirti agli altri con calma e fiducia.",
+     "love": "Un momento di introspezione chiarisce ciò che desideri: comprendi il cuore prima di aprirlo a qualcuno.",
+     "work": "Allontanati dal rumore per riflettere: nella quiete trovi la chiarezza che le decisioni importanti richiedono.",
+     "money": "Rivedi i conti in tranquillità: un esame attento e ponderato delle finanze ti mostra la via giusta."
     },
     {
      "name": "La Ruota della Fortuna",
      "keyword": "Cambiamento",
-     "line": "I cicli girano: accogli il nuovo capitolo con apertura."
+     "line": "I cicli girano: accogli il nuovo capitolo con apertura.",
+     "reversedKeyword": "Resistenza",
+     "reversedLine": "Un ciclo cambia e tu resisti: accogli il movimento con apertura, ogni fase ha il suo senso e il suo tempo.",
+     "love": "I cicli girano a tuo favore: accogli un nuovo capitolo affettivo con apertura e cuore fiducioso.",
+     "work": "Un cambiamento porta opportunità inattese: adattati con flessibilità e cavalca l'onda del nuovo corso.",
+     "money": "La fortuna gira nel verso giusto: cogli un'occasione che si presenta, ma resta misurato e attento."
     },
     {
      "name": "La Giustizia",
      "keyword": "Equilibrio",
-     "line": "Verità e responsabilità riportano armonia."
+     "line": "Verità e responsabilità riportano armonia.",
+     "reversedKeyword": "Disequilibrio",
+     "reversedLine": "Qualcosa stride con la coscienza: rivedi le scelte con onestà e ristabilisci l'equità, prima dentro di te.",
+     "love": "L'onestà costruisce fiducia: sii trasparente e leale, l'equilibrio reciproco fa crescere il rapporto.",
+     "work": "Agisci con correttezza e rigore: decisioni giuste e trasparenti rafforzano la tua reputazione professionale.",
+     "money": "Metti i conti in ordine con equità: salda i debiti e rispetta gli impegni, la chiarezza ti premia."
     },
     {
      "name": "L'Appeso",
      "keyword": "Nuova prospettiva",
-     "line": "Cambia punto di vista: una pausa rivela ciò che conta."
+     "line": "Cambia punto di vista: una pausa rivela ciò che conta.",
+     "reversedKeyword": "Stallo",
+     "reversedLine": "L'attesa si è fatta troppo lunga: forse è tempo di lasciar andare e guardare la situazione da una nuova angolazione.",
+     "love": "Cambia prospettiva nei rapporti: oggi una pausa riflessiva ti aiuta a vedere l'amore con occhi nuovi.",
+     "work": "Una pausa apparente nasconde una svolta: lascia maturare le cose e accogli un punto di vista diverso.",
+     "money": "Rallenta prima di decidere: sospendere un acquisto oggi ti offre la lucidità per scegliere meglio domani."
     },
     {
      "name": "La Morte",
      "keyword": "Trasformazione",
-     "line": "Una fine apre la porta a una rinascita: lascia andare con fiducia."
+     "line": "Una fine apre la porta a una rinascita: lascia andare con fiducia.",
+     "reversedKeyword": "Transizione lenta",
+     "reversedLine": "Un cambiamento tarda a completarsi: lascia andare con dolcezza ciò che finisce e fa' spazio a ciò che nasce.",
+     "love": "Chiudi con serenità un capitolo finito: lasciar andare il passato libera spazio per un amore più vero.",
+     "work": "Una fine apre una rinascita: archivia ciò che non serve più e accogli con coraggio una fase nuova.",
+     "money": "Rivedi le vecchie abitudini di spesa: trasformare oggi uno schema obsoleto rinnova in meglio le tue finanze."
     },
     {
      "name": "La Temperanza",
      "keyword": "Armonia",
-     "line": "Misura e pazienza creano un equilibrio prezioso."
+     "line": "Misura e pazienza creano un equilibrio prezioso.",
+     "reversedKeyword": "Eccesso",
+     "reversedLine": "L'equilibrio si è incrinato: ritrova misura e pazienza, dosa le energie senza spingere troppo in una direzione.",
+     "love": "La pazienza e la misura armonizzano il legame: cerca il giusto mezzo e coltiva una dolce intesa reciproca.",
+     "work": "Modera i ritmi e collabora con calma: l'equilibrio tra impegno e riposo rende il lavoro più fluido.",
+     "money": "Trova la giusta misura nelle spese: un approccio equilibrato e paziente fa crescere il risparmio nel tempo."
     },
     {
      "name": "Il Diavolo",
      "keyword": "Consapevolezza",
-     "line": "Riconosci ciò che ti lega: la libertà è una tua scelta."
+     "line": "Riconosci ciò che ti lega: la libertà è una tua scelta.",
+     "reversedKeyword": "Liberazione",
+     "reversedLine": "Un legame o un'abitudine ti trattiene: riconosci con lucidità ciò che ti vincola e ritrova la tua libertà.",
+     "love": "Osserva ciò che ti lega davvero: distingui il desiderio sano dalle dipendenze e scegli un amore che libera.",
+     "work": "Non lasciarti incatenare alla routine: riconosci ciò che ti pesa e ritrova oggi entusiasmo e autonomia.",
+     "money": "Attenzione alle tentazioni materiali: evita acquisti impulsivi e libera le finanze da spese non necessarie."
     },
     {
      "name": "La Torre",
      "keyword": "Risveglio",
-     "line": "Un cambiamento improvviso fa spazio a basi più autentiche."
+     "line": "Un cambiamento improvviso fa spazio a basi più autentiche.",
+     "reversedKeyword": "Scossa benefica",
+     "reversedLine": "Una struttura traballa: invece di temere il crollo, lascia cadere ciò che non regge e ricostruisci più solido.",
+     "love": "Una verità improvvisa schiarisce l'aria: affronta con coraggio un chiarimento e libera il legame dal non detto.",
+     "work": "Un imprevisto scuote i piani: accoglilo come occasione per ricostruire su fondamenta più autentiche e sane.",
+     "money": "Rivedi ciò che credevi sicuro: oggi un controllo attento delle finanze previene sorprese e rafforza la base."
     },
     {
      "name": "La Stella",
      "keyword": "Speranza",
-     "line": "Una luce serena ti rinnova: credi nei tuoi sogni."
+     "line": "Una luce serena ti rinnova: credi nei tuoi sogni.",
+     "reversedKeyword": "Fiducia smarrita",
+     "reversedLine": "La speranza sembra affievolita: tratta te stesso con dolcezza e riaccendi piano la fiducia, una luce alla volta.",
+     "love": "La speranza illumina il cuore: apriti con fiducia e serenità, l'amore fiorisce dove regna l'autenticità.",
+     "work": "Una visione ispirata ti guida: coltiva i tuoi sogni con calma fiducia e i progetti prendono luce e forma.",
+     "money": "Le prospettive si schiariscono: con ottimismo realistico e pazienza, le tue finanze ritrovano respiro e serenità."
     },
     {
      "name": "La Luna",
      "keyword": "Immaginazione",
-     "line": "Fidati dell'intuito tra le ombre: la chiarezza tornerà."
+     "line": "Fidati dell'intuito tra le ombre: la chiarezza tornerà.",
+     "reversedKeyword": "Chiarezza in arrivo",
+     "reversedLine": "Le nebbie iniziano a diradarsi: i dubbi si sciolgono piano, dai tempo alle emozioni di trovare la loro luce.",
+     "love": "Ascolta le emozioni profonde: ciò che è incerto chiede pazienza, lascia che la verità emerga con dolcezza.",
+     "work": "Non tutto è ancora chiaro: procedi con cautela tra le ambiguità e fidati dell'intuito mentre la nebbia si dirada.",
+     "money": "Verifica bene prima di impegnarti: in ambito finanziario, diffida di ciò che non è del tutto trasparente."
     },
     {
      "name": "Il Sole",
      "keyword": "Gioia",
-     "line": "Calore, successo e vitalità illuminano la tua giornata."
+     "line": "Calore, successo e vitalità illuminano la tua giornata.",
+     "reversedKeyword": "Luce velata",
+     "reversedLine": "La gioia è un po' offuscata: ritrova le piccole cose che ti scaldano il cuore e lascia rientrare la serenità.",
+     "love": "Calore e gioia illuminano il legame: vivi l'amore con leggerezza e gratitudine, la felicità si moltiplica.",
+     "work": "Il successo sorride ai tuoi sforzi: la tua energia positiva contagia gli altri e oggi i progetti brillano.",
+     "money": "Un periodo luminoso favorisce le finanze: goditi i frutti del lavoro con gratitudine e saggia generosità."
     },
     {
      "name": "Il Giudizio",
      "keyword": "Rinnovamento",
-     "line": "Una chiamata interiore ti invita a un nuovo inizio."
+     "line": "Una chiamata interiore ti invita a un nuovo inizio.",
+     "reversedKeyword": "Dubbio interiore",
+     "reversedLine": "Un richiamo resta inascoltato: perdona te stesso con compassione e ascolta la chiamata al rinnovamento interiore.",
+     "love": "È tempo di un risveglio del cuore: perdona, rinnova e dai una seconda possibilità a un legame sincero.",
+     "work": "Una svolta ti chiama a evolvere: rispondi con consapevolezza, è il momento di rinnovare il tuo percorso.",
+     "money": "Rivaluta le scelte finanziarie passate: oggi un bilancio onesto e lucido apre la via a una ripartenza saggia."
     },
     {
      "name": "Il Mondo",
      "keyword": "Compimento",
-     "line": "Un ciclo si chiude con pienezza: festeggia il traguardo."
+     "line": "Un ciclo si chiude con pienezza: festeggia il traguardo.",
+     "reversedKeyword": "Cerchio aperto",
+     "reversedLine": "Un traguardo tarda a chiudersi: completa con pazienza l'ultimo passo, ogni dettaglio porta il suo compimento.",
+     "love": "Senso di pienezza e armonia nel legame: celebra ciò che avete costruito e apriti a un nuovo, bellissimo ciclo.",
+     "work": "Un progetto giunge a compimento con successo: riconosci il valore del cammino e festeggia il traguardo raggiunto.",
+     "money": "Le finanze raggiungono un sano equilibrio: raccogli i frutti del tuo impegno e poni basi solide per ciò che verrà."
     }
-   ]
+   ],
+   "reversedLabel": "Rovescio",
+   "fieldLabels": {
+    "love": "Amore",
+    "work": "Lavoro",
+    "money": "Denaro"
+   },
+   "spreadTitle": "Stesa a tre carte: passato, presente e futuro",
+   "positions": [
+    "Passato",
+    "Presente",
+    "Futuro"
+   ],
+   "askMore": "Chiedi di più su questa carta"
   },
   "luckyFour": {
    "title": "I tuoi quattro portafortuna",
@@ -3633,114 +4617,237 @@ window.LUX = {
     {
      "name": "Si Pandir (The Fool)",
      "keyword": "Awal Baru",
-     "line": "Saatnya melangkah dengan hati terbuka dan jiwa yang ringan menuju petualangan baru."
+     "line": "Saatnya melangkah dengan hati terbuka dan jiwa yang ringan menuju petualangan baru.",
+     "reversedKeyword": "Gegabah, ragu",
+     "reversedLine": "Langkahmu mungkin terburu tanpa arah, jadi tariklah napas dan tata rencana sebelum melompat lebih jauh.",
+     "love": "Buka hatimu untuk awal yang segar, sebab keberanian kecil hari ini bisa menumbuhkan kedekatan tak terduga.",
+     "work": "Peluang baru menanti, jadi terimalah tantangan dengan rasa ingin tahu meski jalannya masih belum jelas benar.",
+     "money": "Saat tepat mencoba ide finansial baru, namun tetap sisihkan cadangan agar semangatmu tidak berubah jadi kelalaian."
     },
     {
      "name": "Sang Pesulap (The Magician)",
      "keyword": "Manifestasi",
-     "line": "Kamu punya semua bekal untuk mewujudkan keinginanmu — percayalah pada kemampuanmu."
+     "line": "Kamu punya semua bekal untuk mewujudkan keinginanmu — percayalah pada kemampuanmu.",
+     "reversedKeyword": "Manipulasi, ragu",
+     "reversedLine": "Kemampuanmu sedang terhambat, maka kembalikan fokus pada niat jujur agar energimu mengalir lagi dengan jernih.",
+     "love": "Kamu punya daya tarik untuk memulai percakapan, jadi ungkapkan perasaanmu dengan tulus dan penuh percaya diri.",
+     "work": "Semua alat untuk sukses ada di tanganmu, maka wujudkan rencana menjadi tindakan nyata hari ini.",
+     "money": "Inisiatifmu bisa membuka sumber pemasukan baru, jadi manfaatkan keterampilan yang sudah kamu kuasai dengan cermat."
     },
     {
      "name": "Pendeta Wanita Agung (The High Priestess)",
      "keyword": "Intuisi",
-     "line": "Dengarkan suara batinmu; jawaban yang kamu cari ada dalam keheningan."
+     "line": "Dengarkan suara batinmu; jawaban yang kamu cari ada dalam keheningan.",
+     "reversedKeyword": "Rahasia, abai",
+     "reversedLine": "Mungkin kamu mengabaikan bisikan batin, maka luangkan waktu hening untuk menata kembali apa yang sungguh kamu rasakan.",
+     "love": "Dengarkan intuisimu soal hubungan, sebab jawaban yang kamu cari sering hadir lewat perasaan, bukan kata-kata.",
+     "work": "Amati situasi dengan tenang sebelum bertindak, karena kesabaran membaca pola akan memberimu keunggulan tersembunyi.",
+     "money": "Percayai firasatmu soal uang, namun pastikan keputusan tetap didukung pertimbangan yang matang dan masuk akal."
     },
     {
      "name": "Sang Permaisuri (The Empress)",
      "keyword": "Kelimpahan",
-     "line": "Energi yang penuh kasih dan subur sedang mengelilingimu — rawat apa yang kamu cintai."
+     "line": "Energi yang penuh kasih dan subur sedang mengelilingimu — rawat apa yang kamu cintai.",
+     "reversedKeyword": "Stagnan, lelah",
+     "reversedLine": "Energi merawatmu mungkin terkuras, jadi isi ulang dirimu lebih dulu sebelum mencurahkan perhatian untuk orang lain.",
+     "love": "Kelembutan dan kehangatanmu menarik kedekatan, jadi rawat hubungan dengan kasih yang tulus dan penuh kesabaran.",
+     "work": "Kreativitasmu sedang subur, maka biarkan ide-ide tumbuh dan wujudkan dalam karya yang nyata dan bermakna.",
+     "money": "Kelimpahan datang lewat ketekunan, jadi kelola sumber dayamu dengan bijak agar hasilnya terus berkembang."
     },
     {
      "name": "Sang Kaisar (The Emperor)",
      "keyword": "Kestabilan",
-     "line": "Struktur dan kedisiplinan akan membawa rasa aman serta kepemimpinan yang kokoh."
+     "line": "Struktur dan kedisiplinan akan membawa rasa aman serta kepemimpinan yang kokoh.",
+     "reversedKeyword": "Kaku, dominan",
+     "reversedLine": "Kendali yang terlalu kaku bisa menyesakkan, maka beri ruang fleksibel agar struktur tetap kokoh tanpa menekan.",
+     "love": "Hadirkan rasa aman dan komitmen yang stabil, sebab pasangan menghargai kehadiranmu yang teguh dan dapat diandalkan.",
+     "work": "Susun rencana dengan disiplin dan batas yang jelas, karena keteraturan hari ini menjadi fondasi pencapaianmu nanti.",
+     "money": "Kelola keuangan dengan struktur yang rapi, sebab kedisiplinan kecil hari ini menjaga stabilitas jangka panjangmu."
     },
     {
      "name": "Sang Pendeta Tinggi (The Hierophant)",
      "keyword": "Tradisi",
-     "line": "Kearifan dan nilai-nilai luhur menuntunmu; belajarlah dari mereka yang berpengalaman."
+     "line": "Kearifan dan nilai-nilai luhur menuntunmu; belajarlah dari mereka yang berpengalaman.",
+     "reversedKeyword": "Kaku aturan",
+     "reversedLine": "Tradisi yang membelenggu bisa menahanmu, jadi pertimbangkan jalan baru tanpa harus menyingkirkan nilai yang berharga.",
+     "love": "Hubungan tumbuh lewat nilai bersama, jadi bangun komitmen di atas rasa saling hormat dan keyakinan yang sejalan.",
+     "work": "Belajar dari mentor atau sistem yang teruji akan memperkuat langkahmu menuju keahlian yang lebih matang.",
+     "money": "Ikuti pendekatan keuangan yang teruji dan tradisional, sebab kestabilan sering lahir dari kebijaksanaan yang sudah terbukti."
     },
     {
      "name": "Sang Kekasih (The Lovers)",
      "keyword": "Pilihan Hati",
-     "line": "Sebuah keputusan dari hati menanti — selaraskan nilai dan perasaanmu."
+     "line": "Sebuah keputusan dari hati menanti — selaraskan nilai dan perasaanmu.",
+     "reversedKeyword": "Bimbang, retak",
+     "reversedLine": "Keselarasan mungkin sedang goyah, maka jujurlah pada nilaimu dan komunikasikan perasaan sebelum jarak makin melebar.",
+     "love": "Hari ini menyokong keterhubungan yang dalam, jadi pilih kejujuran hati untuk mempererat ikatan yang berarti bagimu.",
+     "work": "Sebuah pilihan penting menanti, maka selaraskan keputusanmu dengan nilai inti agar kerja sama berjalan harmonis.",
+     "money": "Pertimbangkan keputusan finansial yang sejalan dengan prinsipmu, sebab keselarasan nilai membawa ketenangan dalam mengelola uang."
     },
     {
      "name": "Sang Kereta Perang (The Chariot)",
      "keyword": "Tekad",
-     "line": "Dengan fokus dan kemauan kuat, kamu mampu menaklukkan tantangan di depan."
+     "line": "Dengan fokus dan kemauan kuat, kamu mampu menaklukkan tantangan di depan.",
+     "reversedKeyword": "Arah hilang",
+     "reversedLine": "Kemudi mungkin terasa lepas kendali, jadi tata kembali tujuanmu dan kumpulkan tekad sebelum melaju lebih kencang.",
+     "love": "Tekad dan kejelasan arah memperkuat hubungan, jadi tunjukkan komitmenmu dengan langkah yang mantap dan konsisten.",
+     "work": "Fokus dan disiplin membawamu pada kemenangan, maka arahkan seluruh energi pada satu tujuan yang jelas.",
+     "money": "Tetapkan target finansial yang tegas, sebab kedisiplinan menjaga arah akan membawamu menuju hasil yang kamu kejar."
     },
     {
      "name": "Kekuatan (Strength)",
      "keyword": "Keberanian Lembut",
-     "line": "Kekuatan sejati lahir dari kesabaran dan kelembutan, bukan paksaan."
+     "line": "Kekuatan sejati lahir dari kesabaran dan kelembutan, bukan paksaan.",
+     "reversedKeyword": "Ragu diri",
+     "reversedLine": "Kepercayaan dirimu mungkin meredup, maka rawat batinmu dengan lembut agar kekuatan sejati perlahan pulih kembali.",
+     "love": "Kesabaran dan kelembutan menumbuhkan cinta, jadi hadapi gesekan dengan hati tenang dan pengertian yang hangat.",
+     "work": "Ketahananmu diuji, namun ketenangan dan keyakinan diri akan membawamu melewati tantangan dengan anggun.",
+     "money": "Hadapi tekanan keuangan dengan kepala dingin, sebab kesabaran dan ketekunan lebih kuat daripada keputusan tergesa."
     },
     {
      "name": "Sang Pertapa (The Hermit)",
      "keyword": "Perenungan",
-     "line": "Luangkan waktu untuk menyendiri; kejernihan akan datang dari refleksi yang tenang."
+     "line": "Luangkan waktu untuk menyendiri; kejernihan akan datang dari refleksi yang tenang.",
+     "reversedKeyword": "Terasing, sepi",
+     "reversedLine": "Menyendiri itu wajar, namun jangan sampai terkucil, jadi seimbangkan waktu refleksi dengan tetap terhubung pada sekitarmu.",
+     "love": "Beri ruang untuk memahami dirimu, sebab kejelasan batin akan membuat hubunganmu lebih jujur dan bermakna.",
+     "work": "Saat tepat merenung dan mencari arah, jadi dengarkan kebijaksanaan dalam dirimu sebelum mengambil langkah besar.",
+     "money": "Tinjau kembali keuanganmu dengan tenang dan jernih, sebab refleksi yang sabar membantu menyusun rencana yang lebih bijak."
     },
     {
      "name": "Roda Keberuntungan (Wheel of Fortune)",
      "keyword": "Perputaran",
-     "line": "Siklus kehidupan sedang berputar; sambut perubahan dengan hati yang terbuka."
+     "line": "Siklus kehidupan sedang berputar; sambut perubahan dengan hati yang terbuka.",
+     "reversedKeyword": "Hambatan, tunda",
+     "reversedLine": "Roda terasa berbalik arah, maka tetap tenang sebab setiap siklus akan berputar, dan kesabaran menjaga keseimbangan.",
+     "love": "Perubahan membawa peluang baru dalam asmara, jadi sambut pergeseran ini dengan hati terbuka dan penuh harapan.",
+     "work": "Putaran nasib sedang menguntungkan, maka manfaatkan momentum ini untuk melangkah maju dengan percaya diri.",
+     "money": "Peluang finansial bisa berputar ke arahmu, jadi bersiaplah menangkap kesempatan saat waktunya tiba dengan sigap."
     },
     {
      "name": "Keadilan (Justice)",
      "keyword": "Keseimbangan",
-     "line": "Kejujuran dan keadilan membawa keselarasan — pertimbangkan segalanya dengan bijak."
+     "line": "Kejujuran dan keadilan membawa keselarasan — pertimbangkan segalanya dengan bijak.",
+     "reversedKeyword": "Berat sebelah",
+     "reversedLine": "Keseimbangan mungkin terganggu, maka tinjau kembali tindakanmu dengan jujur agar keadilan tetap terjaga bagi semua pihak.",
+     "love": "Kejujuran dan keadilan memperkuat hubungan, jadi perlakukan pasangan dengan tulus dan tanggung jawab yang seimbang.",
+     "work": "Keputusan adil dan jelas membawa hasil baik, maka pertimbangkan setiap pilihan dengan kepala jernih dan integritas.",
+     "money": "Tata keuanganmu dengan jujur dan seimbang, sebab keputusan yang adil hari ini membawa ketenangan di kemudian hari."
     },
     {
      "name": "Sang Tergantung (The Hanged Man)",
      "keyword": "Sudut Pandang Baru",
-     "line": "Berhenti sejenak dan lihat dari sisi berbeda; jeda ini penuh makna."
+     "line": "Berhenti sejenak dan lihat dari sisi berbeda; jeda ini penuh makna.",
+     "reversedKeyword": "Macet, korban",
+     "reversedLine": "Mungkin kamu terjebak menunggu, maka lepaskan yang tak bisa diubah dan temukan sudut pandang baru yang menyegarkan.",
+     "love": "Coba lihat hubungan dari sudut pandang baru, sebab kesabaran dan kerelaan melepas akan membuka pemahaman lebih dalam.",
+     "work": "Jeda sejenak memberimu perspektif segar, jadi gunakan masa ini untuk merenung sebelum bergerak ke arah berbeda.",
+     "money": "Tahan dulu keputusan besar soal uang, sebab menunggu dengan sabar bisa mengungkap pilihan yang lebih cerdas."
     },
     {
      "name": "Kematian (Death)",
      "keyword": "Transformasi",
-     "line": "Sebuah babak usai agar babak baru bisa dimulai — lepaskan yang tak lagi melayanimu."
+     "line": "Sebuah babak usai agar babak baru bisa dimulai — lepaskan yang tak lagi melayanimu.",
+     "reversedKeyword": "Tertahan, takut",
+     "reversedLine": "Perubahan mungkin tertunda karena ragu, maka relakan yang usai dengan lembut agar babak baru bisa benar-benar dimulai.",
+     "love": "Akhir satu babak membuka ruang bagi yang baru, jadi sambut transformasi dalam hubungan dengan hati yang lapang.",
+     "work": "Saatnya melepas cara lama yang tak lagi cocok, sebab pembaruan ini membuka jalan menuju pertumbuhan yang nyata.",
+     "money": "Tinggalkan kebiasaan finansial yang menghambat, sebab perubahan ini menyiapkan ruang bagi pendekatan yang lebih sehat."
     },
     {
      "name": "Kesederhanaan (Temperance)",
      "keyword": "Harmoni",
-     "line": "Keseimbangan dan kesabaran memadukan segala hal menjadi selaras."
+     "line": "Keseimbangan dan kesabaran memadukan segala hal menjadi selaras.",
+     "reversedKeyword": "Tak seimbang",
+     "reversedLine": "Keselarasan mungkin sedikit goyah, maka cari kembali ritme yang pas antara memberi, menerima, dan beristirahat sejenak.",
+     "love": "Kesabaran dan keselarasan memperdalam cinta, jadi rawat hubungan dengan komunikasi tenang dan kompromi yang lembut.",
+     "work": "Padukan berbagai unsur dengan sabar, sebab pendekatan yang seimbang membawa hasil kerja yang lebih harmonis.",
+     "money": "Kelola uang dengan moderasi dan kesabaran, sebab keseimbangan antara hemat dan menikmati menjaga keuanganmu tetap sehat."
     },
     {
      "name": "Sang Iblis (The Devil)",
      "keyword": "Keterikatan",
-     "line": "Kenali belenggu yang kamu ciptakan sendiri; kebebasan ada dalam genggamanmu."
+     "line": "Kenali belenggu yang kamu ciptakan sendiri; kebebasan ada dalam genggamanmu.",
+     "reversedKeyword": "Lepas belenggu",
+     "reversedLine": "Kamu mulai sadar pada ikatan yang membatasi, maka kenali pola itu dengan jujur untuk perlahan membebaskan dirimu.",
+     "love": "Kenali pola yang mengikat dalam hubungan, sebab kesadaran jujur membantumu memilih kedekatan yang lebih sehat dan bebas.",
+     "work": "Periksa apakah ada yang membelenggu langkahmu, maka lepaskan kebiasaan yang menahanmu agar bisa bergerak lebih leluasa.",
+     "money": "Waspadai godaan belanja atau utang yang mengikat, sebab kesadaran hari ini menjaga kebebasan finansialmu ke depan."
     },
     {
      "name": "Menara (The Tower)",
      "keyword": "Pembaruan Mendadak",
-     "line": "Guncangan tak terduga membuka jalan bagi fondasi yang lebih jujur dan kuat."
+     "line": "Guncangan tak terduga membuka jalan bagi fondasi yang lebih jujur dan kuat.",
+     "reversedKeyword": "Reda, pulih",
+     "reversedLine": "Guncangan mungkin mereda perlahan, maka gunakan momen ini untuk membangun ulang fondasi dengan lebih jujur dan kokoh.",
+     "love": "Kejujuran terbuka bisa menyegarkan hubungan, jadi sampaikan apa yang terpendam agar ikatan tumbuh lebih kuat dan tulus.",
+     "work": "Perubahan mendadak bisa membuka kebenaran baru, maka terimalah sebagai kesempatan menata ulang yang lebih solid.",
+     "money": "Tinjau ulang fondasi keuanganmu hari ini, sebab menata kembali yang rapuh kini mencegah guncangan yang lebih besar."
     },
     {
      "name": "Bintang (The Star)",
      "keyword": "Harapan",
-     "line": "Cahaya harapan dan ketenangan menyinari jalanmu — percayalah pada masa depan."
+     "line": "Cahaya harapan dan ketenangan menyinari jalanmu — percayalah pada masa depan.",
+     "reversedKeyword": "Harap pudar",
+     "reversedLine": "Harapan mungkin terasa redup sejenak, maka rawat dirimu dengan lembut sebab cahaya batinmu masih menyala diam-diam.",
+     "love": "Harapan dan ketulusan menyembuhkan hati, jadi biarkan dirimu terbuka dan percaya pada kedekatan yang sedang tumbuh.",
+     "work": "Optimisme menuntunmu pada inspirasi baru, maka percayai visimu dan ambil langkah kecil menuju impian yang jelas.",
+     "money": "Masa depan finansial terlihat cerah, jadi tanam harapan lewat langkah perlahan dan rencana yang penuh keyakinan."
     },
     {
      "name": "Bulan (The Moon)",
      "keyword": "Intuisi & Imajinasi",
-     "line": "Ikuti firasatmu melewati kabut keraguan; intuisimu lebih tajam dari yang kamu kira."
+     "line": "Ikuti firasatmu melewati kabut keraguan; intuisimu lebih tajam dari yang kamu kira.",
+     "reversedKeyword": "Bingung, cemas",
+     "reversedLine": "Kabut mulai menipis perlahan, maka beri waktu pada dirimu untuk memilah ilusi dari kenyataan dengan tenang.",
+     "love": "Dengarkan perasaanmu yang terdalam, sebab kejujuran pada diri sendiri akan menjernihkan kebingungan dalam hubunganmu.",
+     "work": "Tidak semua tampak jelas saat ini, maka majulah selangkah demi selangkah sambil mempercayai intuisimu yang halus.",
+     "money": "Cermati keputusan keuangan yang masih kabur, sebab kesabaran menelaah detail mencegah salah langkah yang merugikan."
     },
     {
      "name": "Matahari (The Sun)",
      "keyword": "Kegembiraan",
-     "line": "Kehangatan, keberhasilan, dan keceriaan sedang bersinar untukmu hari ini."
+     "line": "Kehangatan, keberhasilan, dan keceriaan sedang bersinar untukmu hari ini.",
+     "reversedKeyword": "Redup sesaat",
+     "reversedLine": "Cahaya mungkin sedikit terhalang, maka cari sumber kegembiraan kecil agar semangatmu kembali bersinar dengan hangat.",
+     "love": "Kehangatan dan keceriaan mendekatkan hati, jadi bagikan kebahagiaan tulus dan nikmati momen indah bersama pasangan.",
+     "work": "Energi positif membuka jalan keberhasilan, maka tampilkan dirimu dengan percaya diri dan biarkan potensimu bersinar.",
+     "money": "Hari ini membawa kabar finansial yang cerah, jadi syukuri kelimpahan dan kelola hasilnya dengan bijak dan penuh rasa cukup."
     },
     {
      "name": "Penghakiman (Judgement)",
      "keyword": "Kebangkitan",
-     "line": "Sebuah panggilan untuk bangkit dan memulai babak baru dengan jiwa yang diperbarui."
+     "line": "Sebuah panggilan untuk bangkit dan memulai babak baru dengan jiwa yang diperbarui.",
+     "reversedKeyword": "Tunda evaluasi",
+     "reversedLine": "Mungkin kamu menunda merenungi pelajaran lama, maka dengarkan panggilan batinmu agar bisa bangkit dengan kesadaran baru.",
+     "love": "Saatnya memaafkan dan memulai lembaran baru, jadi lepaskan beban masa lalu agar hubunganmu terlahir lebih jujur dan ringan.",
+     "work": "Sebuah panggilan atau peluang penting hadir, maka renungkan perjalananmu dan ambil keputusan yang selaras dengan tujuanmu.",
+     "money": "Tinjau kembali pelajaran finansial masa lalu, sebab kesadaran jujur hari ini membantumu memulai babak keuangan yang lebih bijak."
     },
     {
      "name": "Dunia (The World)",
      "keyword": "Penyelesaian",
-     "line": "Sebuah siklus tuntas dengan indah — rayakan pencapaian dan keutuhanmu."
+     "line": "Sebuah siklus tuntas dengan indah — rayakan pencapaian dan keutuhanmu.",
+     "reversedKeyword": "Hampir rampung",
+     "reversedLine": "Sebuah siklus hampir tuntas, maka rapikan langkah terakhir dengan sabar agar pencapaianmu terasa utuh dan bermakna.",
+     "love": "Hubungan menuju keutuhan dan kepuasan, jadi syukuri perjalanan bersama dan rayakan ikatan yang tumbuh semakin matang.",
+     "work": "Pencapaian besar ada dalam jangkauan, maka selesaikan tahap akhir dengan tekun agar hasilnya benar-benar sempurna.",
+     "money": "Tujuan finansialmu hampir terwujud, jadi jaga konsistensi langkah terakhir agar kelimpahan datang secara menyeluruh dan stabil."
     }
-   ]
+   ],
+   "reversedLabel": "Posisi Terbalik",
+   "fieldLabels": {
+    "love": "Asmara",
+    "work": "Karier",
+    "money": "Keuangan"
+   },
+   "spreadTitle": "Sebaran Tiga Kartu: Masa Lalu, Kini, dan Nanti",
+   "positions": [
+    "Masa Lalu",
+    "Saat Ini",
+    "Masa Depan"
+   ],
+   "askMore": "Tanya lebih dalam tentang kartu ini"
   },
   "luckyFour": {
    "title": "Empat Elemen Keberuntungan",

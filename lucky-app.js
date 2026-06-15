@@ -5241,25 +5241,85 @@ function renderSunSignPanel(data){
   _luxInsert(panel);
 }
 
-// ── 4) 오늘의 타로 (메이저 아르카나) ────────────────────────
+// ── 4) 오늘의 타로 (메이저 아르카나) — 정/역방향·분야별·3카드·AI챗 ──────
+const _TAROT_Q = {
+  ko:(n,o)=>`오늘 뽑은 '${n}'(${o}) 타로 카드가 제게 어떤 의미인지 더 자세히 알려주세요.`,
+  en:(n,o)=>`Tell me more about what the '${n}' (${o}) tarot card means for me today.`,
+  ja:(n,o)=>`今日引いた「${n}」(${o})のタロットカードが私にとってどんな意味か、もっと詳しく教えてください。`,
+  de:(n,o)=>`Erzähl mir mehr darüber, was die Tarotkarte „${n}" (${o}) heute für mich bedeutet.`,
+  fr:(n,o)=>`Dis-m'en plus sur ce que la carte de tarot « ${n} » (${o}) signifie pour moi aujourd'hui.`,
+  es:(n,o)=>`Cuéntame más sobre lo que la carta de tarot '${n}' (${o}) significa para mí hoy.`,
+  pt:(n,o)=>`Conte-me mais sobre o que a carta de tarô '${n}' (${o}) significa para mim hoje.`,
+  it:(n,o)=>`Dimmi di più su cosa significa per me oggi la carta dei tarocchi '${n}' (${o}).`,
+  id:(n,o)=>`Ceritakan lebih lanjut arti kartu tarot '${n}' (${o}) untuk saya hari ini.`,
+};
+function _tarotAskAI(ci, rev, lang){
+  try{
+    const X=window.LUX&&(window.LUX[lang]||window.LUX.en); const T=X&&X.tarot; const card=T&&T.cards[ci]; if(!card) return;
+    const orient= rev ? (T.reversedLabel||'Reversed') : (T.uprightLabel||'Upright');
+    const q=(_TAROT_Q[lang]||_TAROT_Q.en)(card.name, orient);
+    const chat=document.getElementById('ai-chat-panel'); if(chat) chat.scrollIntoView({behavior:'smooth',block:'center'});
+    const inp=document.getElementById('ai-input');
+    if(inp){ inp.value=q; inp.focus(); if(typeof sendAIChatMessage==='function') sendAIChatMessage(); }
+  }catch(e){}
+}
 function renderTarotPanel(data){
   const old=document.getElementById('tarot-panel'); if(old) old.remove();
   const X=_luxGet(data.lang); if(!X||!X.tarot) return;
-  const T=X.tarot; const ci=_luxPick(data.seed,7, T.cards.length);
+  const T=X.tarot; const lang=data.lang;
+  const ci=_luxPick(data.seed,7, T.cards.length);
   const card=T.cards[ci]; if(!card) return;
+  // 정/역방향 (역방향 콘텐츠 있을 때만, 50% 결정론)
+  const canRev=!!card.reversedLine;
+  const rev= canRev && _luxPick(data.seed,71,2)===1;
+  const orient= rev ? (T.reversedLabel||T.uprightLabel||'') : (T.uprightLabel||'');
+  const kw= rev ? (card.reversedKeyword||card.keyword) : card.keyword;
+  const line= rev ? card.reversedLine : card.line;
+  const rot= rev ? 'transform:rotate(180deg);' : '';
+  // 분야별 (콘텐츠 있을 때)
+  const FL=T.fieldLabels;
+  const fieldRows = (FL && card.love) ? `
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">
+      ${[['💕',FL.love,card.love],['💼',FL.work,card.work],['💰',FL.money,card.money]].map(f=>
+        `<div style="display:flex;gap:8px;align-items:flex-start;font-size:11.5px;line-height:1.5;"><span style="flex-shrink:0;">${f[0]}</span><span><b style="color:#fcd34d;">${escHtml(f[1])}</b> <span style="color:#e0e7ff;">${escHtml(f[2])}</span></span></div>`).join('')}
+    </div>` : '';
+  // 3카드 스프레드 (과거·현재·미래, 콘텐츠 있을 때)
+  let spread='';
+  if(T.spreadTitle && T.positions && T.positions.length===3){
+    const idxs=[]; let s=0;
+    while(idxs.length<3 && s<60){ const c=_luxPick(data.seed,80+s*7, T.cards.length); if(idxs.indexOf(c)<0) idxs.push(c); s++; }
+    while(idxs.length<3) idxs.push(idxs.length);
+    spread=`<div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.12);padding-top:12px;">
+      <div style="font-size:11px;font-weight:700;color:#c7d2fe;margin-bottom:9px;">🃏 ${escHtml(T.spreadTitle)}</div>
+      <div style="display:flex;gap:8px;">
+        ${idxs.map((c,k)=>{const cd=T.cards[c]||{};return `<div style="flex:1;background:rgba(255,255,255,.07);border-radius:10px;padding:9px 6px;text-align:center;">
+          <div style="font-size:9px;color:#a5b4fc;text-transform:uppercase;letter-spacing:.02em;">${escHtml(T.positions[k])}</div>
+          <div style="font-size:20px;margin:4px 0;">🃏</div>
+          <div style="font-size:10.5px;font-weight:800;color:#fff;line-height:1.2;">${escHtml(cd.name||'')}</div>
+          <div style="font-size:9.5px;color:#fcd34d;margin-top:2px;">${escHtml(cd.keyword||'')}</div>
+        </div>`;}).join('')}
+      </div></div>`;
+  }
+  // AI 더 물어보기 (클릭 시점엔 ai-chat-panel 이 이미 렌더됨 — 렌더순서 무관)
+  const askBtn = T.askMore ? `
+    <button onclick="_tarotAskAI(${ci},${rev?1:0},'${lang}')" style="margin-top:12px;width:100%;background:rgba(251,191,36,.18);color:#fcd34d;border:1px solid rgba(251,191,36,.4);border-radius:10px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;">💬 ${escHtml(T.askMore)}</button>` : '';
+
   const panel=document.createElement('div');
   panel.id='tarot-panel';
   panel.style.cssText='background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;padding:16px;margin:16px 0;color:#e0e7ff;';
   panel.innerHTML=`
     <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c7d2fe;margin-bottom:6px;text-transform:uppercase;">🔮 ${escHtml(T.title)}</div>
     <div style="font-size:11px;color:#a5b4fc;margin-bottom:12px;line-height:1.4;">${escHtml(T.intro)}</div>
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
-      <div style="width:62px;height:96px;flex-shrink:0;border-radius:10px;background:linear-gradient(160deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 4px 14px rgba(0,0,0,.35);border:2px solid #fcd34d;">🃏</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+      <div style="width:62px;height:96px;flex-shrink:0;border-radius:10px;background:linear-gradient(160deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 4px 14px rgba(0,0,0,.35);border:2px solid #fcd34d;${rot}">🃏</div>
       <div style="flex:1;">
         <div style="font-size:19px;font-weight:900;color:#fff;line-height:1.2;">${escHtml(card.name)}</div>
-        <div style="display:inline-block;margin-top:6px;background:rgba(251,191,36,.2);color:#fcd34d;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;">${escHtml(T.uprightLabel)} · ${escHtml(card.keyword)}</div>
+        <div style="display:inline-block;margin-top:6px;background:${rev?'rgba(248,113,113,.22)':'rgba(251,191,36,.2)'};color:${rev?'#fca5a5':'#fcd34d'};font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;">${escHtml(orient)} · ${escHtml(kw)}</div>
       </div></div>
-    <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#e0e7ff;line-height:1.6;">${escHtml(card.line)}</div>`;
+    <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#e0e7ff;line-height:1.6;">${escHtml(line)}</div>
+    ${fieldRows}
+    ${askBtn}
+    ${spread}`;
   _luxInsert(panel);
 }
 
