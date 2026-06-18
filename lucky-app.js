@@ -1647,7 +1647,8 @@ function renderResults(data) {
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
-   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel'].forEach(id => {
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
+   'retro-panel','electional-panel','moonritual-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1738,6 +1739,10 @@ function renderResults(data) {
   renderLuckyFourPanel(data);
   renderDreamPanel(data);
   renderAngelPanel(data);
+  // 트렌드 코스믹 웨더 (오늘 날짜 기반, 전 사용자 공통). 천체계산 실패가 체인을 끊지 않도록 격리
+  try { renderRetroPanel(data); } catch(e){}
+  try { renderElectionalPanel(data); } catch(e){}
+  try { renderMoonRitualPanel(data); } catch(e){}
   // 결과 중간 광고 — 패널들 사이에 한 번 더 노출 (알리·쿠팡은 상단으로 이동됨)
   _resultAdSense('ad-result-mid', 400);
   renderShareBtns(data);
@@ -5500,6 +5505,149 @@ function renderAngelPanel(data){
         <div id="angel-detail" style="font-size:12px;color:#78350f;line-height:1.55;margin-top:3px;">${escHtml(today.meaning)}</div></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;">${refs}</div>`;
+  _luxInsert(panel);
+}
+
+// ══════════════════════════════════════════════════════════
+// 트렌드 Wave1: 코스믹 웨더 (역행·일렉셔널 길일·달위상 의식)
+// astronomy-engine 으로 오늘 날짜 기반 100% 결정론 (출생정보 불필요 → 전 사용자 공통).
+// 콘텐츠: window.LUX[lang].retro/electional/moonRitual
+// ══════════════════════════════════════════════════════════
+function _astro(){ return (typeof window!=='undefined' && window.Astronomy) ? window.Astronomy : null; }
+function _eclLon(body, date){
+  const A=_astro(); if(!A) return null;
+  try{
+    if(body==='Sun') return ((A.SunPosition(date).elon%360)+360)%360;
+    const v = (body==='Moon') ? A.GeoMoon(date) : A.GeoVector(body, date, true);
+    return ((A.Ecliptic(v).elon%360)+360)%360;
+  }catch(e){ return null; }
+}
+function _isRetro(body, date){
+  const l1=_eclLon(body,date), l2=_eclLon(body,new Date(date.getTime()+86400000));
+  if(l1==null||l2==null) return null;
+  let d=l2-l1; if(d>180)d-=360; if(d<-180)d+=360;
+  return d<0;
+}
+function _nextStation(body, from, retroNow){
+  for(let i=2;i<=240;i+=2){ const dt=new Date(from.getTime()+i*86400000); const r=_isRetro(body,dt); if(r!=null && r!==retroNow) return dt; }
+  return null;
+}
+function _moonPhase(date){ const A=_astro(); if(!A) return null; try{ const ang=A.MoonPhase(date); return {ang, idx:Math.floor(((ang+22.5)%360)/45)%8}; }catch(e){ return null; } }
+function _nextPhaseDate(targetAng, date){ const A=_astro(); if(!A) return null; try{ const t=A.SearchMoonPhase(targetAng, date, 45); return t?(t.date||t.tt&&t):null; }catch(e){ return null; } }
+function _moonSignNow(date){ const l=_eclLon('Moon',date); return l==null?null:Math.floor(l/30); }
+function _isMoonVOC(date){
+  const A=_astro(); if(!A) return false;
+  try{
+    const bodies=['Sun','Mercury','Venus','Mars','Jupiter','Saturn'].map(n=>n==='Sun'?'Sun':A.Body[n]);
+    const asp=[0,60,90,120,180];
+    const ml0=_eclLon('Moon',date); if(ml0==null) return false;
+    const sign=Math.floor(ml0/30); let prev=null;
+    for(let s=0;s<=14;s++){
+      const dt=new Date(date.getTime()+s*0.2*86400000);
+      const ml=_eclLon('Moon',dt); if(ml==null) break;
+      if(s>0 && Math.floor(ml/30)!==sign) break;
+      const diffs=bodies.map(b=>{const pl=_eclLon(b,dt); if(pl==null)return null; const sep=((ml-pl)%360+360)%360; return asp.map(a=>{let x=sep-a; if(x>180)x-=360; if(x<-180)x+=360; return x;});});
+      if(prev){ for(let bi=0;bi<bodies.length;bi++){ if(!diffs[bi]||!prev[bi])continue; for(let ai=0;ai<asp.length;ai++){ if(prev[bi][ai]*diffs[bi][ai]<0 && Math.abs(prev[bi][ai])<8 && Math.abs(diffs[bi][ai])<8) return false; } } }
+      prev=diffs;
+    }
+    return true;
+  }catch(e){ return false; }
+}
+const _MOON_EMJ=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+const _PLANET_SYM=['☿','♀','♂','♃','♄'];
+
+// ── T1) 행성 역행 트래커 ──────────────────────────────────
+function renderRetroPanel(data){
+  const old=document.getElementById('retro-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.retro||!X.retro.planets) return;
+  const R=X.retro; const now=new Date();
+  let bodies; try{ bodies=['Mercury','Venus','Mars','Jupiter','Saturn'].map(n=>A.Body[n]); }catch(e){ return; }
+  const rows=R.planets.map((p,i)=>{
+    const retro=_isRetro(bodies[i], now); const active=retro===true;
+    let cd='';
+    if(active){ const st=_nextStation(bodies[i],now,true); if(st){ const days=Math.max(0,Math.ceil((st-now)/86400000)); cd=' · '+escHtml(R.stationLabel)+' D-'+days; } }
+    return `<div style="background:rgba(255,255,255,.05);border-radius:10px;padding:9px 11px;margin-bottom:6px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <span style="font-size:12.5px;font-weight:700;color:#e2e8f0;">${_PLANET_SYM[i]} ${escHtml(p.name)} <span style="font-size:10px;color:#94a3b8;font-weight:500;">${escHtml(p.theme)}</span></span>
+        <span style="font-size:10.5px;font-weight:800;color:${active?'#f87171':'#34d399'};white-space:nowrap;">${active?escHtml(R.statusActive):escHtml(R.statusDirect)}${cd}</span></div>
+      ${active?`<div style="font-size:11px;color:#cbd5e1;line-height:1.5;margin-top:5px;">⚠️ ${escHtml(p.retroTip)}</div>`:''}
+    </div>`;
+  }).join('');
+  const panel=document.createElement('div');
+  panel.id='retro-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:16px;padding:16px;margin:16px 0;color:#e2e8f0;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#7dd3fc;margin-bottom:6px;text-transform:uppercase;">🪐 ${escHtml(R.title)}</div>
+    <div style="font-size:11px;color:#94a3b8;margin-bottom:11px;line-height:1.4;">${escHtml(R.intro)}</div>${rows}`;
+  _luxInsert(panel);
+}
+
+// ── T2) 일렉셔널 길일 — 행동별 추천 ───────────────────────
+const _ELECT=[ {el:['earth'],ph:1,merc:1,voc:1}, {el:['water','air'],ph:1,merc:0,voc:1}, {el:['earth'],ph:0,merc:0,voc:1}, {el:['earth','water'],ph:-1,merc:0,voc:0}, {el:['fire'],ph:1,merc:1,voc:1}, {el:['air','fire'],ph:0,merc:1,voc:0}, {el:['air'],ph:0,merc:1,voc:1}, {el:['earth'],ph:1,merc:1,voc:1} ];
+const _ELECT_EMJ=['📝','💕','🏠','🩺','💼','✈️','💬','💰'];
+function renderElectionalPanel(data){
+  const old=document.getElementById('electional-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.electional||!X.electional.activities) return;
+  const E=X.electional; const now=new Date();
+  const msi=_moonSignNow(now); if(msi==null) return;
+  const moonElem=_SIGN_ELEM[msi]; const mp=_moonPhase(now); const waxing=mp?mp.ang<180:true;
+  const mercRetro=_isRetro(A.Body.Mercury, now)===true; const voc=_isMoonVOC(now);
+  const moonSignName=(X.sunSign&&X.sunSign.signs&&X.sunSign.signs[msi])?X.sunSign.signs[msi].name:'';
+  const score=(i)=>{ const a=_ELECT[i]; let s=58;
+    if(a.el.indexOf(moonElem)>=0) s+=16;
+    if(a.ph===1) s+= waxing?8:-6; else if(a.ph===-1) s+= waxing?-6:8;
+    if(a.merc&&mercRetro) s-=14; if(a.voc&&voc) s-=12;
+    s += (Math.floor(mkRng((i+1)+_luxDayNum()*(i+2))()*9)-4);
+    return Math.max(28,Math.min(96,s)); };
+  const vlabel=(s)=> s>=75?{t:E.verdict.great,c:'#15803d',b:'#dcfce7'} : s>=55?{t:E.verdict.good,c:'#b45309',b:'#fef3c7'} : {t:E.verdict.caution,c:'#b91c1c',b:'#fee2e2'};
+  const rows=E.activities.map((act,i)=>{ const s=score(i); const v=vlabel(s); const good=s>=55;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f0fdf4;">
+      <span style="font-size:12px;color:#14532d;font-weight:600;">${_ELECT_EMJ[i]} ${escHtml(act.name)}</span>
+      <span style="font-size:11px;font-weight:800;color:${v.c};background:${v.b};padding:2px 9px;border-radius:20px;white-space:nowrap;">${escHtml(v.t)}</span></div>`;
+  }).join('');
+  const panel=document.createElement('div');
+  panel.id='electional-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#15803d;margin-bottom:6px;text-transform:uppercase;">📅 ${escHtml(E.title)}</div>
+    <div style="font-size:11px;color:#15803d;margin-bottom:9px;line-height:1.4;">${escHtml(E.intro)}</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px;">
+      <span style="font-size:11px;background:rgba(21,128,61,.1);color:#14532d;padding:3px 10px;border-radius:20px;">🌙 ${escHtml(E.moonLabel)}: ${_MOON_EMJ[mp?mp.idx:0]} ${escHtml(moonSignName)}</span>
+      ${voc?`<span style="font-size:11px;background:#fee2e2;color:#b91c1c;padding:3px 10px;border-radius:20px;">⚠️ ${escHtml(E.vocLabel)}</span>`:''}
+    </div>
+    ${voc?`<div style="font-size:11px;color:#b91c1c;line-height:1.5;margin-bottom:8px;">${escHtml(E.vocTip)}</div>`:''}
+    ${rows}`;
+  _luxInsert(panel);
+}
+
+// ── T3) 달위상 매니페스테이션 의식 ────────────────────────
+function _moonIntentKey(){ return 'moon_intent_v1'; }
+function _saveMoonIntent(){ try{ const t=document.getElementById('moon-intent'); if(t) localStorage.setItem(_moonIntentKey(), JSON.stringify({t:Date.now(), v:t.value.slice(0,500)})); const b=document.getElementById('moon-intent-saved'); if(b){ b.style.display='inline'; setTimeout(()=>{b.style.display='none';},2000);} }catch(e){} }
+function renderMoonRitualPanel(data){
+  const old=document.getElementById('moonritual-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.moonRitual||!X.moonRitual.phases) return;
+  const M=X.moonRitual; const now=new Date(); const mp=_moonPhase(now); if(!mp) return;
+  const ph=M.phases[mp.idx]||M.phases[0];
+  const nextNew=_nextPhaseDate(0,now), nextFull=_nextPhaseDate(180,now);
+  const fmtD=(d)=>{ try{ return new Intl.DateTimeFormat(data.lang,{month:'short',day:'numeric'}).format(d); }catch(e){ return ''; } };
+  let saved=''; try{ const s=JSON.parse(localStorage.getItem(_moonIntentKey())||'null'); if(s&&s.v) saved=s.v; }catch(e){}
+  const panel=document.createElement('div');
+  panel.id='moonritual-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;padding:16px;margin:16px 0;color:#e0e7ff;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c4b5fd;margin-bottom:10px;text-transform:uppercase;">🌙 ${escHtml(M.title)}</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:11px;">
+      <div style="font-size:44px;line-height:1;">${_MOON_EMJ[mp.idx]}</div>
+      <div style="flex:1;"><div style="font-size:17px;font-weight:900;color:#fff;">${escHtml(ph.name)}</div>
+        ${(nextNew||nextFull)?`<div style="font-size:10px;color:#a5b4fc;margin-top:3px;">${nextNew?'🌑 '+fmtD(nextNew):''}${nextNew&&nextFull?' · ':''}${nextFull?'🌕 '+fmtD(nextFull):''}</div>`:''}
+      </div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;font-size:12px;color:#e0e7ff;line-height:1.55;margin-bottom:9px;"><b style="color:#c4b5fd;">${escHtml(M.ritualLabel)}</b> · ${escHtml(ph.ritual)}</div>
+    <div style="font-size:11.5px;color:#c7d2fe;line-height:1.5;margin-bottom:9px;">💭 <b>${escHtml(M.journalLabel)}</b> ${escHtml(ph.journal)}</div>
+    <textarea id="moon-intent" rows="2" placeholder="..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.07);border:1px solid rgba(196,181,253,.3);border-radius:8px;color:#e0e7ff;font-size:12px;padding:8px;resize:vertical;">${escHtml(saved)}</textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+      <span style="font-size:10px;color:#a5b4fc;">🔢 ${escHtml(M.label369)} · ${escHtml(M.tip369)}</span>
+      <button onclick="_saveMoonIntent()" style="background:rgba(196,181,253,.2);color:#ddd6fe;border:1px solid rgba(196,181,253,.4);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">💾 <span id="moon-intent-saved" style="display:none;">✓</span></button>
+    </div>`;
   _luxInsert(panel);
 }
 

@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v14: 광고 상단 배치 — 알리익스프레스·ko쿠팡을 결과/SEO 상단으로 이동
-const CACHE_NAME = 'lucky-v14';
+// v15: 트렌드 코스믹웨더 — 역행 트래커·일렉셔널 길일·달위상 의식
+const CACHE_NAME = 'lucky-v15';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

@@ -1,5 +1,5 @@
-// luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 best-in-class)
-// 5종 + Wave 확장(호로스코프·타로정역·라이프패스·오행띠/연간·궁합4축/겉궁합·꿈해몽·엔젤넘버).
+// luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
+// 기존 + 트렌드 Wave1(retro 역행·electional 길일·moonRitual 달위상의식).
 // 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON(아포스트로피 안전). 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -980,6 +980,145 @@ window.LUX = {
     {
      "keyword": "도약과 신뢰",
      "meaning": "한 단계 더 도약하라는 우주의 초대입니다. 자신과 흐름을 믿고 나아가면 새로운 차원이 펼쳐집니다."
+    }
+   ]
+  },
+  "retro": {
+   "title": "행성 역행",
+   "intro": "역행(레트로그레이드)은 행성이 하늘에서 거꾸로 가는 것처럼 보이는 시기로, 그 행성이 관장하는 영역을 되돌아보고 다듬으라는 신호로 읽힙니다.",
+   "statusActive": "역행 중",
+   "statusDirect": "순행 중",
+   "stationLabel": "시작/종료",
+   "tipsLabel": "대처 팁",
+   "planets": [
+    {
+     "name": "수성",
+     "theme": "소통·계약·이동·기기",
+     "retroTip": "수성 역행(머큐리 레트로) 때는 중요한 계약 서명과 새 기기 구매를 한 박자 늦추고, 메일과 일정은 보내기 전에 한 번 더 확인하세요."
+    },
+    {
+     "name": "금성",
+     "theme": "연애·돈·미적 취향",
+     "retroTip": "금성 역행 때는 충동적인 고백이나 큰 쇼핑보다 옛 인연과 지난 소비 습관을 차분히 정리하는 데 시간을 쓰는 편이 좋습니다."
+    },
+    {
+     "name": "화성",
+     "theme": "추진력·열정·갈등",
+     "retroTip": "화성 역행 때는 새 일을 벌이기보다 진행 중인 일에 집중하고, 욱하는 순간엔 한 박자 쉬며 에너지를 안으로 다스려 보세요."
+    },
+    {
+     "name": "목성",
+     "theme": "확장·기회·신념",
+     "retroTip": "목성 역행 때는 무리한 확장이나 과한 낙관을 잠시 접고, 내가 진짜 키우고 싶은 가치가 무엇인지 안에서부터 다시 점검해 보세요."
+    },
+    {
+     "name": "토성",
+     "theme": "책임·구조·한계",
+     "retroTip": "토성 역행 때는 미뤄둔 의무와 느슨해진 루틴을 다시 손보기 좋은 시기이니, 부담으로 여기지 말고 기반을 단단히 다진다고 생각하세요."
+    }
+   ]
+  },
+  "electional": {
+   "title": "오늘의 길일·택일",
+   "intro": "오늘 하늘의 흐름이 어떤 일에 손을 들어주고 어떤 일은 살짝 말리는지, 행동별로 택일의 기운을 짚어 드립니다.",
+   "moonLabel": "달 자리",
+   "vocLabel": "보이드 타임",
+   "vocTip": "달이 별자리를 비우는 보이드(void of course) 시간에는 계약이나 창업처럼 새로 시작하는 일은 잠시 미루고, 마무리나 휴식에 쓰는 편이 좋습니다.",
+   "verdict": {
+    "great": "아주 좋음",
+    "good": "무난",
+    "caution": "주의"
+   },
+   "activities": [
+    {
+     "name": "계약·서명",
+     "goodWhen": "수성이 순행하고 달이 안정된 별자리에 머무는 맑은 시간대라면 도장을 찍기 좋습니다.",
+     "cautionWhen": "수성 역행이나 보이드 타임에는 조항을 다시 읽고 서명을 하루 미루는 편이 안전합니다."
+    },
+    {
+     "name": "연애·고백",
+     "goodWhen": "금성이 순행하고 달이 부드러운 기운일 때 마음을 전하면 진심이 잘 가닿습니다.",
+     "cautionWhen": "금성 역행이나 달이 불안정할 때는 충동적인 고백보다 마음을 천천히 데우는 편이 좋습니다."
+    },
+    {
+     "name": "이사·이전",
+     "goodWhen": "손 없는 날과 달이 든든한 별자리가 겹치는 날이면 새 공간으로 옮기기에 무난합니다.",
+     "cautionWhen": "수성 역행이나 보이드 타임에는 이삿짐 분실·일정 착오가 생기기 쉬우니 날을 다시 잡아 보세요."
+    },
+    {
+     "name": "건강·시술",
+     "goodWhen": "달이 시술 부위와 어울리고 기운이 차오르는 시기라면 회복이 한결 매끄럽습니다.",
+     "cautionWhen": "보름 전후나 달이 해당 부위를 지날 때는 무리한 시술을 피하고 전문의와 충분히 상의하세요."
+    },
+    {
+     "name": "사업·창업",
+     "goodWhen": "목성의 확장 기운과 달이 차오르는 흐름이 맞물릴 때 첫발을 내딛기 좋습니다.",
+     "cautionWhen": "수성·화성 역행이나 보이드 타임에는 개업·론칭을 서두르지 말고 준비를 더 다지세요."
+    },
+    {
+     "name": "여행",
+     "goodWhen": "수성이 순행하고 달의 흐름이 가벼운 날이면 이동과 일정이 매끄럽게 풀립니다.",
+     "cautionWhen": "수성 역행 때는 연착·예약 착오가 잦으니 여유 시간을 넉넉히 두고 짐을 다시 확인하세요."
+    },
+    {
+     "name": "중요한 대화",
+     "goodWhen": "수성이 순행하고 달이 차분한 시간대라면 진심이 오해 없이 잘 전달됩니다.",
+     "cautionWhen": "수성 역행이나 보이드 타임에는 말이 엇갈리기 쉬우니 민감한 대화는 한 박자 미루는 게 좋습니다."
+    },
+    {
+     "name": "금전·투자",
+     "goodWhen": "금성·목성이 순행하고 달이 안정될 때 차분한 판단으로 움직이면 결이 좋습니다.",
+     "cautionWhen": "역행기나 보이드 타임에는 큰돈을 새로 넣기보다 점검과 분산에 무게를 두세요."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "달 위상 의식",
+   "intro": "달이 차고 기우는 여덟 단계의 리듬에 맞춰, 바라는 바를 그리고 비워 내는 작은 의식과 저널을 안내합니다.",
+   "label369": "369 매니페스테이션",
+   "tip369": "369법은 원하는 문장을 아침에 3번, 낮에 6번, 밤에 9번 적으며 바람을 또렷이 새기는 매니페스테이션 방법입니다.",
+   "journalLabel": "저널 질문",
+   "ritualLabel": "오늘의 의식",
+   "phases": [
+    {
+     "name": "신월",
+     "ritual": "조용한 곳에서 새로 시작하고 싶은 일 하나를 종이에 적고, 그 씨앗을 마음에 심듯 또렷이 떠올려 보세요.",
+     "journal": "앞으로 한 달, 내 삶에 새로 들이고 싶은 것은 무엇인가요?"
+    },
+    {
+     "name": "초승달",
+     "ritual": "신월에 세운 바람을 향한 작은 첫걸음 하나를 오늘 실제로 실행에 옮겨 보세요.",
+     "journal": "내 의도를 현실로 만들기 위해 지금 뗄 수 있는 한 걸음은 무엇인가요?"
+    },
+    {
+     "name": "상현달",
+     "ritual": "목표로 가는 길에 놓인 걸림돌을 하나 적고, 그것을 넘을 방법을 한 가지 정해 보세요.",
+     "journal": "지금 나를 머뭇거리게 하는 두려움이나 장애물은 무엇인가요?"
+    },
+    {
+     "name": "상현망간",
+     "ritual": "여기까지 해낸 일들을 가만히 떠올리며, 잘 굴러가는 방향에 감사와 힘을 더해 보세요.",
+     "journal": "최근에 잘 풀린 일들 중 더 키우고 싶은 흐름은 무엇인가요?"
+    },
+    {
+     "name": "만월",
+     "ritual": "달빛 아래에서 이룬 것에 감사하고, 더는 지니고 싶지 않은 감정을 적어 가만히 놓아 보세요.",
+     "journal": "지금 내 삶에서 무르익어 결실을 맺은 것은 무엇인가요?"
+    },
+    {
+     "name": "하현망간",
+     "ritual": "지난 한 달의 흐름을 되짚으며 나에게 잘 맞았던 것과 덜어낼 것을 나눠 정리해 보세요.",
+     "journal": "이번 주기에서 내가 배운 가장 큰 깨달음은 무엇인가요?"
+    },
+    {
+     "name": "하현달",
+     "ritual": "마음과 공간을 가볍게 비우는 시간을 가지며, 용서하거나 흘려보낼 일 하나를 정해 보세요.",
+     "journal": "이제 그만 내려놓아도 괜찮은 짐은 무엇인가요?"
+    },
+    {
+     "name": "그믐달",
+     "ritual": "다음 신월을 앞두고 충분히 쉬며, 고요 속에서 내면의 목소리에 가만히 귀 기울여 보세요.",
+     "journal": "다음 한 달을 맞기 전, 내 마음이 진짜로 바라는 것은 무엇인가요?"
     }
    ]
   }
@@ -1964,6 +2103,145 @@ window.LUX = {
      "meaning": "1212 inspires a confident leap forward, encouraging you to trust your journey, rise above doubt, and keep moving toward the bright future taking shape."
     }
    ]
+  },
+  "retro": {
+   "title": "Planetary Retrogrades",
+   "intro": "A retrograde is when a planet appears to move backward across the sky — a cue to slow down and revisit rather than rush forward.",
+   "statusActive": "Retrograde",
+   "statusDirect": "Direct",
+   "stationLabel": "Begins / Ends",
+   "tipsLabel": "How to Handle It",
+   "planets": [
+    {
+     "name": "Mercury",
+     "theme": "communication, travel, tech",
+     "retroTip": "Back up your files, reread messages before sending, and confirm plans twice. This is a season to revise rather than launch."
+    },
+    {
+     "name": "Venus",
+     "theme": "love, money, beauty",
+     "retroTip": "Hold off on dramatic style makeovers or new romances, and use the window to clarify what you truly value in love and finances."
+    },
+    {
+     "name": "Mars",
+     "theme": "energy, drive, action",
+     "retroTip": "Channel restless energy into finishing old projects instead of starting new ones, and pause before reacting in a heated moment."
+    },
+    {
+     "name": "Jupiter",
+     "theme": "growth, luck, belief",
+     "retroTip": "Revisit a goal or belief that no longer fits, and turn outward expansion inward by deepening what you already have."
+    },
+    {
+     "name": "Saturn",
+     "theme": "structure, work, limits",
+     "retroTip": "Review your commitments and long-term plans honestly, shoring up shaky foundations rather than piling on fresh responsibilities."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Today's Auspicious Timing",
+   "intro": "Electional timing helps you pick the moment when the sky best supports what you are about to begin.",
+   "moonLabel": "Moon Sign",
+   "vocLabel": "Void-of-Course",
+   "vocTip": "When the Moon is void-of-course, hold off on launching anything important, as plans started now tend to fizzle or lead nowhere.",
+   "verdict": {
+    "great": "Excellent",
+    "good": "Favorable",
+    "caution": "Caution"
+   },
+   "activities": [
+    {
+     "name": "Contracts & Signing",
+     "goodWhen": "Best when the Moon is waxing and clear of void, with steady aspects to lock in the terms.",
+     "cautionWhen": "Hold back during a void-of-course Moon or Mercury retrograde, when fine print is easily missed."
+    },
+    {
+     "name": "Romance & Confessions",
+     "goodWhen": "Favored when Venus is strong and the Moon flows easily, opening hearts to honest connection.",
+     "cautionWhen": "Tread gently during Venus retrograde or tense Moon aspects, when feelings can be misread."
+    },
+    {
+     "name": "Moving & Relocation",
+     "goodWhen": "Smoothest on a waxing Moon with grounded earth-sign energy to support putting down fresh roots.",
+     "cautionWhen": "Avoid a void Moon or Mars retrograde, when logistics snarl and delays pile up."
+    },
+    {
+     "name": "Health & Procedures",
+     "goodWhen": "Well supported when the Moon is waning for letting go, and clear of harsh aspects for smooth recovery.",
+     "cautionWhen": "Reconsider when the Moon sits in the sign that rules the body part being treated, or during chaotic transits."
+    },
+    {
+     "name": "Business & Launches",
+     "goodWhen": "Powerful on a waxing-to-full Moon with confident Jupiter or Sun support for visibility.",
+     "cautionWhen": "Postpone during Mercury retrograde or a void Moon, when momentum stalls soon after the start."
+    },
+    {
+     "name": "Travel",
+     "goodWhen": "Easiest when Mercury is direct and the Moon makes flowing aspects for smooth passage.",
+     "cautionWhen": "Build in buffer time during Mercury retrograde or a void Moon, when schedules tend to slip."
+    },
+    {
+     "name": "Important Conversations",
+     "goodWhen": "Most productive when the Moon and Mercury align warmly, helping your words land as intended.",
+     "cautionWhen": "Choose another moment during a void Moon or a harsh Mars aspect, when talks can turn combative."
+    },
+    {
+     "name": "Money & Investments",
+     "goodWhen": "Favored on a waxing Moon with steady Venus or Jupiter support for growth and gain.",
+     "cautionWhen": "Stay cautious during Venus or Mercury retrograde and void Moons, when true value is hard to read."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Moon Phase Rituals",
+   "intro": "Each phase of the Moon carries its own energy, offering a natural rhythm for setting intentions and letting go.",
+   "label369": "369 Manifestation",
+   "tip369": "Write your intention three times in the morning, six times at midday, and nine times at night to anchor it into focus.",
+   "journalLabel": "Journal Prompt",
+   "ritualLabel": "Today's Ritual",
+   "phases": [
+    {
+     "name": "New Moon",
+     "ritual": "Light a candle, write a fresh intention, and plant the seed of what you want to call in this cycle.",
+     "journal": "What new beginning am I ready to commit to right now?"
+    },
+    {
+     "name": "Waxing Crescent",
+     "ritual": "Take one small, concrete action toward your intention to give it real momentum.",
+     "journal": "What first step can I take today to move my dream forward?"
+    },
+    {
+     "name": "First Quarter",
+     "ritual": "Face an obstacle head-on and adjust your plan with courage and clarity.",
+     "journal": "What challenge is asking me to grow, and how will I meet it?"
+    },
+    {
+     "name": "Waxing Gibbous",
+     "ritual": "Refine the details, trust the process, and stay patient as your work builds toward fullness.",
+     "journal": "Where do I need to fine-tune, and where should I simply stay the course?"
+    },
+    {
+     "name": "Full Moon",
+     "ritual": "Celebrate how far you have come, then release what no longer serves you under the bright Moon.",
+     "journal": "What am I grateful for, and what am I ready to let go of?"
+    },
+    {
+     "name": "Waning Gibbous",
+     "ritual": "Share your gifts and gratitude, and reflect on the lessons this cycle has taught you.",
+     "journal": "What wisdom can I pass on or give back this week?"
+    },
+    {
+     "name": "Last Quarter",
+     "ritual": "Clear out clutter, forgive an old grudge, and make space for what comes next.",
+     "journal": "What habit or belief am I ready to release for good?"
+    },
+    {
+     "name": "Waning Crescent",
+     "ritual": "Rest, restore, and turn inward with quiet reflection before the next New Moon.",
+     "journal": "What do my mind and body most need in order to rest and renew?"
+    }
+   ]
   }
  },
  "ja": {
@@ -2944,6 +3222,145 @@ window.LUX = {
     {
      "keyword": "飛躍と信頼",
      "meaning": "新たな成長へと飛躍するときが訪れています。宇宙の流れを信じて踏み出せば、道は明るく開かれていくでしょう。"
+    }
+   ]
+  },
+  "retro": {
+   "title": "惑星の逆行",
+   "intro": "逆行とは、地球から見て惑星が一時的に逆方向へ進むように見える現象で、その天体が司る分野をあらためて見直すのにふさわしいタイミングとされています。",
+   "statusActive": "逆行中",
+   "statusDirect": "順行中",
+   "stationLabel": "開始・終了",
+   "tipsLabel": "過ごし方のヒント",
+   "planets": [
+    {
+     "name": "水星",
+     "theme": "コミュニケーション・契約・移動",
+     "retroTip": "水星逆行(マーキュリー・リトログレード)の時期は、メールや契約の内容をもう一度読み返し、送信前にひと呼吸おくと、思わぬ行き違いを防ぎやすくなります。"
+    },
+    {
+     "name": "金星",
+     "theme": "恋愛・お金・美",
+     "retroTip": "金星逆行の頃は、昔の相手からの連絡や衝動買いに心が揺れやすいので、自分の価値観や本当に大切にしたいものを、ゆっくり見つめ直してみてください。"
+    },
+    {
+     "name": "火星",
+     "theme": "行動力・情熱・闘志",
+     "retroTip": "火星逆行のあいだは、勢いだけで突き進むより一歩立ち止まり、たまった怒りや焦りを健やかな形で手放していくと、流れが整いやすくなります。"
+    },
+    {
+     "name": "木星",
+     "theme": "成長・幸運・拡大",
+     "retroTip": "木星逆行の時期は、外へ広げるより内側を充実させる好機です。これまで学んできたことを丁寧に振り返り、足もとの土台を固めてみましょう。"
+    },
+    {
+     "name": "土星",
+     "theme": "責任・努力・基盤",
+     "retroTip": "土星逆行の頃は、これまで築いてきた責任や習慣を点検する時期です。無理のあるルールはそっと手放し、本当に続けたい約束だけを残してみてください。"
+    }
+   ]
+  },
+  "electional": {
+   "title": "今日の吉日・日取り",
+   "intro": "月の位置とボイドタイムを手がかりに、その日にふさわしい行動と、控えめにしておきたい行動の傾向をお伝えします。",
+   "moonLabel": "月のサイン",
+   "vocLabel": "ボイドタイム",
+   "vocTip": "ボイド・オブ・コース(月の無効時間)のあいだは、新しいことを始めても空回りしやすいといわれます。着手の時間を少しずらすと安心です。",
+   "verdict": {
+    "great": "とても良い",
+    "good": "無難",
+    "caution": "注意"
+   },
+   "activities": [
+    {
+     "name": "契約・サイン",
+     "goodWhen": "月が安定したサインにあり、ボイドを抜けている時間帯なら、条件をよく確かめたうえで安心して署名に踏み出せます。",
+     "cautionWhen": "水星逆行中やボイドタイムが重なる日は、署名を急がず、内容の再確認にあてるほうが安心です。"
+    },
+    {
+     "name": "恋愛・告白",
+     "goodWhen": "月が好調で金星の流れも穏やかな日は、素直な気持ちが届きやすく、距離を縮める後押しになります。",
+     "cautionWhen": "金星逆行や、月が不安定な日は気持ちが揺れやすいので、伝えるより相手の様子をうかがうほうが無難です。"
+    },
+    {
+     "name": "引っ越し・移転",
+     "goodWhen": "月が新しい場所と縁の深いサインにあり、流れが滑らかな日は、住まいや拠点の移動がスムーズに運びます。",
+     "cautionWhen": "水星逆行や、移動を司る星が乱れる時期は、契約や手続きの抜け漏れが起きやすいので、ひと手間かけて慎重に進めてください。"
+    },
+    {
+     "name": "健康・施術",
+     "goodWhen": "月が体調と相性の良いサインにあり、回復を後押しする流れの日は、ケアや施術の効果を感じやすくなります。",
+     "cautionWhen": "月が施術を予定する部位に重なる日や流れが乱れる時期は、急ぎでなければ日程をずらすほうが安心です。"
+    },
+    {
+     "name": "事業・起業",
+     "goodWhen": "月が成長を後押しするサインにあり、木星の流れが整う日は、新しい挑戦の第一歩を踏み出すのに向いています。",
+     "cautionWhen": "水星逆行やボイドが続く時期は、正式な始動は控え、計画づくりや準備にあてると後悔が減ります。"
+    },
+    {
+     "name": "旅行",
+     "goodWhen": "月が軽やかなサインにあり、移動を妨げる要素が少ない日は、旅程が気持ちよく流れていきます。",
+     "cautionWhen": "水星逆行や天候の乱れが重なる時期は、予約変更や遅れにも備えて、余裕のある計画を心がけてください。"
+    },
+    {
+     "name": "大切な話し合い",
+     "goodWhen": "月が落ち着いたサインにあり、水星の流れが澄んでいる日は、本音が伝わりやすく、対話が前に進みます。",
+     "cautionWhen": "水星逆行やボイドタイムには言葉が行き違いやすいので、結論を急がず、相手の話に耳を傾ける姿勢を大切にしてください。"
+    },
+    {
+     "name": "金銭・投資",
+     "goodWhen": "月が堅実なサインにあり、金星や木星の流れが安定した日は、落ち着いた判断で資金を動かせます。",
+     "cautionWhen": "金星逆行や、月が乱れる時期は価値が見えにくくなるので、大きな決断は流れが整うまで待つほうが賢明です。"
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "月相のセレモニー",
+   "intro": "月の満ち欠けに寄り添い、その位相にふさわしい引き寄せの習慣を、そっとご提案します。",
+   "label369": "369メソッド",
+   "tip369": "369メソッドとは、願いを朝に3回・昼に6回・夜に9回書き出し、少しずつ意識に染み込ませていく引き寄せの手法です。",
+   "journalLabel": "ジャーナルの問い",
+   "ritualLabel": "今日の儀式",
+   "phases": [
+    {
+     "name": "新月",
+     "ritual": "静かな場所で、これから始めたい願いを新しい紙に書き出し、心に種をまいてみましょう。",
+     "journal": "これから始まる新しいサイクルで、私が本当に育てたいものは何でしょうか。"
+    },
+    {
+     "name": "三日月",
+     "ritual": "芽吹いた願いを思い出し、それに向けて踏み出せる小さな一歩を、ひとつだけ決めてみてください。",
+     "journal": "願いに近づくために、今日できるいちばん小さな一歩は何でしょうか。"
+    },
+    {
+     "name": "上弦の月",
+     "ritual": "進む途中で現れた迷いや障害を書き出し、それでも続けたいと思える理由を、あらためて確かめましょう。",
+     "journal": "前に進むうえで、私が手放してもよい迷いや言い訳は何でしょうか。"
+    },
+    {
+     "name": "十三夜月",
+     "ritual": "ふくらんでいく月の光のもとで、これまでの努力をねぎらい、感謝の言葉を声に出してみてください。",
+     "journal": "ここまで歩んでこられたことに対して、私は何へ感謝を贈りたいでしょうか。"
+    },
+    {
+     "name": "満月",
+     "ritual": "叶ったことに感謝し、もう必要のなくなった感情を紙に書いて、静かに手放す儀式をしましょう。",
+     "journal": "今、満ち足りて、もう手放してもよいと感じるものは何でしょうか。"
+    },
+    {
+     "name": "十六夜月",
+     "ritual": "満月の余韻のなかで、得た気づきを言葉にして、まわりへ分かち合う方法を考えてみてください。",
+     "journal": "この満ちる時期に受け取った学びを、私はこの先どう活かせるでしょうか。"
+    },
+    {
+     "name": "下弦の月",
+     "ritual": "暮らしや人間関係を見渡し、重荷になっている習慣をひとつ手放す決断をしてみましょう。",
+     "journal": "私の毎日のなかで、そろそろ整理してよいものは何でしょうか。"
+    },
+    {
+     "name": "晦の月",
+     "ritual": "灯りを落として深く呼吸し、心を休めながら、次のサイクルへ向けて静かに自分を整えましょう。",
+     "journal": "新しい始まりを迎える前に、私が癒やし、整えておきたい部分はどこでしょうか。"
     }
    ]
   }
@@ -3928,6 +4345,145 @@ window.LUX = {
      "meaning": "Die 1212 ermutigt dich zum nächsten Schritt nach vorn; vertraue deinem Weg, denn du bewegst dich auf etwas Schönes zu."
     }
    ]
+  },
+  "retro": {
+   "title": "Planetenrückläufe",
+   "intro": "Wenn ein Planet rückläufig wird, scheint er von der Erde aus betrachtet rückwärts zu wandern - eine Phase, die astrologisch als Zeit zum Innehalten und Überprüfen gilt.",
+   "statusActive": "Rückläufig",
+   "statusDirect": "Direktläufig",
+   "stationLabel": "Beginn / Ende",
+   "tipsLabel": "Tipps für den Umgang",
+   "planets": [
+    {
+     "name": "Merkur",
+     "theme": "Kommunikation, Reisen, Technik",
+     "retroTip": "Während Merkur rückläufig (Mercury retrograde) ist, lohnt sich ein zweiter Blick auf Verträge, E-Mails und Reisepläne, statt überstürzt zu handeln."
+    },
+    {
+     "name": "Venus",
+     "theme": "Liebe, Werte, Ästhetik",
+     "retroTip": "Bei rückläufiger Venus tauchen oft alte Gefühle oder Kontakte wieder auf - eine gute Gelegenheit, Beziehungen und eigene Wünsche in Ruhe zu klären."
+    },
+    {
+     "name": "Mars",
+     "theme": "Antrieb, Energie, Tatkraft",
+     "retroTip": "Ist Mars rückläufig, kann die Energie gebremst wirken; setze eher auf Geduld und sorgfältige Planung als auf forsches Durchstarten."
+    },
+    {
+     "name": "Jupiter",
+     "theme": "Wachstum, Sinn, Expansion",
+     "retroTip": "Während Jupiter rückläufig ist, richtet sich der Blick nach innen - eine Phase, um Überzeugungen, Ziele und das eigene Wachstum ehrlich zu hinterfragen."
+    },
+    {
+     "name": "Saturn",
+     "theme": "Struktur, Verantwortung, Disziplin",
+     "retroTip": "Bei rückläufigem Saturn empfiehlt es sich, alte Verpflichtungen und Strukturen zu überprüfen und nur das mitzunehmen, was wirklich trägt."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Günstiger Tag & Zeitwahl",
+   "intro": "Die Elektionsastrologie hilft dabei, für wichtige Vorhaben einen Zeitpunkt zu wählen, dessen Sternenkonstellation als besonders günstig gilt.",
+   "moonLabel": "Mondstand",
+   "vocLabel": "Leerlauf-Mond (Void of Course)",
+   "vocTip": "Während der Leerlauf-Phase des Mondes (Void of Course) verlaufen neu begonnene Dinge oft im Sande - warte lieber, bis der Mond ins nächste Zeichen wechselt.",
+   "verdict": {
+    "great": "Sehr günstig",
+    "good": "Unproblematisch",
+    "caution": "Mit Vorsicht"
+   },
+   "activities": [
+    {
+     "name": "Verträge & Unterschriften",
+     "goodWhen": "Günstig, wenn der Mond zunimmt und Merkur direktläufig ist - dann lassen sich Vereinbarungen klar und verbindlich festhalten.",
+     "cautionWhen": "Vorsicht bei rückläufigem Merkur oder im Leerlauf-Mond, weil sich später leicht Missverständnisse einschleichen."
+    },
+    {
+     "name": "Liebe & Liebesgeständnis",
+     "goodWhen": "Ein zunehmender Mond und eine harmonisch stehende Venus begünstigen offene Worte und ein gutes Gefühl beim Gegenüber.",
+     "cautionWhen": "Eher zurückhaltend bei rückläufiger Venus oder angespannten Mondaspekten, wenn die Stimmung gereizt wirkt."
+    },
+    {
+     "name": "Umzug & Wohnungswechsel",
+     "goodWhen": "Ein stabiler Mond in einem erdigen Zeichen unterstützt ein gutes Ankommen und das Gefühl, sich rasch einzuleben.",
+     "cautionWhen": "Lieber verschieben bei rückläufigem Merkur oder Leerlauf-Mond, da Termine und Logistik dann leicht ins Stocken geraten."
+    },
+    {
+     "name": "Gesundheit & Eingriffe",
+     "goodWhen": "Ein zunehmender Mond und eine kräftige Sonne gelten als förderlich für Erholung und neue gesunde Routinen.",
+     "cautionWhen": "Mit Vorsicht, wenn der Mond das betroffene Körperzeichen durchläuft - kläre planbare Eingriffe in Ruhe mit Fachleuten ab."
+    },
+    {
+     "name": "Geschäft & Gründung",
+     "goodWhen": "Ein zunehmender Mond, ein gut gestellter Jupiter und direktläufige Planeten begünstigen einen schwungvollen Start.",
+     "cautionWhen": "Eher abwarten bei rückläufigem Merkur oder Mars, wenn Pläne noch unausgereift oder Verzögerungen absehbar sind."
+    },
+    {
+     "name": "Reisen",
+     "goodWhen": "Günstig bei direktläufigem Merkur und ruhigen Mondaspekten - Anreise und Ablauf verlaufen dann meist entspannt.",
+     "cautionWhen": "Vorsicht bei rückläufigem Merkur, der gern für Verspätungen, Pannen und vergessene Dokumente steht."
+    },
+    {
+     "name": "Wichtige Gespräche",
+     "goodWhen": "Ein klar gestellter Merkur und ein freundlicher Mond schaffen eine Atmosphäre, in der man einander wirklich zuhört.",
+     "cautionWhen": "Heikle Themen lieber verschieben im Leerlauf-Mond oder bei angespanntem Mars, wenn die Lage schnell eskaliert."
+    },
+    {
+     "name": "Geld & Investitionen",
+     "goodWhen": "Ein gut stehender Jupiter und ein zunehmender Mond gelten als Tendenz für besonnene, wachstumsorientierte Entscheidungen.",
+     "cautionWhen": "Zurückhaltung bei rückläufiger Venus oder Leerlauf-Mond, wenn Zahlen oder Konditionen noch nicht ganz klar sind."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Mondphasen-Ritual",
+   "intro": "Jede Mondphase trägt eine eigene Stimmung, die du sanft nutzen kannst, um Vorhaben anzustoßen, zu nähren oder loszulassen.",
+   "label369": "369-Manifestation",
+   "tip369": "Schreibe deinen Wunsch dreimal am Morgen, sechsmal mittags und neunmal am Abend auf, um ihn täglich bewusst zu verankern.",
+   "journalLabel": "Journal-Frage",
+   "ritualLabel": "Ritual des Tages",
+   "phases": [
+    {
+     "name": "Neumond",
+     "ritual": "Zünde eine Kerze an und formuliere in Ruhe eine klare Absicht für den kommenden Mondzyklus.",
+     "journal": "Welche Absicht möchte ich in diesem neuen Zyklus setzen?"
+    },
+    {
+     "name": "Zunehmende Sichel",
+     "ritual": "Notiere drei kleine Schritte, die dich deinem Vorhaben in den nächsten Tagen konkret näherbringen.",
+     "journal": "Welcher erste Schritt fühlt sich gerade richtig und machbar an?"
+    },
+    {
+     "name": "Zunehmender Halbmond",
+     "ritual": "Halte kurz inne und entscheide bewusst, woran du festhältst und was du anpasst.",
+     "journal": "Wo darf ich dranbleiben, und wo darf ich meinen Kurs sanft korrigieren?"
+    },
+    {
+     "name": "Zunehmender Dreiviertelmond",
+     "ritual": "Feile an den Details deines Vorhabens und bereite alles für den Höhepunkt vor.",
+     "journal": "Was braucht noch etwas Feinschliff, bevor es sich rundet?"
+    },
+    {
+     "name": "Vollmond",
+     "ritual": "Stelle ein Glas Wasser ins Mondlicht und nimm dir einen Moment, um dankbar das Erreichte anzuerkennen.",
+     "journal": "Wofür bin ich gerade dankbar, und was darf jetzt sichtbar werden?"
+    },
+    {
+     "name": "Abnehmender Dreiviertelmond",
+     "ritual": "Räume bewusst eine Kleinigkeit auf und lasse dabei los, was nicht mehr passt.",
+     "journal": "Welche Gewohnheit oder Sorge darf ich nun langsam abgeben?"
+    },
+    {
+     "name": "Abnehmender Halbmond",
+     "ritual": "Atme ein paar Mal tief durch und verzeihe dir selbst eine Sache, die dich belastet.",
+     "journal": "Was darf ich mir selbst verzeihen, um leichter zu werden?"
+    },
+    {
+     "name": "Abnehmende Sichel",
+     "ritual": "Ruhe dich bewusst aus und gönne dir Stille, bevor der nächste Zyklus beginnt.",
+     "journal": "Was möchte ich vor dem nächsten Neumond endgültig loslassen?"
+    }
+   ]
   }
  },
  "fr": {
@@ -4908,6 +5464,145 @@ window.LUX = {
     {
      "keyword": "Élan et confiance",
      "meaning": "Le 1212 vous encourage à avancer avec foi. Sortez de votre zone de confort : un bel élan vous porte vers votre épanouissement."
+    }
+   ]
+  },
+  "retro": {
+   "title": "Rétrogradation des planètes",
+   "intro": "La rétrogradation est une illusion d'optique : depuis la Terre, une planète semble reculer dans le ciel. Cette période est souvent associée à un ralentissement propice au recul et à la réflexion.",
+   "statusActive": "Rétrograde",
+   "statusDirect": "Directe",
+   "stationLabel": "Début / Fin",
+   "tipsLabel": "Conseils pratiques",
+   "planets": [
+    {
+     "name": "Mercure",
+     "theme": "communication, voyages, contrats",
+     "retroTip": "Pendant Mercure rétrograde, relisez vos messages, sauvegardez vos fichiers et confirmez deux fois les horaires : les malentendus se glissent facilement, mais une vérification attentive suffit à les éviter."
+    },
+    {
+     "name": "Vénus",
+     "theme": "amour, beauté, argent",
+     "retroTip": "Vénus rétrograde tend à raviver le passé. Prenez le temps avant un gros achat esthétique, et observez vos motivations si l'envie vous prend de renouer avec une ancienne relation."
+    },
+    {
+     "name": "Mars",
+     "theme": "énergie, action, désir",
+     "retroTip": "Mars rétrograde peut diluer l'élan. Avancez par étapes et canalisez l'irritation dans le sport ou un projet concret plutôt que dans des conflits inutiles."
+    },
+    {
+     "name": "Jupiter",
+     "theme": "expansion, chance, sens",
+     "retroTip": "Jupiter rétrograde invite à revoir vos grandes ambitions : un bon moment pour affiner vos objectifs et donner du sens à vos projets plutôt que de vous éparpiller."
+    },
+    {
+     "name": "Saturne",
+     "theme": "structure, discipline, responsabilités",
+     "retroTip": "Saturne rétrograde met en lumière ce qui demande à être renforcé. Profitez-en pour consolider vos bases et honorer vos engagements avec patience et constance."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Moment favorable du jour",
+   "intro": "Choisir le bon moment, ou astrologie électionnelle, aide à lancer vos projets quand le ciel semble le plus porteur.",
+   "moonLabel": "Signe de la Lune",
+   "vocLabel": "Lune vide de course",
+   "vocTip": "Pendant la Lune vide de course (void of course), il est préférable de reporter le lancement d'une entreprise importante : ces moments conviennent mieux au repos, à la réflexion et aux tâches de routine.",
+   "verdict": {
+    "great": "Très favorable",
+    "good": "Neutre",
+    "caution": "Prudence"
+   },
+   "activities": [
+    {
+     "name": "Contrats et signatures",
+     "goodWhen": "Idéal quand la Lune est bien établie dans un signe et forme des aspects harmonieux, gage de clarté et de stabilité.",
+     "cautionWhen": "À reporter pendant la Lune vide de course ou Mercure rétrograde, plus propices aux clauses mal comprises."
+    },
+    {
+     "name": "Amour et déclaration",
+     "goodWhen": "Favorable lorsque Vénus est bien aspectée et que la Lune se trouve dans un signe doux et réceptif.",
+     "cautionWhen": "Moment plus délicat si Vénus est rétrograde, car les hésitations et les vieux doutes refont souvent surface."
+    },
+    {
+     "name": "Déménagement et installation",
+     "goodWhen": "Plutôt porteur en Lune croissante et dans un signe stable, qui favorise un ancrage durable dans le nouveau lieu.",
+     "cautionWhen": "À reporter de préférence pendant la Lune vide de course ou décroissante, moins propices à un changement qui s'enracine."
+    },
+    {
+     "name": "Santé et soins",
+     "goodWhen": "Bien adapté quand la Lune décroissante soutient la récupération et la convalescence après un soin ou une intervention.",
+     "cautionWhen": "Prudence lorsque la Lune traverse le signe lié à la partie du corps concernée, jugé moins favorable dans la tradition."
+    },
+    {
+     "name": "Affaires et création d'entreprise",
+     "goodWhen": "Encourageant en Lune croissante avec un Jupiter ou un Soleil bien placé, symboles de croissance et d'élan.",
+     "cautionWhen": "À reporter pendant la Lune vide de course ou une rétrogradation majeure, qui ralentissent souvent les lancements."
+    },
+    {
+     "name": "Voyage",
+     "goodWhen": "Plutôt fluide quand la Lune et Mercure sont bien aspectés, signe de trajets et de logistique sans accroc.",
+     "cautionWhen": "Restez vigilant pendant Mercure rétrograde : retards, bagages et réservations méritent une double vérification."
+    },
+    {
+     "name": "Conversation importante",
+     "goodWhen": "Favorable lorsque Mercure est bien aspecté et la Lune en signe d'air, pour des échanges clairs et apaisés.",
+     "cautionWhen": "À tempérer sous des aspects tendus à Mars ou à Mercure, plus enclins aux malentendus et aux propos vifs."
+    },
+    {
+     "name": "Argent et investissement",
+     "goodWhen": "Porteur en Lune croissante avec Vénus ou Jupiter bien placés, propice à faire fructifier ses ressources.",
+     "cautionWhen": "Prudence pendant la Lune vide de course ou une rétrogradation : mieux vaut différer une grosse décision financière."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Rituel des phases de la Lune",
+   "intro": "Chaque phase lunaire offre une énergie particulière, à utiliser pour poser des intentions et avancer en conscience.",
+   "label369": "Manifestation 3-6-9",
+   "tip369": "La méthode 3-6-9 consiste à écrire votre intention 3 fois le matin, 6 fois à midi et 9 fois le soir, afin de l'ancrer jour après jour.",
+   "journalLabel": "Question de journal",
+   "ritualLabel": "Rituel du jour",
+   "phases": [
+    {
+     "name": "Nouvelle Lune",
+     "ritual": "Écrivez une nouvelle intention sur un papier et placez-le près d'une bougie pour symboliser un départ.",
+     "journal": "Quel nouveau cycle ai-je envie d'ouvrir, et quelle première petite action puis-je poser dès maintenant ?"
+    },
+    {
+     "name": "Premier croissant",
+     "ritual": "Relisez votre intention à voix haute et notez les premiers gestes concrets qui la mettent en mouvement.",
+     "journal": "Quelle habitude simple pourrait soutenir, chaque jour, l'intention que je viens de semer ?"
+    },
+    {
+     "name": "Premier quartier",
+     "ritual": "Identifiez un obstacle qui se dresse et choisissez consciemment une réponse plutôt que de l'éviter.",
+     "journal": "Quel obstacle me freine en ce moment, et de quelle ressource intérieure puis-je me servir pour avancer ?"
+    },
+    {
+     "name": "Lune gibbeuse croissante",
+     "ritual": "Affinez votre projet : corrigez un détail, ajustez le cap et remerciez le chemin déjà parcouru.",
+     "journal": "Qu'est-ce qui mérite encore d'être ajusté avant que les choses arrivent à maturité ?"
+    },
+    {
+     "name": "Pleine Lune",
+     "ritual": "Allumez une bougie, célébrez ce qui s'est accompli et exprimez votre gratitude pour les fruits récoltés.",
+     "journal": "De quoi suis-je reconnaissant(e) aujourd'hui, et que cette plénitude me révèle-t-elle sur mes désirs ?"
+    },
+    {
+     "name": "Lune gibbeuse décroissante",
+     "ritual": "Partagez quelque chose, transmettez un savoir ou rendez un service pour faire circuler l'énergie reçue.",
+     "journal": "Quelle leçon de ce cycle ai-je envie de partager ou de transmettre autour de moi ?"
+    },
+    {
+     "name": "Dernier quartier",
+     "ritual": "Faites le tri : notez une croyance ou une habitude à lâcher, puis déchirez symboliquement le papier.",
+     "journal": "Qu'est-ce que je suis prêt(e) à laisser derrière moi pour avancer plus léger ?"
+    },
+    {
+     "name": "Lune balsamique",
+     "ritual": "Accordez-vous du repos et un moment de silence pour faire le bilan avant la prochaine nouvelle lune.",
+     "journal": "Que m'a appris ce cycle, et de quel repos ai-je besoin avant de recommencer ?"
     }
    ]
   }
@@ -5892,6 +6587,145 @@ window.LUX = {
      "meaning": "El 1212 te anima a dar un salto hacia tus sueños; mantén pensamientos elevados y confía en que avanzas hacia tu mayor bien."
     }
    ]
+  },
+  "retro": {
+   "title": "Retrógrados planetarios",
+   "intro": "Un planeta retrógrado parece moverse hacia atrás visto desde la Tierra e invita a revisar, repensar y ajustar el área de la vida que rige.",
+   "statusActive": "En retrógrado",
+   "statusDirect": "En movimiento directo",
+   "stationLabel": "Inicio / Fin",
+   "tipsLabel": "Consejos para gestionarlo",
+   "planets": [
+    {
+     "name": "Mercurio",
+     "theme": "Comunicación, viajes y tecnología",
+     "retroTip": "Con Mercurio retrógrado relee tus mensajes, confirma horarios y haz copias de seguridad antes de firmar contratos o comprar dispositivos."
+    },
+    {
+     "name": "Venus",
+     "theme": "Amor, dinero y belleza",
+     "retroTip": "Durante Venus retrógrado evita los cambios de imagen drásticos y reflexiona sobre tus vínculos antes de reconciliarte con una expareja o gastar de más."
+    },
+    {
+     "name": "Marte",
+     "theme": "Acción, deseo y energía",
+     "retroTip": "Con Marte retrógrado canaliza la frustración en ejercicio suave, evita las discusiones impulsivas y replantea tus proyectos en lugar de forzarlos."
+    },
+    {
+     "name": "Júpiter",
+     "theme": "Crecimiento, suerte y expansión",
+     "retroTip": "Júpiter retrógrado pide moderar el optimismo excesivo: revisa tus metas, ajusta presupuestos y crece desde adentro antes de expandirte hacia afuera."
+    },
+    {
+     "name": "Saturno",
+     "theme": "Disciplina, límites y compromisos",
+     "retroTip": "Con Saturno retrógrado revisa las responsabilidades pendientes, ordena tus finanzas y replantea las estructuras que ya no sostienen tus planes a largo plazo."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Día propicio de hoy",
+   "intro": "La astrología electiva busca el momento más favorable, según la posición de la Luna y los planetas, para iniciar aquello que te importa.",
+   "moonLabel": "Signo de la Luna",
+   "vocLabel": "Luna fuera de curso",
+   "vocTip": "Durante la Luna fuera de curso evita iniciar proyectos nuevos o tomar decisiones importantes; aprovecha para descansar, ordenar o terminar pendientes.",
+   "verdict": {
+    "great": "Muy favorable",
+    "good": "Neutral",
+    "caution": "Con precaución"
+   },
+   "activities": [
+    {
+     "name": "Contratos y firmas",
+     "goodWhen": "Firma cuando la Luna esté creciente y Mercurio en movimiento directo, con todos los términos claros y revisados.",
+     "cautionWhen": "Evita firmar durante Mercurio retrógrado o con la Luna fuera de curso, cuando los detalles suelen escaparse."
+    },
+    {
+     "name": "Amor y confesiones",
+     "goodWhen": "Declárate con la Luna en un signo de agua o con Venus bien aspectado, cuando los sentimientos fluyen con naturalidad.",
+     "cautionWhen": "Posponlo si Venus está retrógrado o la Luna está tensa, porque las palabras pueden malinterpretarse con facilidad."
+    },
+    {
+     "name": "Mudanzas y traslados",
+     "goodWhen": "Múdate con la Luna creciente en un signo de tierra, que favorece echar raíces y sentirte estable en tu nuevo hogar.",
+     "cautionWhen": "Evita trasladarte con la Luna menguante o fuera de curso, ya que tiende a alargar el desorden y los imprevistos."
+    },
+    {
+     "name": "Salud y tratamientos",
+     "goodWhen": "Programa tratamientos con la Luna menguante para soltar y depurar, o creciente cuando buscas fortalecer y recuperar energía.",
+     "cautionWhen": "Conviene posponer cirugías o procedimientos cuando la Luna transita el signo que rige la zona del cuerpo a intervenir."
+    },
+    {
+     "name": "Negocios y emprendimiento",
+     "goodWhen": "Lanza tu proyecto con la Luna nueva o creciente y Júpiter favorable, cuando la energía acompaña los comienzos.",
+     "cautionWhen": "Evita abrir un negocio durante los retrógrados de Mercurio o Saturno, cuando los acuerdos y permisos suelen demorarse."
+    },
+    {
+     "name": "Viajes",
+     "goodWhen": "Viaja con la Luna en signos mutables y Mercurio directo, que favorecen los desplazamientos y la logística fluida.",
+     "cautionWhen": "Toma margen extra si viajas con Mercurio retrógrado, revisando reservas, documentos y horarios con antelación."
+    },
+    {
+     "name": "Conversaciones importantes",
+     "goodWhen": "Habla cuando la Luna esté bien aspectada con Mercurio, lo que facilita el entendimiento y el diálogo sincero.",
+     "cautionWhen": "Evita los temas delicados con la Luna fuera de curso o en tensión con Marte, cuando todo se inflama con rapidez."
+    },
+    {
+     "name": "Dinero e inversiones",
+     "goodWhen": "Invierte con la Luna creciente y Venus o Júpiter favorables, cuando el clima apoya hacer crecer tus recursos.",
+     "cautionWhen": "Posterga las grandes inversiones durante Venus o Mercurio retrógrado, cuando los números pueden confundir y conviene esperar."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Rituales según la fase lunar",
+   "intro": "Cada fase de la Luna acompaña un momento distinto del ciclo, ideal para sembrar intenciones, crecer, celebrar o soltar.",
+   "label369": "Manifestación 369",
+   "tip369": "El método 369 consiste en escribir tu intención 3 veces por la mañana, 6 al mediodía y 9 por la noche para grabarla con claridad.",
+   "journalLabel": "Pregunta para tu diario",
+   "ritualLabel": "Ritual de hoy",
+   "phases": [
+    {
+     "name": "Luna nueva",
+     "ritual": "Enciende una vela, escribe tres intenciones nuevas y plántalas como semillas para el ciclo que comienza.",
+     "journal": "¿Qué quiero crear o atraer a mi vida en este nuevo comienzo?"
+    },
+    {
+     "name": "Luna creciente",
+     "ritual": "Da el primer paso concreto hacia tu intención y visualiza con detalle cómo se siente lograrla.",
+     "journal": "¿Qué pequeña acción puedo dar hoy para acercarme a lo que deseo?"
+    },
+    {
+     "name": "Cuarto creciente",
+     "ritual": "Identifica un obstáculo, escribe cómo superarlo y comprométete con una decisión que sostenga tu impulso.",
+     "journal": "¿Qué miedo o excusa necesito soltar para seguir avanzando?"
+    },
+    {
+     "name": "Gibosa creciente",
+     "ritual": "Revisa tu progreso, ajusta lo que haga falta y agradece de antemano por lo que está por llegar.",
+     "journal": "¿Qué estoy aprendiendo en el camino y qué debo afinar?"
+    },
+    {
+     "name": "Luna llena",
+     "ritual": "Celebra tus logros bajo la luz de la Luna, carga tus cristales y libera todo lo que cumplió su ciclo.",
+     "journal": "¿Qué quiero celebrar y qué siento que ya está completo en mí?"
+    },
+    {
+     "name": "Gibosa menguante",
+     "ritual": "Comparte lo aprendido, expresa gratitud y empieza a soltar tensiones y cargas innecesarias.",
+     "journal": "¿Qué gratitud quiero expresar y qué peso deseo empezar a dejar ir?"
+    },
+    {
+     "name": "Cuarto menguante",
+     "ritual": "Haz una limpieza de tu espacio y de tus hábitos, soltando lo que ya no te sirve para avanzar.",
+     "journal": "¿Qué hábito, vínculo o creencia ya no me corresponde llevar conmigo?"
+    },
+    {
+     "name": "Luna balsámica",
+     "ritual": "Descansa, medita en silencio y permítete vaciarte para recibir con claridad el próximo ciclo.",
+     "journal": "¿Qué necesito sanar y perdonar antes de comenzar de nuevo?"
+    }
+   ]
   }
  },
  "pt": {
@@ -6872,6 +7706,145 @@ window.LUX = {
     {
      "keyword": "Avanço e Confiança",
      "meaning": "O 1212 inspira você a avançar com confiança rumo aos seus sonhos; mantenha pensamentos positivos, pois o universo apoia o seu próximo grande salto."
+    }
+   ]
+  },
+  "retro": {
+   "title": "Retrogradação dos Planetas",
+   "intro": "A retrogradação acontece quando um planeta parece se mover para trás no céu, um convite para revisar, ajustar e desacelerar aquela área da vida.",
+   "statusActive": "Em retrogradação",
+   "statusDirect": "Em movimento direto",
+   "stationLabel": "Início / Fim",
+   "tipsLabel": "Dicas para lidar",
+   "planets": [
+    {
+     "name": "Mercúrio",
+     "theme": "comunicação, contratos e tecnologia",
+     "retroTip": "No Mercúrio retrógrado, releia mensagens antes de enviar, faça backups e confirme horários e endereços: pequenos cuidados evitam mal-entendidos e trazem tranquilidade."
+    },
+    {
+     "name": "Vênus",
+     "theme": "amor, valores e dinheiro",
+     "retroTip": "Com Vênus retrógrado, vale a pena revisitar relações e finanças com carinho, mas adie compras impulsivas e mudanças radicais de visual para mais adiante."
+    },
+    {
+     "name": "Marte",
+     "theme": "energia, ação e coragem",
+     "retroTip": "No Marte retrógrado, canalize a energia com sabedoria: respire antes de reagir, evite bater de frente e retome com calma os projetos que ficaram parados."
+    },
+    {
+     "name": "Júpiter",
+     "theme": "expansão, fé e oportunidades",
+     "retroTip": "Com Júpiter retrógrado, é tempo de revisar metas e crenças: repense promessas grandes demais e construa um crescimento com base sólida, sem pressa."
+    },
+    {
+     "name": "Saturno",
+     "theme": "estrutura, disciplina e responsabilidade",
+     "retroTip": "No Saturno retrógrado, reavalie compromissos e limites com maturidade: ajuste o que pesa, honre os prazos e transforme a cobrança em uma estrutura mais leve."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Dia Favorável de Hoje",
+   "intro": "A eleição astrológica observa o céu do dia para sugerir os melhores momentos de iniciar cada tipo de ação.",
+   "moonLabel": "Signo da Lua",
+   "vocLabel": "Lua fora de curso",
+   "vocTip": "Durante a Lua fora de curso, evite começar algo novo ou importante: prefira finalizar tarefas, descansar e deixar as grandes decisões para depois.",
+   "verdict": {
+    "great": "Muito favorável",
+    "good": "Tranquilo",
+    "caution": "Atenção"
+   },
+   "activities": [
+    {
+     "name": "Contratos e assinaturas",
+     "goodWhen": "Tende a fluir bem quando a Lua está bem aspectada e fora do período de Lua fora de curso.",
+     "cautionWhen": "Vale adiar se Mercúrio estiver retrógrado ou a Lua estiver fora de curso."
+    },
+    {
+     "name": "Amor e declarações",
+     "goodWhen": "Costuma favorecer quando a Lua passa por Touro, Câncer, Libra ou Peixes em clima harmonioso.",
+     "cautionWhen": "Melhor esperar se Vênus estiver tensa ou retrógrada e o astral estiver pesado."
+    },
+    {
+     "name": "Mudança e troca de casa",
+     "goodWhen": "Tende a dar certo com a Lua crescente e em bom aspecto, num dia calmo e organizado.",
+     "cautionWhen": "Evite com a Lua minguante muito carregada ou em pleno período fora de curso."
+    },
+    {
+     "name": "Saúde e procedimentos",
+     "goodWhen": "Geralmente favorece quando a Lua está crescente para fortalecer e bem aspectada pelos benéficos.",
+     "cautionWhen": "Reconsidere se a Lua transita o signo ligado à área a ser tratada ou está muito tensa."
+    },
+    {
+     "name": "Negócios e abertura de empresa",
+     "goodWhen": "Tende a prosperar com a Lua crescente, Júpiter favorável e Mercúrio em movimento direto.",
+     "cautionWhen": "Adie se Mercúrio estiver retrógrado ou Saturno estiver cobrando demais o setor financeiro."
+    },
+    {
+     "name": "Viagens",
+     "goodWhen": "Costuma correr bem com a Lua leve em signos de ar ou fogo e com poucos aspectos tensos.",
+     "cautionWhen": "Redobre o cuidado se Mercúrio estiver retrógrado ou a Lua estiver fora de curso na partida."
+    },
+    {
+     "name": "Conversas importantes",
+     "goodWhen": "Flui melhor quando a Lua faz bom aspecto com Mercúrio e o clima do dia está sereno.",
+     "cautionWhen": "Melhor adiar se a Lua estiver tensa com Marte ou Saturno, deixando o ânimo curto."
+    },
+    {
+     "name": "Dinheiro e investimentos",
+     "goodWhen": "Tende a favorecer com a Lua crescente, Vênus e Júpiter bem aspectados e clima estável.",
+     "cautionWhen": "Pense duas vezes se Mercúrio estiver retrógrado ou a Lua estiver fora de curso."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Rituais das Fases da Lua",
+   "intro": "Cada fase da Lua traz uma energia diferente para você plantar, cuidar, colher e soltar os seus desejos.",
+   "label369": "Manifestação 369",
+   "tip369": "O método 369 consiste em escrever a sua intenção 3 vezes pela manhã, 6 vezes à tarde e 9 vezes à noite, sempre no tempo presente.",
+   "journalLabel": "Pergunta para o diário",
+   "ritualLabel": "Ritual de hoje",
+   "phases": [
+    {
+     "name": "Lua Nova",
+     "ritual": "Acenda uma vela, escreva suas intenções para o novo ciclo e plante uma semente simbólica do que você deseja ver florescer.",
+     "journal": "Que novo começo eu quero plantar neste ciclo e como ele me faria sentir realizada?"
+    },
+    {
+     "name": "Lua Crescente Inicial",
+     "ritual": "Dê o primeiro passo concreto rumo a um desejo e visualize-o ganhando forma, com confiança e entusiasmo.",
+     "journal": "Qual pequena ação eu posso dar hoje para aproximar meu sonho da realidade?"
+    },
+    {
+     "name": "Quarto Crescente",
+     "ritual": "Enfrente um obstáculo com coragem, reafirme o seu compromisso e repita uma frase de motivação diante do espelho.",
+     "journal": "Que desafio está testando a minha vontade e como posso superá-lo com firmeza?"
+    },
+    {
+     "name": "Lua Gibosa Crescente",
+     "ritual": "Refine seus planos, ajuste os detalhes do que está construindo e agradeça pelo progresso conquistado até aqui.",
+     "journal": "O que ainda preciso ajustar ou aperfeiçoar para que tudo se concretize plenamente?"
+    },
+    {
+     "name": "Lua Cheia",
+     "ritual": "Celebre suas conquistas, energize seus cristais sob o luar e agradeça em voz alta por tudo que você recebeu.",
+     "journal": "Pelo que sou profundamente grata neste momento e o que finalmente amadureceu na minha vida?"
+    },
+    {
+     "name": "Lua Gibosa Minguante",
+     "ritual": "Compartilhe o que aprendeu, ofereça ajuda a alguém e devolva ao mundo um pouco da sua abundância.",
+     "journal": "Que sabedoria deste ciclo eu posso partilhar e oferecer a quem está ao meu redor?"
+    },
+    {
+     "name": "Quarto Minguante",
+     "ritual": "Faça uma faxina física e emocional, solte hábitos que pesam e perdoe o que precisa ser deixado para trás.",
+     "journal": "Do que eu preciso me libertar para abrir espaço para algo melhor na minha vida?"
+    },
+    {
+     "name": "Lua Minguante",
+     "ritual": "Descanse, medite em silêncio e recolha-se para integrar as lições antes do próximo recomeço.",
+     "journal": "Que aprendizados deste ciclo eu levo comigo e como quero entrar renovada no próximo?"
     }
    ]
   }
@@ -7856,6 +8829,145 @@ window.LUX = {
      "meaning": "Il 1212 incoraggia uno slancio in avanti con fiducia: continua a credere nel tuo percorso, stai salendo verso una versione più luminosa di te."
     }
    ]
+  },
+  "retro": {
+   "title": "Pianeti retrogradi",
+   "intro": "La retrogradazione è l'illusione ottica per cui un pianeta sembra muoversi all'indietro nel cielo: un invito a rallentare e rivedere i temi che governa.",
+   "statusActive": "In retrogradazione",
+   "statusDirect": "In moto diretto",
+   "stationLabel": "Inizio / fine",
+   "tipsLabel": "Consigli pratici",
+   "planets": [
+    {
+     "name": "Mercurio",
+     "theme": "comunicazione, viaggi, tecnologia",
+     "retroTip": "Durante Mercurio retrogrado rileggi due volte messaggi e contratti, salva i file importanti e metti in conto qualche ritardo nei viaggi senza drammatizzare."
+    },
+    {
+     "name": "Venere",
+     "theme": "amore, relazioni, denaro",
+     "retroTip": "Con Venere retrograda è un periodo da capire più che da decidere: rimanda i grandi acquisti estetici e osserva chi torna dal passato senza riaprire porte a caso."
+    },
+    {
+     "name": "Marte",
+     "theme": "energia, azione, desiderio",
+     "retroTip": "Quando Marte è retrogrado l'energia cala e la frustrazione sale: scegli le battaglie che contano davvero, riscalda i muscoli e rifinisci i progetti invece di lanciarne di nuovi."
+    },
+    {
+     "name": "Giove",
+     "theme": "crescita, fortuna, espansione",
+     "retroTip": "Con Giove retrogrado la crescita si sposta all'interno: ottimo momento per rivedere gli obiettivi, studiare e consolidare ciò che hai prima di espanderti di nuovo verso l'esterno."
+    },
+    {
+     "name": "Saturno",
+     "theme": "disciplina, struttura, responsabilità",
+     "retroTip": "Durante Saturno retrogrado emergono i conti in sospeso con doveri e limiti: usa il periodo per riorganizzare gli impegni e rafforzare basi che reggeranno nel tempo."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Giorno propizio di oggi",
+   "intro": "L'astrologia elettiva sceglie il momento più favorevole per dare il via a ciò che conta, leggendo il cielo come una bussola.",
+   "moonLabel": "Segno della Luna",
+   "vocLabel": "Luna fuori corso",
+   "vocTip": "Quando la Luna è fuori corso evita di avviare cose nuove o firmare accordi: usa quel tempo per concludere, riposare e riflettere.",
+   "verdict": {
+    "great": "Molto favorevole",
+    "good": "Nella norma",
+    "caution": "Attenzione"
+   },
+   "activities": [
+    {
+     "name": "Contratti e firme",
+     "goodWhen": "Si firma con serenità quando la Luna è in buon aspetto e siamo fuori dal periodo di Mercurio retrogrado.",
+     "cautionWhen": "Meglio rimandare se la Luna è fuori corso o se Mercurio è retrogrado, per evitare clausole sfuggite."
+    },
+    {
+     "name": "Amore e dichiarazioni",
+     "goodWhen": "Una dichiarazione fiorisce con la Luna o Venere in buon aspetto, in una giornata dal clima dolce e accogliente.",
+     "cautionWhen": "Trattieni le parole importanti se Venere è retrograda o la Luna scivola in aspetti tesi."
+    },
+    {
+     "name": "Trasloco e trasferimenti",
+     "goodWhen": "Il trasloco scorre liscio con Luna crescente e cielo stabile, ideale per radicarsi in un nuovo spazio.",
+     "cautionWhen": "Evita le date con Luna fuori corso o Marte teso, che portano intoppi logistici e nervosismo."
+    },
+    {
+     "name": "Salute e trattamenti",
+     "goodWhen": "Cure e piccoli interventi rispondono meglio con la Luna in buon aspetto e lontana dalla fase di plenilunio.",
+     "cautionWhen": "Rimanda le procedure non urgenti se la Luna transita la zona del corpo interessata o è fuori corso."
+    },
+    {
+     "name": "Affari e nuove attività",
+     "goodWhen": "Lanciare un progetto rende con Luna crescente e Giove benevolo, segno di crescita e visibilità.",
+     "cautionWhen": "Frena i debutti quando Mercurio è retrogrado o la Luna è calante e fuori corso."
+    },
+    {
+     "name": "Viaggi",
+     "goodWhen": "Si parte con il piede giusto sotto una Luna armoniosa e con Mercurio in moto diretto.",
+     "cautionWhen": "Pianifica con un margine extra se Mercurio è retrogrado o la Luna è fuori corso, per via dei ritardi."
+    },
+    {
+     "name": "Conversazioni importanti",
+     "goodWhen": "Il dialogo difficile si scioglie con Mercurio diretto e la Luna in aspetto morbido che favorisce l'ascolto.",
+     "cautionWhen": "Rinvia i chiarimenti delicati con Luna tesa o Marte acceso, quando i toni si infiammano facilmente."
+    },
+    {
+     "name": "Denaro e investimenti",
+     "goodWhen": "Le scelte finanziarie maturano con Venere e Giove in buon aspetto e Mercurio in moto diretto.",
+     "cautionWhen": "Sospendi le mosse audaci se Mercurio o Venere sono retrogradi o la Luna è fuori corso."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Rituale delle fasi lunari",
+   "intro": "Ogni fase della Luna offre un'energia diversa da accordare ai tuoi desideri e alla tua manifestazione.",
+   "label369": "Manifestazione 369",
+   "tip369": "Il metodo 369 consiste nello scrivere la tua intenzione tre volte al mattino, sei a metà giornata e nove la sera, per imprimerla con costanza.",
+   "journalLabel": "Domanda per il diario",
+   "ritualLabel": "Rituale di oggi",
+   "phases": [
+    {
+     "name": "Luna nuova",
+     "ritual": "Accendi una candela bianca e scrivi tre nuove intenzioni da piantare come semi per il ciclo che inizia.",
+     "journal": "Cosa desidero davvero far nascere in questo nuovo ciclo?"
+    },
+    {
+     "name": "Luna crescente",
+     "ritual": "Rileggi le tue intenzioni e compi un primo piccolo gesto concreto che le metta in movimento.",
+     "journal": "Qual è il primo passo coraggioso che posso fare oggi?"
+    },
+    {
+     "name": "Primo quarto",
+     "ritual": "Affronta un ostacolo che rimandi da tempo, trasformando la tensione di questa fase in azione decisa.",
+     "journal": "Quale resistenza sono pronto a superare adesso?"
+    },
+    {
+     "name": "Gibbosa crescente",
+     "ritual": "Rifinisci e correggi i tuoi progetti con cura, sistemando i dettagli prima del culmine.",
+     "journal": "Cosa posso migliorare e affinare prima che tutto fiorisca?"
+    },
+    {
+     "name": "Luna piena",
+     "ritual": "Celebra i tuoi traguardi alla luce della Luna e lascia andare ciò che non ti serve più con gratitudine.",
+     "journal": "Per cosa provo gratitudine e cosa è il momento di lasciare andare?"
+    },
+    {
+     "name": "Gibbosa calante",
+     "ritual": "Condividi ciò che hai imparato e restituisci qualcosa, lasciando defluire l'energia in eccesso.",
+     "journal": "Quale saggezza posso condividere o donare a qualcuno?"
+    },
+    {
+     "name": "Ultimo quarto",
+     "ritual": "Fai pulizia di spazi, abitudini e legami stanchi, liberando spazio per ciò che verrà.",
+     "journal": "Quale abitudine o peso sono pronto a rilasciare?"
+    },
+    {
+     "name": "Luna calante",
+     "ritual": "Concediti riposo profondo, meditazione e silenzio per ricaricarti prima del nuovo inizio.",
+     "journal": "Di quale riposo e cura ha bisogno la mia anima ora?"
+    }
+   ]
   }
  },
  "id": {
@@ -8836,6 +9948,145 @@ window.LUX = {
     {
      "keyword": "Lompatan",
      "meaning": "1212 membawa semangat untuk maju dan percaya pada langkahmu. Teruslah bertumbuh dengan optimis, sebab kamu sedang bergerak ke depan."
+    }
+   ]
+  },
+  "retro": {
+   "title": "Planet Retrograde",
+   "intro": "Retrograde (gerak mundur semu) adalah saat sebuah planet tampak bergerak mundur jika diamati dari Bumi, momen yang cocok untuk meninjau ulang, merenung, dan memperbaiki.",
+   "statusActive": "Sedang Retrograde",
+   "statusDirect": "Bergerak Maju",
+   "stationLabel": "Mulai / Selesai",
+   "tipsLabel": "Tips Menghadapi",
+   "planets": [
+    {
+     "name": "Merkurius",
+     "theme": "komunikasi, perjalanan, teknologi",
+     "retroTip": "Saat Merkurius retrograde, baca ulang pesan sebelum mengirim, simpan cadangan data penting, dan sediakan waktu ekstra untuk perjalanan agar hati tetap tenang."
+    },
+    {
+     "name": "Venus",
+     "theme": "cinta, relasi, keuangan",
+     "retroTip": "Saat Venus retrograde, tunda keputusan besar soal hubungan atau belanja impulsif; gunakan waktu ini untuk merenungkan apa yang benar-benar Anda hargai."
+    },
+    {
+     "name": "Mars",
+     "theme": "energi, semangat, tindakan",
+     "retroTip": "Saat Mars retrograde, energi terasa melambat, jadi tahan emosi sesaat, kelola amarah dengan sabar, dan tunda peluncuran proyek yang menguras banyak tenaga."
+    },
+    {
+     "name": "Jupiter",
+     "theme": "peluang, pertumbuhan, harapan",
+     "retroTip": "Saat Jupiter retrograde, tinjau kembali rencana besar dan target Anda; ini waktu yang baik untuk memperbaiki arah, bukan memaksakan ekspansi yang terburu-buru."
+    },
+    {
+     "name": "Saturnus",
+     "theme": "disiplin, tanggung jawab, struktur",
+     "retroTip": "Saat Saturnus retrograde, evaluasi komitmen dan kebiasaan Anda; rapikan pondasi yang masih rapuh dengan sabar agar hasilnya lebih kokoh ke depan."
+    }
+   ]
+  },
+  "electional": {
+   "title": "Hari Baik & Penentuan Waktu Hari Ini",
+   "intro": "Panduan memilih waktu yang selaras untuk memulai sesuatu yang penting, berdasarkan posisi Bulan dan ritme langit hari ini.",
+   "moonLabel": "Posisi Bulan",
+   "vocLabel": "Waktu Void",
+   "vocTip": "Saat Bulan berada dalam fase void-of-course, sebaiknya tunda memulai hal baru yang penting dan manfaatkan waktu ini untuk beristirahat atau merampungkan urusan lama.",
+   "verdict": {
+    "great": "Sangat Baik",
+    "good": "Cukup Baik",
+    "caution": "Perlu Hati-hati"
+   },
+   "activities": [
+    {
+     "name": "Kontrak & Tanda Tangan",
+     "goodWhen": "Cocok saat Bulan sedang tenang dan tidak void, sehingga kesepakatan terasa jernih dan kedua pihak sepaham.",
+     "cautionWhen": "Sebaiknya tunda saat Merkurius retrograde karena detail mudah disalahpahami atau terlewat."
+    },
+    {
+     "name": "Cinta & Ungkapan Hati",
+     "goodWhen": "Terasa pas saat Bulan berada di posisi lembut dan Venus mendukung, hati pun lebih mudah terbuka.",
+     "cautionWhen": "Lebih bijak menunggu bila Venus retrograde, agar perasaan tidak diutarakan saat suasana hati belum stabil."
+    },
+    {
+     "name": "Pindah & Pindahan Rumah",
+     "goodWhen": "Lancar saat Bulan stabil dan langit cerah, langkah baru terasa ringan dan penuh semangat.",
+     "cautionWhen": "Sebaiknya hindari di waktu void atau saat cuaca dan jadwal masih serba tidak pasti."
+    },
+    {
+     "name": "Kesehatan & Tindakan Medis",
+     "goodWhen": "Baik saat Bulan sedang menyusut (waning) untuk pemulihan, dan tubuh dalam kondisi cukup istirahat.",
+     "cautionWhen": "Pertimbangkan ulang saat Bulan void atau Mars retrograde, kecuali memang kondisi mendesak menurut anjuran dokter."
+    },
+    {
+     "name": "Bisnis & Usaha Baru",
+     "goodWhen": "Penuh peluang saat Bulan baru (new moon) dan Jupiter mendukung, niat baru pun lebih bertenaga.",
+     "cautionWhen": "Tahan dulu peluncuran saat Merkurius atau Saturnus retrograde agar rencana lebih matang dan rapi."
+    },
+    {
+     "name": "Perjalanan",
+     "goodWhen": "Menyenangkan saat Bulan cerah dan langit mendukung, perjalanan terasa mulus dan berkesan.",
+     "cautionWhen": "Siapkan rencana cadangan saat Merkurius retrograde karena jadwal mudah berubah di tengah jalan."
+    },
+    {
+     "name": "Percakapan Penting",
+     "goodWhen": "Mengalir baik saat Bulan tenang dan Merkurius mendukung, pesan tersampaikan dengan jernih.",
+     "cautionWhen": "Tunda obrolan berat saat Bulan void atau emosi sedang panas agar tidak menimbulkan salah paham."
+    },
+    {
+     "name": "Keuangan & Investasi",
+     "goodWhen": "Terasa selaras saat Bulan stabil dan Jupiter mendukung, keputusan diambil dengan kepala dingin.",
+     "cautionWhen": "Lebih waspada saat Venus atau Merkurius retrograde, dan hindari keputusan finansial yang terburu-buru."
+    }
+   ]
+  },
+  "moonRitual": {
+   "title": "Ritual Fase Bulan",
+   "intro": "Setiap fase Bulan membawa nuansa berbeda yang bisa menjadi pengingat lembut untuk menata niat dan rasa syukur Anda.",
+   "label369": "Manifestasi 369",
+   "tip369": "Metode 369 mengajak Anda menuliskan niat positif 3 kali di pagi hari, 6 kali di siang hari, dan 9 kali di malam hari sebagai cara memperkuat fokus.",
+   "journalLabel": "Pertanyaan Jurnal",
+   "ritualLabel": "Ritual Hari Ini",
+   "phases": [
+    {
+     "name": "Bulan Baru",
+     "ritual": "Luangkan waktu hening, tarik napas dalam-dalam, dan tuliskan satu niat baru yang ingin Anda tumbuhkan ke depan.",
+     "journal": "Apa satu hal baru yang ingin saya mulai dan tumbuhkan di siklus ini?"
+    },
+    {
+     "name": "Bulan Sabit Muda",
+     "ritual": "Susun langkah kecil pertama untuk niat Anda dan ucapkan rasa syukur atas keberanian untuk memulai.",
+     "journal": "Langkah kecil apa yang bisa saya ambil hari ini untuk mendekati impian saya?"
+    },
+    {
+     "name": "Bulan Separuh Awal",
+     "ritual": "Tinjau kembali rencana Anda, kuatkan tekad menghadapi hambatan, dan rapikan hal yang perlu diperbaiki.",
+     "journal": "Hambatan apa yang muncul, dan bagaimana saya bisa menghadapinya dengan tenang?"
+    },
+    {
+     "name": "Bulan Cembung Membesar",
+     "ritual": "Rawat momentum dengan tetap konsisten, sambil bersyukur atas setiap kemajuan kecil yang sudah dicapai.",
+     "journal": "Kemajuan apa yang patut saya syukuri, dan apa yang masih perlu saya sempurnakan?"
+    },
+    {
+     "name": "Bulan Purnama",
+     "ritual": "Rayakan apa yang telah terwujud, ucapkan syukur sepenuh hati, dan lepaskan hal yang tak lagi melayani Anda.",
+     "journal": "Pencapaian apa yang saya syukuri, dan apa yang siap saya lepaskan dengan ikhlas?"
+    },
+    {
+     "name": "Bulan Cembung Menyusut",
+     "ritual": "Renungkan pelajaran yang Anda petik dan bagikan kebaikan atau rasa syukur Anda kepada orang sekitar.",
+     "journal": "Pelajaran berharga apa yang saya dapat, dan kepada siapa saya ingin berterima kasih?"
+    },
+    {
+     "name": "Bulan Separuh Akhir",
+     "ritual": "Bereskan urusan yang tertunda dan lepaskan beban pikiran yang sudah tak perlu Anda bawa lagi.",
+     "journal": "Beban atau kebiasaan apa yang siap saya lepaskan agar hati lebih ringan?"
+    },
+    {
+     "name": "Bulan Sabit Tua",
+     "ritual": "Beristirahatlah sejenak, tenangkan diri, dan siapkan ruang hening untuk menyambut siklus baru yang akan datang.",
+     "journal": "Apa yang ingin saya lepaskan sepenuhnya sebelum memulai babak yang baru?"
     }
    ]
   }
