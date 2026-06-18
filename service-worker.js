@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v17: 트렌드 새턴리턴 추적기 + 솔라리턴(올해의 차트)
-const CACHE_NAME = 'lucky-v17';
+// v18: 트렌드 빅3 상승궁(어센던트) + 도시 드롭다운
+const CACHE_NAME = 'lucky-v18';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

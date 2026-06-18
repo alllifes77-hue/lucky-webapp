@@ -370,6 +370,9 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
                 <option value="">00분</option>
               </select>
             </div>
+            <select id="birth-city" class="lottery-select" style="margin-top:8px;">
+              <option value="">🌍 출생 도시 (선택 — 상승궁/빅3)</option>
+            </select>
             <p class="draw-date-note" id="txt-birth-time-note">시주(時柱) 계산으로 더 정밀한 사주 분석을 제공합니다.</p>
             <p class="draw-date-note lmt-note" id="txt-lmt-note" style="display:none;color:#a78bfa;"></p>
           </div>
@@ -555,8 +558,8 @@ if (window.self === window.top) {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2/astronomy.browser.min.js" defer></script>
-<script src="luck-elements.js?v=20260615h" defer></script>
-<script src="lucky-app.js?v=20260615i" defer></script>
+<script src="luck-elements.js?v=20260615i" defer></script>
+<script src="lucky-app.js?v=20260615j" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () =>

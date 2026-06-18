@@ -1,5 +1,5 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar).
+// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising 빅3상승궁).
 // 언어별 네이티브+적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -1224,6 +1224,27 @@ window.LUX = {
     "목표와 책임에 진심을 다하는 해입니다. 꾸준한 노력이 인정과 성취로 이어지며, 어른스러운 단단함이 빛을 발해요.",
     "자유와 연대가 어우러지는 한 해. 나다움을 지키면서 사람들과 연결되고, 신선한 발상이 미래의 문을 열어줍니다.",
     "감성과 직관이 깊어지는 한 해입니다. 꿈, 예술, 연민이 마음을 적시며 자신과 세상을 부드럽게 보듬는 시기예요."
+   ]
+  },
+  "rising": {
+   "title": "상승궁 (어센던트)",
+   "bigThreeTitle": "당신의 빅3",
+   "risingLabel": "상승궁 · 첫인상·페르소나",
+   "cityLabel": "출생 도시",
+   "cta": "출생 시각과 도시까지 입력하면 정확한 상승궁과 빅3가 계산돼요. 지금은 태양궁 기준으로 추정한 결과예요.",
+   "signs": [
+    "처음 보는 사람에게도 거침없이 다가가는 직진형 첫인상이에요. 에너지가 강하고 솔직해서, 가만히 있어도 '이 공간의 주인공'처럼 보이는 분위기를 풍깁니다.",
+    "서두르지 않는 차분함과 은근한 고급스러움이 첫인상을 만들어요. 말수는 적지만 안정감이 묻어나, 사람들은 당신을 '믿고 기댈 수 있는 사람'으로 먼저 읽습니다.",
+    "표정도 말도 빠르고 호기심이 반짝이는 첫인상이에요. 어디서든 대화를 트는 재주가 있어, 처음 본 사람도 '재밌고 똑똑한 사람'이라는 인상을 곧바로 받습니다.",
+    "부드럽고 다정한 분위기로 상대를 무장 해제시키는 첫인상이에요. 잘 들어주고 잘 챙겨줘서, 사람들은 당신 앞에서 이상하게 마음이 편해진다고 느낍니다.",
+    "등장만으로 시선을 끄는 화려하고 당당한 첫인상이에요. 표정과 제스처에 자신감이 흘러서, 누가 봐도 '메인 캐릭터' 같은 존재감을 자연스럽게 발산합니다.",
+    "단정하고 깔끔하며 어딘가 똑부러진 첫인상을 줘요. 디테일을 놓치지 않는 분위기 덕에, 사람들은 당신을 '믿고 일 맡길 만한 사람'으로 먼저 인식합니다.",
+    "우아하고 다가가기 편한 미소로 호감을 사는 첫인상이에요. 상대를 배려하는 태도가 자연스러워, 처음 만난 사람도 '세련되고 부드러운 사람'이라 느낍니다.",
+    "쉽게 속을 드러내지 않는 깊고 묘한 첫인상이에요. 강렬한 눈빛과 차분한 거리감 덕에, 사람들은 당신에게서 '뭔가 비밀 있어 보이는 매력'을 느낍니다.",
+    "밝고 솔직하며 어디든 잘 어울리는 자유로운 첫인상이에요. 웃음이 시원해서, 처음 본 사람도 '같이 있으면 즐거울 것 같은 사람'이라 바로 느낍니다.",
+    "차분하고 어른스러우며 믿음직한 첫인상을 줘요. 가볍게 들뜨지 않는 태도 덕분에, 사람들은 당신을 실제 나이보다 '진중하고 능력 있는 사람'으로 봅니다.",
+    "독특하고 쿨하며 어딘가 남다른 첫인상이에요. 유행을 그대로 따르지 않는 자기다움이 묻어나, 사람들은 당신을 '개성 강하고 흥미로운 사람'으로 기억합니다.",
+    "몽환적이고 부드러우며 감성적인 분위기를 풍기는 첫인상이에요. 눈빛이 다정해서, 처음 본 사람도 '예술가 같고 마음이 따뜻한 사람'이라는 인상을 받습니다."
    ]
   }
  },
@@ -2450,6 +2471,27 @@ window.LUX = {
     "An open, future-facing year: your heart warms to friendship, community, and fresh ideas, and you thrive by following what is original, free, and a little unconventional.",
     "A soft, dreamy, intuitive year: your emotions run deep and compassionate, and you find renewal through rest, creativity, and quiet moments of spiritual connection."
    ]
+  },
+  "rising": {
+   "title": "Rising Sign (Ascendant)",
+   "bigThreeTitle": "Your Big Three",
+   "risingLabel": "Rising · First Impression & Persona",
+   "cityLabel": "Birth City",
+   "cta": "Enter your exact birth time and city for your true Rising sign and full Big Three; without them, this is estimated from your Sun.",
+   "signs": [
+    "Aries Rising walks in fast and direct, radiating a bold, slightly competitive energy. People read you as confident and unfiltered before you say a word, like you came here to win.",
+    "Taurus Rising gives off a calm, grounded warmth that puts a room at ease. You seem unhurried and steady, with an unbothered presence and an air of quiet, sensual good taste.",
+    "Gemini Rising sparkles with quick, curious energy and reads as witty and approachable. People meet you as the chatty, animated one, full of questions and ready with a clever remark.",
+    "Cancer Rising softens a room with a gentle, nurturing vibe that feels safe to approach. You come across as caring and a little shy, with an emotionally tuned-in, protective first impression.",
+    "Leo Rising makes a bright, glamorous entrance and reads as warm, dramatic, and impossible to miss. You carry yourself with main-character confidence, drawing eyes without seeming to try.",
+    "Virgo Rising presents as polished, composed, and quietly observant. People sense you are taking it all in, reading you as modest, well-put-together, and the reliable, capable one in any room.",
+    "Libra Rising radiates effortless charm and a poised, photogenic ease. You read as graceful and likeable, meeting the world with a soft smile and a gift for making others feel welcome.",
+    "Scorpio Rising arrives with a magnetic, intense stillness that intrigues people. You seem mysterious and self-contained, giving little away, with a piercing gaze others find hard to look away from.",
+    "Sagittarius Rising bursts in with open, optimistic energy and an easy, infectious laugh. People read you as adventurous and blunt, the fun, restless one who looks ready for the next plane out.",
+    "Capricorn Rising projects quiet authority and a composed, grown-up seriousness. You come across as ambitious and self-possessed, the dependable one others instinctively trust to handle things.",
+    "Aquarius Rising reads as cool, quirky, and a little detached, like you operate on your own frequency. People meet you as the original, unconventional one, friendly yet impossible to fully pin down.",
+    "Pisces Rising drifts in with a dreamy, gentle softness and a faraway look in the eyes. You seem ethereal and empathetic, an easy presence people open up to without quite knowing why."
+   ]
   }
  },
  "ja": {
@@ -3674,6 +3716,27 @@ window.LUX = {
     "実りへ向かう一年。責任を引き受け、地道な努力を積み上げるほどに、現実的な成果と社会での確かな手応えが返ってくる季節です。",
     "個性が解き放たれる一年。型にとらわれない発想と仲間との出会いが、未来を見据えた自由な変化と新しい可能性を呼び込みます。",
     "感受性が満ちる一年。夢や直感、目に見えない優しさに心が開き、芸術や癒やし、深い慈しみが、静かに魂を潤してくれます。"
+   ]
+  },
+  "rising": {
+   "title": "上昇宮(アセンダント)",
+   "bigThreeTitle": "あなたのビッグ3",
+   "risingLabel": "上昇宮 · 第一印象・ペルソナ",
+   "cityLabel": "出生都市",
+   "cta": "生まれた時刻と都市を入力すると、正確なアセンダント(ビッグ3)が割り出されます。未入力の場合は太陽星座をもとにしたおおよその推定となります。",
+   "signs": [
+    "牡羊座アセンダント。出会った瞬間に伝わる、まっすぐで勢いのある第一印象。先頭を切って動く人と映り、その場の空気にいち早く火を灯す存在として記憶されます。",
+    "牡牛座アセンダント。落ち着きと安心感をまとった佇まい。急がず、声も動きもゆったりとして、まわりに穏やかで信頼できる人という印象を静かに残していきます。",
+    "双子座アセンダント。軽やかで好奇心に満ちた第一印象。言葉が滑らかで表情がよく動き、誰とでもすっと打ち解ける、風のように親しみやすい人として映ります。",
+    "蟹座アセンダント。やわらかく包み込むような雰囲気。初対面でもどこか懐かしく、相手の気持ちにそっと寄り添う、面倒見のよい人という印象を与えます。",
+    "獅子座アセンダント。華やかで堂々とした、その場の中心になる第一印象。立ち姿に自然な輝きが宿り、思わず目を引く主役のような存在感を放ちます。",
+    "乙女座アセンダント。清潔感と知性を感じさせる端正な佇まい。控えめながら細部まで行き届き、きちんとした信頼できる人という印象を静かに伝えます。",
+    "天秤座アセンダント。上品で穏やかな、洗練された第一印象。物腰がやわらかく感じよく、誰とでも心地よい距離を保つ、調和を大切にする人として映ります。",
+    "蠍座アセンダント。多くを語らず、静かな深みをたたえた佇まい。一瞬で印象に残るまなざしを持ち、どこかミステリアスで惹きつける雰囲気をまといます。",
+    "射手座アセンダント。明るく開放的で、自由を感じさせる第一印象。屈託のない笑顔と大らかな物腰で、一緒にいると視界が広がるような人として映ります。",
+    "山羊座アセンダント。落ち着いた、頼れる大人の佇まい。控えめで隙がなく、責任感と品格を感じさせ、まわりから自然と一目置かれる印象を与えます。",
+    "水瓶座アセンダント。どこか自由で独特な空気をまとった第一印象。人とは違う視点を持ち、軽やかに距離を保ちながら、新鮮で個性的な人として記憶されます。",
+    "魚座アセンダント。夢見るようなやわらかい雰囲気。境界線がふんわりとして掴みどころがなく、優しく繊細で、そっと寄り添ってくれる人という印象を残します。"
    ]
   }
  },
@@ -4900,6 +4963,27 @@ window.LUX = {
     "Ein freies, eigensinniges Jahr, in dem Sie eigene Wege gehen und Gemeinschaft sowie Zukunftsvisionen Sie bewegen.",
     "Ein traumhaftes, mitfühlendes Jahr, in dem Intuition, Kunst und stille Hingabe Ihre innere Welt prägen."
    ]
+  },
+  "rising": {
+   "title": "Aszendent",
+   "bigThreeTitle": "Deine großen Drei",
+   "risingLabel": "Aszendent · Erster Eindruck & Persona",
+   "cityLabel": "Geburtsort",
+   "cta": "Mit genauer Geburtszeit und -stadt errechnen wir deinen exakten Aszendenten und deine großen Drei – ohne diese Angaben bleibt es eine Schätzung auf Basis deines Sonnenzeichens.",
+   "signs": [
+    "Widder-Aszendent wirkt direkt und energiegeladen: Du betrittst Räume zügig, sprichst klar und hinterlässt den Eindruck, dass du Initiative ergreifst, bevor andere überhaupt zögern.",
+    "Stier-Aszendent strahlt Ruhe und Beständigkeit aus. Auf andere wirkst du gelassen, bodenständig und verlässlich – eine Präsenz, die eher ruht als drängt.",
+    "Zwillinge-Aszendent gibt dir eine wache, gesprächige Ausstrahlung. Du wirkst neugierig, beweglich und schlagfertig – Menschen empfinden dich rasch als zugänglich und vielseitig.",
+    "Krebs-Aszendent vermittelt einen sanften, fürsorglichen ersten Eindruck. Du wirkst zurückhaltend und feinfühlig, und andere spüren oft eine schützende, warme Atmosphäre um dich.",
+    "Löwe-Aszendent verleiht einen glanzvollen, selbstbewussten Auftritt. Du wirkst präsent und großzügig, ziehst Blicke fast mühelos an und füllst Räume mit natürlicher Wärme.",
+    "Jungfrau-Aszendent wirkt gepflegt, aufmerksam und besonnen. Andere nehmen dich als zurückhaltend kompetent wahr – jemand, der Details bemerkt und überlegt auftritt.",
+    "Waage-Aszendent schenkt dir eine charmante, ausgewogene Ausstrahlung. Du wirkst höflich und ästhetisch feinsinnig, und Menschen empfinden deine Gegenwart meist als angenehm und harmonisch.",
+    "Skorpion-Aszendent umgibt dich mit Intensität und einer gewissen Unergründlichkeit. Du wirkst kontrolliert und magnetisch, gibst wenig preis und hinterlässt einen tiefen, prägenden Eindruck.",
+    "Schütze-Aszendent wirkt offen, unbeschwert und lebenshungrig. Du strahlst Optimismus aus, und andere nehmen dich tendenziell als freiheitsliebend, reiselustig und ehrlich wahr.",
+    "Steinbock-Aszendent vermittelt Ernst, Würde und Reife. Du wirkst kontrolliert und zielstrebig, und Menschen begegnen dir oft mit einem gewissen Respekt vor deiner Zurückhaltung.",
+    "Wassermann-Aszendent gibt dir eine eigenwillige, etwas distanzierte Note. Du wirkst originell und unabhängig – jemand, der sich angenehm vom Erwartbaren abhebt.",
+    "Fische-Aszendent umgibt dich mit einer träumerischen, weichen Aura. Du wirkst empfänglich und kaum greifbar, und andere spüren tendenziell etwas Sanftes, fast Verschwommenes an dir."
+   ]
   }
  },
  "fr": {
@@ -6124,6 +6208,27 @@ window.LUX = {
     "Une année structurante et ambitieuse : vous construisez avec sérieux, visez le long terme et récoltez ce que la discipline vous permet d'édifier.",
     "Une année libre et tournée vers les autres : vous innovez, vous reliez à votre communauté et inventez des manières de vivre plus fidèles à vous-même.",
     "Une année douce et inspirée : intuition, art et compassion adoucissent votre quotidien et vous invitent à lâcher prise avec confiance."
+   ]
+  },
+  "rising": {
+   "title": "Ascendant",
+   "bigThreeTitle": "Votre Big Three",
+   "risingLabel": "Ascendant · première impression et persona",
+   "cityLabel": "Ville de naissance",
+   "cta": "Renseignez votre heure et votre ville de naissance pour obtenir votre Ascendant exact et votre Big Three complet ; sans heure précise, l'estimation s'appuie sur votre signe solaire.",
+   "signs": [
+    "Ascendant Bélier : on vous perçoit comme vif, direct et plein d'allant. Vous donnez le ton d'emblée, abordez le monde de front et dégagez une énergie de meneur qui ne passe pas inaperçue.",
+    "Ascendant Taureau : vous renvoyez une présence posée, chaleureuse et rassurante. On vous trouve stable et sensoriel ; vous avancez sans précipitation, ancré, et inspirez naturellement confiance dès le premier contact.",
+    "Ascendant Gémeaux : vif d'esprit et curieux, vous semblez toujours en mouvement. On retient votre aisance verbale, votre regard pétillant et cette manière légère et joueuse d'aborder les gens et les idées.",
+    "Ascendant Cancer : vous dégagez une douceur enveloppante et un air un peu réservé. On vous sent à l'écoute, protecteur, attentif aux ambiances ; votre première approche reste prudente, pudique, profondément humaine.",
+    "Ascendant Lion : votre entrée ne passe jamais inaperçue. On vous perçoit comme rayonnant, généreux et sûr de vous ; vous abordez le monde avec panache, comme si chaque scène vous revenait de droit.",
+    "Ascendant Vierge : vous paraissez net, attentif et discrètement raffiné. On remarque votre regard analytique et votre réserve soignée ; vous abordez les situations avec mesure, en observant avant de vous engager.",
+    "Ascendant Balance : on vous trouve avenant, élégant et naturellement diplomate. Vous soignez l'harmonie du premier contact, cherchez l'accord plutôt que la friction, et dégagez un charme posé et conciliant.",
+    "Ascendant Scorpion : votre présence est intense et magnétique. On vous perçoit comme énigmatique, difficile à cerner ; vous avancez avec retenue, le regard pénétrant, en gardant une part de mystère soigneusement préservée.",
+    "Ascendant Sagittaire : vous semblez ouvert, enjoué et avide d'horizons. On retient votre franc-parler et votre optimisme ; vous abordez le monde en explorateur, avec une décontraction qui met vite à l'aise.",
+    "Ascendant Capricorne : vous renvoyez une image sérieuse, maîtrisée et fiable. On vous perçoit comme posé et ambitieux ; votre première approche reste sobre et mesurée, dégageant une autorité tranquille et respectable.",
+    "Ascendant Verseau : on vous trouve singulier, indépendant et un brin décalé. Vous dégagez une distance amicale et un grain d'originalité ; vous abordez le monde en observateur libre, à votre propre rythme.",
+    "Ascendant Poissons : vous renvoyez une aura douce, rêveuse et insaisissable. On vous sent réceptif, empathique, presque fluide ; votre première approche est délicate, nimbée d'une sensibilité artistique et un peu lointaine."
    ]
   }
  },
@@ -7350,6 +7455,27 @@ window.LUX = {
     "Un año de libertad y comunidad: rompes moldes, abrazas tu autenticidad y te unes a causas, amistades y proyectos que miran hacia el futuro.",
     "Un año sensible y espiritual: la intuición se agudiza, sueñas, sanas y te entregas con compasión a lo invisible, al arte y a lo que el alma necesita."
    ]
+  },
+  "rising": {
+   "title": "Ascendente",
+   "bigThreeTitle": "Tu Big Three",
+   "risingLabel": "Ascendente · primera impresión y persona",
+   "cityLabel": "Ciudad de nacimiento",
+   "cta": "Introduce tu hora y ciudad de nacimiento para calcular tu Ascendente exacto y tu Big Three; sin esos datos, mostramos una estimación basada solo en tu signo solar.",
+   "signs": [
+    "Con Ascendente Aries proyectas energía, ímpetu y una chispa competitiva. Vas de frente, hablas sin rodeos y los demás te perciben como alguien valiente, directo y siempre listo para empezar.",
+    "Con Ascendente Tauro irradias calma, sensualidad y una serenidad firme. Pareces estable y de buen gusto; los demás te ven sereno, fiable y poco dado a las prisas o a los dramas.",
+    "Con Ascendente Géminis das una primera impresión vivaz, curiosa y muy verbal. Pareces ligero, ocurrente y sociable, ese alguien que entra hablando, pregunta por todo y conecta al instante con cualquiera.",
+    "Con Ascendente Cáncer transmites dulzura, calidez y un aire protector. La gente te siente cercano y sensible, alguien que cuida desde el primer momento, aunque por dentro guardes cierta timidez y reserva.",
+    "Con Ascendente Leo entras como protagonista: porte luminoso, presencia magnética y un aire seguro y elegante. Los demás te recuerdan enseguida, te miran y te perciben cálido, generoso y nacido para brillar.",
+    "Con Ascendente Virgo proyectas pulcritud, discreción y una atención al detalle evidente. Pareces sereno, observador y servicial; los demás te ven correcto, modesto y dispuesto a ayudar sin buscar el centro de atención.",
+    "Con Ascendente Libra desprendes encanto, simpatía y un aire equilibrado y refinado. Caes bien al instante: pareces amable, diplomático y atractivo, esa persona que armoniza el ambiente y agrada a casi todos.",
+    "Con Ascendente Escorpio emanas intensidad, misterio y una mirada magnética. La gente percibe tu profundidad y tu reserva; resultas atractivo y algo enigmático, alguien que impone y fascina sin necesidad de muchas palabras.",
+    "Con Ascendente Sagitario das una impresión abierta, optimista y aventurera. Pareces libre, espontáneo y de risa fácil; los demás te ven como ese alma viajera que contagia entusiasmo y franqueza vayas donde vayas.",
+    "Con Ascendente Capricornio proyectas seriedad, madurez y un aire competente y reservado. Inspiras respeto desde el principio: pareces responsable, sobrio y con los pies en la tierra, alguien en quien se confía enseguida.",
+    "Con Ascendente Acuario transmites originalidad, independencia y un aire distinto y fresco. Pareces moderno, amistoso y un punto excéntrico; los demás te ven libre, cerebral y difícil de encasillar en moldes convencionales.",
+    "Con Ascendente Piscis envuelves a los demás en un aura suave, soñadora y empática. Pareces tierno, sensible y algo etéreo; la gente te siente cercano, artístico y fácil de querer desde el primer encuentro."
+   ]
   }
  },
  "pt": {
@@ -8574,6 +8700,27 @@ window.LUX = {
     "Um ano de foco, responsabilidade e conquistas concretas. Você assume metas sérias e constrói, passo a passo, algo que vai durar.",
     "Um ano de liberdade, amizades e ideias originais. Você quer inovar, romper padrões e se conectar a causas e pessoas que pensam adiante.",
     "Um ano de sensibilidade, intuição e entrega ao invisível. Sonhos, arte e espiritualidade pedem espaço, e o coração se abre à compaixão."
+   ]
+  },
+  "rising": {
+   "title": "Ascendente",
+   "bigThreeTitle": "Seu Big Three",
+   "risingLabel": "Ascendente · primeira impressão e persona",
+   "cityLabel": "Cidade de nascimento",
+   "cta": "Informe a hora exata e a cidade do seu nascimento para revelar o Ascendente preciso e fechar seu Big Three; sem esses dados, mostramos uma estimativa baseada apenas no seu signo solar.",
+   "signs": [
+    "Ascendente em Áries chega com energia direta e olhar decidido: você parece corajoso, impaciente e pronto para agir, transmitindo uma presença que abre caminho sozinha.",
+    "Ascendente em Touro veste calma e firmeza: sua chegada é serena, sensual e confiável, com voz tranquila e um jeito de quem caminha pelo mundo sem pressa nenhuma.",
+    "Ascendente em Gêmeos espalha curiosidade e leveza: você surge falante, espirituoso e simpático, dando a impressão de quem está sempre por dentro de tudo e troca um papo com facilidade.",
+    "Ascendente em Câncer suaviza a primeira impressão: você parece acolhedor, sensível e meio reservado, com um olhar gentil que faz as pessoas se sentirem cuidadas logo de cara.",
+    "Ascendente em Leão entra com brilho e postura: sua presença é calorosa, magnética e teatral, e você costuma ser notado mesmo em silêncio, irradiando uma confiança elegante.",
+    "Ascendente em Virgem se apresenta discreto e impecável: você parece atento, organizado e observador, passando uma impressão de gente competente que repara em cada detalhe.",
+    "Ascendente em Libra encanta logo na entrada: simpático, charmoso e diplomático, você transmite equilíbrio e bom gosto, sempre buscando agradar e deixar o clima leve e harmonioso.",
+    "Ascendente em Escorpião provoca uma intensidade silenciosa: você parece misterioso, magnético e difícil de decifrar, com um olhar profundo que desperta curiosidade e respeito ao mesmo tempo.",
+    "Ascendente em Sagitário chega aberto e bem-humorado: você surge livre, otimista e aventureiro, passando aquela impressão de quem está sempre pronto para uma viagem ou uma boa conversa.",
+    "Ascendente em Capricórnio impõe uma seriedade elegante: você parece maduro, contido e ambicioso, transmitindo respeito e responsabilidade mesmo antes de dizer qualquer palavra.",
+    "Ascendente em Aquário se mostra original e independente: você surge diferente, antenado e amigável de um jeito distante, passando a impressão de mente livre que não segue regra à toa.",
+    "Ascendente em Peixes desperta um ar sonhador: você parece doce, sensível e meio etéreo, com olhar acolhedor e uma energia suave que faz as pessoas baixarem a guarda."
    ]
   }
  },
@@ -9800,6 +9947,27 @@ window.LUX = {
     "Un anno di indipendenza e visione: cerchi spazio, idee originali e legami autentici. L'umore è libero, lucido e proiettato in avanti.",
     "Un anno sensibile e ispirato: vivi tra sogno e intuizione, con il cuore aperto. È tempo di ascoltare l'anima, creare e prenderti cura del mondo interiore."
    ]
+  },
+  "rising": {
+   "title": "Ascendente",
+   "bigThreeTitle": "I tuoi Tre Grandi",
+   "risingLabel": "Ascendente · prima impressione e persona",
+   "cityLabel": "Città di nascita",
+   "cta": "Inserisci l'ora esatta e la città di nascita per calcolare il tuo vero Ascendente e completare i Tre Grandi: senza l'orario, la lettura resta una stima basata solo sul Sole.",
+   "signs": [
+    "Ascendente Ariete: arrivi sempre per primo, con piglio diretto e un'energia che riempie la stanza. Gli altri ti percepiscono come spontaneo, sportivo e un filo impaziente, pronto a partire prima ancora di pensarci.",
+    "Ascendente Toro: trasmetti calma e solidità, una presenza calda e rassicurante che non si lascia mettere fretta. Sembri elegante, sensuale e affidabile, qualcuno con cui ci si sente subito a proprio agio.",
+    "Ascendente Gemelli: appari brillante, curioso e chiacchierone, con uno sguardo vivace che salta da un dettaglio all'altro. Dai l'impressione di essere giovanile, versatile e socievole, sempre con una battuta pronta.",
+    "Ascendente Cancro: emani dolcezza e una riservatezza protettiva, come chi osserva prima di aprirsi davvero. Gli altri ti sentono accogliente e sensibile, un porto sicuro dietro un'apparenza un po' timida.",
+    "Ascendente Leone: entri in scena con magnetismo e portamento regale, impossibile non notarti. Sembri sicuro di te, caloroso e teatrale, e porti con te quell'aria luminosa da protagonista che attira gli sguardi.",
+    "Ascendente Vergine: dai un'impressione composta, ordinata e attenta, con un'eleganza pulita e discreta. Appari riservato, preciso e affidabile, qualcuno che nota i dettagli e non si lascia mai prendere alla sprovvista.",
+    "Ascendente Bilancia: ti presenti con grazia, garbo e un sorriso che mette tutti a proprio agio. Sembri raffinato, diplomatico e armonioso, una persona che cerca il bello e la giusta misura in ogni gesto.",
+    "Ascendente Scorpione: emani un'intensità magnetica e misteriosa, uno sguardo profondo che osserva senza svelarsi. Appari riservato e affascinante, con un'aura intensa che incuriosisce e tiene a una certa distanza.",
+    "Ascendente Sagittario: arrivi con entusiasmo aperto e un sorriso franco, dando subito l'idea del viaggiatore curioso. Sembri ottimista, schietto e avventuroso, qualcuno che ama esplorare e dice ciò che pensa.",
+    "Ascendente Capricorno: trasmetti compostezza e serietà, una maturità che ispira rispetto fin dal primo sguardo. Appari controllato, ambizioso e affidabile, qualcuno che sa il fatto suo e non si scompone facilmente.",
+    "Ascendente Acquario: ti presenti come originale e un po' fuori dagli schemi, con un tocco eccentrico e moderno. Sembri amichevole ma distaccato, una persona indipendente che osserva il mondo da una prospettiva tutta sua.",
+    "Ascendente Pesci: emani una dolcezza sognante e un'aura sfumata, quasi eterea, difficile da definire. Appari sensibile, empatico e artistico, qualcuno che sembra appartenere a un mondo un po' più poetico del nostro."
+   ]
   }
  },
  "id": {
@@ -11024,6 +11192,27 @@ window.LUX = {
     "Tahun untuk fokus, tanggung jawab, dan membangun sesuatu yang bertahan lama. Disiplinmu kini menjadi fondasi pencapaian yang membanggakan.",
     "Tahun untuk kebebasan, persahabatan, dan ide-ide segar. Terhubung dengan komunitas dan merancang masa depan terasa membebaskan sekaligus menginspirasi.",
     "Tahun yang lembut, penuh intuisi dan kepekaan batin. Istirahat, seni, spiritualitas, dan welas asih menyentuh sisi terdalam dirimu."
+   ]
+  },
+  "rising": {
+   "title": "Ascendant (Rising)",
+   "bigThreeTitle": "Big Three Anda",
+   "risingLabel": "Ascendant · Kesan Pertama & Persona",
+   "cityLabel": "Kota Lahir",
+   "cta": "Masukkan jam dan kota kelahiran untuk Ascendant (Big Three) yang akurat; tanpa jam, kami perkirakan dari posisi Matahari saja.",
+   "signs": [
+    "Ascendant Aries membuat Anda terkesan langsung bergerak, berani, dan apa adanya. Orang sering merasakan aura penuh semangat dan terus terang, seolah Anda selalu siap memulai sesuatu lebih dulu.",
+    "Ascendant Taurus memancarkan kesan tenang, hangat, dan kokoh. Orang cenderung merasa nyaman di dekat Anda, melihat sosok sabar dan stabil yang tak mudah terburu-buru.",
+    "Ascendant Gemini menampilkan persona cerdas, ramah, dan penuh rasa ingin tahu. Anda mudah diajak mengobrol dan terkesan gesit serta hidup, seolah selalu punya bahan cerita baru.",
+    "Ascendant Cancer memberi kesan lembut, perhatian, dan mudah didekati. Banyak orang merasa diayomi, seolah Anda secara alami menyimak dan peduli pada perasaan orang di sekitar.",
+    "Ascendant Leo membuat penampilan Anda hangat, percaya diri, dan memikat. Anda cenderung mencuri perhatian saat memasuki ruangan, dengan aura yang ramah sekaligus berkarisma.",
+    "Ascendant Virgo memancarkan kesan rapi, tenang, dan teliti. Orang melihat sosok yang cermat dan dapat diandalkan, dengan cara bersikap yang santun dan terkendali.",
+    "Ascendant Libra menampilkan persona ramah, anggun, dan menyenangkan. Anda terkesan diplomatis dan mudah disukai, seolah selalu berusaha menjaga suasana tetap harmonis.",
+    "Ascendant Scorpio memberi aura misterius, dalam, dan magnetis. Orang sering penasaran pada Anda, merasakan ketenangan kuat yang sulit ditebak namun memikat.",
+    "Ascendant Sagittarius memancarkan kesan ceria, terbuka, dan suka berpetualang. Anda terlihat optimis dan apa adanya, membawa energi bebas yang membuat orang di sekitar merasa santai.",
+    "Ascendant Capricorn membuat Anda terkesan dewasa, tenang, dan berwibawa. Orang cenderung melihat sosok serius yang dapat dipercaya, seolah Anda menguasai keadaan dengan kalem.",
+    "Ascendant Aquarius menampilkan persona unik, mandiri, dan agak nyeleneh. Anda terkesan berbeda dan berpikiran terbuka, dengan aura ramah namun sedikit menjaga jarak.",
+    "Ascendant Pisces memancarkan kesan lembut, hangat, dan penuh imajinasi. Orang merasakan aura empatik dan mengalir, seolah Anda mudah memahami dan menyerap suasana di sekitar."
    ]
   }
  }

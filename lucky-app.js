@@ -5238,6 +5238,19 @@ function renderSunSignPanel(data){
   const chip=(emj,name,col,bg)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:${bg};color:${col};font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:20px;">${emj} ${escHtml(name)}</span>`;
   const meta=(t,v)=>`<span style="background:rgba(126,34,206,.08);color:#6b21a8;font-size:10.5px;padding:3px 9px;border-radius:8px;"><b style="color:#7e22ce;">${escHtml(t)}</b> ${escHtml(v)}</span>`;
 
+  // 빅3: 상승궁(어센던트) — 출생시각+출생도시 입력 시 정밀 계산
+  const RX=X.rising; const ri=_currentRising(data);
+  const risingName=(ri!=null && S.signs[ri])?S.signs[ri].name:null;
+  const risingHtml=(ri!=null && RX && RX.signs)?`
+    <div style="background:rgba(255,255,255,.7);border-radius:12px;padding:10px 12px;margin-bottom:12px;border:1px solid rgba(147,51,234,.18);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+        <span style="font-size:10px;color:#9333ea;font-weight:700;text-transform:uppercase;letter-spacing:.03em;">⬆️ ${escHtml(RX.risingLabel||'Rising')}</span>
+        <span style="font-size:14px;font-weight:900;color:#581c87;">${_SIGN_EMJ[ri]} ${escHtml(risingName)}</span></div>
+      <div style="font-size:11.5px;color:#6b21a8;line-height:1.5;">${escHtml(RX.signs[ri])}</div>
+    </div>`:'';
+  const risingCta=(ri==null && RX && RX.cta)?`<div style="font-size:10.5px;color:#9333ea;background:rgba(147,51,234,.07);border-radius:8px;padding:7px 10px;margin-bottom:12px;line-height:1.45;">✨ ${escHtml(RX.cta)}</div>`:'';
+  const b3Title=(ri!=null && RX && RX.bigThreeTitle)?RX.bigThreeTitle:(L.bigTwoTitle||'');
+
   const bigTwo = `
     <div style="display:flex;gap:9px;margin-bottom:12px;">
       <div style="flex:1;background:rgba(255,255,255,.65);border-radius:12px;padding:10px 12px;">
@@ -5263,8 +5276,9 @@ function renderSunSignPanel(data){
         <div style="font-size:21px;font-weight:900;color:#581c87;">${escHtml(sign.name)}</div>
         <div style="font-size:11px;color:#7e22ce;margin-top:2px;">${escHtml(sign.range)} · <span style="color:${elemCol};font-weight:700;">${escHtml(sign.element)}</span></div>
       </div></div>
-    ${L.bigTwoTitle?`<div style="font-size:11px;font-weight:700;color:#7e22ce;margin-bottom:6px;">${lbl('bigTwoTitle')}</div>`:''}
+    ${b3Title?`<div style="font-size:11px;font-weight:700;color:#7e22ce;margin-bottom:6px;">${escHtml(b3Title)}</div>`:''}
     ${bigTwo}
+    ${risingHtml}${risingCta}
     <div style="background:rgba(126,34,206,.09);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#3b0764;line-height:1.6;margin-bottom:12px;"><b>${lbl('overall',S.overallLabel||'Today')}</b> · ${escHtml(daily)}</div>
     <div style="display:flex;gap:10px 12px;flex-wrap:wrap;margin-bottom:12px;">
       ${bar(L.love||S.loveLabel||'Love',sLove)}${bar(L.money||S.moneyLabel||'Money',sMoney)}${bar(L.career||'Career',sCareer)}${bar(L.health||'Health',sHealth)}${bar(L.social||'Social',sSocial)}
@@ -5697,6 +5711,49 @@ function renderTransitPanel(data){
   panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c7d2fe;margin-bottom:6px;text-transform:uppercase;">✨ ${escHtml(TR.title)}</div>
     <div style="font-size:11px;color:#a5b4fc;margin-bottom:11px;line-height:1.4;">${escHtml(TR.intro)}</div>${body}`;
   _luxInsert(panel);
+}
+
+// ── 도시 위경도 테이블 + 어센던트(상승궁) 계산 (Trend Wave4) ──
+// [도시명(영문), 위도, 경도(동+), 표준 UTC오프셋(DST 무시)]
+const _CITIES=[
+['Seoul',37.57,126.98,9],['Busan',35.18,129.08,9],['Incheon',37.46,126.71,9],['Daegu',35.87,128.60,9],
+['Tokyo',35.68,139.69,9],['Osaka',34.69,135.50,9],['Nagoya',35.18,136.91,9],['Fukuoka',33.59,130.40,9],['Sapporo',43.06,141.35,9],
+['Beijing',39.90,116.41,8],['Shanghai',31.23,121.47,8],['Hong Kong',22.32,114.17,8],['Taipei',25.03,121.57,8],
+['Jakarta',-6.21,106.85,7],['Surabaya',-7.25,112.75,7],['Bandung',-6.92,107.61,7],['Medan',3.59,98.67,7],['Denpasar (Bali)',-8.65,115.22,8],['Makassar',-5.15,119.43,8],
+['Bangkok',13.76,100.50,7],['Singapore',1.35,103.82,8],['Kuala Lumpur',3.14,101.69,8],['Manila',14.60,120.98,8],['Ho Chi Minh City',10.82,106.63,7],['Hanoi',21.03,105.85,7],
+['Mumbai',19.08,72.88,5.5],['Delhi',28.61,77.21,5.5],
+['New York',40.71,-74.01,-5],['Los Angeles',34.05,-118.24,-8],['Chicago',41.88,-87.63,-6],['Houston',29.76,-95.37,-6],['Miami',25.76,-80.19,-5],['San Francisco',37.77,-122.42,-8],['Seattle',47.61,-122.33,-8],['Washington DC',38.91,-77.04,-5],['Atlanta',33.75,-84.39,-5],
+['Toronto',43.65,-79.38,-5],['Vancouver',49.28,-123.12,-8],
+['London',51.51,-0.13,0],['Manchester',53.48,-2.24,0],['Dublin',53.35,-6.26,0],
+['Berlin',52.52,13.40,1],['Munich',48.14,11.58,1],['Hamburg',53.55,9.99,1],['Frankfurt',50.11,8.68,1],['Cologne',50.94,6.96,1],['Vienna',48.21,16.37,1],['Zurich',47.37,8.54,1],
+['Paris',48.86,2.35,1],['Marseille',43.30,5.37,1],['Lyon',45.76,4.84,1],
+['Madrid',40.42,-3.70,1],['Barcelona',41.39,2.17,1],['Valencia',39.47,-0.38,1],['Seville',37.39,-5.99,1],
+['Rome',41.90,12.50,1],['Milan',45.46,9.19,1],['Naples',40.85,14.27,1],
+['Lisbon',38.72,-9.14,0],['Porto',41.16,-8.63,0],
+['Sao Paulo',-23.55,-46.63,-3],['Rio de Janeiro',-22.91,-43.17,-3],['Brasilia',-15.79,-47.88,-3],['Belo Horizonte',-19.92,-43.94,-3],['Salvador',-12.97,-38.50,-3],['Porto Alegre',-30.03,-51.23,-3],['Recife',-8.05,-34.88,-3],
+['Mexico City',19.43,-99.13,-6],['Buenos Aires',-34.60,-58.38,-3],['Bogota',4.71,-74.07,-5],['Lima',-12.05,-77.04,-5],['Santiago',-33.45,-70.67,-3],
+['Sydney',-33.87,151.21,10],['Melbourne',-37.81,144.96,10],['Auckland',-36.85,174.76,12],
+['Moscow',55.76,37.62,3],['Istanbul',41.01,28.98,3],['Dubai',25.20,55.27,4],['Cairo',30.04,31.24,2],['Johannesburg',-26.20,28.05,2],
+['Amsterdam',52.37,4.90,1],['Brussels',50.85,4.35,1],['Stockholm',59.33,18.07,1],['Warsaw',52.23,21.01,1]
+];
+function _ascendant(utcDate, lat, lon){
+  const A=_astro(); if(!A||!A.SiderealTime) return null;
+  try{
+    const gast=A.SiderealTime(utcDate);            // Greenwich apparent sidereal time (hours)
+    let lst=((gast + lon/15)%24+24)%24;            // local sidereal time (hours)
+    const RAMC=lst*15, eps=23.4367, r=Math.PI/180; // RA of MC (deg), obliquity
+    let asc=Math.atan2(Math.cos(RAMC*r), -(Math.sin(RAMC*r)*Math.cos(eps*r)+Math.tan(lat*r)*Math.sin(eps*r)))/r;
+    return ((asc%360)+360)%360;
+  }catch(e){ return null; }
+}
+function _currentRising(data){
+  if(data.birthHour==null) return null;
+  const sel=(typeof document!=='undefined')?document.getElementById('birth-city'):null;
+  if(!sel||sel.value==='') return null;
+  const c=_CITIES[+sel.value]; if(!c) return null;
+  const utc=new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,0,Math.round((data.birthHour-c[3])*60+(data.birthMinute||0))));
+  const asc=_ascendant(utc, c[1], c[2]); if(asc==null) return null;
+  return Math.floor(asc/30); // 0=양자리..11=물고기
 }
 
 // ── T5) 새턴 리턴 추적기 (Trend Wave3) ───────────────────────
@@ -6298,6 +6355,16 @@ function applyLang() {
       minSel.appendChild(opt);
     }
     if (curMin !== '') minSel.value = curMin;
+  }
+
+  // 출생 도시 (상승궁/빅3용) — _CITIES 로 채움
+  const citySel = document.getElementById('birth-city');
+  if (citySel && typeof _CITIES !== 'undefined') {
+    const curCity = citySel.value;
+    const rLbl = (((window.LUX && (window.LUX[lang]||window.LUX.en)) || {}).rising || {}).cityLabel;
+    citySel.innerHTML = `<option value="">🌍 ${rLbl || 'Birth City'}</option>`;
+    _CITIES.forEach((c,i)=>{ const opt=document.createElement('option'); opt.value=i; opt.textContent=c[0]; citySel.appendChild(opt); });
+    if (curCity !== '') citySel.value = curCity;
   }
 
   if (L.docTitle) document.title = L.docTitle;
