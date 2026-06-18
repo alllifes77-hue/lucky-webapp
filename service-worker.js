@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v16: 트렌드 개인 트랜짓 — 오늘의 코스믹 웨더(생일천체×오늘천체 어스펙트)
-const CACHE_NAME = 'lucky-v16';
+// v17: 트렌드 새턴리턴 추적기 + 솔라리턴(올해의 차트)
+const CACHE_NAME = 'lucky-v17';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

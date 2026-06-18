@@ -1,6 +1,6 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드(retro·electional·moonRitual·transits 개인트랜짓).
-// 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
+// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar).
+// 언어별 네이티브+적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
   "lang": "ko",
@@ -1188,6 +1188,42 @@ window.LUX = {
      "challenging": "책임의 무게가 묵직하게 느껴지는 날이지만, 지금의 인내가 미래의 나를 단단하게 세워 주는 값진 투자임을 믿어 주세요.",
      "intense": "토성 에너지가 당신의 책임과 한계 영역 위에 진하게 내려앉아, 현실과 의무의 주제가 또렷하고 강렬하게 부각되는 하루입니다."
     }
+   ]
+  },
+  "saturn": {
+   "title": "새턴 리턴",
+   "intro": "토성이 약 29년 주기로 당신의 출생 위치로 돌아와, 인생을 한 단계 더 어른으로 재정비하게 만드는 별의 통과의례입니다.",
+   "return1": "첫 번째 새턴 리턴",
+   "return2": "두 번째 새턴 리턴",
+   "approaching": "다가오는 중",
+   "active": "진행 중",
+   "completed": "지나감",
+   "upcoming": "예정",
+   "progressLabel": "진행률",
+   "ageNote": "보통 29~30세 / 58~60세",
+   "theme": "새턴 리턴은 더 이상 맞지 않는 관계와 일, 낡은 나를 정직하게 마주하게 하는 시기예요. 흔들림은 무너짐이 아니라, 진짜 어른으로 다시 세워지기 위한 성장통입니다.",
+   "advice": "조급해하지 말고 한 번에 하나씩 정리하세요. 지금 단단히 다진 토대가 다음 30년을 든든히 지탱해 줍니다."
+  },
+  "solar": {
+   "title": "솔라 리턴 · 올해의 차트",
+   "intro": "매 생일마다 태양이 출생 위치로 정확히 돌아오는 순간을 포착한, 다음 생일까지의 '올해의 운명 지도'입니다.",
+   "coreLabel": "변치 않는 핵심",
+   "srMoonLabel": "올해의 무드(솔라리턴 달)",
+   "yearThemeLabel": "올해의 테마",
+   "validNote": "이 차트는 당신의 다음 생일까지 한 해 동안 유효합니다.",
+   "moonThemes": [
+    "올해는 먼저 움직이는 사람이 주도권을 쥡니다. 망설임을 내려놓고 새로운 도전과 시작에 불을 붙일 한 해예요.",
+    "안정과 편안함을 갈망하는 한 해. 서두르기보다 천천히 쌓아 올린 것이 당신에게 진짜 안전감과 결실을 가져다줍니다.",
+    "호기심과 대화가 삶을 넓히는 해입니다. 새로운 배움, 사람, 정보가 활발히 오가며 마음이 분주하면서도 즐거워져요.",
+    "마음의 뿌리와 가족, 내 공간이 중심이 되는 한 해. 안으로 단단해지고 나를 돌보는 따뜻함이 올해의 키워드가 됩니다.",
+    "자신을 표현하고 빛나고 싶은 욕구가 커지는 해입니다. 창작과 사랑, 즐거움이 당신의 무대 위 자신감을 끌어올려요.",
+    "정리하고 가다듬으며 일상을 매만지는 한 해. 건강과 루틴, 작은 디테일을 챙길수록 삶이 한결 가벼워지고 또렷해집니다.",
+    "관계와 균형이 올해의 화두입니다. 혼자보다 함께일 때 길이 열리며, 조율과 화합 속에서 성장하는 한 해가 돼요.",
+    "깊이 파고들고 다시 태어나는 해. 표면을 넘어선 감정과 진실을 마주하며 강렬하게 변화하고 거듭나는 시기입니다.",
+    "더 넓은 세상을 향한 갈망이 커지는 한 해. 여행, 배움, 새로운 신념이 당신의 시야와 가능성을 멀리까지 확장합니다.",
+    "목표와 책임에 진심을 다하는 해입니다. 꾸준한 노력이 인정과 성취로 이어지며, 어른스러운 단단함이 빛을 발해요.",
+    "자유와 연대가 어우러지는 한 해. 나다움을 지키면서 사람들과 연결되고, 신선한 발상이 미래의 문을 열어줍니다.",
+    "감성과 직관이 깊어지는 한 해입니다. 꿈, 예술, 연민이 마음을 적시며 자신과 세상을 부드럽게 보듬는 시기예요."
    ]
   }
  },
@@ -2378,6 +2414,42 @@ window.LUX = {
      "intense": "Saturn settles firmly onto your chart today, making responsibility, maturity, and the long game impossible to ignore; commit to the work and you grow."
     }
    ]
+  },
+  "saturn": {
+   "title": "Saturn Return",
+   "intro": "Your Saturn Return is the chapter when Saturn circles back to its birth position and gently insists you grow into your fullest, most grounded self.",
+   "return1": "First Saturn Return",
+   "return2": "Second Saturn Return",
+   "approaching": "Approaching",
+   "active": "In progress",
+   "completed": "Passed",
+   "upcoming": "Upcoming",
+   "progressLabel": "Progress",
+   "ageNote": "Usually around ages 29-30 and 58-60",
+   "theme": "Saturn Return asks you to set down what no longer fits and rebuild your life on foundations that are truly your own. It can feel heavy, but every demand it makes is shaping a steadier, wiser, more authentic version of you.",
+   "advice": "Stop pushing against the change and let it reorganize you: choose the commitments that matter, release the rest, and trust that the structure you build now will hold for decades."
+  },
+  "solar": {
+   "title": "Solar Return - Your Chart for the Year",
+   "intro": "Every birthday the Sun returns to the exact spot it held when you were born, casting a fresh chart that colors the twelve months ahead.",
+   "coreLabel": "Your unchanging core",
+   "srMoonLabel": "This year's mood (Solar Return Moon)",
+   "yearThemeLabel": "Theme of the year",
+   "validNote": "This chart stays in effect until your next birthday, when a new one takes its place.",
+   "moonThemes": [
+    "A year that rewards boldness: your emotions run hot and quick, so follow the spark, start what you have been postponing, and lead from the front without apology.",
+    "A year to slow down and savor: comfort, security, and the senses anchor your mood, so build steadily, hold what you value, and let pleasure feel earned.",
+    "A restless, curious year where your feelings live in conversation: learning, connecting, and saying yes to new voices keeps your inner world bright and busy.",
+    "A tender, home-centered year: you crave roots, family, and emotional safety, and nurturing yourself and your closest people becomes the quiet heart of everything.",
+    "A warm, expressive year where your heart wants to be seen: creativity, romance, and play light you up, so step into the spotlight and let your joy show.",
+    "A year of refining and tending: your mood steadies through routine, useful work, and care for body and detail, finding deep calm in things done well.",
+    "A year tuned to harmony and partnership: your feelings flow through relationships, beauty, and balance, and you bloom when connection and fairness surround you.",
+    "An intense, deeply felt year: emotions run profound and transformative, drawing you toward honesty, intimacy, and the quiet courage to let old layers fall away.",
+    "An expansive, hopeful year: your spirit reaches for horizons, meaning, and adventure, and your mood lifts whenever you learn, travel, or chase a bigger vision.",
+    "A focused, ambitious year: you feel most settled when you are building something real, so set serious goals and let patient effort become its own reward.",
+    "An open, future-facing year: your heart warms to friendship, community, and fresh ideas, and you thrive by following what is original, free, and a little unconventional.",
+    "A soft, dreamy, intuitive year: your emotions run deep and compassionate, and you find renewal through rest, creativity, and quiet moments of spiritual connection."
+   ]
   }
  },
  "ja": {
@@ -3566,6 +3638,42 @@ window.LUX = {
      "challenging": "限界や課題に向き合う場面が訪れますが、その重みはあなたの土台をより強く堅固に築き上げてくれます。",
      "intense": "責任と試練の主題が重く立ち上がり、為すべきことの重さと、それを引き受ける覚悟が一日の中心を占めます。"
     }
+   ]
+  },
+  "saturn": {
+   "title": "サターンリターン",
+   "intro": "サターンリターンとは、土星がおよそ29年をかけて生まれた位置へと還り、人生を編み直し「大人になる」ための節目を運んでくる時期です。",
+   "return1": "第一回サターンリターン",
+   "return2": "第二回サターンリターン",
+   "approaching": "近づいています",
+   "active": "進行中",
+   "completed": "通過しました",
+   "upcoming": "これから",
+   "progressLabel": "進行度",
+   "ageNote": "おおむね29〜30歳／58〜60歳ごろ",
+   "theme": "この時期は、借り物の生き方を脱ぎ捨て、本当に自分のものと呼べる人生の土台を据え直すための問いかけです。重く感じる責任や別れは、あなたを削るためではなく、揺るがない芯を育てるために訪れています。",
+   "advice": "焦らず一つずつ、いま手放すべきものと守り抜くものを、静かに見極めていきましょう。"
+  },
+  "solar": {
+   "title": "ソーラーリターン・今年のチャート",
+   "intro": "ソーラーリターンとは、誕生日ごとに太陽が生まれた位置へと還り、あなたの新しい一年の空模様を描き出す「今年のチャート」です。",
+   "coreLabel": "変わらない核",
+   "srMoonLabel": "今年のムード（ソーラーリターンの月）",
+   "yearThemeLabel": "今年のテーマ",
+   "validNote": "このチャートは次の誕生日まで、あなたの一年を静かに照らし続けます。",
+   "moonThemes": [
+    "今年は心が前へ前へと駆け出す一年。直感のままに新しい扉を叩くたび、眠っていた情熱が目を覚まし、人生が一気に動き出します。",
+    "穏やかさと安定を求める一年。急がず五感を満たしながら、心地よい暮らしと確かな安心を、自分の手でゆっくり築いていきたくなります。",
+    "好奇心が羽を広げる一年。新しい学びや人との会話が心を弾ませ、軽やかな知的探求とつながりが、毎日に新鮮な風を運んできます。",
+    "心の故郷へ還る一年。家族や住まい、深い情愛の絆を大切にしながら、安心して帰れる温かな居場所を、内側から育てていく季節です。",
+    "自分らしさが輝く一年。胸の奥の創造性と誇りが解き放たれ、惜しみなく愛し表現するほどに、人生が華やかな彩りを帯びていきます。",
+    "心を整える一年。暮らしや健康、日々の習慣を丁寧に見直しながら、地に足のついた小さな改善が、確かな充実感へと結ばれていきます。",
+    "つながりと調和を紡ぐ一年。人との関わりや美しいものに心が向き、互いを思いやるバランスの中で、穏やかな絆と協力が育まれます。",
+    "深く生まれ変わる一年。表層を脱ぎ捨て、本音や情の奥へ降りていくほどに、人生は静かな変容と濃密な再生の力を帯びていきます。",
+    "視界が大きく広がる一年。旅や学び、新しい思想が心を遠くへ誘い、自由と意味を求める冒険心が、未来への希望を灯してくれます。",
+    "実りへ向かう一年。責任を引き受け、地道な努力を積み上げるほどに、現実的な成果と社会での確かな手応えが返ってくる季節です。",
+    "個性が解き放たれる一年。型にとらわれない発想と仲間との出会いが、未来を見据えた自由な変化と新しい可能性を呼び込みます。",
+    "感受性が満ちる一年。夢や直感、目に見えない優しさに心が開き、芸術や癒やし、深い慈しみが、静かに魂を潤してくれます。"
    ]
   }
  },
@@ -4756,6 +4864,42 @@ window.LUX = {
      "intense": "Fragen von Pflicht, Ordnung und Durchhalten rücken heute mit Nachdruck in den Vordergrund und fordern eine ernsthafte Auseinandersetzung von dir."
     }
    ]
+  },
+  "saturn": {
+   "title": "Saturn Return",
+   "intro": "Etwa mit 29 und 59 Jahren kehrt Saturn an seine Geburtsposition zurück und läutet eine Zeit der inneren Neuordnung und des Erwachsenwerdens ein.",
+   "return1": "Erste Saturn Return",
+   "return2": "Zweite Saturn Return",
+   "approaching": "Naht",
+   "active": "Aktiv",
+   "completed": "Vergangen",
+   "upcoming": "Bevorstehend",
+   "progressLabel": "Fortschritt",
+   "ageNote": "Meist mit 29–30 Jahren / 58–60 Jahren",
+   "theme": "Saturn prüft, was wirklich tragfähig ist, und löst auf, was nur Fassade war. Was hier endet, macht Platz für ein Leben, das endlich Ihnen gehört.",
+   "advice": "Bauen Sie geduldig und ehrlich — was Sie jetzt mit Sorgfalt errichten, trägt für Jahrzehnte."
+  },
+  "solar": {
+   "title": "Solar Return · Die Jahreskarte",
+   "intro": "Mit jedem Geburtstag kehrt die Sonne an ihre Geburtsposition zurück und eröffnet die astrologische Karte Ihres kommenden Lebensjahres.",
+   "coreLabel": "Der unveränderliche Kern",
+   "srMoonLabel": "Die Stimmung des Jahres (Solar-Return-Mond)",
+   "yearThemeLabel": "Das Thema des Jahres",
+   "validNote": "Diese Karte gilt bis zu Ihrem nächsten Geburtstag.",
+   "moonThemes": [
+    "Ein Jahr des Aufbruchs: Sie folgen Ihren Impulsen mutig und beginnen aus eigener Kraft, was lange in Ihnen drängte.",
+    "Ein Jahr der Verwurzelung: Sie suchen Sicherheit, Genuss und Ruhe und bauen langsam etwas Beständiges auf.",
+    "Ein neugieriges Jahr voller Gespräche, Ideen und Begegnungen, in dem Bewegung und Austausch Ihre Stimmung bestimmen.",
+    "Ein gefühlvolles Jahr, das sich um Zuhause, Familie und das Bedürfnis nach Geborgenheit und Nähe dreht.",
+    "Ein Jahr der Selbstentfaltung: Sie zeigen sich, schaffen kreativ und sehnen sich nach Wärme und Anerkennung.",
+    "Ein klärendes Jahr, in dem Sie ordnen, verbessern und durch Sorgfalt und Routine inneren Halt gewinnen.",
+    "Ein Jahr der Beziehungen und der Balance, in dem Harmonie, Partnerschaft und Schönheit Ihr Empfinden tragen.",
+    "Ein tiefes, wandelndes Jahr, das alte Schichten ablegt und Sie zu ehrlicher emotionaler Erneuerung führt.",
+    "Ein weites Jahr voller Optimismus, in dem Reisen, Lernen und neue Horizonte Ihre Stimmung beflügeln.",
+    "Ein ernstes, zielstrebiges Jahr, in dem Sie Verantwortung übernehmen und geduldig an dauerhaften Strukturen arbeiten.",
+    "Ein freies, eigensinniges Jahr, in dem Sie eigene Wege gehen und Gemeinschaft sowie Zukunftsvisionen Sie bewegen.",
+    "Ein traumhaftes, mitfühlendes Jahr, in dem Intuition, Kunst und stille Hingabe Ihre innere Welt prägen."
+   ]
   }
  },
  "fr": {
@@ -5944,6 +6088,42 @@ window.LUX = {
      "challenging": "Saturne met une responsabilité à l'épreuve ; cette contrainte n'est pas un mur, mais une leçon qui solidifie ce que vous bâtissez.",
      "intense": "Saturne s'ancre dans votre structure natale : les thèmes du devoir, de la limite et de l'engagement deviennent aujourd'hui incontournables."
     }
+   ]
+  },
+  "saturn": {
+   "title": "Retour de Saturne",
+   "intro": "Le Retour de Saturne survient lorsque Saturne revient à sa position natale, vers 29-30 ans puis vers 59 ans, et marque un grand seuil de maturité et de remise en ordre de l'existence.",
+   "return1": "Premier Retour de Saturne",
+   "return2": "Deuxième Retour de Saturne",
+   "approaching": "À l'approche",
+   "active": "En cours",
+   "completed": "Passé",
+   "upcoming": "À venir",
+   "progressLabel": "Progression",
+   "ageNote": "En général 29-30 ans / 58-60 ans",
+   "theme": "Saturne vous invite à bâtir sur du vrai : ce qui n'a plus de sens vacille, et ce qui vous ressemble vraiment se consolide. C'est moins une épreuve qu'un passage vers votre propre autorité, plus sobre et plus libre.",
+   "advice": "Avancez avec patience et honnêteté envers vous-même : posez des fondations solides plutôt que de chercher des raccourcis."
+  },
+  "solar": {
+   "title": "Retour Solaire · le thème de l'année",
+   "intro": "À chaque anniversaire, le Soleil retrouve sa position natale et dresse la carte de votre année à venir.",
+   "coreLabel": "Le noyau immuable",
+   "srMoonLabel": "L'humeur de l'année (Lune du retour solaire)",
+   "yearThemeLabel": "Le thème de l'année",
+   "validNote": "Ce thème reste valable jusqu'à votre prochain anniversaire.",
+   "moonThemes": [
+    "Une année où l'élan vous appartient : vous osez initier, affirmer vos désirs et avancer sans attendre la permission des autres.",
+    "Une année tournée vers la stabilité et le confort : vous cherchez à enraciner vos émotions, à savourer le concret et à sécuriser ce qui compte.",
+    "Une année curieuse et bavarde : les échanges, les apprentissages et les rencontres légères nourrissent votre cœur et stimulent votre esprit.",
+    "Une année plus intime et sensible : le foyer, les liens familiaux et le besoin de vous sentir en sécurité émotionnelle guident vos choix.",
+    "Une année rayonnante et créative : vous avez envie d'être vu, d'exprimer votre singularité et de mettre de la chaleur dans tout ce que vous vivez.",
+    "Une année d'ajustement et de soin : vous affinez vos habitudes, prenez soin du détail et trouvez de la paix dans l'ordre et l'utile.",
+    "Une année placée sous le signe du lien : partenariats, équilibre et harmonie relationnelle deviennent le terrain de votre épanouissement.",
+    "Une année intense et transformatrice : vous plongez sous la surface, faites le tri en profondeur et renaissez de ce que vous osez regarder en face.",
+    "Une année d'horizons élargis : voyages, quête de sens et grandes aspirations rallument votre foi en l'avenir et votre soif de découvrir.",
+    "Une année structurante et ambitieuse : vous construisez avec sérieux, visez le long terme et récoltez ce que la discipline vous permet d'édifier.",
+    "Une année libre et tournée vers les autres : vous innovez, vous reliez à votre communauté et inventez des manières de vivre plus fidèles à vous-même.",
+    "Une année douce et inspirée : intuition, art et compassion adoucissent votre quotidien et vous invitent à lâcher prise avec confiance."
    ]
   }
  },
@@ -7134,6 +7314,42 @@ window.LUX = {
      "intense": "Saturno se asienta con fuerza sobre tu sentido del deber y el día se vuelve serio y formativo, pidiéndote compromiso y una madurez plena."
     }
    ]
+  },
+  "saturn": {
+   "title": "Retorno de Saturno",
+   "intro": "El Retorno de Saturno es el momento en que Saturno regresa al punto exacto que ocupaba al nacer y te invita a madurar, a reordenar tu vida y a construir cimientos sólidos para la etapa que viene.",
+   "return1": "Primer Retorno de Saturno",
+   "return2": "Segundo Retorno de Saturno",
+   "approaching": "Acercándose",
+   "active": "En curso",
+   "completed": "Ya pasó",
+   "upcoming": "Próximo",
+   "progressLabel": "Progreso",
+   "ageNote": "Suele ocurrir entre los 29 y los 30 años, y de nuevo entre los 58 y los 60.",
+   "theme": "Saturno te pide soltar lo que ya no sostiene tu vida y asumir con honestidad quién eres y hacia dónde vas. Puede sentirse exigente, pero es una poda necesaria: lo que permanezca después tendrá raíces verdaderas y será tuyo de verdad.",
+   "advice": "Acoge el cambio sin prisa, comprométete con lo que de veras te importa y deja ir lo demás con gratitud."
+  },
+  "solar": {
+   "title": "Retorno Solar · La carta de tu año",
+   "intro": "Cada cumpleaños el Sol vuelve al lugar exacto donde estaba al nacer, abriendo una carta nueva que marca el tono de tu año.",
+   "coreLabel": "Tu esencia, lo que no cambia",
+   "srMoonLabel": "El ánimo del año (Luna del Retorno Solar)",
+   "yearThemeLabel": "El tema del año",
+   "validNote": "Esta carta acompaña tu camino hasta tu próximo cumpleaños.",
+   "moonThemes": [
+    "Un año para encenderte y empezar de cero: tu impulso despierta, te atreves a liderar y a perseguir lo que de verdad deseas sin pedir permiso.",
+    "Un año de calma, cuerpo y placeres sencillos: buscas estabilidad, seguridad material y un ritmo sereno que nutra tus sentidos y tu paz.",
+    "Un año mentalmente inquieto y conversador: la curiosidad te abre puertas, aprendes, te conectas y tu mundo se llena de ideas, mensajes y vínculos nuevos.",
+    "Un año de hogar, raíces y emociones tiernas: el corazón pide refugio, cuidar a los tuyos y reconciliarte con tu mundo interior y tu pasado.",
+    "Un año luminoso y creativo: necesitas brillar, jugar y expresarte desde el corazón, dejando que el amor, el arte y la alegría tomen el escenario.",
+    "Un año de orden y mejora diaria: refinas tus rutinas, cuidas tu salud y encuentras sentido en lo concreto, lo útil y lo bien hecho.",
+    "Un año de vínculos y equilibrio: las relaciones cobran protagonismo y buscas armonía, acuerdos justos y belleza compartida con quienes te rodean.",
+    "Un año intenso y transformador: emociones profundas te invitan a soltar lo viejo, mirar tus sombras y renacer con más verdad y poder interior.",
+    "Un año de horizontes amplios: ganas de viajar, aprender, creer y expandirte; el alma pide aventura, sentido y nuevas filosofías de vida.",
+    "Un año de metas y madurez: te enfocas en construir, asumir responsabilidades y levantar logros sólidos con disciplina, paciencia y ambición sana.",
+    "Un año de libertad y comunidad: rompes moldes, abrazas tu autenticidad y te unes a causas, amistades y proyectos que miran hacia el futuro.",
+    "Un año sensible y espiritual: la intuición se agudiza, sueñas, sanas y te entregas con compasión a lo invisible, al arte y a lo que el alma necesita."
+   ]
   }
  },
  "pt": {
@@ -8322,6 +8538,42 @@ window.LUX = {
      "challenging": "Uma cobrança ou um limite aparece hoje, mas encarar essa responsabilidade com paciência fortalece a sua estrutura e maturidade.",
      "intense": "O tema do dever e do amadurecimento fica forte hoje, e Saturno chama você para o sério, mostrando onde vale a pena firmar suas bases."
     }
+   ]
+  },
+  "saturn": {
+   "title": "Retorno de Saturno",
+   "intro": "O Retorno de Saturno acontece quando o planeta volta exatamente à posição que ocupava no seu nascimento, marcando uma virada de amadurecimento e reinvenção da sua vida.",
+   "return1": "Primeiro Retorno de Saturno",
+   "return2": "Segundo Retorno de Saturno",
+   "approaching": "Se aproximando",
+   "active": "Em curso",
+   "completed": "Já passou",
+   "upcoming": "Previsto",
+   "progressLabel": "Progresso",
+   "ageNote": "Geralmente entre 29 e 30 anos / 58 e 60 anos",
+   "theme": "Saturno chega pedindo verdade: ele convida você a assumir de vez quem é, soltar o que não cabe mais e construir uma base que seja realmente sua. Pode pesar um pouco, mas tudo o que resistir a esse tempo vira alicerce firme para a próxima fase da sua vida.",
+   "advice": "Encare os desafios de frente, com paciência e honestidade: cada passo maduro que você dá agora vira fundação sólida para os anos que vêm."
+  },
+  "solar": {
+   "title": "Retorno Solar · Mapa do Ano",
+   "intro": "A cada aniversário, o Sol retorna ao ponto exato do seu nascimento e desenha o mapa que rege o seu novo ciclo de vida.",
+   "coreLabel": "Essência que não muda",
+   "srMoonLabel": "Clima do ano (Lua do Retorno Solar)",
+   "yearThemeLabel": "Tema do ano",
+   "validNote": "Este mapa permanece válido até o seu próximo aniversário.",
+   "moonThemes": [
+    "Um ano para agir com coragem e começar do zero. Sua energia transborda e você sente vontade de liderar, ousar e abrir caminhos novos.",
+    "Um ano para buscar estabilidade, conforto e segurança. Você valoriza o que é seu, cultiva prazeres simples e constrói com calma e firmeza.",
+    "Um ano de curiosidade, conversas e movimento. Sua mente fica inquieta e cheia de ideias, pedindo trocas, aprendizados e novas conexões.",
+    "Um ano de emoções profundas e olhar para dentro. Casa, família e raízes pedem cuidado, e o coração busca acolhimento e pertencimento.",
+    "Um ano para brilhar, criar e se expressar de coração aberto. Você quer ser visto, viver com paixão e colocar sua alegria no mundo.",
+    "Um ano de organização, cuidado e rotina consciente. Você ajusta os detalhes, cuida do corpo e encontra paz no que é prático e útil.",
+    "Um ano de relações, parcerias e busca por equilíbrio. O outro ganha peso na sua vida, e você aprende a harmonizar desejos e afetos.",
+    "Um ano de intensidade, transformação e renascimento. Velhas camadas caem, e você mergulha fundo para reencontrar sua verdadeira força.",
+    "Um ano de expansão, fé e aventura. A vontade de crescer fala alto, abrindo portas para viagens, estudos e novos horizontes de sentido.",
+    "Um ano de foco, responsabilidade e conquistas concretas. Você assume metas sérias e constrói, passo a passo, algo que vai durar.",
+    "Um ano de liberdade, amizades e ideias originais. Você quer inovar, romper padrões e se conectar a causas e pessoas que pensam adiante.",
+    "Um ano de sensibilidade, intuição e entrega ao invisível. Sonhos, arte e espiritualidade pedem espaço, e o coração se abre à compaixão."
    ]
   }
  },
@@ -9512,6 +9764,42 @@ window.LUX = {
      "intense": "Il tema dell'impegno e della struttura diventa centrale: oggi sei chiamato a costruire con serietà e a fare sul serio."
     }
    ]
+  },
+  "saturn": {
+   "title": "Ritorno di Saturno",
+   "intro": "Il Ritorno di Saturno è il momento in cui il pianeta della maturità torna nella sua posizione di nascita, segnando il vero passaggio all'età adulta.",
+   "return1": "Primo Ritorno di Saturno",
+   "return2": "Secondo Ritorno di Saturno",
+   "approaching": "In avvicinamento",
+   "active": "In corso",
+   "completed": "Concluso",
+   "upcoming": "In arrivo",
+   "progressLabel": "Avanzamento",
+   "ageNote": "Di solito tra i 29 e i 30 anni / tra i 58 e i 60 anni",
+   "theme": "Saturno torna per chiederti chi sei davvero: smonta ciò che non ti appartiene più e mette alla prova le tue fondamenta. È un periodo impegnativo, ma ogni difficoltà che attraversi adesso diventa la solidità su cui costruirai il resto della tua vita.",
+   "advice": "Non avere fretta di vederci chiaro su tutto: onora i tuoi limiti, scegli con sincerità ciò che vuoi portare avanti e lascia andare il resto senza sensi di colpa."
+  },
+  "solar": {
+   "title": "Ritorno del Sole · La Carta dell'Anno",
+   "intro": "Ad ogni compleanno il Sole torna esattamente nella sua posizione di nascita, aprendo la carta che racconta l'energia e il tema del tuo nuovo anno.",
+   "coreLabel": "Il nucleo che non cambia",
+   "srMoonLabel": "L'umore dell'anno (Luna del Ritorno Solare)",
+   "yearThemeLabel": "Il tema dell'anno",
+   "validNote": "Questa carta resta valida fino al tuo prossimo compleanno.",
+   "moonThemes": [
+    "Un anno di slancio e coraggio: senti il bisogno di iniziare, di affermarti e di seguire l'istinto. L'energia emotiva ti spinge a metterti al primo posto.",
+    "Un anno che cerca stabilità e calore: emozioni più lente e profonde ti invitano a costruire sicurezza, comfort e radici che durino nel tempo.",
+    "Un anno di curiosità e parole: la mente è viva, vuoi conoscere, conversare e collegare. L'umore cambia in fretta, leggero e brillante.",
+    "Un anno tutto cuore e casa: senti forte il richiamo degli affetti, della famiglia e del nido. Le emozioni chiedono cura, tenerezza e protezione.",
+    "Un anno per brillare ed esprimerti: vuoi essere visto, amato e creativo. Il cuore cerca gioia, romanticismo e momenti che ti facciano sentire vivo.",
+    "Un anno di ordine e dettagli: l'umore trova pace nel migliorare le cose, nel prenderti cura di te e nel riportare equilibrio nella quotidianità.",
+    "Un anno di relazioni e armonia: cerchi connessione, bellezza e collaborazione. Le emozioni fioriscono accanto agli altri e nel dialogo a due.",
+    "Un anno intenso e trasformativo: senti tutto in profondità e niente a metà. È il momento di lasciar morire il vecchio e rinascere più autentico.",
+    "Un anno di apertura e orizzonti: cresce la voglia di libertà, viaggi e significato. L'umore è ottimista e affamato di esperienze nuove.",
+    "Un anno di concretezza e obiettivi: le emozioni si fanno serie e responsabili. Vuoi risultati reali e una struttura che regga il tuo futuro.",
+    "Un anno di indipendenza e visione: cerchi spazio, idee originali e legami autentici. L'umore è libero, lucido e proiettato in avanti.",
+    "Un anno sensibile e ispirato: vivi tra sogno e intuizione, con il cuore aperto. È tempo di ascoltare l'anima, creare e prenderti cura del mondo interiore."
+   ]
   }
  },
  "id": {
@@ -10700,6 +10988,42 @@ window.LUX = {
      "challenging": "Mungkin ada rasa tanggung jawab atau batasan yang terasa menekan hari ini, lihat sebagai ujian yang menguatkan kedisiplinan dan kematanganmu.",
      "intense": "Saturnus menyatu erat dengan dirimu hari ini, membuat tema komitmen, struktur, dan pelajaran hidup terasa serius dan menuntut perhatian penuh."
     }
+   ]
+  },
+  "saturn": {
+   "title": "Saturn Return",
+   "intro": "Saturn Return adalah momen saat planet Saturnus kembali ke posisi kelahiranmu, terjadi setiap sekitar 29-30 tahun sekali, menandai babak menata ulang hidup dan benar-benar bertumbuh dewasa.",
+   "return1": "Saturn Return Pertama",
+   "return2": "Saturn Return Kedua",
+   "approaching": "Sedang mendekat",
+   "active": "Sedang berlangsung",
+   "completed": "Telah berlalu",
+   "upcoming": "Akan datang",
+   "progressLabel": "Tingkat kemajuan",
+   "ageNote": "Umumnya pada usia 29-30 tahun / 58-60 tahun",
+   "theme": "Saturn Return mengajakmu menengok ulang fondasi hidup: karier, hubungan, dan nilai yang benar-benar kamu pegang. Mungkin terasa berat, tetapi inilah saat di mana kamu meletakkan dasar yang lebih kokoh dan tumbuh menjadi versi dirimu yang lebih utuh.",
+   "advice": "Hadapi babak ini dengan jujur pada diri sendiri, lepaskan hal-hal yang sudah tak lagi cocok, dan percayalah bahwa setiap langkah kecil yang kamu tempuh dengan sungguh-sungguh sedang membangun masa depanmu."
+  },
+  "solar": {
+   "title": "Solar Return - Peta Tahun Ini",
+   "intro": "Solar Return adalah peta langit yang terbentuk setiap kali Matahari kembali ke posisi kelahiranmu di hari ulang tahun, menggambarkan warna dan suasana satu tahun ke depan.",
+   "coreLabel": "Inti yang tak berubah",
+   "srMoonLabel": "Suasana hati tahun ini (Bulan Solar Return)",
+   "yearThemeLabel": "Tema tahun ini",
+   "validNote": "Peta ini berlaku hingga hari ulang tahunmu berikutnya.",
+   "moonThemes": [
+    "Tahun yang penuh dorongan untuk memulai. Energimu menyala, keberanianmu tumbuh, dan inisiatif baru terasa paling memuaskan saat kamu berani bergerak lebih dulu.",
+    "Tahun untuk menenangkan diri dan mencari rasa aman. Kenyamanan, kestabilan keuangan, dan menikmati hal-hal sederhana akan terasa sangat menyembuhkan.",
+    "Tahun yang ramai dengan percakapan, rasa ingin tahu, dan koneksi baru. Pikiranmu lincah, dan mempelajari hal-hal baru membuat hatimu terasa hidup.",
+    "Tahun yang berpusat pada rumah, keluarga, dan kebutuhan emosional. Merawat akar batinmu dan orang-orang terkasih membawa rasa damai yang dalam.",
+    "Tahun untuk bersinar dan mengekspresikan diri. Kreativitas, kebahagiaan, serta keinginan untuk dilihat dan dihargai menjadi nada utamamu.",
+    "Tahun untuk membenahi rutinitas, kesehatan, dan hal-hal kecil yang penting. Kepuasan datang dari ketekunan dan merapikan hidup selangkah demi selangkah.",
+    "Tahun yang menekankan hubungan dan keseimbangan. Kemitraan, kerja sama, dan keselarasan dengan orang lain menjadi pusat perhatianmu.",
+    "Tahun perubahan batin yang mendalam dan kejujuran emosional. Melepaskan yang lama membuka ruang bagi transformasi dan kedekatan yang lebih tulus.",
+    "Tahun untuk melebarkan cakrawala dan mengejar makna. Petualangan, perjalanan, belajar, dan keyakinan baru memberi semangat yang menyegarkan.",
+    "Tahun untuk fokus, tanggung jawab, dan membangun sesuatu yang bertahan lama. Disiplinmu kini menjadi fondasi pencapaian yang membanggakan.",
+    "Tahun untuk kebebasan, persahabatan, dan ide-ide segar. Terhubung dengan komunitas dan merancang masa depan terasa membebaskan sekaligus menginspirasi.",
+    "Tahun yang lembut, penuh intuisi dan kepekaan batin. Istirahat, seni, spiritualitas, dan welas asih menyentuh sisi terdalam dirimu."
    ]
   }
  }

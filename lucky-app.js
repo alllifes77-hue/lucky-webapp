@@ -1648,7 +1648,7 @@ function renderResults(data) {
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
    'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
-   'retro-panel','electional-panel','moonritual-panel','transit-panel'].forEach(id => {
+   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1741,6 +1741,8 @@ function renderResults(data) {
   renderAngelPanel(data);
   // 트렌드 코스믹 웨더 (오늘 날짜 기반, 전 사용자 공통). 천체계산 실패가 체인을 끊지 않도록 격리
   try { renderTransitPanel(data); } catch(e){}
+  try { renderSolarPanel(data); } catch(e){}
+  try { renderSaturnPanel(data); } catch(e){}
   try { renderRetroPanel(data); } catch(e){}
   try { renderElectionalPanel(data); } catch(e){}
   try { renderMoonRitualPanel(data); } catch(e){}
@@ -5694,6 +5696,90 @@ function renderTransitPanel(data){
   panel.style.cssText='background:linear-gradient(135deg,#312e81,#4338ca);border-radius:16px;padding:16px;margin:16px 0;color:#e0e7ff;';
   panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c7d2fe;margin-bottom:6px;text-transform:uppercase;">✨ ${escHtml(TR.title)}</div>
     <div style="font-size:11px;color:#a5b4fc;margin-bottom:11px;line-height:1.4;">${escHtml(TR.intro)}</div>${body}`;
+  _luxInsert(panel);
+}
+
+// ── T5) 새턴 리턴 추적기 (Trend Wave3) ───────────────────────
+function _saturnReturnInfo(data){
+  const A=_astro(); if(!A) return null;
+  let nd; try{ nd=new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,12,0)); }catch(e){ return null; }
+  const ns=_eclLon(A.Body.Saturn, nd); if(ns==null) return null;
+  const now=new Date(); const ageNow=(now-nd)/(365.25*86400000);
+  const which = ageNow < 44 ? 1 : 2; const targetAge = which===1 ? 29.5 : 59; const orb=5;
+  const startMs=nd.getTime()+(targetAge-2.6)*365.25*86400000, endMs=nd.getTime()+(targetAge+2.6)*365.25*86400000;
+  let firstIn=null,lastIn=null,exact=null,minD=999;
+  for(let ms=startMs; ms<=endMs; ms+=5*86400000){ const dt=new Date(ms); const s=_eclLon(A.Body.Saturn,dt); if(s==null)continue;
+    let diff=Math.abs(s-ns)%360; if(diff>180)diff=360-diff;
+    if(diff<=orb){ if(!firstIn)firstIn=dt; lastIn=dt; } if(diff<minD){ minD=diff; exact=dt; } }
+  if(!firstIn) return { which, status:'upcoming', progress:0, exact };
+  let status,progress;
+  if(now<firstIn){ status=(firstIn-now)<400*86400000?'approaching':'upcoming'; progress=0; }
+  else if(now>lastIn){ status='completed'; progress=100; }
+  else { status='active'; progress=Math.max(1,Math.min(99,Math.round((now-firstIn)/(lastIn-firstIn)*100))); }
+  return { which, status, progress, firstIn, lastIn, exact };
+}
+function renderSaturnPanel(data){
+  const old=document.getElementById('saturn-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.saturn) return;
+  const S=X.saturn; const info=_saturnReturnInfo(data); if(!info) return;
+  const fmt=(d)=>{ try{ return d?new Intl.DateTimeFormat(data.lang,{year:'numeric',month:'short'}).format(d):''; }catch(e){ return ''; } };
+  const statusTxt={upcoming:S.upcoming,approaching:S.approaching,active:S.active,completed:S.completed}[info.status]||'';
+  const statusCol={upcoming:'#94a3b8',approaching:'#d97706',active:'#7c3aed',completed:'#16a34a'}[info.status]||'#94a3b8';
+  const panel=document.createElement('div');
+  panel.id='saturn-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#1c1917,#44403c);border-radius:16px;padding:16px;margin:16px 0;color:#e7e5e4;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#d6d3d1;margin-bottom:6px;text-transform:uppercase;">♄ ${escHtml(S.title)}</div>
+    <div style="font-size:11px;color:#a8a29e;margin-bottom:11px;line-height:1.4;">${escHtml(S.intro)}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;gap:8px;">
+      <span style="font-size:13px;font-weight:800;color:#fafaf9;">${escHtml(info.which===1?S.return1:S.return2)}</span>
+      <span style="font-size:11px;font-weight:800;color:${statusCol};background:${statusCol}22;padding:2px 10px;border-radius:20px;">${escHtml(statusTxt)}</span></div>
+    ${info.firstIn?`<div style="margin-bottom:9px;"><div style="display:flex;justify-content:space-between;font-size:10px;color:#a8a29e;margin-bottom:3px;"><span>${escHtml(S.progressLabel)} ${info.progress}%</span><span>${fmt(info.firstIn)} ~ ${fmt(info.lastIn)}</span></div>
+      <div style="height:8px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${info.progress}%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:4px;"></div></div></div>`:''}
+    <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;font-size:12px;color:#e7e5e4;line-height:1.55;margin-bottom:8px;">${escHtml(S.theme)}</div>
+    <div style="font-size:11.5px;color:#d6d3d1;line-height:1.5;">💡 ${escHtml(S.advice)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── T6) 솔라 리턴 — 올해의 차트 (Trend Wave3) ────────────────
+function _solarReturnInfo(data){
+  const A=_astro(); if(!A) return null;
+  let nd; try{ nd=new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,12,0)); }catch(e){ return null; }
+  const natalSun=_eclLon('Sun', nd); if(natalSun==null) return null;
+  const now=new Date(); const m=(data.month||1), d=(data.day||1);
+  const thisYrB=new Date(Date.UTC(now.getUTCFullYear(), m-1, Math.max(1,d-6), 0,0));
+  const refStart = (new Date(Date.UTC(now.getUTCFullYear(), m-1, d, 12,0)) > now)
+    ? new Date(Date.UTC(now.getUTCFullYear()-1, m-1, Math.max(1,d-6), 0,0)) : thisYrB;
+  let srDate=null;
+  try{ if(A.SearchSunLongitude){ const t=A.SearchSunLongitude(natalSun, refStart, 14); srDate=t?(t.date||null):null; } }catch(e){}
+  if(!srDate) srDate=refStart;
+  const srMoon=_moonSignNow(srDate); const natalSunSign=Math.floor(natalSun/30);
+  return { srDate, srMoon, natalSunSign };
+}
+function renderSolarPanel(data){
+  const old=document.getElementById('solar-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.solar||!X.solar.moonThemes) return;
+  const SL=X.solar; const info=_solarReturnInfo(data); if(!info||info.srMoon==null) return;
+  const signs=(X.sunSign&&X.sunSign.signs)?X.sunSign.signs:null;
+  const sunName=signs?signs[info.natalSunSign].name:''; const moonName=signs?signs[info.srMoon].name:'';
+  const theme=SL.moonThemes[info.srMoon]||'';
+  const fmt=(d)=>{ try{ return d?new Intl.DateTimeFormat(data.lang,{year:'numeric',month:'short',day:'numeric'}).format(d):''; }catch(e){ return ''; } };
+  const panel=document.createElement('div');
+  panel.id='solar-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#fff7ed,#fed7aa);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c2410c;margin-bottom:6px;text-transform:uppercase;">🎂 ${escHtml(SL.title)}</div>
+    <div style="font-size:11px;color:#c2410c;margin-bottom:11px;line-height:1.4;">${escHtml(SL.intro)}</div>
+    <div style="display:flex;gap:9px;margin-bottom:11px;">
+      <div style="flex:1;background:rgba(255,255,255,.6);border-radius:12px;padding:10px 12px;">
+        <div style="font-size:9.5px;color:#9a3412;font-weight:700;text-transform:uppercase;">☉ ${escHtml(SL.coreLabel)}</div>
+        <div style="font-size:14px;font-weight:900;color:#7c2d12;margin-top:2px;">${escHtml(sunName)}</div></div>
+      <div style="flex:1;background:rgba(255,255,255,.6);border-radius:12px;padding:10px 12px;">
+        <div style="font-size:9.5px;color:#9a3412;font-weight:700;text-transform:uppercase;">☽ ${escHtml(SL.srMoonLabel)}</div>
+        <div style="font-size:14px;font-weight:900;color:#7c2d12;margin-top:2px;">${escHtml(moonName)}</div></div>
+    </div>
+    <div style="background:rgba(194,65,12,.08);border-radius:10px;padding:10px 12px;font-size:12px;color:#7c2d12;line-height:1.55;"><b>${escHtml(SL.yearThemeLabel)}</b> · ${escHtml(theme)}</div>
+    <div style="font-size:10px;color:#9a3412;margin-top:7px;line-height:1.4;">📅 ${fmt(info.srDate)} · ${escHtml(SL.validNote)}</div>`;
   _luxInsert(panel);
 }
 
