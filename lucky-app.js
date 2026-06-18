@@ -1648,7 +1648,7 @@ function renderResults(data) {
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
    'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
-   'retro-panel','electional-panel','moonritual-panel'].forEach(id => {
+   'retro-panel','electional-panel','moonritual-panel','transit-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1740,6 +1740,7 @@ function renderResults(data) {
   renderDreamPanel(data);
   renderAngelPanel(data);
   // 트렌드 코스믹 웨더 (오늘 날짜 기반, 전 사용자 공통). 천체계산 실패가 체인을 끊지 않도록 격리
+  try { renderTransitPanel(data); } catch(e){}
   try { renderRetroPanel(data); } catch(e){}
   try { renderElectionalPanel(data); } catch(e){}
   try { renderMoonRitualPanel(data); } catch(e){}
@@ -5648,6 +5649,51 @@ function renderMoonRitualPanel(data){
       <span style="font-size:10px;color:#a5b4fc;">🔢 ${escHtml(M.label369)} · ${escHtml(M.tip369)}</span>
       <button onclick="_saveMoonIntent()" style="background:rgba(196,181,253,.2);color:#ddd6fe;border:1px solid rgba(196,181,253,.4);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">💾 <span id="moon-intent-saved" style="display:none;">✓</span></button>
     </div>`;
+  _luxInsert(panel);
+}
+
+// ── T4) 오늘의 코스믹 웨더 — 개인 트랜짓 (Trend Wave2) ───────
+// 생일 행성 × 오늘 행성의 어스펙트(합/육각/사각/삼각/대립)로 개인화 데일리.
+function _planetLonsAt(date){
+  const A=_astro(); if(!A) return null;
+  const defs=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn'];
+  return defs.map(b=>_eclLon(b==='Sun'?'Sun':(b==='Moon'?'Moon':A.Body[b]), date));
+}
+function renderTransitPanel(data){
+  const old=document.getElementById('transit-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.transits||!X.transits.planets) return;
+  const TR=X.transits;
+  const bh=(data.birthHour!=null)?data.birthHour:12;
+  let natalDate; try{ natalDate=new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,bh,data.birthMinute||0)); }catch(e){ return; }
+  const natal=_planetLonsAt(natalDate), today=_planetLonsAt(new Date());
+  if(!natal||!today) return;
+  const ASP=[{a:0,k:'conjunction',tone:'intense',sym:'☌'},{a:60,k:'sextile',tone:'harmonious',sym:'⚹'},{a:90,k:'square',tone:'challenging',sym:'□'},{a:120,k:'trine',tone:'harmonious',sym:'△'},{a:180,k:'opposition',tone:'challenging',sym:'☍'}];
+  const orb=6, hits=[];
+  for(let t=0;t<7;t++){ for(let n=0;n<7;n++){
+    if(today[t]==null||natal[n]==null) continue;
+    let sep=Math.abs(today[t]-natal[n])%360; if(sep>180)sep=360-sep;
+    for(const asp of ASP){ const d=Math.abs(sep-asp.a); if(d<=orb) hits.push({t,n,asp,orb:d}); }
+  }}
+  hits.sort((a,b)=>a.orb-b.orb);
+  const seen={}, top=[];
+  for(const h of hits){ if(seen[h.t])continue; seen[h.t]=1; top.push(h); if(top.length>=3)break; }
+  const SYM=['☉','☽','☿','♀','♂','♃','♄'];
+  let body;
+  if(top.length){
+    body=top.map(h=>{ const tp=TR.planets[h.t], np=TR.planets[h.n]; const reading=tp[h.asp.tone]||'';
+      const tc=h.asp.tone==='harmonious'?'#22c55e':h.asp.tone==='challenging'?'#fbbf24':'#c4b5fd';
+      return `<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin-bottom:7px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#fff;margin-bottom:5px;flex-wrap:wrap;">${SYM[h.t]} ${escHtml(tp.name)} <span style="color:#a5b4fc;">${h.asp.sym}</span> ${SYM[h.n]} ${escHtml(np.name)}</div>
+        <div style="font-size:11.5px;color:#e0e7ff;line-height:1.55;">${escHtml(reading)}</div>
+        <div style="margin-top:5px;"><span style="font-size:9.5px;background:${tc}26;color:${tc};padding:2px 9px;border-radius:10px;">${escHtml(TR.aspectLabels[h.asp.k]||'')} · ${escHtml(TR.toneLabels[h.asp.tone]||'')} · ${escHtml(np.natalArea)}</span></div>
+      </div>`; }).join('');
+  } else body=`<div style="font-size:12px;color:#cbd5e1;line-height:1.55;">${escHtml(TR.noAspect)}</div>`;
+  const panel=document.createElement('div');
+  panel.id='transit-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#312e81,#4338ca);border-radius:16px;padding:16px;margin:16px 0;color:#e0e7ff;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c7d2fe;margin-bottom:6px;text-transform:uppercase;">✨ ${escHtml(TR.title)}</div>
+    <div style="font-size:11px;color:#a5b4fc;margin-bottom:11px;line-height:1.4;">${escHtml(TR.intro)}</div>${body}`;
   _luxInsert(panel);
 }
 

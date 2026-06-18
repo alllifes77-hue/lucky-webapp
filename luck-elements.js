@@ -1,6 +1,6 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드 Wave1(retro 역행·electional 길일·moonRitual 달위상의식).
-// 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON(아포스트로피 안전). 렌더는 lucky-app.js.
+// 기존 + 트렌드(retro·electional·moonRitual·transits 개인트랜짓).
+// 언어별 네이티브 생성 + 적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
   "lang": "ko",
@@ -1119,6 +1119,74 @@ window.LUX = {
      "name": "그믐달",
      "ritual": "다음 신월을 앞두고 충분히 쉬며, 고요 속에서 내면의 목소리에 가만히 귀 기울여 보세요.",
      "journal": "다음 한 달을 맞기 전, 내 마음이 진짜로 바라는 것은 무엇인가요?"
+    }
+   ]
+  },
+  "transits": {
+   "title": "오늘의 코스믹 웨더",
+   "intro": "오늘 하늘에서 움직이는 행성들이 당신의 출생 차트를 어떤 각도로 건드리는지, 지금 이 순간의 기류를 읽어 드릴게요.",
+   "noAspect": "오늘은 하늘의 행성들이 당신 차트와 큰 각도를 맺지 않아, 잔잔하고 평온한 흐름 속에서 자기만의 리듬을 지킬 수 있는 하루예요.",
+   "toneLabels": {
+    "harmonious": "조화",
+    "challenging": "도전",
+    "intense": "강렬"
+   },
+   "aspectLabels": {
+    "conjunction": "합",
+    "sextile": "육각",
+    "square": "사각",
+    "trine": "삼각",
+    "opposition": "대립"
+   },
+   "planets": [
+    {
+     "name": "태양",
+     "natalArea": "정체성·자아",
+     "harmonious": "오늘의 태양이 당신의 본래 자아를 부드럽게 비추며, 있는 그대로의 모습이 자연스럽게 빛나고 인정받기 좋은 기류가 흐릅니다.",
+     "challenging": "정체성이 살짝 시험대에 오르는 날이지만, 남의 기대 대신 진짜 나를 다시 확인하는 성장의 계기로 삼아 보세요.",
+     "intense": "태양 에너지가 당신의 자아 위에 강하게 겹쳐, 내가 누구인지에 대한 감각이 또렷하고 강렬하게 부각되는 하루예요."
+    },
+    {
+     "name": "달",
+     "natalArea": "감정·마음",
+     "harmonious": "오늘의 달이 당신의 마음결을 따뜻하게 어루만지며, 감정이 편안하게 흐르고 사람들과 정서적으로 깊이 통하기 좋은 날입니다.",
+     "challenging": "감정이 평소보다 예민하게 출렁일 수 있지만, 그 흔들림이 내 진짜 욕구가 뭔지 알려 주는 신호임을 기억해 주세요.",
+     "intense": "달 에너지가 당신의 감정 위에 진하게 내려앉아, 마음의 파도가 크고 또렷하게 느껴지는 감각적인 하루가 됩니다."
+    },
+    {
+     "name": "수성",
+     "natalArea": "소통·사고",
+     "harmonious": "오늘의 수성이 당신의 사고와 말에 가볍게 날개를 달아 주어, 대화가 술술 풀리고 아이디어가 매끄럽게 연결되는 흐름이에요.",
+     "challenging": "생각이 엉키거나 말이 오해를 부를 수 있는 날이지만, 한 번 더 천천히 다듬는 습관이 소통의 근력을 키워 줍니다.",
+     "intense": "수성 에너지가 당신의 사고 회로 위에 강하게 겹쳐, 머릿속이 빠르게 돌아가고 말하고 싶은 것이 또렷하게 솟아오릅니다."
+    },
+    {
+     "name": "금성",
+     "natalArea": "사랑·관계·돈",
+     "harmonious": "오늘의 금성이 당신의 관계와 미적 감각을 사르르 데워, 사랑도 돈도 부드럽게 끌려오고 매력이 자연스레 흐르는 날입니다.",
+     "challenging": "사랑이나 돈 문제에서 작은 긴장이 생길 수 있지만, 내가 진짜 무엇을 소중히 여기는지 가치관을 점검하는 좋은 기회예요.",
+     "intense": "금성 에너지가 당신의 사랑과 관계 영역 위에 진하게 포개져, 끌림과 욕망, 애정의 주제가 강렬하게 전면에 부각됩니다."
+    },
+    {
+     "name": "화성",
+     "natalArea": "의욕·행동",
+     "harmonious": "오늘의 화성이 당신의 추진력에 산뜻한 부스터를 달아 주어, 미뤄 둔 일에 시원하게 시동을 걸기 딱 좋은 활력의 흐름이에요.",
+     "challenging": "의욕이 과열되어 조급함이나 충돌로 번질 수 있는 날이니, 그 뜨거운 에너지를 운동이나 집중력으로 영리하게 풀어 주세요.",
+     "intense": "화성 에너지가 당신의 행동력 위에 강하게 겹쳐, 하고 싶은 충동과 승부욕이 또렷하고 뜨겁게 끓어오르는 하루입니다."
+    },
+    {
+     "name": "목성",
+     "natalArea": "행운·확장",
+     "harmonious": "오늘의 목성이 당신의 가능성을 넉넉하게 넓혀 주어, 좋은 기회와 인연이 자연스럽게 다가오고 시야가 한층 트이는 날이에요.",
+     "challenging": "확장의 에너지가 과욕이나 무리수로 흐를 수 있으니, 욕심의 균형을 잡으면 오히려 더 단단한 성장으로 이어집니다.",
+     "intense": "목성 에너지가 당신의 행운과 확장 영역 위에 크게 겹쳐, 더 넓은 세계로 뻗어 가고 싶은 욕구가 강렬하게 차오릅니다."
+    },
+    {
+     "name": "토성",
+     "natalArea": "책임·시련",
+     "harmonious": "오늘의 토성이 당신의 노력에 든든한 토대를 깔아 주어, 꾸준히 쌓아 온 것들이 차곡차곡 형태를 갖추기 좋은 안정된 흐름이에요.",
+     "challenging": "책임의 무게가 묵직하게 느껴지는 날이지만, 지금의 인내가 미래의 나를 단단하게 세워 주는 값진 투자임을 믿어 주세요.",
+     "intense": "토성 에너지가 당신의 책임과 한계 영역 위에 진하게 내려앉아, 현실과 의무의 주제가 또렷하고 강렬하게 부각되는 하루입니다."
     }
    ]
   }
@@ -2242,6 +2310,74 @@ window.LUX = {
      "journal": "What do my mind and body most need in order to rest and renew?"
     }
    ]
+  },
+  "transits": {
+   "title": "Today's Cosmic Weather",
+   "intro": "Here's how today's moving sky is brushing up against your natal chart and coloring the hours ahead.",
+   "noAspect": "The sky is quiet against your chart today, so let this calm be your permission to simply move at your own pace.",
+   "toneLabels": {
+    "harmonious": "Harmonious",
+    "challenging": "Challenging",
+    "intense": "Intense"
+   },
+   "aspectLabels": {
+    "conjunction": "Conjunction",
+    "sextile": "Sextile",
+    "square": "Square",
+    "trine": "Trine",
+    "opposition": "Opposition"
+   },
+   "planets": [
+    {
+     "name": "Sun",
+     "natalArea": "identity and self",
+     "harmonious": "Today's Sun warms your sense of self with an easy glow, so confidence and vitality flow without you having to force a thing.",
+     "challenging": "The Sun puts a little pressure on your identity now, nudging you to prove who you are — meet it as a chance to grow into yourself, not a verdict on your worth.",
+     "intense": "The Sun lands squarely on your core today, spotlighting your identity and pulling everything back to the question of who you really are."
+    },
+    {
+     "name": "Moon",
+     "natalArea": "emotions and inner world",
+     "harmonious": "The Moon flows gently across your feelings today, making your inner world easy to read and your emotions simple to share with the people around you.",
+     "challenging": "The Moon stirs your emotions a touch, surfacing moods that ask for tending — feel them fully, then let them move through you and pass.",
+     "intense": "The Moon merges with your emotional center today, so feelings run close to the surface and your inner weather becomes the whole story."
+    },
+    {
+     "name": "Mercury",
+     "natalArea": "communication and thinking",
+     "harmonious": "Mercury smooths your thinking and your speech today, so ideas arrive cleanly and conversations land exactly where you want them to go.",
+     "challenging": "Mercury muddles the signal a little, so a crossed wire or a rushed word may test you — slow down, ask once more, and the misunderstanding clears.",
+     "intense": "Mercury fuses with your mind today, flooding you with thoughts and words; your focus turns sharp, fast, and almost impossible to switch off."
+    },
+    {
+     "name": "Venus",
+     "natalArea": "love, relationships, money",
+     "harmonious": "Venus sweetens your relationships and your resources today, so affection comes easily and small pleasures feel especially worth savoring right now.",
+     "challenging": "Venus tests your bonds and your budget a bit, asking what you truly value — a little friction here can recalibrate what really matters to you.",
+     "intense": "Venus lands directly on your heart today, magnifying love, beauty, and desire until connection and the things you cherish fill the whole frame."
+    },
+    {
+     "name": "Mars",
+     "natalArea": "drive and action",
+     "harmonious": "Mars feeds your drive with clean momentum today, so you can act decisively and pour energy into what you want without burning out.",
+     "challenging": "Mars cranks up the friction now, so frustration or impatience may flare — channel that heat into focused effort rather than letting it scatter.",
+     "intense": "Mars ignites your will today, turning the volume on desire and action all the way up; you move fast, bold, and hungry to begin."
+    },
+    {
+     "name": "Jupiter",
+     "natalArea": "luck and expansion",
+     "harmonious": "Jupiter opens a door today, so opportunity, optimism, and a little luck flow your way, and saying yes feels naturally right.",
+     "challenging": "Jupiter tempts you to overreach now, so watch for too much of a good thing — the growth is real, but pace it with some grounded judgment.",
+     "intense": "Jupiter amplifies everything today, so possibility, faith, and your appetite for more swell large; aim that abundance with intention, not impulse."
+    },
+    {
+     "name": "Saturn",
+     "natalArea": "responsibility and trials",
+     "harmonious": "Saturn lends you steady structure today, so discipline pays off and patient, careful work quietly builds something that lasts.",
+     "challenging": "Saturn sets a test or a limit now, so a duty may feel heavy — this is the resistance that strengthens you, not a wall you can't get past.",
+     "intense": "Saturn settles firmly onto your chart today, making responsibility, maturity, and the long game impossible to ignore; commit to the work and you grow."
+    }
+   ]
   }
  },
  "ja": {
@@ -3361,6 +3497,74 @@ window.LUX = {
      "name": "晦の月",
      "ritual": "灯りを落として深く呼吸し、心を休めながら、次のサイクルへ向けて静かに自分を整えましょう。",
      "journal": "新しい始まりを迎える前に、私が癒やし、整えておきたい部分はどこでしょうか。"
+    }
+   ]
+  },
+  "transits": {
+   "title": "今日のコズミック・ウェザー",
+   "intro": "今日、空を巡る星々があなたの出生図にそっと触れ、一日の心模様を静かに描き出します。",
+   "noAspect": "今日は大きな角度が結ばれず、空はおだやかに澄み、あなたの内側にも凪のような落ち着きが広がっています。",
+   "toneLabels": {
+    "harmonious": "調和",
+    "challenging": "挑戦",
+    "intense": "強烈"
+   },
+   "aspectLabels": {
+    "conjunction": "合",
+    "sextile": "六分",
+    "square": "矩",
+    "trine": "三分",
+    "opposition": "衝"
+   },
+   "planets": [
+    {
+     "name": "太陽",
+     "natalArea": "アイデンティティ・自我",
+     "harmonious": "あなたという光が無理なく輝き、自分らしさが周囲に伝わって、進む道に静かな自信が満ちていく一日です。",
+     "challenging": "自分の在り方が試されますが、その緊張はあなたの核をより鮮明に磨き、本当の願いを照らし出すための光になります。",
+     "intense": "自我とアイデンティティの主題が強く前面に立ち、「私は何者か」という問いが一日の中心で熱を帯びていきます。"
+    },
+    {
+     "name": "月",
+     "natalArea": "感情・心",
+     "harmonious": "感情がやわらかく流れ、心が求めるものに素直になれて、安心感に包まれながら一日を過ごせるでしょう。",
+     "challenging": "気分の揺れや内なるざわめきが訪れますが、それはあなたが本当に欲しているものへ近づくための、心からの合図です。",
+     "intense": "感情と心の主題が色濃く立ち上がり、内側の波がそのまま表に映り出すような、感受性の高い一日になります。"
+    },
+    {
+     "name": "水星",
+     "natalArea": "コミュニケーション・思考",
+     "harmonious": "言葉と思考が滑らかに巡り、伝えたいことが自然に届いて、会話や学びがいつもより心地よく進みます。",
+     "challenging": "考えがもつれたり言葉が噛み合わない場面もありますが、丁寧に解きほぐすほど理解はより深く確かになっていきます。",
+     "intense": "コミュニケーションと思考の主題が鋭く際立ち、頭の中が活発に動いて、言葉とアイデアが一日を満たしていきます。"
+    },
+    {
+     "name": "金星",
+     "natalArea": "愛・人間関係・金運",
+     "harmonious": "愛や人とのつながりがやわらかく花ひらき、美しいものや豊かさへの感性が満たされ、心がほどけていく一日です。",
+     "challenging": "関係やお金の価値観が問われる場面もありますが、それは本当に大切にしたいものを見極めるためのやさしい問いかけです。",
+     "intense": "愛・人間関係・金運の主題が華やかに高まり、心惹かれるものや誰かへの想いが一日の中で色濃く膨らんでいきます。"
+    },
+    {
+     "name": "火星",
+     "natalArea": "意欲・行動",
+     "harmonious": "意欲が無理なく湧き上がり、行動に迷いがなくなって、やりたいことへまっすぐ踏み出せる活力に満ちた一日です。",
+     "challenging": "苛立ちや衝突の気配を感じる場面もありますが、その熱をうまく向ければ、あなたを前へ押し出す力に変わります。",
+     "intense": "意欲と行動の主題が激しく燃え上がり、内なるエネルギーが高まって、動き出さずにはいられない一日になります。"
+    },
+    {
+     "name": "木星",
+     "natalArea": "幸運・拡大",
+     "harmonious": "幸運の風がやわらかく吹き、視野や可能性が自然に広がって、寛大な気持ちでチャンスを受け取れる一日です。",
+     "challenging": "欲張りすぎや見込み違いに気づかされる場面もありますが、それは成長を地に足のついたものへ導くための学びです。",
+     "intense": "幸運と拡大の主題が大きく際立ち、世界が広がる感覚や前向きな高揚感が、一日をのびやかに彩っていきます。"
+    },
+    {
+     "name": "土星",
+     "natalArea": "責任・試練",
+     "harmonious": "責任や努力が静かに実を結び、地道な積み重ねが確かな形になって、落ち着いた手応えを感じられる一日です。",
+     "challenging": "限界や課題に向き合う場面が訪れますが、その重みはあなたの土台をより強く堅固に築き上げてくれます。",
+     "intense": "責任と試練の主題が重く立ち上がり、為すべきことの重さと、それを引き受ける覚悟が一日の中心を占めます。"
     }
    ]
   }
@@ -4484,6 +4688,74 @@ window.LUX = {
      "journal": "Was möchte ich vor dem nächsten Neumond endgültig loslassen?"
     }
    ]
+  },
+  "transits": {
+   "title": "Dein kosmisches Wetter heute",
+   "intro": "Heute zeigt der Himmel, wie die wandernden Planeten dein Geburtsbild berühren und welche Tendenzen sich dabei abzeichnen.",
+   "noAspect": "Heute bilden die Planeten keine markanten Winkel zu deinem Geburtsbild, sodass eine ruhige, ausgeglichene Grundstimmung überwiegt.",
+   "toneLabels": {
+    "harmonious": "Harmonie",
+    "challenging": "Herausforderung",
+    "intense": "Intensität"
+   },
+   "aspectLabels": {
+    "conjunction": "Konjunktion",
+    "sextile": "Sextil",
+    "square": "Quadrat",
+    "trine": "Trigon",
+    "opposition": "Opposition"
+   },
+   "planets": [
+    {
+     "name": "Sonne",
+     "natalArea": "Identität und Selbst",
+     "harmonious": "Deine Identität fühlt sich heute im Einklang an, und du kannst dich mit natürlicher Selbstverständlichkeit zeigen, ganz ohne dich beweisen zu müssen.",
+     "challenging": "Dein Selbstbild wird heute leicht auf die Probe gestellt, doch genau diese Reibung lädt dich ein, klarer zu erkennen, wer du wirklich bist.",
+     "intense": "Das Thema deiner Identität rückt heute stark in den Mittelpunkt, und alle Aufmerksamkeit richtet sich auf das, was dich im Kern ausmacht."
+    },
+    {
+     "name": "Mond",
+     "natalArea": "Gefühle und Gemüt",
+     "harmonious": "Deine Gefühle fließen heute leicht und ungehindert, sodass du dich emotional getragen fühlst und anderen offen begegnen kannst.",
+     "challenging": "Deine Stimmung schwankt heute spürbarer als sonst, was dir die Chance gibt, deine inneren Bedürfnisse ehrlicher wahrzunehmen.",
+     "intense": "Dein emotionales Erleben wird heute besonders kräftig, und das, was dich innerlich bewegt, drängt deutlich an die Oberfläche."
+    },
+    {
+     "name": "Merkur",
+     "natalArea": "Kommunikation und Denken",
+     "harmonious": "Deine Gedanken ordnen sich heute mühelos, und Gespräche gelingen mit einer Leichtigkeit, die Verständigung fast von selbst entstehen lässt.",
+     "challenging": "Im Austausch entstehen heute leicht Missverständnisse, doch das schärft dein Gespür dafür, genauer hinzuhören und klarer zu formulieren.",
+     "intense": "Dein Denken und Reden stehen heute stark im Vordergrund, und der Drang, dich mitzuteilen oder Antworten zu finden, wird auffallend lebhaft."
+    },
+    {
+     "name": "Venus",
+     "natalArea": "Liebe, Beziehung und Geld",
+     "harmonious": "Begegnungen und Zuneigung verlaufen heute weich und einnehmend, und auch in Geldfragen begünstigt eine entspannte Stimmung angenehme Entscheidungen.",
+     "challenging": "In Beziehung oder Finanzen zeigt sich heute eine leichte Spannung, die dich einlädt, deine wahren Werte und Wünsche neu zu prüfen.",
+     "intense": "Themen rund um Liebe, Nähe und Geld treten heute kraftvoll hervor und verlangen deine ganze Hingabe und Aufmerksamkeit."
+    },
+    {
+     "name": "Mars",
+     "natalArea": "Antrieb und Handeln",
+     "harmonious": "Deine Tatkraft fließt heute geschmeidig, und du kannst Vorhaben mit klarer Energie angehen, ohne dich dabei zu verausgaben.",
+     "challenging": "Dein Antrieb stößt heute leichter an Widerstände, doch diese Reibung kann dir zeigen, wofür es sich wirklich lohnt, deine Kraft einzusetzen.",
+     "intense": "Dein Tatendrang ist heute besonders ausgeprägt, und der Impuls, etwas in Bewegung zu setzen, prägt deinen ganzen Tag."
+    },
+    {
+     "name": "Jupiter",
+     "natalArea": "Glück und Wachstum",
+     "harmonious": "Eine wohlwollende Tendenz öffnet heute Türen, und du spürst, wie sich Möglichkeiten ganz natürlich erweitern und Vertrauen leichter fällt.",
+     "challenging": "Die Lust auf mehr könnte dich heute über das gesunde Maß hinaustragen, was dich einlädt, Wachstum mit Augenmaß zu gestalten.",
+     "intense": "Themen von Fülle, Sinn und Erweiterung rücken heute stark in den Fokus und färben deinen Tag mit einem Gefühl von Aufbruch."
+    },
+    {
+     "name": "Saturn",
+     "natalArea": "Verantwortung und Prüfung",
+     "harmonious": "Struktur und Geduld arbeiten heute für dich, und du kannst mit ruhiger Beständigkeit etwas Tragfähiges aufbauen.",
+     "challenging": "Verantwortung oder Grenzen machen sich heute deutlicher bemerkbar, doch das stärkt langfristig deine Reife und Standfestigkeit.",
+     "intense": "Fragen von Pflicht, Ordnung und Durchhalten rücken heute mit Nachdruck in den Vordergrund und fordern eine ernsthafte Auseinandersetzung von dir."
+    }
+   ]
   }
  },
  "fr": {
@@ -5603,6 +5875,74 @@ window.LUX = {
      "name": "Lune balsamique",
      "ritual": "Accordez-vous du repos et un moment de silence pour faire le bilan avant la prochaine nouvelle lune.",
      "journal": "Que m'a appris ce cycle, et de quel repos ai-je besoin avant de recommencer ?"
+    }
+   ]
+  },
+  "transits": {
+   "title": "La météo cosmique du jour",
+   "intro": "Voici comment le ciel d'aujourd'hui vient effleurer votre thème natal et colorer la tonalité de votre journée.",
+   "noAspect": "Aucun angle majeur ne se forme aujourd'hui : le ciel reste calme et vous laisse avancer à votre propre rythme, en toute sérénité.",
+   "toneLabels": {
+    "harmonious": "Harmonie",
+    "challenging": "Défi",
+    "intense": "Intensité"
+   },
+   "aspectLabels": {
+    "conjunction": "Conjonction",
+    "sextile": "Sextile",
+    "square": "Carré",
+    "trine": "Trigone",
+    "opposition": "Opposition"
+   },
+   "planets": [
+    {
+     "name": "Soleil",
+     "natalArea": "identité et affirmation de soi",
+     "harmonious": "Le Soleil éclaire en douceur votre identité aujourd'hui : vous vous sentez aligné, et votre présence rayonne sans le moindre effort.",
+     "challenging": "Le Soleil met votre image à l'épreuve et vous invite à clarifier qui vous êtes vraiment, au-delà du regard des autres.",
+     "intense": "Le Soleil se superpose à votre cœur natal : votre élan à être pleinement vous-même se trouve fortement amplifié aujourd'hui."
+    },
+    {
+     "name": "Lune",
+     "natalArea": "émotions et monde intérieur",
+     "harmonious": "La Lune fait circuler vos émotions avec fluidité : vous accueillez vos ressentis sans résistance et trouvez naturellement votre équilibre intérieur.",
+     "challenging": "La Lune ravive une sensibilité plus vive ; cette marée intérieure vous montre ce que votre cœur réclame réellement en ce moment.",
+     "intense": "La Lune épouse votre cœur natal et fait monter l'émotion : votre vie intérieure occupe aujourd'hui le devant de la scène."
+    },
+    {
+     "name": "Mercure",
+     "natalArea": "communication et pensée",
+     "harmonious": "Mercure fluidifie vos idées et vos échanges : les mots viennent aisément et vos conversations s'enchaînent avec une belle clarté.",
+     "challenging": "Mercure brouille un peu les messages et tend les discussions ; ralentir et reformuler transforme ce frottement en réflexion plus juste.",
+     "intense": "Mercure se fond dans votre mental natal : votre besoin de penser, d'écrire et d'échanger devient particulièrement vif aujourd'hui."
+    },
+    {
+     "name": "Vénus",
+     "natalArea": "amour, liens et argent",
+     "harmonious": "Vénus adoucit vos relations et votre rapport au plaisir : la tendresse circule, et le beau comme l'argent semblent venir à vous.",
+     "challenging": "Vénus questionne vos liens et vos valeurs ; cette friction révèle ce qui compte vraiment pour vous, en amour comme en matière d'argent.",
+     "intense": "Vénus rejoint votre cœur affectif natal : le désir d'aimer, de plaire et de savourer prend aujourd'hui toute la place."
+    },
+    {
+     "name": "Mars",
+     "natalArea": "élan et passage à l'action",
+     "harmonious": "Mars alimente votre énergie en douceur : vous agissez avec assurance, et chaque initiative trouve sa juste impulsion sans vous épuiser.",
+     "challenging": "Mars attise l'impatience et la tension ; canalisée vers un objectif précis, cette ardeur devient un puissant moteur de progression.",
+     "intense": "Mars se greffe sur votre force natale : votre désir d'agir, de foncer et de conquérir s'embrase fortement aujourd'hui."
+    },
+    {
+     "name": "Jupiter",
+     "natalArea": "chance et expansion",
+     "harmonious": "Jupiter ouvre des portes avec aisance : la confiance grandit, les occasions se présentent et tout semble enclin à s'élargir favorablement.",
+     "challenging": "Jupiter pousse à l'excès ou à la promesse trop large ; mesurer votre élan transforme cette tension en croissance vraiment durable.",
+     "intense": "Jupiter rejoint votre point d'expansion natal : votre soif de grandir, d'apprendre et de viser plus haut déborde aujourd'hui d'élan."
+    },
+    {
+     "name": "Saturne",
+     "natalArea": "responsabilité et maturité",
+     "harmonious": "Saturne pose un cadre rassurant : votre discipline porte ses fruits et vos efforts patients commencent enfin à prendre une forme concrète.",
+     "challenging": "Saturne met une responsabilité à l'épreuve ; cette contrainte n'est pas un mur, mais une leçon qui solidifie ce que vous bâtissez.",
+     "intense": "Saturne s'ancre dans votre structure natale : les thèmes du devoir, de la limite et de l'engagement deviennent aujourd'hui incontournables."
     }
    ]
   }
@@ -6726,6 +7066,74 @@ window.LUX = {
      "journal": "¿Qué necesito sanar y perdonar antes de comenzar de nuevo?"
     }
    ]
+  },
+  "transits": {
+   "title": "El clima cósmico de hoy",
+   "intro": "Hoy el cielo en movimiento roza los planetas de tu carta natal y tiñe el día con su propio matiz.",
+   "noAspect": "Hoy ningún astro forma un ángulo marcado con tu carta, así que el cielo te regala una calma serena para respirar a tu ritmo.",
+   "toneLabels": {
+    "harmonious": "Armonía",
+    "challenging": "Desafío",
+    "intense": "Intenso"
+   },
+   "aspectLabels": {
+    "conjunction": "Conjunción",
+    "sextile": "Sextil",
+    "square": "Cuadratura",
+    "trine": "Trígono",
+    "opposition": "Oposición"
+   },
+   "planets": [
+    {
+     "name": "Sol",
+     "natalArea": "identidad y esencia",
+     "harmonious": "El Sol ilumina con suavidad tu identidad y hoy te sientes en paz con quien eres, brillando sin esfuerzo ni necesidad de demostrar nada.",
+     "challenging": "El Sol pone a prueba tu sentido de ti mismo: algo tensa tu ego, pero es la chispa que te invita a definir mejor lo que de verdad eres.",
+     "intense": "El Sol se funde con tu esencia y todo el día gira en torno a tu identidad, como si el universo enfocara su luz directamente sobre ti."
+    },
+    {
+     "name": "Luna",
+     "natalArea": "emociones y mundo interior",
+     "harmonious": "La Luna fluye amable por tu mundo interior y tus emociones encuentran un cauce sereno, regalándote una sensación cálida de estar en casa contigo.",
+     "challenging": "La Luna remueve tus emociones y algún sentimiento pide atención; no lo temas, es solo tu corazón señalando lo que necesita cuidado hoy.",
+     "intense": "La Luna abraza tu mundo interior y las emociones se vuelven el centro del día, intensas y vívidas como una marea que sube sin avisar."
+    },
+    {
+     "name": "Mercurio",
+     "natalArea": "mente y comunicación",
+     "harmonious": "Mercurio agiliza tu mente y hoy las palabras salen claras: conversaciones, ideas y mensajes fluyen con una facilidad que te sorprende gratamente.",
+     "challenging": "Mercurio enreda un poco la comunicación y algún malentendido asoma; respira antes de hablar y la tensión se transformará en una claridad mayor.",
+     "intense": "Mercurio enciende tu mente y todo el día vibra de pensamiento y palabra, con ideas que llegan rápidas y muchas ganas de contarlo todo."
+    },
+    {
+     "name": "Venus",
+     "natalArea": "amor, vínculos y dinero",
+     "harmonious": "Venus endulza tus vínculos y hoy el amor, la belleza y el placer fluyen sin trabas, acercándote con ternura a quienes y a lo que valoras.",
+     "challenging": "Venus tensa el terreno del afecto o el dinero y pone a prueba lo que aprecias; es una invitación a revisar qué relaciones merecen tu energía.",
+     "intense": "Venus se posa de lleno sobre tu corazón y el amor, el deseo y la belleza se vuelven los protagonistas absolutos de tu jornada."
+    },
+    {
+     "name": "Marte",
+     "natalArea": "impulso y acción",
+     "harmonious": "Marte impulsa tu energía con fluidez y hoy actúas con un coraje sereno: el cuerpo responde, las metas avanzan y todo se mueve a tu favor.",
+     "challenging": "Marte aviva la impaciencia y algo enciende tu ánimo; canaliza esa fuerza en algo concreto y la fricción se convertirá en un empuje útil.",
+     "intense": "Marte se concentra en tu impulso y el deseo de actuar arde fuerte hoy, llenándote de una energía que pide movimiento y decisión."
+    },
+    {
+     "name": "Júpiter",
+     "natalArea": "suerte y expansión",
+     "harmonious": "Júpiter abre puertas con generosidad y hoy la suerte sopla a tu favor: aparecen oportunidades, optimismo y ganas de crecer y abrir horizontes.",
+     "challenging": "Júpiter tienta el exceso y te invita a no abarcar de más; la lección de hoy es expandirte con medida y confiar sin desbordarte.",
+     "intense": "Júpiter amplifica todo lo que toca y la expansión se vuelve el gran tema del día, con un horizonte que se ensancha ante tus ojos."
+    },
+    {
+     "name": "Saturno",
+     "natalArea": "responsabilidad y madurez",
+     "harmonious": "Saturno te da una estructura amable y hoy la disciplina rinde frutos: avanzas con paso firme, construyendo algo sólido que perdura en el tiempo.",
+     "challenging": "Saturno aprieta con sus límites y alguna responsabilidad pesa; tómalo como un maestro exigente que forja tu fortaleza y te hace madurar.",
+     "intense": "Saturno se asienta con fuerza sobre tu sentido del deber y el día se vuelve serio y formativo, pidiéndote compromiso y una madurez plena."
+    }
+   ]
   }
  },
  "pt": {
@@ -7845,6 +8253,74 @@ window.LUX = {
      "name": "Lua Minguante",
      "ritual": "Descanse, medite em silêncio e recolha-se para integrar as lições antes do próximo recomeço.",
      "journal": "Que aprendizados deste ciclo eu levo comigo e como quero entrar renovada no próximo?"
+    }
+   ]
+  },
+  "transits": {
+   "title": "Clima Cósmico de Hoje",
+   "intro": "Hoje o céu em movimento toca os planetas do seu mapa natal e revela onde a vida pede a sua atenção.",
+   "noAspect": "Hoje nenhum ângulo forte se forma com o seu mapa, então o clima cósmico está calmo e você pode seguir no seu próprio ritmo.",
+   "toneLabels": {
+    "harmonious": "Harmonia",
+    "challenging": "Desafio",
+    "intense": "Intensidade"
+   },
+   "aspectLabels": {
+    "conjunction": "Conjunção",
+    "sextile": "Sextil",
+    "square": "Quadratura",
+    "trine": "Trígono",
+    "opposition": "Oposição"
+   },
+   "planets": [
+    {
+     "name": "Sol",
+     "natalArea": "identidade e essência",
+     "harmonious": "Sua identidade flui com leveza hoje, e você se sente à vontade para brilhar e ser exatamente quem é, sem esforço.",
+     "challenging": "Algo testa a sua autoconfiança hoje, mas é justamente esse atrito que mostra com mais clareza quem você quer se tornar.",
+     "intense": "Sua essência fica em destaque total hoje, com o Sol acendendo um foco intenso sobre quem você realmente é e deseja ser."
+    },
+    {
+     "name": "Lua",
+     "natalArea": "emoções e mundo interior",
+     "harmonious": "Suas emoções correm tranquilas hoje, e há uma sensação de aconchego que torna fácil cuidar de si e de quem você ama.",
+     "challenging": "Os sentimentos pesam um pouco mais hoje, mas escutar essa onda interna ensina algo valioso sobre as suas reais necessidades.",
+     "intense": "Seu mundo emocional vibra intensamente hoje, e a Lua amplifica cada sentimento, pedindo presença e gentileza consigo mesmo."
+    },
+    {
+     "name": "Mercúrio",
+     "natalArea": "comunicação e pensamento",
+     "harmonious": "As ideias fluem com clareza hoje, as conversas rendem e é um ótimo momento para escrever, combinar planos e se expressar.",
+     "challenging": "A mente acelera e podem surgir ruídos na comunicação, mas revisar com calma transforma o mal-entendido em aprendizado.",
+     "intense": "Seus pensamentos ganham força total hoje, e Mercúrio coloca a mente e as palavras no centro de tudo o que você vive."
+    },
+    {
+     "name": "Vênus",
+     "natalArea": "amor, relações e dinheiro",
+     "harmonious": "O afeto circula com facilidade hoje, os encontros ficam mais doces e até as questões de dinheiro pedem prazer e equilíbrio.",
+     "challenging": "Relações e finanças pedem ajuste hoje, mas esse pequeno teste revela o que você realmente valoriza e deseja por perto.",
+     "intense": "O tema do amor e do valor pessoal pulsa forte hoje, e Vênus acende desejos, vínculos e aquilo que faz o seu coração acelerar."
+    },
+    {
+     "name": "Marte",
+     "natalArea": "vontade e ação",
+     "harmonious": "Sua energia para agir flui solta hoje, e dá vontade de tomar a iniciativa, mover o corpo e fazer as coisas acontecerem.",
+     "challenging": "A impaciência pode surgir hoje, mas canalizar esse impulso com foco transforma a tensão em coragem e ação consciente.",
+     "intense": "Sua força de vontade fica em alta hoje, e Marte acende o motor da ação, pedindo que você direcione essa potência com clareza."
+    },
+    {
+     "name": "Júpiter",
+     "natalArea": "sorte e expansão",
+     "harmonious": "Portas se abrem com naturalidade hoje, e há um clima de otimismo e oportunidade que convida você a apostar no que cresce.",
+     "challenging": "O entusiasmo pode levar você a exagerar hoje, mas medir os passos garante que essa expansão venha sobre bases firmes.",
+     "intense": "A sorte e o desejo de crescer ficam em foco total hoje, e Júpiter amplia seus horizontes, pedindo visão grande e fé no caminho."
+    },
+    {
+     "name": "Saturno",
+     "natalArea": "responsabilidade e maturidade",
+     "harmonious": "A disciplina flui sem peso hoje, e é um bom momento para organizar, assumir compromissos e construir algo que dure de verdade.",
+     "challenging": "Uma cobrança ou um limite aparece hoje, mas encarar essa responsabilidade com paciência fortalece a sua estrutura e maturidade.",
+     "intense": "O tema do dever e do amadurecimento fica forte hoje, e Saturno chama você para o sério, mostrando onde vale a pena firmar suas bases."
     }
    ]
   }
@@ -8968,6 +9444,74 @@ window.LUX = {
      "journal": "Di quale riposo e cura ha bisogno la mia anima ora?"
     }
    ]
+  },
+  "transits": {
+   "title": "Il Meteo Cosmico di Oggi",
+   "intro": "Oggi i pianeti in transito sfiorano il tuo cielo natale e accendono temi precisi nelle tue giornate.",
+   "noAspect": "Oggi nessun angolo importante tocca la tua carta: il cielo respira piano e ti lascia uno spazio sereno per ascoltarti.",
+   "toneLabels": {
+    "harmonious": "Armonia",
+    "challenging": "Sfida",
+    "intense": "Intensità"
+   },
+   "aspectLabels": {
+    "conjunction": "Congiunzione",
+    "sextile": "Sestile",
+    "square": "Quadratura",
+    "trine": "Trigono",
+    "opposition": "Opposizione"
+   },
+   "planets": [
+    {
+     "name": "Sole",
+     "natalArea": "identità e sé",
+     "harmonious": "La tua luce trova oggi spazio per brillare con naturalezza: ti senti più te stesso e gli altri lo riconoscono senza sforzo.",
+     "challenging": "Qualcosa mette alla prova la tua immagine, ma è l'occasione per capire chi sei davvero, al di là dell'approvazione altrui.",
+     "intense": "Il tema dell'identità si accende con forza: oggi ogni scelta sembra parlare di chi vuoi diventare."
+    },
+    {
+     "name": "Luna",
+     "natalArea": "emozioni e cuore",
+     "harmonious": "Le tue emozioni scorrono limpide e in pace, e ti riesce facile sentirti a casa dentro di te e accanto a chi ami.",
+     "challenging": "Il tuo mondo interiore chiede attenzione e qualche umore si fa sentire: accoglilo come un messaggio, non come un nemico da combattere.",
+     "intense": "Il sentire diventa protagonista assoluto: oggi le emozioni arrivano vivide e ti chiedono solo di essere ascoltate."
+    },
+    {
+     "name": "Mercurio",
+     "natalArea": "mente e parola",
+     "harmonious": "Le idee si allineano con chiarezza e le parole arrivano giuste: è un buon giorno per dire ciò che pensi e farti capire.",
+     "challenging": "La comunicazione si ingarbuglia un po', ma rallentare e ripetere ti aiuta a trasformare il malinteso in vera comprensione.",
+     "intense": "La mente lavora a pieno regime e i pensieri corrono: oggi tutto passa attraverso ciò che dici, leggi e scrivi."
+    },
+    {
+     "name": "Venere",
+     "natalArea": "amore e valori",
+     "harmonious": "Affetti, bellezza e denaro fluiscono dolcemente: ti senti più aperto al piacere e a ricevere ciò che ti fa stare bene.",
+     "challenging": "Una relazione o una spesa ti mette davanti a ciò che conta davvero per te: una piccola frizione che chiarisce i tuoi valori.",
+     "intense": "Il tema dell'amore e del desiderio si fa centrale: oggi cuore e bellezza chiedono spazio e non passano inosservati."
+    },
+    {
+     "name": "Marte",
+     "natalArea": "energia e azione",
+     "harmonious": "La tua spinta ad agire è viva e ben canalizzata: muoviti, inizia, osa, perché oggi l'iniziativa ti premia.",
+     "challenging": "Qualcosa accende impazienza o attrito, ma è energia preziosa: indirizzala su un obiettivo invece che contro un ostacolo.",
+     "intense": "La voglia di fare divampa con forza: oggi l'azione e il coraggio sono il filo che attraversa ogni cosa."
+    },
+    {
+     "name": "Giove",
+     "natalArea": "fortuna ed espansione",
+     "harmonious": "Si apre un respiro di fiducia e opportunità: dici sì più facilmente e il mondo sembra venirti incontro con generosità.",
+     "challenging": "L'entusiasmo rischia di farti esagerare: è un invito gentile a sognare in grande senza perdere la misura delle cose.",
+     "intense": "Il tema della crescita esplode: oggi tutto sembra più grande e ti chiama ad allargare i tuoi orizzonti."
+    },
+    {
+     "name": "Saturno",
+     "natalArea": "responsabilità e prove",
+     "harmonious": "La disciplina lavora a tuo favore: con pazienza e costanza oggi posi mattoni solidi che reggeranno nel tempo.",
+     "challenging": "Una responsabilità o un limite si fa sentire, ma è l'allenamento che rende matura e duratura ogni tua conquista.",
+     "intense": "Il tema dell'impegno e della struttura diventa centrale: oggi sei chiamato a costruire con serietà e a fare sul serio."
+    }
+   ]
   }
  },
  "id": {
@@ -10087,6 +10631,74 @@ window.LUX = {
      "name": "Bulan Sabit Tua",
      "ritual": "Beristirahatlah sejenak, tenangkan diri, dan siapkan ruang hening untuk menyambut siklus baru yang akan datang.",
      "journal": "Apa yang ingin saya lepaskan sepenuhnya sebelum memulai babak yang baru?"
+    }
+   ]
+  },
+  "transits": {
+   "title": "Cuaca Kosmis Hari Ini",
+   "intro": "Inilah cara langit hari ini menyentuh peta kelahiranmu dan mewarnai energi yang kamu rasakan.",
+   "noAspect": "Hari ini langit bergerak tenang tanpa sudut besar ke peta kelahiranmu, jadi nikmati ritme yang lapang dan damai ini.",
+   "toneLabels": {
+    "harmonious": "Selaras",
+    "challenging": "Tantangan",
+    "intense": "Intens"
+   },
+   "aspectLabels": {
+    "conjunction": "Konjungsi",
+    "sextile": "Sekstil",
+    "square": "Kuadrat",
+    "trine": "Trigon",
+    "opposition": "Oposisi"
+   },
+   "planets": [
+    {
+     "name": "Matahari",
+     "natalArea": "identitas dan jati diri",
+     "harmonious": "Energi Matahari mengalir lembut hari ini, membuat jati dirimu bersinar alami dan rasa percaya diri terasa hangat tanpa perlu kamu paksakan.",
+     "challenging": "Hari ini ada sedikit gesekan antara siapa dirimu dan apa yang dunia harapkan, momen pas untuk menegaskan jati diri dengan lebih jujur.",
+     "intense": "Matahari menyatu kuat dengan dirimu hari ini, jadi tema identitas dan keberadaanmu terasa menyala terang dan mendominasi suasana."
+    },
+    {
+     "name": "Bulan",
+     "natalArea": "emosi dan hati",
+     "harmonious": "Suasana hatimu mengalir tenang dan selaras hari ini, membuat kamu lebih mudah merasakan kenyamanan batin serta terhubung hangat dengan orang sekitar.",
+     "challenging": "Emosimu mungkin sedikit naik turun hari ini, anggap saja undangan lembut untuk mendengarkan hati dan merawat kebutuhan batinmu lebih sadar.",
+     "intense": "Bulan menyatu erat dengan hatimu hari ini, jadi perasaan terasa pekat dan mendalam, mengangkat segala hal soal emosi ke permukaan."
+    },
+    {
+     "name": "Merkurius",
+     "natalArea": "komunikasi dan pikiran",
+     "harmonious": "Pikiranmu jernih dan kata-kata mengalir lancar hari ini, ini saat menyenangkan untuk berbincang, menulis, atau bertukar ide dengan ringan.",
+     "challenging": "Komunikasi mungkin sedikit tersendat hari ini, jadikan ini latihan untuk menyimak lebih saksama dan memilih kata dengan lebih sabar.",
+     "intense": "Merkurius menyala kuat di pikiranmu hari ini, membuat ide, percakapan, dan rasa ingin tahu terasa sangat hidup dan mendesak untuk diungkapkan."
+    },
+    {
+     "name": "Venus",
+     "natalArea": "cinta, relasi, dan keuangan",
+     "harmonious": "Pesona dan kehangatanmu mengalir alami hari ini, memudahkan rasa sayang mengalir dalam relasi serta membawa keberuntungan kecil soal uang.",
+     "challenging": "Mungkin ada sedikit ujian dalam relasi atau soal keuangan hari ini, peluang manis untuk menata ulang apa yang benar-benar kamu hargai.",
+     "intense": "Venus menyatu kuat dengan dirimu hari ini, membuat tema cinta, daya tarik, dan kenikmatan terasa begitu menonjol dan menggoda perhatian."
+    },
+    {
+     "name": "Mars",
+     "natalArea": "semangat dan tindakan",
+     "harmonious": "Dorongan dan semangatmu mengalir lancar hari ini, energi terasa terarah sehingga kamu bisa bertindak dengan percaya diri dan gesit.",
+     "challenging": "Energimu mungkin terasa sedikit tertahan atau gampang panas hari ini, salurkan ke aktivitas produktif agar tantangan justru menempa keberanianmu.",
+     "intense": "Mars menyala kuat dalam dirimu hari ini, membuat keinginan, gairah, dan dorongan untuk bergerak terasa sangat kuat dan menggebu."
+    },
+    {
+     "name": "Jupiter",
+     "natalArea": "keberuntungan dan perluasan",
+     "harmonious": "Pintu peluang terasa terbuka lebar hari ini, energi Jupiter mengalir murah hati dan mengundang kamu untuk tumbuh serta melihat gambaran yang lebih besar.",
+     "challenging": "Hari ini optimisme bisa berlebih, anggap ini pengingat lembut untuk tetap membumi sambil merangkul peluang berkembang dengan bijak.",
+     "intense": "Jupiter menyatu kuat dengan dirimu hari ini, melipatgandakan tema keberuntungan, keyakinan, dan keinginan untuk memperluas cakrawala hidupmu."
+    },
+    {
+     "name": "Saturnus",
+     "natalArea": "tanggung jawab dan ujian",
+     "harmonious": "Energi Saturnus menopang kamu dengan stabil hari ini, ini saat baik untuk membangun fondasi, berkomitmen, dan menata rencana jangka panjang.",
+     "challenging": "Mungkin ada rasa tanggung jawab atau batasan yang terasa menekan hari ini, lihat sebagai ujian yang menguatkan kedisiplinan dan kematanganmu.",
+     "intense": "Saturnus menyatu erat dengan dirimu hari ini, membuat tema komitmen, struktur, dan pelajaran hidup terasa serius dan menuntut perhatian penuh."
     }
    ]
   }

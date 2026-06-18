@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v15: 트렌드 코스믹웨더 — 역행 트래커·일렉셔널 길일·달위상 의식
-const CACHE_NAME = 'lucky-v15';
+// v16: 트렌드 개인 트랜짓 — 오늘의 코스믹 웨더(생일천체×오늘천체 어스펙트)
+const CACHE_NAME = 'lucky-v16';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
