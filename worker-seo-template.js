@@ -560,9 +560,103 @@ function buildNavFooter(lang, activePage) {
     const href = lang === 'ko' ? `${SITE_URL}/${slug}/` : `${SITE_URL}/${lang}/${slug}/`;
     return `<a href="${href}"${activePage===cat?' class="nav-act"':''}>${esc(labels[cat]||cat)}</a>`;
   }).join('');
-  return `${ADS_TOP_INJECT}${TOP_AFF_INJECT(lang)}${ADS_UNIT}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav><footer class="site-footer"><a href="${SITE_URL}/${lang}/about/">${({ko:'소개',ja:'紹介',en:'About',de:'Über',fr:'À propos',es:'Acerca de',pt:'Sobre',it:'Chi siamo',id:'Tentang'})[lang]||'About'}</a> · <a href="${SITE_URL}/${lang}/method/">${({ko:'분석 방법',ja:'分析方法',en:'Method',de:'Methode',fr:'Méthode',es:'Método',pt:'Método',it:'Metodo',id:'Metode'})[lang]||'Method'}</a> · <a href="${SITE_URL}/lucky-sitemap.xml">${({ko:'사이트맵',ja:'サイトマップ',en:'Sitemap',de:'Seitenübersicht',fr:'Plan du site',es:'Mapa del sitio',pt:'Mapa do site',it:'Mappa del sito',id:'Peta situs'})[lang]||'Sitemap'}</a></footer>`;
+  // SEO#10 신규 콘텐츠 허브 내부링크 (전 페이지 → 허브 → 전 항목 크롤 분배)
+  const _hubL = (href,label)=> label?`<a href="${href}">${esc(label)}</a>`:'';
+  const _tl=(typeof TAROT_LABELS!=='undefined'&&TAROT_LABELS[lang])||{}, _dl=(typeof DREAM_LABELS!=='undefined'&&DREAM_LABELS[lang])||{}, _ll=(typeof LIFEPATH_LABELS!=='undefined'&&LIFEPATH_LABELS[lang])||{}, _bl=(typeof BIRTHSTONE_LABELS!=='undefined'&&BIRTHSTONE_LABELS[lang])||{}, _cl=(typeof CHINESE2026_LABELS!=='undefined'&&CHINESE2026_LABELS[lang])||{};
+  const _cpL=(typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[lang])?COMPAT_PAIR[lang].catLabel:'';
+  const _cSlug={ko:'gunghap',en:'compatibility',ja:'compatibility',de:'partnerschaft',fr:'compatibilite',es:'compatibilidad',pt:'compatibilidade',it:'compatibilita',id:'kecocokan'}[lang]||'compatibility';
+  const _compatHref = lang==='ko'?`${SITE_URL}/gunghap/`:`${SITE_URL}/${lang}/${_cSlug}/`;
+  const hubLinks = [
+    _hubL(`${SITE_URL}/${lang}/tarot/`, _tl.title),
+    _hubL(_compatHref, _cpL),
+    _hubL(`${SITE_URL}/${lang}/dream/`, _dl.dreamLabel),
+    _hubL(`${SITE_URL}/${lang}/life-path/`, _ll.lpLabel),
+    _hubL(`${SITE_URL}/${lang}/birthstone/`, _bl.stoneLabel),
+    _hubL(`${SITE_URL}/${lang}/horoscope-2026/`, '2026'),
+    _hubL(`${SITE_URL}/${lang}/zodiac-2026/`, _cl.yearTitle?'🐎 2026':''),
+  ].filter(Boolean).join('');
+  const hubNav = hubLinks ? `<nav class="page-nav" aria-label="explore"><div class="nav-inner">${hubLinks}</div></nav>` : '';
+  return `${ADS_TOP_INJECT}${TOP_AFF_INJECT(lang)}${ADS_UNIT}${renderAffSlot(lang)}<nav class="page-nav" aria-label="categories"><div class="nav-inner"><a href="${mainHref}"${activePage==='lucky'?' class="nav-act"':''}>${_NAV_MAIN[lang]||_NAV_MAIN.en}</a>${catLinks}</div></nav>${hubNav}<footer class="site-footer"><a href="${SITE_URL}/${lang}/about/">${({ko:'소개',ja:'紹介',en:'About',de:'Über',fr:'À propos',es:'Acerca de',pt:'Sobre',it:'Chi siamo',id:'Tentang'})[lang]||'About'}</a> · <a href="${SITE_URL}/${lang}/method/">${({ko:'분석 방법',ja:'分析方法',en:'Method',de:'Methode',fr:'Méthode',es:'Método',pt:'Método',it:'Metodo',id:'Metode'})[lang]||'Method'}</a> · <a href="${SITE_URL}/lucky-sitemap.xml">${({ko:'사이트맵',ja:'サイトマップ',en:'Sitemap',de:'Seitenübersicht',fr:'Plan du site',es:'Mapa del sitio',pt:'Mapa do site',it:'Mappa del sito',id:'Peta situs'})[lang]||'Sitemap'}</a></footer>`;
 }
 
+
+// ── SEO#10 콘텐츠 허브 페이지 (크롤 분배 + 토픽 권위) ──────────
+function renderHubPage(lang, cfg){
+  const canonical=`${SITE_URL}/${lang}/${cfg.path}/`;
+  const hl=buildHreflang((cfg.langs||ALL_LANGS).map(l=>({lang:l,url:`${SITE_URL}/${l}/${cfg.path}/`})), `${SITE_URL}/en/${cfg.path}/`);
+  const linksHtml=cfg.items.map(x=>`<a class="hub-card" href="${x.href}"><span class="he">${x.emoji||''}</span><span>${esc(x.label)}</span></a>`).join('');
+  const bcSchema=JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":LANGS[lang].h1,"item":`${SITE_URL}/${lang==='ko'?'':lang+'/'}lucky/`},{"@type":"ListItem","position":2,"name":cfg.h1}]});
+  const ilSchema=JSON.stringify({"@context":"https://schema.org","@type":"ItemList","name":cfg.h1,"numberOfItems":cfg.items.length,"itemListElement":cfg.items.map((x,i)=>({"@type":"ListItem","position":i+1,"name":x.label,"url":x.href}))});
+  const acc=cfg.accent||'#4f46e5';
+  return `<!DOCTYPE html><html lang="${lang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+${FAVICON_TAGS}
+${ADS_TAG}
+<title>${esc(cfg.title)}</title>
+<meta name="description" content="${esc(cfg.intro)}">
+<link rel="canonical" href="${esc(canonical)}">
+${hl}
+<meta property="og:title" content="${esc(cfg.title)}">
+<meta property="og:description" content="${esc(cfg.intro)}">
+<meta property="og:url" content="${esc(canonical)}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="${APP_URL}/og-${lang}.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${bcSchema}</script>
+<script type="application/ld+json">${ilSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1e293b;}
+.hero{background:linear-gradient(135deg,${acc},#1e1b4b);color:#fff;padding:34px 20px;text-align:center;}
+.hero .em{font-size:clamp(46px,12vw,72px);line-height:1;}
+.hero h1{font-size:clamp(21px,4.5vw,34px);font-weight:900;margin:8px 0 8px;}
+.hero p{font-size:13px;color:rgba(255,255,255,.82);max-width:560px;margin:0 auto;line-height:1.6;}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 8px;}
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+.hub-card{display:flex;align-items:center;gap:9px;background:#fff;border-radius:12px;padding:12px 14px;text-decoration:none;color:#1e293b;font-size:13.5px;font-weight:700;box-shadow:0 1px 8px rgba(15,23,42,.07);transition:transform .12s;}
+.hub-card:hover{transform:translateY(-2px);color:${acc};}
+.hub-card .he{font-size:20px;flex-shrink:0;}
+iframe{width:100%;border:none;display:block;height:520px;margin-top:14px;border-radius:12px;}
+${NAV_FOOTER_CSS}
+</style>
+</head><body>
+<div class="hero"><div class="em">${cfg.emoji}</div><h1>${esc(cfg.h1)}</h1><p>${esc(cfg.intro)}</p></div>
+<div class="wrap"><div class="hub-grid">${linksHtml}</div>
+<iframe src="${esc(`${APP_URL}/?lang=${lang}`)}" scrolling="no" title="${esc(cfg.h1)}" loading="lazy"></iframe></div>
+${buildNavFooter(lang,'lucky')}
+</body></html>`;
+}
+function buildHubCfg(lang, type){
+  if(type==='tarot' && typeof TAROT!=='undefined' && TAROT[lang] && TAROT_LABELS[lang]){
+    const T=TAROT[lang], TL=TAROT_LABELS[lang], slugs=TAROT_MAJOR_SLUG.concat(TAROT_SUITS.flatMap(s=>TAROT_RANKS.map(r=>`${r}-of-${s}`)));
+    return {path:'tarot',accent:'#6d28d9',emoji:'🃏',h1:`${TL.title} · 78`,title:`${TL.title} ${TL.pageTitleSuffix}`,intro:TL.intro,langs:ALL_LANGS.filter(l=>TAROT[l]),
+      items:slugs.filter(s=>T[s]).map(s=>{const m=tarotMeta(s);return{href:`${SITE_URL}/${lang}/tarot/${s}/`,emoji:m&&m.suit?TAROT_SUIT_EMOJI[m.suit]:'🔮',label:T[s].name};})};
+  }
+  if(type==='dream' && typeof DREAM!=='undefined' && DREAM[lang] && DREAM_LABELS[lang]){
+    const D=DREAM[lang], DL=DREAM_LABELS[lang];
+    return {path:'dream',accent:'#4338ca',emoji:'💭',h1:DL.dreamLabel,title:`${DL.dreamLabel} — ${DL.pageTitleSuffix}`,intro:DL.intro,langs:ALL_LANGS.filter(l=>DREAM[l]),
+      items:DREAM_SLUGS.filter(s=>D[s]).map(s=>({href:`${SITE_URL}/${lang}/dream/${s}/`,emoji:DREAM_EMOJI[s]||'💭',label:D[s].name}))};
+  }
+  if(type==='life-path' && typeof LIFEPATH!=='undefined' && LIFEPATH[lang] && LIFEPATH_LABELS[lang]){
+    const LP=LIFEPATH[lang], LL=LIFEPATH_LABELS[lang];
+    return {path:'life-path',accent:'#0d9488',emoji:'🔢',h1:LL.lpLabel,title:`${LL.lpLabel} — ${LL.pageTitleSuffix}`,intro:LL.intro,langs:ALL_LANGS.filter(l=>LIFEPATH[l]),
+      items:LIFEPATH_NUMS.filter(n=>LP[n]).map(n=>({href:`${SITE_URL}/${lang}/life-path/${n}/`,emoji:LIFEPATH_EMOJI[n]||'🔢',label:LP[n].title}))};
+  }
+  if(type==='birthstone' && typeof BIRTHSTONE!=='undefined' && BIRTHSTONE[lang] && BIRTHSTONE_LABELS[lang]){
+    const BS=BIRTHSTONE[lang], BL=BIRTHSTONE_LABELS[lang];
+    return {path:'birthstone',accent:'#a21caf',emoji:'💎',h1:BL.stoneLabel,title:`${BL.stoneLabel} — ${BL.pageTitleSuffix}`,intro:BL.intro,langs:ALL_LANGS.filter(l=>BIRTHSTONE[l]),
+      items:['1','2','3','4','5','6','7','8','9','10','11','12'].filter(m=>BS[m]).map(m=>({href:`${SITE_URL}/${lang}/birthstone/${m}/`,emoji:BIRTHSTONE_EMOJI[m]||'💎',label:`${BS[m].monthName} · ${BS[m].stone}`}))};
+  }
+  if(type==='horoscope-2026' && typeof HOROSCOPE2026!=='undefined' && HOROSCOPE2026[lang] && HOROSCOPE2026_LABELS[lang]){
+    const H=HOROSCOPE2026[lang], HL=HOROSCOPE2026_LABELS[lang];
+    return {path:'horoscope-2026',accent:'#4f46e5',emoji:'🔮',h1:`2026 ${HL.relatedLabel}`,title:`2026 ${HL.pageTitleSuffix}`,intro:HL.intro,langs:ALL_LANGS.filter(l=>HOROSCOPE2026[l]),
+      items:H26_SIGNS.filter(s=>H[s]).map((s,i)=>({href:`${SITE_URL}/${lang}/horoscope-2026/${s}/`,emoji:H26_EMOJI[H26_SIGNS.indexOf(s)],label:H[s].signName}))};
+  }
+  if(type==='zodiac-2026' && typeof CHINESE2026!=='undefined' && CHINESE2026[lang] && CHINESE2026_LABELS[lang]){
+    const C=CHINESE2026[lang], CL=CHINESE2026_LABELS[lang];
+    return {path:'zodiac-2026',accent:'#dc2626',emoji:'🐎',h1:CL.yearTitle,title:`${CL.yearTitle} — ${CL.pageTitleSuffix}`,intro:CL.intro,langs:ALL_LANGS.filter(l=>CHINESE2026[l]),
+      items:CZ26_ANIMALS.filter(a=>C[a]).map(a=>({href:`${SITE_URL}/${lang}/zodiac-2026/${a}/`,emoji:CZ26_EMOJI[a]||'🧧',label:C[a].animalName}))};
+  }
+  return null;
+}
 
 // ── AI 운세 상담 시스템 프롬프트 ─────────────────────────
 function buildFortuneSystemPrompt(lang, d) {
@@ -1030,6 +1124,8 @@ export default {
         ...ALL_LANGS.flatMap(l => ['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'].map(s=>({lang:l,loc:`${SITE_URL}/${l}/horoscope-2026/${s}/`,priority:'0.8',lm:'2026-01-01'}))),
         // SEO#7 2026 십이지 띠별 연간운세 (12 × 9 langs = 108 URLs) — 시즌 트렌드
         ...ALL_LANGS.flatMap(l => ['rat','ox','tiger','rabbit','dragon','snake','horse','goat','monkey','rooster','dog','pig'].map(a=>({lang:l,loc:`${SITE_URL}/${l}/zodiac-2026/${a}/`,priority:'0.8',lm:'2026-01-01'}))),
+        // SEO#10 콘텐츠 허브 (6 types × 9 langs = 54 URLs) — 토픽 권위·크롤 분배
+        ...ALL_LANGS.flatMap(l => ['tarot','dream','life-path','birthstone','horoscope-2026','zodiac-2026'].map(t=>({lang:l,loc:`${SITE_URL}/${l}/${t}/`,priority:'0.85'}))),
         // Nine Star Ki (ja, 9 pages)
         ...['ikki','jikoku','sanpoku','yonroku','goo','rokusei','shichishin','hapaku','kyushi'].map(s=>({lang:'ja',loc:`${SITE_URL}/ja/${s}/`,priority:'0.75'})),
         // En born year pages (1940–2010)
@@ -1429,6 +1525,8 @@ ${buildNavFooter(catLang, catKey)}
           const aFaq = (aL.faq||[]).map(f=>({q:f.q.replace(/\{n\}/g,aNum),a:f.a.replace(/\{n\}/g,aNum)}));
           const aFaqHtml = aFaq.map(f=>`<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-a">${esc(f.a)}</div></details>`).join('');
           const aFaqSchema = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":aFaq.map(f=>({'@type':'Question','name':f.q,'acceptedAnswer':{'@type':'Answer','text':f.a}}))});
+          const aBcSchema = JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":LANGS[aLang].h1,"item":`${SITE_URL}/${aLang==='ko'?'':aLang+'/'}lucky/`},{"@type":"ListItem","position":2,"name":aL.numberLabel,"item":`${SITE_URL}/${aLang}/${ANGEL_PREFIX[aLang]}/${aNum}/`},{"@type":"ListItem","position":3,"name":`${aL.numberLabel} ${aNum}`}]});
+          const aArtSchema = JSON.stringify({"@context":"https://schema.org","@type":"Article","headline":aTitle,"inLanguage":aLang,"author":{"@type":"Organization","name":"all-lifes.com"},"publisher":{"@type":"Organization","name":"all-lifes.com"},"description":aDesc});
           const aHtml = `<!DOCTYPE html><html lang="${aLang}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 ${FAVICON_TAGS}
@@ -1444,6 +1542,8 @@ ${aHreflang}
 <meta property="og:image" content="${APP_URL}/og-${aLang}.png">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">${aFaqSchema}</script>
+<script type="application/ld+json">${aBcSchema}</script>
+<script type="application/ld+json">${aArtSchema}</script>
 <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f3ff;}
 .hero{background:linear-gradient(135deg,#3b0764,#7c3aed);color:#fff;padding:36px 20px;text-align:center;}
 .hero .angel-num{font-size:clamp(52px,12vw,88px);font-weight:900;letter-spacing:-2px;margin-bottom:8px;}
@@ -2477,6 +2577,15 @@ ${buildNavFooter(cLang,'lucky')}
       }
     }
 
+    // ── SEO#10 콘텐츠 허브 (/{lang}/{type}/) ──
+    {
+      const hubM = path.match(/^\/([a-z]{2})\/(tarot|dream|life-path|birthstone|horoscope-2026|zodiac-2026)\/?$/);
+      if (hubM && LANGS[hubM[1]]) {
+        const cfg = buildHubCfg(hubM[1], hubM[2]);
+        if (cfg && cfg.items.length) return new Response(renderHubPage(hubM[1], cfg), {headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
     const compatMatch = path.match(/^\/([a-z]{2})\/([a-z]+)\/?$/);
     if (compatMatch) {
       const cLang = compatMatch[1], cSlug = compatMatch[2];
@@ -3281,6 +3390,8 @@ ${hreflangs}
 <script type="application/ld+json">${faqSchema}</script>
 ${howToSchema ? `<script type="application/ld+json">${howToSchema}</script>` : ''}
 <script type="application/ld+json">${breadcrumbSchema}</script>
+<script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"Organization","name":"all-lifes.com","url":`${SITE_URL}/lucky/`,"logo":`${SITE_URL}/lucky/apple-touch-icon.png`,"description":ogDesc})}</script>
+<script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"WebSite","name":L.h1,"url":`${SITE_URL}/${lang==='ko'?'':lang+'/'}lucky/`,"inLanguage":lang})}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
