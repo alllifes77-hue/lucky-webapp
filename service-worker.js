@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v13: 신규 요소 꿈해몽(24상징) + 엔젤넘버(오늘의 수)
-const CACHE_NAME = 'lucky-v13';
+// v14: 광고 상단 배치 — 알리익스프레스·ko쿠팡을 결과/SEO 상단으로 이동
+const CACHE_NAME = 'lucky-v14';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

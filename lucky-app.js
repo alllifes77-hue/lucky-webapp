@@ -1658,6 +1658,9 @@ function renderResults(data) {
 
   // 결과 상단 광고 — 핵심 결과(번호/점수) 바로 아래, 가장 잘 보이는 위치
   _resultAdSense('ad-result-top', 360);
+  // 알리익스프레스 + ko 쿠팡도 상단(광고 바로 아래)에 배치 — 잘 보이는 위치
+  renderAliExpressPanel(data);
+  _resultCoupang(lang);
 
   // ══ LUCKY: 행운 번호 전용 ════════════════════════════════
   if (cat === 'lucky') {
@@ -1735,10 +1738,8 @@ function renderResults(data) {
   renderLuckyFourPanel(data);
   renderDreamPanel(data);
   renderAngelPanel(data);
-  // 결과 중간 광고 + ko 쿠팡 — 패널들 사이에 한 번 더 노출
+  // 결과 중간 광고 — 패널들 사이에 한 번 더 노출 (알리·쿠팡은 상단으로 이동됨)
   _resultAdSense('ad-result-mid', 400);
-  _resultCoupang(lang);
-  renderAliExpressPanel(data);
   renderShareBtns(data);
   renderAIChat(data);
   renderFaq();
@@ -4920,8 +4921,10 @@ async function renderAliExpressPanel(data) {
       <div style="font-size:12px;font-weight:800;color:#374151;margin:0 18px 10px;">${lb.title}</div>
       <div style="display:flex;gap:9px;overflow-x:auto;padding:0 18px 6px;-webkit-overflow-scrolling:touch;">${cards}</div>
       <p style="font-size:9.5px;color:#a8a29e;margin:8px 18px 0;line-height:1.5;">${lb.disc}</p>`;
-    const share = document.querySelector('.share-section');
-    if (share) share.before(div);
+    // 상단(결과 번호/광고 바로 아래)에 배치 — 잘 보이는 위치
+    const topA = document.getElementById('ad-result-top') || document.querySelector('.fortune-card') || document.getElementById('lottery-section');
+    if (topA && topA.parentNode) topA.after(div);
+    else { const share = document.querySelector('.share-section'); if (share) share.before(div); }
   } catch(e) {}
 }
 
@@ -5519,12 +5522,13 @@ function _resultCoupang(lang){
   if (window.self !== window.top) return;
   if (lang !== 'ko') return;
   if (document.getElementById('coupang-result')) return;
-  const share = document.querySelector('.share-section');
-  if (!share) return;
+  // 상단(결과 번호/광고 바로 아래)에 배치 — 잘 보이는 위치
+  const topA = document.getElementById('ad-result-top') || document.querySelector('.fortune-card') || document.getElementById('lottery-section');
+  if (!topA || !topA.parentNode) return;
   const wrap = document.createElement('div');
   wrap.id = 'coupang-result';
-  wrap.style.cssText = 'max-width:712px;margin:14px auto;text-align:center;';
-  share.parentNode.insertBefore(wrap, share);
+  wrap.style.cssText = 'max-width:680px;margin:14px auto;text-align:center;overflow:hidden;box-sizing:border-box;';
+  topA.after(wrap);
   try {
     var cpW = Math.min(680, Math.max(300, document.documentElement.clientWidth - 32));
     var cpF = document.createElement('iframe');
