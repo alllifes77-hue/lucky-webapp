@@ -1,5 +1,5 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising·astro·lilith).
+// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising·astro·lilith·hd).
 // 언어별 네이티브+적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -1302,6 +1302,123 @@ window.LUX = {
     "남다른 자신을 감추고 무리에 맞춰 살아왔을지 몰라요. 이질적이라 여겼던 본모습을 드러낼 때, 시대를 앞서는 독창적인 해방의 힘이 깨어납니다.",
     "경계 없이 녹아들고 싶은 갈망과 현실에서 도피하려는 충동이 있어요. 환상과 연약함마저 끌어안을 때, 세상을 품는 깊고 신비로운 공감의 힘으로 피어납니다."
    ]
+  },
+  "hd": {
+   "title": "휴먼 디자인",
+   "intro": "휴먼 디자인은 태어난 순간의 천체 위치를 토대로 산출하는 '나 사용설명서'로, 내가 어떻게 결정하고 움직일 때 가장 나다운지를 보여줘요.",
+   "typeLabel": "타입",
+   "strategyLabel": "전략",
+   "authorityLabel": "내적 권위",
+   "profileLabel": "프로파일",
+   "definedLabel": "정의된 센터",
+   "cta": "정확한 출생 시각과 출생 도시를 입력할수록 차트의 타입·권위·프로파일이 분 단위로 정밀하게 계산돼요.",
+   "types": {
+    "generator": {
+     "name": "제너레이터 (Generator)",
+     "strategy": "먼저 나서지 말고, 눈앞에 다가온 것에 몸이 '응' 하고 반응할 때 움직이세요.",
+     "desc": "세상을 굴리는 에너지의 원동력이자 일꾼이에요. 진짜 끌리는 일에 몰입할 때 깊은 만족감(satisfaction)이 차오르고, 그 에너지가 주변까지 살려요."
+    },
+    "mg": {
+     "name": "매니페스팅 제너레이터 (Manifesting Generator)",
+     "strategy": "끌리는 일에 먼저 몸으로 반응한 뒤, 실행에 들어가기 전 주변에 미리 알리고 빠르게 밀어붙이세요.",
+     "desc": "제너레이터의 지속력에 매니페스터의 추진력을 더한 다재다능형이에요. 여러 일을 동시에 빠르게 처리하며, 지름길을 찾아 단계를 건너뛰는 게 오히려 강점이에요."
+    },
+    "projector": {
+     "name": "프로젝터 (Projector)",
+     "strategy": "스스로 밀어붙이기보다, 당신의 가치를 알아본 사람의 초대와 인정을 기다리세요.",
+     "desc": "사람과 시스템을 꿰뚫어 보는 타고난 안내자예요. 옳은 자리로 초대받았을 때 통찰이 빛을 발하고, 인정받을 때 진짜 성공(success)을 느껴요."
+    },
+    "manifestor": {
+     "name": "매니페스터 (Manifestor)",
+     "strategy": "행동에 나서기 전에 영향받을 사람들에게 미리 알려서(informing) 저항을 줄이세요.",
+     "desc": "혼자 일을 시작하고 판을 여는 개척자예요. 허락을 구하지 않고 움직일 때 자유로워지며, 미리 알리는 습관이 평화(peace)를 가져다줘요."
+    },
+    "reflector": {
+     "name": "리플렉터 (Reflector)",
+     "strategy": "큰 결정은 서두르지 말고, 달이 한 바퀴 도는 한 달 동안 마음을 지켜보며 내리세요.",
+     "desc": "주변 환경과 사람들의 건강함을 그대로 비추는 희귀한 거울이에요. 어디에 있는지, 누구와 있는지가 컨디션을 좌우하니 좋은 환경을 고르는 게 핵심이에요."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "감정 권위 (Emotional)",
+     "desc": "그 자리에서 즉답하지 말고, 시간을 두고 감정의 파도가 잔잔해질 때까지 기다린 뒤 결정하세요."
+    },
+    "sacral": {
+     "name": "천골 권위 (Sacral)",
+     "desc": "머리로 따지기 전에 아랫배에서 올라오는 '응(끌림)'과 '으응(거부)'의 즉각적인 몸의 반응을 따르세요."
+    },
+    "splenic": {
+     "name": "비장 권위 (Splenic)",
+     "desc": "딱 한 번, 그 순간 스치는 직감을 믿으세요. 두 번 반복되지 않으니 첫 신호를 놓치지 마세요."
+    },
+    "ego": {
+     "name": "에고/심장 권위 (Ego)",
+     "desc": "'내가 진짜 이걸 원하나, 끝까지 의지가 가나'를 솔직히 들여다보고, 마음이 원하는 쪽을 택하세요."
+    },
+    "self": {
+     "name": "자아투사 권위 (Self-Projected)",
+     "desc": "믿을 만한 사람에게 소리 내어 말하면서, 내 목소리의 방향과 톤에서 진짜 원하는 답을 알아채세요."
+    },
+    "mental": {
+     "name": "정신/환경 권위 (Mental·Environmental)",
+     "desc": "혼자 결론 내리지 말고, 여러 사람·여러 환경에서 충분히 이야기를 나눈 뒤 또렷해진 생각을 따르세요."
+    },
+    "lunar": {
+     "name": "달 권위 (Lunar)",
+     "desc": "리플렉터의 권위로, 한 달의 달 주기를 온전히 보내며 마음의 흐름을 관찰한 뒤 결정하세요."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "1/3 탐구자-순교자 (Investigator-Martyr)",
+     "desc": "탄탄한 기초를 깊이 파고들어 공부한 뒤, 직접 부딪히는 시행착오로 진짜 자기 것을 만드는 실험가예요."
+    },
+    "1/4": {
+     "name": "1/4 탐구자-기회주의자 (Investigator-Opportunist)",
+     "desc": "단단히 다진 지식을 가까운 인맥과 네트워크를 통해 나누고 기회로 이어가는 안정적인 토대형이에요."
+    },
+    "2/4": {
+     "name": "2/4 은둔자-기회주의자 (Hermit-Opportunist)",
+     "desc": "혼자만의 시간에 타고난 재능을 키우다가, 친밀한 관계 속에서 부름을 받아 세상에 나서는 사람이에요."
+    },
+    "2/5": {
+     "name": "2/5 은둔자-이단아 (Hermit-Heretic)",
+     "desc": "조용히 자기 재능을 갈고닦지만, 사람들이 보내는 기대와 부름에 못 이겨 해결사로 불려 나오는 유형이에요."
+    },
+    "3/5": {
+     "name": "3/5 순교자-이단아 (Martyr-Heretic)",
+     "desc": "직접 겪고 깨지며 배운 실전 경험으로, 위기의 순간 사람들을 구하는 현실적인 문제 해결사예요."
+    },
+    "3/6": {
+     "name": "3/6 순교자-역할모델 (Martyr-Role Model)",
+     "desc": "젊을 땐 시행착오로 마음껏 부딪히고, 나이 들수록 그 경험을 무르익혀 모범이 되는 인생 3막형이에요."
+    },
+    "4/6": {
+     "name": "4/6 기회주의자-역할모델 (Opportunist-Role Model)",
+     "desc": "따뜻한 관계망 위에서 기회를 만들고, 시간이 흐를수록 신뢰받는 역할 모델로 자리 잡는 사람이에요."
+    },
+    "5/1": {
+     "name": "5/1 이단아-탐구자 (Heretic-Investigator)",
+     "desc": "탄탄한 실력을 바탕으로 위기 때 빛나는 해결사지만, 사람들의 기대와 투사를 잘 다루는 게 관건이에요."
+    },
+    "5/2": {
+     "name": "5/2 이단아-은둔자 (Heretic-Hermit)",
+     "desc": "평소엔 혼자 있길 좋아하지만, 결정적 순간 불려 나와 현실적인 해법을 제시하는 숨은 구원자예요."
+    },
+    "6/2": {
+     "name": "6/2 역할모델-은둔자 (Role Model-Hermit)",
+     "desc": "인생 후반에 무르익은 지혜로 본보기가 되며, 타고난 재능은 자연스러운 부름을 통해 발휘되는 사람이에요."
+    },
+    "6/3": {
+     "name": "6/3 역할모델-순교자 (Role Model-Martyr)",
+     "desc": "수많은 시행착오를 거쳐 단단해진 뒤, 유연하고 인간적인 역할 모델로 사람들에게 길을 보여줘요."
+    },
+    "4/1": {
+     "name": "4/1 기회주의자-탐구자 (Opportunist-Investigator)",
+     "desc": "깊이 다진 신념을 가까운 관계망을 통해 펼치는, 방향성이 또렷하고 흔들림이 적은 고정형이에요."
+    }
+   }
   }
  },
  "en": {
@@ -2604,6 +2721,123 @@ window.LUX = {
     "In Aquarius, your buried hunger is to belong nowhere and answer to no one; reclaim your right to be strange, to break from the herd, and to honor the rebel the world tried to smooth away.",
     "In Pisces, the silenced part of you longs to dissolve, to feel everything, to surrender completely; reclaim your right to your visions and longings without losing yourself to please others."
    ]
+  },
+  "hd": {
+   "title": "Human Design",
+   "intro": "Human Design is your personal owner's manual, calculated from the exact position of the planets at the moment you were born.",
+   "typeLabel": "Type",
+   "strategyLabel": "Strategy",
+   "authorityLabel": "Inner Authority",
+   "profileLabel": "Profile",
+   "definedLabel": "Defined Centers",
+   "cta": "Enter your exact birth time and city for a precise chart — even a few minutes can shift your Type, Authority, and Profile.",
+   "types": {
+    "generator": {
+     "name": "Generator",
+     "strategy": "Wait to respond — let life bring something to you, then notice how your body answers before you commit.",
+     "desc": "Generators are the life force of the planet, built to do work they genuinely love. When you follow what lights you up, your energy is steady and magnetic; when you force things, you hit frustration and burnout."
+    },
+    "mg": {
+     "name": "Manifesting Generator",
+     "strategy": "Respond first, then inform the people around you before you leap into fast, multi-track action.",
+     "desc": "Manifesting Generators are the multitaskers — quick, efficient, and able to juggle several passions at once. You may skip steps and double back, and that nonlinear path is exactly how you find the shortcut others miss."
+    },
+    "projector": {
+     "name": "Projector",
+     "strategy": "Wait for the invitation — let your gifts be seen and recognized before you offer your guidance.",
+     "desc": "Projectors are the natural guides, here to see deeply into people and systems and steer their energy wisely. Recognition is your fuel: when the right people invite you in, your insight lands and you feel valued rather than overlooked."
+    },
+    "manifestor": {
+     "name": "Manifestor",
+     "strategy": "Inform the people your move will affect, then initiate — start the thing without waiting for permission.",
+     "desc": "Manifestors are the initiators, here to start what others continue and to make an impact. You move in independent bursts of energy, and a quick heads-up to those around you turns resistance into support."
+    },
+    "reflector": {
+     "name": "Reflector",
+     "strategy": "Wait a full lunar cycle — about a month — before locking in any major decision.",
+     "desc": "Reflectors are the rare mirrors of their community, sampling and amplifying the energy around them. You are deeply sensitive to your environment, so the right place and the right people change everything for you."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Emotional Authority",
+     "desc": "Never decide in the moment — sleep on it and ride the emotional wave up and down until you reach a calm, clear feeling."
+    },
+    "sacral": {
+     "name": "Sacral Authority",
+     "desc": "Trust the instant gut response of your body — the spontaneous yes that lifts you or the no that contracts you."
+    },
+    "splenic": {
+     "name": "Splenic Authority",
+     "desc": "Follow your spleen's quiet, in-the-moment hunch — it speaks once, softly, so act on that first intuitive flash."
+    },
+    "ego": {
+     "name": "Ego (Heart) Authority",
+     "desc": "Decide from willpower and desire — say yes only to what your heart truly wants and is ready to commit to."
+    },
+    "self": {
+     "name": "Self-Projected Authority",
+     "desc": "Talk it out loud with someone you trust — you hear your own truth in the sound of your own voice, not inside your head."
+    },
+    "mental": {
+     "name": "Mental (Environmental) Authority",
+     "desc": "Process out loud with trusted people across different settings — clarity comes from the conversation and the right environment, never from rushing a decision alone."
+    },
+    "lunar": {
+     "name": "Lunar Authority",
+     "desc": "Give big choices a full 28-day lunar cycle, talking them through with trusted sounding boards, and let the answer that stays consistent emerge over time."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "Investigator / Martyr",
+     "desc": "You need a solid foundation of knowledge to feel secure, then learn the rest through bold trial and error — every misstep becomes hard-won wisdom."
+    },
+    "1/4": {
+     "name": "Investigator / Opportunist",
+     "desc": "You dig deep to master your subject, then share it through your close network — your opportunities and breakthroughs flow through the people who already know and trust you."
+    },
+    "2/4": {
+     "name": "Hermit / Opportunist",
+     "desc": "You carry a natural talent that needs alone time to develop, yet your friendly network keeps calling you out to be seen and to put that gift to work."
+    },
+    "2/5": {
+     "name": "Hermit / Heretic",
+     "desc": "You crave solitude to recharge, but others project big expectations onto you and call on you for practical solutions when it matters most."
+    },
+    "3/5": {
+     "name": "Martyr / Heretic",
+     "desc": "You learn fast by experimenting and discovering what doesn't work, then turn that real-world experience into practical answers people look to you for."
+    },
+    "3/6": {
+     "name": "Martyr / Role Model",
+     "desc": "Your early life is hands-on trial and error; with maturity those lessons settle into the quiet, lived wisdom of a trusted role model."
+    },
+    "4/6": {
+     "name": "Opportunist / Role Model",
+     "desc": "You thrive on loyal relationships and a strong network, growing over time into someone others naturally look up to and trust."
+    },
+    "5/1": {
+     "name": "Heretic / Investigator",
+     "desc": "People expect you to deliver real solutions, and your deep, well-researched foundation means you usually can — a practical problem-solver others rely on."
+    },
+    "5/2": {
+     "name": "Heretic / Hermit",
+     "desc": "Others project leadership and rescue onto you, while you guard your private time and answer the call only when you're genuinely ready."
+    },
+    "6/2": {
+     "name": "Role Model / Hermit",
+     "desc": "You move through life in three phases toward becoming a wise role model, carrying a natural gift that shines brightest when it's drawn out of you by others."
+    },
+    "6/3": {
+     "name": "Role Model / Martyr",
+     "desc": "You learn through bold experimentation early on and mature into an authentic role model whose wisdom is grounded in real, lived experience."
+    },
+    "4/1": {
+     "name": "Opportunist / Investigator",
+     "desc": "You stand on a fixed, deeply researched foundation and express it through your network — a stable, influential bridge between solid knowledge and the right people."
+    }
+   }
   }
  },
  "ja": {
@@ -3906,6 +4140,123 @@ window.LUX = {
     "水瓶座のリリスは、群れと違うことを恐れ、異端の自分を抑える癖。独自の感性を孤立ごと受け入れるとき、革新を起こす自由な力が花開きます。",
     "魚座のリリスは、果てしない憧れや陶酔、逃避の願いを弱さと封じる癖。境界の溶ける感覚を許すとき、すべてと溶け合う原初の慈悲が戻ります。"
    ]
+  },
+  "hd": {
+   "title": "ヒューマンデザイン",
+   "intro": "生まれた瞬間の天体配置から算出する、あなただけの「自分の取扱説明書」です。",
+   "typeLabel": "タイプ",
+   "strategyLabel": "ストラテジー（戦略）",
+   "authorityLabel": "内なる権威（オーソリティ）",
+   "profileLabel": "プロファイル",
+   "definedLabel": "定義されたセンター",
+   "cta": "正確な出生時刻と出生地を入力するほど、天体の配置が緻密に計算され、あなただけの精密なチャートが導き出されます。",
+   "types": {
+    "generator": {
+     "name": "ジェネレーター（Generator・生命力の源）",
+     "strategy": "自分から動き出すのではなく、目の前に現れたものに「反応」してから動くこと。",
+     "desc": "世界の約7割を占める、持続的な生命エネルギー（サクラル）を持つ働き手です。心からワクワクすることに反応して取り組むと深い満足感（サティスファクション）に満たされ、合わないことを無理に続けるとフラストレーションが溜まりやすくなります。"
+    },
+    "mg": {
+     "name": "マニフェスティング・ジェネレーター（Manifesting Generator・多才な実行者）",
+     "strategy": "まず目の前のことに反応し、行動に移す前に周囲へひと言「伝えて」から一気に駆け抜けること。",
+     "desc": "ジェネレーターの持久力にマニフェスターのスピードが加わった、多才で行動の速いタイプです。複数のことを同時にこなし、近道を見つけるのが得意ですが、工程を飛ばしがちなので大切な手順を見直す習慣を持つと力を最大限に発揮できます。"
+    },
+    "projector": {
+     "name": "プロジェクター（Projector・導き手）",
+     "strategy": "自分を理解し評価してくれる相手からの「招待」を待ってから動くこと。",
+     "desc": "人やシステムの本質を見抜き、的確に導く才能を持つ案内人です。エネルギーを自家発電しないため、招待されてその才能が認められる場で活きると成功（サクセス）を実感でき、認められないまま無理に押し進めると苦味（にがみ）を感じやすくなります。"
+    },
+    "manifestor": {
+     "name": "マニフェスター（Manifestor・開拓者）",
+     "strategy": "行動を起こす前に、関わる人へ「これからこうする」と先に伝えて（インフォーミング）から動くこと。",
+     "desc": "誰の許可も待たず、ゼロから物事を始められる独立した開拓者です。発信力と推進力で道を切り拓きますが、周囲に事前に伝えておくことで余計な抵抗が減り、本来の自由な動きで平和（ピース）を得られます。"
+    },
+    "reflector": {
+     "name": "リフレクター（Reflector・鏡）",
+     "strategy": "重要な決断は、月が一周する約28日間かけてじっくり寝かせてから下すこと。",
+     "desc": "全人口の約1パーセントという希少な存在で、すべてのセンターが開かれた「環境を映す鏡」です。周りの人やその場の雰囲気を敏感に感じ取り、健やかな場にいると驚き（サプライズ）に満ちた人生になります。決断を急がず月のリズムに委ねることが鍵です。"
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "感情（エモーショナル）の権威",
+     "desc": "その場の高揚で即答せず、感情の波が高い時も低い時も過ごし、心が落ち着いた地点で初めて結論を出します。"
+    },
+    "sacral": {
+     "name": "仙骨（サクラル）の権威",
+     "desc": "頭で考えるより先に、お腹の奥から湧き上がる「うん（イエス）／ううん（ノー）」という身体の即時反応に従って決めます。"
+    },
+    "splenic": {
+     "name": "脾臓（スプリーン）の権威",
+     "desc": "一度きりしか訪れない、その瞬間の直感やひらめきを信じて、即座に行動を選びます。"
+    },
+    "ego": {
+     "name": "エゴ（ハート）の権威",
+     "desc": "「自分が本当にそれを望んでいるか、やり遂げる意志があるか」という心の声に正直に従って決めます。"
+    },
+    "self": {
+     "name": "自己投影（セルフ・プロジェクテッド）の権威",
+     "desc": "信頼できる相手に向かって声に出して話すうちに、自分の本心が聞こえてきて、答えが明確になります。"
+    },
+    "mental": {
+     "name": "メンタル（環境）の権威",
+     "desc": "信頼する相手との対話や、身を置く環境からの感触を通して、時間をかけて少しずつ正解を確かめていきます。"
+    },
+    "lunar": {
+     "name": "月（ルナー）の権威",
+     "desc": "リフレクター特有の決め方で、約28日の月の一周を待ち、その間の心の動きを見守ってから結論に至ります。"
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "1/3（探究者／試行錯誤する人）",
+     "desc": "土台を徹底的に調べて安心を得る探究心と、実際に試して失敗から学ぶ実験精神を併せ持ち、体当たりで本物の知恵を築きます。"
+    },
+    "1/4": {
+     "name": "1/4（探究者／機会をもたらす人）",
+     "desc": "深く学んで確かな知識を蓄え、それを信頼で結ばれた身近な人間関係を通じて広げていく、安定感のある影響者です。"
+    },
+    "2/4": {
+     "name": "2/4（隠者／機会をもたらす人）",
+     "desc": "一人の時間に自然な才能を育み、人との縁（ネットワーク）に呼び出されることで、その才能が世に開花していきます。"
+    },
+    "2/5": {
+     "name": "2/5（隠者／救世主）",
+     "desc": "ひそかに磨いた才能を持ちつつ、周囲から頼られて呼び出され、実際的な解決策で人々の期待に応えていく存在です。"
+    },
+    "3/5": {
+     "name": "3/5（試行錯誤する人／救世主）",
+     "desc": "数々の試みと失敗から実践的な学びを得て、その経験を活かし困っている人々を導く、現場に強い問題解決者です。"
+    },
+    "3/6": {
+     "name": "3/6（試行錯誤する人／役割モデル）",
+     "desc": "前半生は体当たりの実験で学び、人生の後半には積み上げた経験から、人々の手本となる賢明な存在へと成熟します。"
+    },
+    "4/6": {
+     "name": "4/6（機会をもたらす人／役割モデル）",
+     "desc": "温かな人間関係を大切にしながら、人生をかけて信頼を育み、やがて多くの人が仰ぎ見るロールモデルになります。"
+    },
+    "5/1": {
+     "name": "5/1（救世主／探究者）",
+     "desc": "深い探究で築いた確かな土台の上に立ち、危機の場面で実践的な解決策を示して人々の期待に応える、頼れる存在です。"
+    },
+    "5/2": {
+     "name": "5/2（救世主／隠者）",
+     "desc": "内に秘めた自然な才能を持ち、人々に必要とされて呼び出されると、現実的な力でその期待に見事に応えていきます。"
+    },
+    "6/2": {
+     "name": "6/2（役割モデル／隠者）",
+     "desc": "持って生まれた才能を静かに育てながら成熟し、人生の後半には信頼される手本として周囲に良い影響を与えます。"
+    },
+    "6/3": {
+     "name": "6/3（役割モデル／試行錯誤する人）",
+     "desc": "若い頃は数々の経験と失敗から柔軟に学び、その豊かな歩みを糧に、しなやかで親しみやすい人生の手本となります。"
+    },
+    "4/1": {
+     "name": "4/1（機会をもたらす人／探究者）",
+     "desc": "揺るぎない土台と確かな信念を持ち、信頼で結ばれた人間関係を通じて、ぶれない使命をまっすぐ伝えていく存在です。"
+    }
+   }
   }
  },
  "de": {
@@ -5208,6 +5559,123 @@ window.LUX = {
     "Im Wassermann lauert das unterdrückte Anderssein und der Wunsch nach Rebellion. Deine Urkraft ist es, deine Eigenart zu leben, statt dich heimlich anzupassen.",
     "In den Fischen verbirgt sich grenzenlose Sehnsucht und verdrängter Rausch. Versöhne dich mit deiner Verletzlichkeit und deinem Hunger nach Auflösung und Hingabe."
    ]
+  },
+  "hd": {
+   "title": "Human Design",
+   "intro": "Human Design ist deine persönliche Bedienungsanleitung, errechnet aus dem exakten Stand der Gestirne zum Zeitpunkt deiner Geburt.",
+   "typeLabel": "Typ",
+   "strategyLabel": "Strategie",
+   "authorityLabel": "Innere Autorität",
+   "profileLabel": "Profil",
+   "definedLabel": "Definierte Zentren",
+   "cta": "Mit präziser Geburtszeit und genauem Geburtsort wird deine Berechnung minutengenau und damit besonders treffsicher.",
+   "types": {
+    "generator": {
+     "name": "Generator",
+     "strategy": "Reagieren statt vorpreschen – auf das antworten, was das Leben dir vorlegt.",
+     "desc": "Der Generator ist die schöpferische Lebenskraft der Welt und trägt eine verlässliche, sich regenerierende Energie in sich. Folgt er dem, was ihn wirklich erfüllt, mündet seine Arbeit in tiefe Zufriedenheit statt in Frust."
+    },
+    "mg": {
+     "name": "Manifestierender Generator",
+     "strategy": "Erst auf einen Impuls reagieren, dann informieren und zügig ins Tun kommen.",
+     "desc": "Der Manifestierende Generator verbindet die Ausdauer des Generators mit der Schlagkraft des Manifestors – vielseitig, schnell und oft mehrgleisig. Umwege und übersprungene Schritte gehören dazu, denn sein Tempo ist nicht linear, sondern effizient."
+    },
+    "projector": {
+     "name": "Projektor",
+     "strategy": "Auf die Einladung warten – für die wesentlichen Dinge gesehen und gerufen werden.",
+     "desc": "Der Projektor ist der Begleiter und Wegweiser, der Menschen und Systeme klar durchschaut und ihr Potenzial lenken kann. Anerkennung und echte Einladungen sind sein Treibstoff; gegen den Strom zu drängen kostet ihn nur Kraft."
+    },
+    "manifestor": {
+     "name": "Manifestor",
+     "strategy": "Informieren, bevor du handelst – die anderen ins Bild setzen und dann anstoßen.",
+     "desc": "Der Manifestor ist der Initiator und Wegbereiter, der aus eigenem Antrieb Neues ins Rollen bringt. Indem er sein Umfeld rechtzeitig informiert, räumt er Widerstand aus dem Weg und bewahrt sich seine kostbare Freiheit."
+    },
+    "reflector": {
+     "name": "Reflektor",
+     "strategy": "Einen ganzen Mondzyklus abwarten, bevor du große Entscheidungen triffst.",
+     "desc": "Der Reflektor ist der seltene Spiegel der Gemeinschaft und nimmt feinfühlig wahr, wie es seinem Umfeld wirklich geht. Da er ganz offen und durchlässig ist, braucht er Zeit, das richtige Umfeld und Klarheit, statt sich von der Stimmung des Augenblicks treiben zu lassen."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Emotionale Autorität",
+     "desc": "Du entscheidest nie im Affekt, sondern lässt die Gefühlswelle abklingen und prüfst über die Zeit, ob die Klarheit bestehen bleibt."
+    },
+    "sacral": {
+     "name": "Sakrale Autorität",
+     "desc": "Du vertraust der unmittelbaren körperlichen Reaktion deines Bauchraums – einem spontanen Ja oder Nein im Moment der Frage."
+    },
+    "splenic": {
+     "name": "Milz-Autorität",
+     "desc": "Du folgst der leisen, blitzschnellen Intuition deiner Milz, die nur ein einziges Mal im Augenblick spricht."
+    },
+    "ego": {
+     "name": "Ego-/Herz-Autorität",
+     "desc": "Du entscheidest aus deiner Willenskraft heraus und fragst dich ehrlich, ob du es wirklich willst und ob dein Herz wirklich dahintersteht."
+    },
+    "self": {
+     "name": "Selbst-projizierte Autorität",
+     "desc": "Du findest Klarheit, indem du laut aussprichst, was dich bewegt, und im eigenen Klang deiner Stimme erkennst, was stimmig ist."
+    },
+    "mental": {
+     "name": "Mentale/Umgebungs-Autorität",
+     "desc": "Du wirst klar, indem du dich mit vertrauten Menschen austauschst und spürst, welche Umgebung sich für dich richtig anfühlt."
+    },
+    "lunar": {
+     "name": "Mond-Autorität",
+     "desc": "Du lässt eine Entscheidung einen vollen Mondzyklus reifen und beobachtest, wie sich dein Gefühl dazu über die Wochen hinweg wandelt."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "Forscher / Märtyrer",
+     "desc": "Du brauchst ein solides Fundament aus gründlichem Wissen und tastest dich zugleich durch Versuch und Irrtum voran, bis du verstehst, was wirklich trägt."
+    },
+    "1/4": {
+     "name": "Forscher / Opportunist",
+     "desc": "Du gräbst dich tief in dein Wissen ein und gibst es über ein verlässliches Netz aus engen Beziehungen weiter, durch das sich deine Chancen ergeben."
+    },
+    "2/4": {
+     "name": "Eremit / Opportunist",
+     "desc": "Du brauchst Rückzug und Zeit für dich, während dein vertrautes Umfeld dein natürliches Talent erkennt und dich genau dann nach vorne ruft."
+    },
+    "2/5": {
+     "name": "Eremit / Häretiker",
+     "desc": "Du wirkst am liebsten aus dem Verborgenen heraus, und andere projizieren große Erwartungen auf dich, weil sie in dir eine praktische Lösung sehen."
+    },
+    "3/5": {
+     "name": "Märtyrer / Häretiker",
+     "desc": "Du lernst aus eigener Erfahrung durch Ausprobieren und Verwerfen und wirst von anderen gerufen, dieses erprobte Wissen in handfeste Lösungen zu verwandeln."
+    },
+    "3/6": {
+     "name": "Märtyrer / Rollenvorbild",
+     "desc": "In jungen Jahren sammelst du durch Versuch und Irrtum Erfahrungen, um später als gereiftes Vorbild aus echter Lebensweisheit zu wirken."
+    },
+    "4/6": {
+     "name": "Opportunist / Rollenvorbild",
+     "desc": "Tragfähige Beziehungen sind dein Fundament, auf dem du über die Lebensphasen hinweg zu einem verlässlichen Vorbild für andere heranreifst."
+    },
+    "5/1": {
+     "name": "Häretiker / Forscher",
+     "desc": "Andere erwarten von dir tatkräftige Lösungen, und du wirst ihnen gerecht, weil du dir zuvor ein festes Fundament aus gründlichem Wissen erarbeitet hast."
+    },
+    "5/2": {
+     "name": "Häretiker / Eremit",
+     "desc": "Man ruft dich, um Probleme zu lösen, doch du brauchst zugleich deinen Rückzug und das Gefühl, im richtigen Moment ganz natürlich gefragt zu werden."
+    },
+    "6/2": {
+     "name": "Rollenvorbild / Eremit",
+     "desc": "Du reifst über drei Lebensphasen zum Vorbild heran und folgst dabei deinem natürlichen Talent, das sich aus der Stille deines Rückzugs entfaltet."
+    },
+    "6/3": {
+     "name": "Rollenvorbild / Märtyrer",
+     "desc": "Du wächst über die Jahre zum lebenserfahrenen Vorbild heran und bleibst dabei offen, immer wieder Neues durch Ausprobieren zu erproben."
+    },
+    "4/1": {
+     "name": "Opportunist / Forscher",
+     "desc": "Du stehst auf einem festen Fundament aus tiefem Wissen und festen Überzeugungen, das du über dein vertrautes Beziehungsnetz mit der Welt teilst."
+    }
+   }
   }
  },
  "fr": {
@@ -6510,6 +6978,123 @@ window.LUX = {
     "Lilith en Verseau : votre étrangeté et votre besoin de rompre les règles ont été mis à l'écart. Revendiquez votre singularité radicale et votre droit d'exister hors des normes.",
     "Lilith en Poissons : vos émotions débordantes et votre sensibilité magique ont été recouvertes de honte. Récupérez votre intuition, votre fusion mystique et vos rêves comme une force sacrée."
    ]
+  },
+  "hd": {
+   "title": "Human Design",
+   "intro": "Le Human Design est votre mode d'emploi personnel, calculé à partir de la position exacte des astres au moment de votre naissance.",
+   "typeLabel": "Type",
+   "strategyLabel": "Stratégie",
+   "authorityLabel": "Autorité intérieure",
+   "profileLabel": "Profil",
+   "definedLabel": "Centres définis",
+   "cta": "En renseignant votre heure de naissance précise et votre ville, le calcul gagne en finesse et révèle votre conception unique.",
+   "types": {
+    "generator": {
+     "name": "Générateur (Generator)",
+     "strategy": "Attendre puis répondre : laissez la vie vous solliciter et observez la réaction de votre corps avant d'agir.",
+     "desc": "Vous êtes le moteur du monde, doté d'une énergie vitale qui se renouvelle dès que vous suivez ce qui vous anime vraiment. Quand votre activité vous procure une satisfaction profonde, votre force devient presque inépuisable."
+    },
+    "mg": {
+     "name": "Générateur Manifesteur (Manifesting Generator)",
+     "strategy": "Répondre puis informer : sentez ce qui vous attire, vérifiez en interne, puis prévenez votre entourage avant de vous lancer dans plusieurs choses à la fois.",
+     "desc": "Polyvalent et rapide, vous avancez souvent par bonds, sautez les étapes et menez plusieurs projets de front. Votre efficacité s'épanouit lorsque vous vous autorisez à suivre vos multiples passions sans vous enfermer dans une seule voie."
+    },
+    "projector": {
+     "name": "Projecteur (Projector)",
+     "strategy": "Attendre l'invitation : laissez les autres reconnaître votre talent avant de vous engager dans ce qui compte vraiment.",
+     "desc": "Guide naturel, vous percevez les autres et les systèmes avec une rare acuité. Reconnu et invité, vous orientez avec justesse ; ignoré ou forcé, vous vous épuisez : d'où l'importance d'attendre la juste reconnaissance."
+    },
+    "manifestor": {
+     "name": "Manifesteur (Manifestor)",
+     "strategy": "Informer : annoncez vos intentions à ceux que cela concerne avant d'agir, afin d'ouvrir la voie sans heurts.",
+     "desc": "Pionnier et initiateur, vous êtes fait pour lancer, déclencher et impulser le mouvement. Informer votre entourage en amont apaise les résistances et vous restitue votre pleine liberté d'action."
+    },
+    "reflector": {
+     "name": "Réflecteur (Reflector)",
+     "strategy": "Attendre un cycle lunaire : laissez passer environ un mois avant toute décision majeure, afin d'en éprouver toute la clarté.",
+     "desc": "Rare et précieux, vous êtes le miroir de votre environnement et en reflétez fidèlement la santé. Sensible à tout ce qui vous entoure, vous avez besoin des bons lieux et des bonnes personnes pour vous épanouir."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Autorité émotionnelle (Emotional)",
+     "desc": "Ne décidez jamais dans l'instant : laissez la vague émotionnelle se déployer dans le temps, car la clarté naît du recul, non de l'élan."
+    },
+    "sacral": {
+     "name": "Autorité sacrale (Sacral)",
+     "desc": "Fiez-vous à la réaction immédiate de votre corps, ce oui ou ce non viscéral qui surgit à l'instant même où la question se pose."
+    },
+    "splenic": {
+     "name": "Autorité splénique (Splenic)",
+     "desc": "Suivez l'intuition fugace de l'instant présent, cette guidance subtile et instantanée du corps qui ne se manifeste qu'une seule fois."
+    },
+    "ego": {
+     "name": "Autorité du cœur / ego (Ego)",
+     "desc": "Décidez à partir de votre volonté et de votre désir profond : engagez-vous uniquement dans ce que vous voulez vraiment et que vous pouvez tenir."
+    },
+    "self": {
+     "name": "Autorité du Soi projeté (Self-Projected)",
+     "desc": "Trouvez votre vérité en parlant : c'est en vous exprimant à voix haute, auprès d'oreilles de confiance, que la bonne direction se révèle."
+    },
+    "mental": {
+     "name": "Autorité mentale / environnementale (Mental)",
+     "desc": "Clarifiez vos choix par l'échange et le bon environnement : dialoguez à voix haute et laissez le lieu juste affiner votre discernement."
+    },
+    "lunar": {
+     "name": "Autorité lunaire (Lunar)",
+     "desc": "Accordez-vous le cycle d'un mois lunaire : observez l'évolution de votre ressenti tout au long de la lunaison avant de trancher."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "Chercheur / Martyr (1/3)",
+     "desc": "Vous bâtissez des fondations solides par l'étude approfondie, puis affinez votre savoir au gré des essais et des erreurs que vous traversez."
+    },
+    "1/4": {
+     "name": "Chercheur / Opportuniste (1/4)",
+     "desc": "Vous explorez en profondeur pour vous sentir sûr de vous, puis transmettez ce socle à travers votre réseau de relations proches."
+    },
+    "2/4": {
+     "name": "Ermite / Opportuniste (2/4)",
+     "desc": "Vous cultivez vos dons naturels dans la solitude, jusqu'à ce que vos relations de confiance vous appellent à les partager."
+    },
+    "2/5": {
+     "name": "Ermite / Hérétique (2/5)",
+     "desc": "Vous oscillez entre le retrait dont vous avez besoin et les appels du collectif, qui projette sur vous ses attentes et vient chercher vos solutions."
+    },
+    "3/5": {
+     "name": "Martyr / Hérétique (3/5)",
+     "desc": "Vous apprenez en expérimentant sans relâche, puis offrez au monde les solutions concrètes nées de vos épreuves."
+    },
+    "3/6": {
+     "name": "Martyr / Modèle (3/6)",
+     "desc": "Vous traversez d'abord une longue phase d'essais et d'erreurs, avant de mûrir en figure d'exemple inspirante pour les autres."
+    },
+    "4/6": {
+     "name": "Opportuniste / Modèle (4/6)",
+     "desc": "Vous avancez grâce à la qualité de vos liens, tout en évoluant vers un rôle de modèle dont la sagesse se révèle avec le temps."
+    },
+    "5/1": {
+     "name": "Hérétique / Chercheur (5/1)",
+     "desc": "Le collectif attend de vous des réponses concrètes, et vous les fournissez grâce à des fondations patiemment approfondies."
+    },
+    "5/2": {
+     "name": "Hérétique / Ermite (5/2)",
+     "desc": "On vous appelle pour résoudre et sauver, mais vos talents les plus précieux jaillissent quand on respecte votre besoin de retrait."
+    },
+    "6/2": {
+     "name": "Modèle / Ermite (6/2)",
+     "desc": "Vous mûrissez en figure de référence au fil de la vie, portant des dons innés qui demandent du temps et du recul pour se déployer."
+    },
+    "6/3": {
+     "name": "Modèle / Martyr (6/3)",
+     "desc": "Vous devenez un modèle riche de toute la sagesse glanée à travers les essais, les erreurs et les rebondissements de l'existence."
+    },
+    "4/1": {
+     "name": "Opportuniste / Chercheur (4/1)",
+     "desc": "Profil de transmission stable, vous diffusez par votre réseau des fondations solidement ancrées et une direction de vie pleinement assumée."
+    }
+   }
   }
  },
  "es": {
@@ -7812,6 +8397,123 @@ window.LUX = {
     "Lilith en Acuario reprime una rareza que te enseñaron a temer. Tu fuerza renace cuando honras lo que te vuelve distinto y dejas de pedir permiso para pertenecer.",
     "En Piscis, Lilith disuelve los límites y oculta un deseo de fusión y éxtasis. Sanas al abrazar tu sensibilidad y tu lado místico sin perderte ni avergonzarte."
    ]
+  },
+  "hd": {
+   "title": "Diseño Humano",
+   "intro": "Tu manual de instrucciones personal, calculado a partir de la posición exacta de los astros en el momento de tu nacimiento.",
+   "typeLabel": "Tipo",
+   "strategyLabel": "Estrategia",
+   "authorityLabel": "Autoridad interior",
+   "profileLabel": "Perfil",
+   "definedLabel": "Centros definidos",
+   "cta": "Cuanto más precisos sean tu hora exacta y tu ciudad de nacimiento, más fiel será tu carta: incluso unos minutos pueden cambiar tu autoridad o tu perfil.",
+   "types": {
+    "generator": {
+     "name": "Generador (Generator)",
+     "strategy": "Responder: deja que la vida te presente algo y observa cómo reacciona tu cuerpo antes de lanzarte.",
+     "desc": "Eres el motor vital del mundo, una fuente de energía sostenible que ilumina todo lo que ama de verdad. Cuando te entregas a aquello que enciende tu cuerpo, la satisfacción te llena; cuando fuerzas lo que no te vibra, llega la frustración."
+    },
+    "mg": {
+     "name": "Generador Manifestante (Manifesting Generator)",
+     "strategy": "Responder y luego informar: siente la chispa en tu cuerpo, da el salto rápido y avisa a quienes te rodean antes de actuar.",
+     "desc": "Eres polifacético, veloz y multitarea por naturaleza: saltas pasos, haces varias cosas a la vez y encuentras atajos que otros no ven. Tu camino no es lineal, y eso es justamente tu genialidad cuando lo aceptas sin pedir disculpas."
+    },
+    "projector": {
+     "name": "Proyector (Projector)",
+     "strategy": "Esperar la invitación: deja que reconozcan tu talento y te inviten antes de ofrecer tu guía en lo importante.",
+     "desc": "Eres el guía sabio, capaz de ver a las personas y los sistemas con una hondura que pocos alcanzan. No estás aquí para hacerlo todo tú, sino para dirigir y orientar; cuando tu mirada es reconocida e invitada, brillas con un éxito sereno."
+    },
+    "manifestor": {
+     "name": "Manifestador (Manifestor)",
+     "strategy": "Informar antes de actuar: avisa a quienes tu impulso vaya a afectar y luego inicia con libertad.",
+     "desc": "Eres el iniciador, la chispa que pone las cosas en marcha sin esperar permiso de nadie. Naciste para abrir caminos e impactar; cuando informas a los demás antes de arrancar, despejas la resistencia y avanzas en paz."
+    },
+    "reflector": {
+     "name": "Reflector (Reflector)",
+     "strategy": "Esperar un ciclo lunar completo: deja pasar unas cuatro semanas antes de tomar las decisiones realmente importantes.",
+     "desc": "Eres un espejo raro y precioso, profundamente abierto al entorno, que refleja la salud del lugar y la gente que te rodea. Como la Luna, atraviesas fases: dale tiempo a tu sabiduría para revelarse y elige los ambientes que te hacen sentir bien."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Autoridad emocional (Emotional)",
+     "desc": "No hay verdad en el instante: deja que la ola emocional suba y baje, consulta las decisiones con la almohada y elige desde la calma, nunca desde el pico."
+    },
+    "sacral": {
+     "name": "Autoridad sacral (Sacral)",
+     "desc": "Confía en la respuesta visceral e inmediata de tu cuerpo: ese impulso instantáneo de sí o de no que sientes en el vientre antes de pensar."
+    },
+    "splenic": {
+     "name": "Autoridad esplénica (Splenic)",
+     "desc": "Escucha esa intuición sutil que habla una sola vez, en el aquí y ahora: un susurro instantáneo que cuida de ti si te atreves a obedecerlo al momento."
+    },
+    "ego": {
+     "name": "Autoridad del ego o corazón (Ego)",
+     "desc": "Decide desde tu voluntad y tu deseo genuino: pregúntate qué quieres de verdad y qué estás dispuesto a sostener, y comprométete solo con eso."
+    },
+    "self": {
+     "name": "Autoridad del yo proyectado (Self-Projected)",
+     "desc": "Tu claridad llega al hablar: di las cosas en voz alta con personas de confianza y escucha tu propia voz para saber qué es correcto para ti."
+    },
+    "mental": {
+     "name": "Autoridad mental o del entorno (Mental / Environmental)",
+     "desc": "Piensa en voz alta y conversa en distintos entornos: la decisión correcta se aclara al contrastar tus ideas con el ambiente adecuado, sin prisa."
+    },
+    "lunar": {
+     "name": "Autoridad lunar (Lunar)",
+     "desc": "Deja que un ciclo lunar de unas cuatro semanas filtre la decisión: observa cómo evoluciona tu sentir a lo largo del mes antes de comprometerte."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "1/3 · El Investigador Mártir",
+     "desc": "Necesitas cimientos sólidos: investigas a fondo para sentirte seguro y luego aprendes de la vida a base de ensayo y error, descubriendo lo que funciona al equivocarte."
+    },
+    "1/4": {
+     "name": "1/4 · El Investigador Oportunista",
+     "desc": "Combinas un conocimiento profundo con el don de las relaciones: estudias hasta dominar el tema y compartes esa solidez a través de tu red cercana de confianza."
+    },
+    "2/4": {
+     "name": "2/4 · El Ermitaño Oportunista",
+     "desc": "Tienes un talento natural que florece en soledad, pero es tu red de contactos la que te llama y te saca al mundo justo cuando estás listo."
+    },
+    "2/5": {
+     "name": "2/5 · El Ermitaño Hereje",
+     "desc": "Atesoras dones que brotan en tu recogimiento, y los demás proyectan en ti grandes expectativas: brillas cuando ofreces soluciones prácticas en el momento oportuno."
+    },
+    "3/5": {
+     "name": "3/5 · El Mártir Hereje",
+     "desc": "Aprendes experimentando y descartando lo que no sirve, y esa sabiduría práctica te convierte en alguien a quien los demás acuden buscando respuestas universales."
+    },
+    "3/6": {
+     "name": "3/6 · El Mártir Modelo a Seguir",
+     "desc": "Vives una primera etapa de prueba y error muy intensa, te retiras a observar y madurar, y acabas siendo un referente sabio forjado por tu propia experiencia."
+    },
+    "4/6": {
+     "name": "4/6 · El Oportunista Modelo a Seguir",
+     "desc": "Las oportunidades llegan por tus vínculos cercanos, mientras maduras hacia convertirte en un ejemplo confiable que inspira con autenticidad y perspectiva."
+    },
+    "5/1": {
+     "name": "5/1 · El Hereje Investigador",
+     "desc": "Los demás proyectan en ti al salvador que resuelve sus problemas, y tu base de conocimiento profundo te permite estar a la altura con soluciones sólidas y prácticas."
+    },
+    "5/2": {
+     "name": "5/2 · El Hereje Ermitaño",
+     "desc": "Atraes expectativas de liderazgo y rescate, pero tu talento es innato y reservado: respondes mejor cuando te llaman para algo que de verdad sabes resolver."
+    },
+    "6/2": {
+     "name": "6/2 · El Modelo a Seguir Ermitaño",
+     "desc": "Caminas hacia ser un referente sereno, con dones naturales que afloran sin esfuerzo: vives en tres fases hasta encarnar la sabiduría que otros admiran."
+    },
+    "6/3": {
+     "name": "6/3 · El Modelo a Seguir Mártir",
+     "desc": "Unes la experimentación constante con la vocación de ser ejemplo: tus tropiezos no son fracasos, sino el material con el que se forja tu autoridad vital."
+    },
+    "4/1": {
+     "name": "4/1 · El Oportunista Investigador",
+     "desc": "Eres un perfil de propósito fijo: tu base de conocimiento es inquebrantable y tu influencia se transmite a través de tu red de relaciones íntimas y leales."
+    }
+   }
   }
  },
  "pt": {
@@ -9114,6 +9816,123 @@ window.LUX = {
     "Em Aquário, Lilith abriga a estranheza que você teme mostrar ao mundo. Recuperar esse poder é honrar sua diferença radical em vez de se diluir para pertencer.",
     "Em Peixes, Lilith esconde desejos difusos, fugas e um êxtase que assusta. Sua cura nasce ao mergulhar na sensibilidade e na sedução sem se perder nem se anular."
    ]
+  },
+  "hd": {
+   "title": "Human Design (Desenho Humano)",
+   "intro": "O Human Design é o seu \"manual de instruções\" pessoal, calculado a partir da posição exata dos astros no momento do seu nascimento.",
+   "typeLabel": "Tipo",
+   "strategyLabel": "Estratégia",
+   "authorityLabel": "Autoridade Interna",
+   "profileLabel": "Perfil",
+   "definedLabel": "Centros Definidos",
+   "cta": "Informe a hora exata e a cidade de nascimento para um mapa preciso, com sua autoridade e seus centros calculados com fidelidade.",
+   "types": {
+    "generator": {
+     "name": "Gerador (Generator)",
+     "strategy": "Responder: espere a vida te apresentar algo e perceba como o seu corpo reage antes de decidir.",
+     "desc": "Você é a força motriz do mundo, com uma energia vital potente e sustentável quando faz o que ama. Trabalhar no que acende o seu sacral traz aquela satisfação profunda e gostosa; forçar o que não te responde leva à frustração."
+    },
+    "mg": {
+     "name": "Gerador Manifestante (Manifesting Generator)",
+     "strategy": "Responder e depois informar: sinta a resposta do corpo, dê o primeiro aviso e parta para a ação em vários caminhos.",
+     "desc": "Você é multitarefa, rápido e cheio de atalhos: faz, descobre o que pode pular e ainda finaliza com energia de sobra. Sua mágica é juntar a satisfação do Gerador com a velocidade de quem realiza, desde que respeite seu ritmo não linear."
+    },
+    "projector": {
+     "name": "Projetor (Projector)",
+     "strategy": "Esperar o convite: aguarde ser reconhecido e chamado antes de oferecer sua orientação e seus dons.",
+     "desc": "Você é o guia natural, capaz de enxergar o outro com uma profundidade rara e otimizar sistemas e pessoas. Quando é reconhecido e convidado, brilha; quando se impõe sem convite, sente amargura e cansaço."
+    },
+    "manifestor": {
+     "name": "Manifestador (Manifestor)",
+     "strategy": "Informar: avise as pessoas impactadas antes de agir, e então abra seus próprios caminhos com liberdade.",
+     "desc": "Você é o desbravador, feito para iniciar, criar movimento e dar o pontapé inicial que os outros seguem. Ao informar antes de agir, você reduz a resistência ao seu redor; quando se sente bloqueado, surge a raiva."
+    },
+    "reflector": {
+     "name": "Refletor (Reflector)",
+     "strategy": "Esperar um ciclo lunar: deixe cerca de um mês (um ciclo da Lua) passar antes de tomar decisões importantes.",
+     "desc": "Você é o espelho raro da comunidade, profundamente sensível e capaz de refletir a saúde do ambiente em que vive. Com tempo e com os lugares e pessoas certos, encontra clareza e uma sensação encantadora de surpresa; com pressa, vive a decepção."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Autoridade Emocional (Emocional/Solar Plexus)",
+     "desc": "Decida com calma e ao longo do tempo: nunca na empolgação do momento, mas esperando a onda emocional subir e baixar até encontrar clareza e serenidade."
+    },
+    "sacral": {
+     "name": "Autoridade Sacral (Sacral)",
+     "desc": "Decida pela resposta imediata do corpo: aquele \"uhum\" (sim) ou \"un-un\" (não) que vem das entranhas no instante da pergunta."
+    },
+    "splenic": {
+     "name": "Autoridade Esplênica (Esplênica/Spleen)",
+     "desc": "Decida pela intuição do agora: aquele saber instantâneo e sutil que aparece uma única vez e protege o seu bem-estar."
+    },
+    "ego": {
+     "name": "Autoridade do Ego (Ego/Coração)",
+     "desc": "Decida pela vontade e pelo desejo verdadeiro: pergunte-se o que você realmente quer e tem força de vontade para sustentar."
+    },
+    "self": {
+     "name": "Autoridade Autoprojetada (Autoprojetada/Self)",
+     "desc": "Decida falando: conversando em voz alta com alguém de confiança, você ouve a sua própria verdade e identidade emergir na fala."
+    },
+    "mental": {
+     "name": "Autoridade Mental/Ambiental (Mental Projetada/Environment)",
+     "desc": "Decida em diálogo e no ambiente certo: troque ideias com várias pessoas e observe como o lugar afeta a sua clareza, sem pressa para concluir."
+    },
+    "lunar": {
+     "name": "Autoridade Lunar (Lunar)",
+     "desc": "Decida ao longo de um ciclo lunar de cerca de 28 dias, deixando a clareza amadurecer aos poucos antes de qualquer escolha importante."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "1/3 – Investigador / Mártir (Investigator/Martyr)",
+     "desc": "Você precisa de uma base sólida de conhecimento para se sentir seguro e aprende a vida na prática, por tentativa e erro, transformando cada tropeço em sabedoria."
+    },
+    "1/4": {
+     "name": "1/4 – Investigador / Oportunista (Investigator/Opportunist)",
+     "desc": "Você mergulha fundo nos assuntos para construir uma fundação firme e compartilha esse saber através de uma rede próxima e confiável de relacionamentos."
+    },
+    "2/4": {
+     "name": "2/4 – Eremita / Oportunista (Hermit/Opportunist)",
+     "desc": "Você tem dons naturais que florescem na solidão, mas é a sua rede de amigos e contatos que te chama para fora e revela o seu talento ao mundo."
+    },
+    "2/5": {
+     "name": "2/5 – Eremita / Herege (Hermit/Heretic)",
+     "desc": "Você equilibra a necessidade de recolhimento com um chamado coletivo: as pessoas projetam em você soluções práticas e esperam que você ajude a salvar o dia."
+    },
+    "3/5": {
+     "name": "3/5 – Mártir / Herege (Martyr/Heretic)",
+     "desc": "Você aprende experimentando e descobre o que funciona na vida real, tornando-se aquela pessoa prática que os outros procuram para resolver problemas concretos."
+    },
+    "3/6": {
+     "name": "3/6 – Mártir / Modelo (Martyr/Role Model)",
+     "desc": "Você vive uma jornada em fases: primeiro experimenta intensamente, depois observa com mais distância e amadurece para se tornar um exemplo de sabedoria."
+    },
+    "4/6": {
+     "name": "4/6 – Oportunista / Modelo (Opportunist/Role Model)",
+     "desc": "Sua vida se constrói sobre relações de confiança e, com o tempo, você se transforma em um modelo de referência, admirado pela sua autenticidade e coerência."
+    },
+    "5/1": {
+     "name": "5/1 – Herege / Investigador (Heretic/Investigator)",
+     "desc": "As pessoas enxergam em você um solucionador universal, e você sustenta essa expectativa com uma base de conhecimento sólida e soluções confiáveis na hora certa."
+    },
+    "5/2": {
+     "name": "5/2 – Herege / Eremita (Heretic/Hermit)",
+     "desc": "O coletivo te procura por soluções práticas, mesmo quando você prefere a sua quietude: seu desafio é responder ao chamado preservando o seu espaço pessoal."
+    },
+    "6/2": {
+     "name": "6/2 – Modelo / Eremita (Role Model/Hermit)",
+     "desc": "Você nasceu para ser um exemplo, mas seus dons naturais brilham melhor no seu próprio tempo e ritmo, sem se forçar a estar sempre disponível."
+    },
+    "6/3": {
+     "name": "6/3 – Modelo / Mártir (Role Model/Martyr)",
+     "desc": "Você une a sabedoria de quem vira referência com a leveza de quem continua experimentando a vida, transformando cada experiência em aprendizado autêntico."
+    },
+    "4/1": {
+     "name": "4/1 – Oportunista / Investigador (Opportunist/Investigator)",
+     "desc": "Você tem uma base de propósito firme e estável, e transmite esse conhecimento profundo por meio de uma rede sólida de pessoas que confiam em você."
+    }
+   }
   }
  },
  "it": {
@@ -10416,6 +11235,123 @@ window.LUX = {
     "Con Lilith in Acquario soffochi la tua diversità per timore dell'esclusione. La forza primordiale è la ribellione lucida: essere unica e libera, anche fuori da ogni gruppo.",
     "Con Lilith in Pesci nascondi un'ombra fatta di fusione, fuga e desiderio dell'infinito. Riappropriartene è abbracciare la tua sensibilità senza perderti né dissolverti negli altri."
    ]
+  },
+  "hd": {
+   "title": "Human Design",
+   "intro": "Il Human Design è il tuo 'manuale d'uso' personale, calcolato dalla posizione esatta dei corpi celesti nel momento della tua nascita.",
+   "typeLabel": "Tipo",
+   "strategyLabel": "Strategia",
+   "authorityLabel": "Autorità interiore",
+   "profileLabel": "Profilo",
+   "definedLabel": "Centri definiti",
+   "cta": "Inserendo l'orario di nascita preciso e la città esatta, il calcolo diventa accurato al minuto e la tua mappa rivela ogni sfumatura.",
+   "types": {
+    "generator": {
+     "name": "Generator (Generatore)",
+     "strategy": "Rispondere: aspetta che la vita ti presenti qualcosa e lascia che il corpo reagisca, prima di agire.",
+     "desc": "Sei il motore vitale del pianeta, con un'energia sacrale che sembra inesauribile quando fai ciò che ami davvero. Seguendo le tue risposte istintive arrivi alla soddisfazione profonda; forzando le cose, invece, accumuli solo frustrazione."
+    },
+    "mg": {
+     "name": "Manifesting Generator (Generatore Manifestante)",
+     "strategy": "Rispondere e poi informare: lascia reagire il corpo e, prima di lanciarti, avvisa chi sarà coinvolto.",
+     "desc": "Multipotenziale e velocissimo, salti i passaggi e porti avanti più cose insieme con un'energia che brucia in fretta. Sei fatto per percorsi non lineari: gli errori e i ritorni indietro non sono fallimenti, ma il tuo modo naturale di trovare la via più efficiente."
+    },
+    "projector": {
+     "name": "Projector (Proiettore)",
+     "strategy": "Aspettare l'invito: attendi il riconoscimento giusto prima di offrire la tua guida e la tua visione.",
+     "desc": "Sei la guida nata, capace di vedere gli altri e i sistemi con una lucidità penetrante. La tua energia non è fatta per la fatica costante: quando vieni invitato e riconosciuto nelle giuste relazioni, la tua saggezza brilla e ottieni il vero successo."
+    },
+    "manifestor": {
+     "name": "Manifestor (Manifestatore)",
+     "strategy": "Informare: prima di iniziare o cambiare qualcosa, comunica le tue intenzioni a chi ne sarà toccato.",
+     "desc": "Sei il pioniere che dà il via alle cose, capace di mettere in moto la realtà in autonomia, senza attendere il permesso di nessuno. Informare gli altri prima di agire abbatte le resistenze e ti restituisce la pace e la libertà che cerchi."
+    },
+    "reflector": {
+     "name": "Reflector (Riflettore)",
+     "strategy": "Aspettare un ciclo lunare: prima delle scelte importanti, lascia passare circa un mese per sentire ogni sfumatura.",
+     "desc": "Raro e prezioso, sei uno specchio che riflette la salute dell'ambiente e delle persone intorno a te. Profondamente influenzabile dalla Luna, hai bisogno di tempo e di luoghi giusti: la tua meraviglia nasce dal sentirti libero di percepire la vita senza fretta."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Autorità Emotiva (Emotional)",
+     "desc": "Decidi solo dopo aver lasciato passare l'onda emotiva: con il tempo l'entusiasmo o lo sconforto si placano e arriva una chiarezza serena, perché per te non esiste verità nell'istante."
+    },
+    "sacral": {
+     "name": "Autorità Sacrale (Sacral)",
+     "desc": "Decidi ascoltando la reazione immediata del corpo nel ventre: quel 'sì' che si apre o quel 'no' che si chiude sono la tua bussola più affidabile, qui e ora."
+    },
+    "splenic": {
+     "name": "Autorità Splenica (Splenic)",
+     "desc": "Decidi affidandoti all'intuito istantaneo: una sensazione sottile e silenziosa che parla una sola volta, nel presente, e va colta al volo senza ripensamenti."
+    },
+    "ego": {
+     "name": "Autorità dell'Io / Cuore (Ego)",
+     "desc": "Decidi seguendo la forza di volontà e il desiderio autentico: chiediti che cosa vuoi davvero e che cosa hai il cuore e l'energia di sostenere fino in fondo."
+    },
+    "self": {
+     "name": "Autorità del Sé Proiettato (Self-Projected)",
+     "desc": "Decidi parlando ad alta voce con persone fidate: è ascoltando la tua stessa voce, e ciò che esce spontaneamente, che riconosci la direzione giusta per te."
+    },
+    "mental": {
+     "name": "Autorità Mentale / Ambientale (Mental)",
+     "desc": "Decidi confrontandoti con l'ambiente e dialogando con voci fidate: non per farti dire cosa fare, ma per far emergere la tua chiarezza nei luoghi e nelle conversazioni giuste."
+    },
+    "lunar": {
+     "name": "Autorità Lunare (Lunar)",
+     "desc": "Decidi seguendo l'intero ciclo della Luna: lascia maturare la scelta lungo circa ventotto giorni, osservando come cambia il tuo sentire, prima di confermarla."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "1/3 Indagatore / Martire (Investigator / Martyr)",
+     "desc": "Hai bisogno di fondamenta solide: studi a fondo per sentirti sicuro, poi impari per tentativi ed errori, trasformando ogni inciampo in saggezza concreta."
+    },
+    "1/4": {
+     "name": "1/4 Indagatore / Opportunista (Investigator / Opportunist)",
+     "desc": "Costruisci basi profonde di conoscenza e le condividi attraverso la tua rete: le opportunità e le svolte arrivano quasi sempre dalle persone che già conosci."
+    },
+    "2/4": {
+     "name": "2/4 Eremita / Opportunista (Hermit / Opportunist)",
+     "desc": "Hai un talento naturale che fiorisce nella solitudine, ma sono gli amici e i contatti a chiamarti fuori al momento giusto, riconoscendo il dono che spesso non vedi in te."
+    },
+    "2/5": {
+     "name": "2/5 Eremita / Eretico (Hermit / Heretic)",
+     "desc": "Custodisci un dono che ami coltivare in privato, mentre gli altri proiettano su di te grandi aspettative e ti chiamano a offrire soluzioni pratiche e universali."
+    },
+    "3/5": {
+     "name": "3/5 Martire / Eretico (Martyr / Heretic)",
+     "desc": "Impari sperimentando sulla tua pelle ciò che funziona e ciò che non funziona, e proprio da quegli errori nascono le soluzioni concrete che gli altri attendono da te."
+    },
+    "3/6": {
+     "name": "3/6 Martire / Modello (Martyr / Role Model)",
+     "desc": "Nella prima parte della vita esplori per prove ed errori, poi ti ritiri a osservare e infine emergi come modello autorevole, frutto di tutto ciò che hai vissuto."
+    },
+    "4/6": {
+     "name": "4/6 Opportunista / Modello (Opportunist / Role Model)",
+     "desc": "Le relazioni solide e la tua rete sono il terreno della tua vita, e con la maturità diventi un punto di riferimento ispiratore in cui gli altri ripongono fiducia."
+    },
+    "5/1": {
+     "name": "5/1 Eretico / Indagatore (Heretic / Investigator)",
+     "desc": "Gli altri si rivolgono a te aspettandosi soluzioni pratiche, e la tua autorevolezza poggia su uno studio profondo che ti rende davvero affidabile sotto pressione."
+    },
+    "5/2": {
+     "name": "5/2 Eretico / Eremita (Heretic / Hermit)",
+     "desc": "Sei chiamato a guidare e a risolvere per la collettività, pur amando il tuo spazio appartato: emergi quando vieni convocato, e poi ti ritiri per ricaricarti."
+    },
+    "6/2": {
+     "name": "6/2 Modello / Eremita (Role Model / Hermit)",
+     "desc": "Sei destinato a diventare un modello vivente attraverso tre fasi di vita, coltivando nella riservatezza i talenti naturali che gli altri sapranno far emergere."
+    },
+    "6/3": {
+     "name": "6/3 Modello / Martire (Role Model / Martyr)",
+     "desc": "Diventi un esempio per gli altri restando fedele all'autenticità: la vita ti mette alla prova con esperienze intense, e dalla resilienza nasce una saggezza luminosa."
+    },
+    "4/1": {
+     "name": "4/1 Opportunista / Indagatore (Opportunist / Investigator)",
+     "desc": "Sei la più stabile delle configurazioni: poggi su basi solide e su una direzione interiore chiara, e influenzi il mondo attraverso la forza dei tuoi legami fissi."
+    }
+   }
   }
  },
  "id": {
@@ -11718,6 +12654,123 @@ window.LUX = {
     "Lilith di Aquarius menyembunyikan keanehan dan jiwa pemberontak yang dulu membuat Anda merasa terasing. Merayakan keunikan tanpa minta restu siapa pun adalah pembebasan Anda.",
     "Lilith di Pisces menyimpan kerinduan, mimpi, dan sisi spiritual yang dulu Anda anggap terlalu rapuh. Menghormati intuisi dan air mata Anda mengubahnya menjadi kekuatan yang lembut."
    ]
+  },
+  "hd": {
+   "title": "Human Design",
+   "intro": "Human Design adalah 'panduan pemakaian diri' yang dihitung dari posisi benda langit saat kamu lahir, memadukan astrologi, I Ching, Kabbalah, dan sistem cakra menjadi satu peta energi yang unik.",
+   "typeLabel": "Tipe",
+   "strategyLabel": "Strategi",
+   "authorityLabel": "Otoritas Batin",
+   "profileLabel": "Profil",
+   "definedLabel": "Pusat yang Terdefinisi",
+   "cta": "Masukkan jam lahir dan kota kelahiran seakurat mungkin agar perhitungan tipe, otoritas, dan profilmu menjadi presisi dan benar-benar mencerminkan dirimu.",
+   "types": {
+    "generator": {
+     "name": "Generator",
+     "strategy": "Menunggu lalu merespons (respond): biarkan hidup menghadirkan sesuatu, lalu rasakan respons sejatimu sebelum bergerak.",
+     "desc": "Kamu adalah mesin energi kehidupan dengan daya tahan luar biasa saat menekuni hal yang benar-benar kamu cintai. Tanda kamu berada di jalur yang tepat adalah rasa puas (satisfaction) yang hangat di dada, bukan kelelahan yang menggerogoti."
+    },
+    "mg": {
+     "name": "Manifesting Generator",
+     "strategy": "Merespons dahulu, lalu beri tahu orang di sekitarmu sebelum melangkah cepat (respond + inform), agar energimu mengalir tanpa hambatan.",
+     "desc": "Kamu serba bisa, cepat, dan mampu mengerjakan banyak hal sekaligus dengan ritme yang khas. Wajar bila kamu melompati langkah atau berganti arah; justru di situlah letak efisiensi dan keajaibanmu, asalkan kamu tetap setia pada respons tubuh."
+    },
+    "projector": {
+     "name": "Projector (Proyektor)",
+     "strategy": "Menunggu undangan (invitation) untuk hal-hal besar seperti peran, cinta, dan kerja sama, sebelum membagikan pandanganmu.",
+     "desc": "Kamu adalah pemandu dan pengamat yang mampu melihat orang lain secara mendalam serta mengarahkan energi dengan bijak. Saat kehadiran dan keahlianmu diakui melalui undangan yang tepat, kamu meraih sukses (success) tanpa harus memaksakan diri."
+    },
+    "manifestor": {
+     "name": "Manifestor",
+     "strategy": "Memberi tahu (inform) pihak yang terdampak sebelum kamu memulai sebuah aksi, agar jalanmu lapang dan minim perlawanan.",
+     "desc": "Kamu adalah pelopor dan pemrakarsa yang mampu memulai sesuatu dari ketiadaan, mengubah ide menjadi kenyataan. Ketika kamu berinisiatif secara bebas dan menginformasikan langkahmu, kamu merasakan kedamaian (peace) yang menandakan kebebasanmu utuh."
+    },
+    "reflector": {
+     "name": "Reflector (Reflektor)",
+     "strategy": "Menunggu satu siklus bulan penuh (sekitar 28 hari) sebelum memutuskan hal penting, sambil membicarakannya dengan orang yang kamu percaya.",
+     "desc": "Kamu adalah cermin langka yang memantulkan kesehatan dan suasana lingkungan di sekitarmu, sangat peka terhadap tempat dan orang-orang. Saat berada di komunitas yang tepat, kamu dipenuhi rasa takjub (surprise) yang menyenangkan terhadap hidup."
+    }
+   },
+   "authorities": {
+    "emotional": {
+     "name": "Otoritas Emosional (Emotional / Solar Plexus)",
+     "desc": "Beri jeda waktu dan tunggu gelombang emosimu mereda hingga terasa jernih; tidak ada kebenaran sejati saat suasana hati sedang memuncak, jadi 'tidur dulu' sebelum memutuskan adalah kebijaksanaanmu."
+    },
+    "sacral": {
+     "name": "Otoritas Sakral (Sacral)",
+     "desc": "Percayai respons spontan tubuhmu saat ini juga, suara batin yang berkata 'iya' (terdengar energik) atau 'tidak' (terasa surut) tanpa perlu kamu pikirkan panjang-panjang."
+    },
+    "splenic": {
+     "name": "Otoritas Limpa (Splenic)",
+     "desc": "Ikuti intuisi sekejap yang muncul hanya sekali di momen itu; bisikan kesadaran tubuh yang halus dan seketika ini menjaga serta menuntunmu, asalkan kamu cukup sigap mendengarnya."
+    },
+    "ego": {
+     "name": "Otoritas Ego / Jantung (Ego / Heart)",
+     "desc": "Tanyakan pada dirimu apa yang sungguh-sungguh kamu inginkan dan sanggup kamu pertahankan; keputusan terbaikmu lahir dari kemauan dan tekad hatimu, bukan dari rasa wajib."
+    },
+    "self": {
+     "name": "Otoritas Proyeksi Diri (Self-Projected)",
+     "desc": "Bicaralah dengan lantang kepada pendengar yang kamu percaya, lalu dengarkan nada dan arah suaramu sendiri; kebenaranmu terungkap justru saat kata-kata itu keluar."
+    },
+    "mental": {
+     "name": "Otoritas Mental / Lingkungan (Mental / Environmental)",
+     "desc": "Diskusikan pilihanmu di berbagai lingkungan dan suasana, lalu perhatikan tempat mana yang membuatmu terasa jernih; kejelasan datang dari dialog dengan lingkungan yang tepat, bukan dari memutuskan sendirian."
+    },
+    "lunar": {
+     "name": "Otoritas Lunar / Bulan (Lunar)",
+     "desc": "Biarkan satu siklus bulan penuh berlalu dan amati bagaimana perasaanmu berubah hari demi hari; kejelasan sejatimu tersusun perlahan sepanjang ritme bulan ini."
+    }
+   },
+   "profiles": {
+    "1/3": {
+     "name": "1/3 - Penyelidik / Martir (Investigator / Martyr)",
+     "desc": "Kamu membangun rasa aman dengan menggali fondasi pengetahuan secara mendalam, lalu mengujinya melalui pengalaman langsung, di mana coba-coba dan kesalahan justru menjadi guru terbaikmu."
+    },
+    "1/4": {
+     "name": "1/4 - Penyelidik / Oportunis (Investigator / Opportunist)",
+     "desc": "Kamu memadukan riset yang teliti dengan kekuatan jejaring; pengetahuan kokoh yang kamu miliki menyebar dan berkembang justru lewat relasi dekat serta orang-orang tepercaya di sekitarmu."
+    },
+    "2/4": {
+     "name": "2/4 - Petapa / Oportunis (Hermit / Opportunist)",
+     "desc": "Kamu butuh waktu menyendiri untuk merawat bakat alami, namun panggilan dan peluang besar justru datang dari jaringan pertemananmu yang menarikmu keluar dari ruang pribadi."
+    },
+    "2/5": {
+     "name": "2/5 - Petapa / Pendobrak (Hermit / Heretic)",
+     "desc": "Kamu menyimpan bakat alami yang matang dalam kesunyian, lalu dunia memproyeksikan harapan besar padamu untuk hadir sebagai pemberi solusi praktis di saat genting."
+    },
+    "3/5": {
+     "name": "3/5 - Martir / Pendobrak (Martyr / Heretic)",
+     "desc": "Kamu belajar lewat eksperimen dan coba-salah tanpa henti, lalu mengubah pelajaran berharga itu menjadi solusi nyata yang diandalkan banyak orang di sekitarmu."
+    },
+    "3/6": {
+     "name": "3/6 - Martir / Teladan (Martyr / Role Model)",
+     "desc": "Kamu menjalani fase mencoba dan tersandung di masa muda, lalu bertransformasi menjadi sosok bijak yang diteladani berkat hikmah dari semua pengalaman yang telah kamu lalui."
+    },
+    "4/6": {
+     "name": "4/6 - Oportunis / Teladan (Opportunist / Role Model)",
+     "desc": "Kamu meniti hidup lewat relasi hangat dan jaringan tepercaya, sambil perlahan tumbuh menjadi panutan yang autentik dan dapat diandalkan oleh komunitasmu."
+    },
+    "5/1": {
+     "name": "5/1 - Pendobrak / Penyelidik (Heretic / Investigator)",
+     "desc": "Kamu dipandang sebagai sosok yang mampu menyelamatkan keadaan, dan kepercayaan itu kamu jawab dengan fondasi pengetahuan yang dalam serta solusi yang benar-benar teruji."
+    },
+    "5/2": {
+     "name": "5/2 - Pendobrak / Petapa (Heretic / Hermit)",
+     "desc": "Dunia memandangmu sebagai pemberi solusi yang dinanti, sementara kamu sendiri menjaga ruang sunyi tempat bakat alamimu matang sebelum dipanggil keluar untuk berkarya."
+    },
+    "6/2": {
+     "name": "6/2 - Teladan / Petapa (Role Model / Hermit)",
+     "desc": "Kamu ditakdirkan menjadi panutan yang autentik, dengan bakat alami yang bersinar saat dibutuhkan, dipoles dalam ketenangan ruang pribadi yang kamu hargai."
+    },
+    "6/3": {
+     "name": "6/3 - Teladan / Martir (Role Model / Martyr)",
+     "desc": "Kamu memadukan kebijaksanaan seorang panutan dengan keberanian bereksperimen; lewat pasang surut pengalaman, kamu tumbuh menjadi teladan yang lapang dan rendah hati."
+    },
+    "4/1": {
+     "name": "4/1 - Oportunis / Penyelidik (Opportunist / Investigator)",
+     "desc": "Kamu memiliki fondasi diri yang kokoh dan teguh, lalu menyebarkan pengetahuan serta pengaruhmu melalui jaringan relasi dekat yang kamu bangun dengan tulus."
+    }
+   }
   }
  }
 };

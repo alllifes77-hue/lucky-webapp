@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v19: 트렌드 아스트로카토그래피(행운의 도시) + 블랙문 릴리스
-const CACHE_NAME = 'lucky-v19';
+// v20: 트렌드 휴먼디자인(64게이트·9센터·36채널 결정론)
+const CACHE_NAME = 'lucky-v20';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

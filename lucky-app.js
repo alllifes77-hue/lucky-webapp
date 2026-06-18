@@ -1648,7 +1648,7 @@ function renderResults(data) {
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
    'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
-   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel'].forEach(id => {
+   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1745,6 +1745,7 @@ function renderResults(data) {
   try { renderSaturnPanel(data); } catch(e){}
   try { renderAstroCartoPanel(data); } catch(e){}
   try { renderLilithPanel(data); } catch(e){}
+  try { renderHumanDesignPanel(data); } catch(e){}
   try { renderRetroPanel(data); } catch(e){}
   try { renderElectionalPanel(data); } catch(e){}
   try { renderMoonRitualPanel(data); } catch(e){}
@@ -5835,6 +5836,96 @@ function renderAstroCartoPanel(data){
     <div style="font-size:11px;color:#0369a1;margin-bottom:10px;line-height:1.4;">${escHtml(AC.intro)}</div>
     <div style="font-size:10.5px;color:#0c4a6e;font-weight:700;text-transform:uppercase;margin-bottom:7px;">✨ ${escHtml(AC.bestLabel)}</div>
     ${best.map(row).join('')}`;
+  _luxInsert(panel);
+}
+
+// ── T6) 휴먼 디자인 (64게이트·9센터·36채널) (Trend Wave6) ──────
+// 게이트 휠: 게이트41이 황경 302°(2°물병)에서 시작하는 트로피컬 표준 라베만달라.
+const _HD_WHEEL=[41,19,13,49,30,55,37,63,22,36,25,17,21,51,42,3,27,24,2,23,8,20,16,35,45,12,15,52,39,53,62,56,31,33,7,4,29,59,40,64,47,6,46,18,48,57,32,50,28,44,1,43,14,34,9,5,26,11,10,58,38,54,61,60];
+const _HD_START=302.0;
+const _HD_CENTERS_MAP={Head:[64,61,63],Ajna:[47,24,4,17,43,11],Throat:[62,23,56,35,12,45,33,8,31,20,16],G:[7,1,13,25,46,2,15,10],Heart:[21,40,26,51],Spleen:[48,57,44,50,32,28,18],Sacral:[5,14,29,59,9,3,42,27,34],SolarPlexus:[6,37,30,55,49,22,36],Root:[53,60,52,19,39,41,58,38,54]};
+const _HD_GATE_CENTER=(function(){ const m={}; for(const c in _HD_CENTERS_MAP) _HD_CENTERS_MAP[c].forEach(g=>{m[g]=c;}); return m; })();
+const _HD_CHANNELS=[[1,8],[2,14],[3,60],[4,63],[5,15],[6,59],[7,31],[9,52],[10,20],[10,34],[10,57],[11,56],[12,22],[13,33],[16,48],[17,62],[18,58],[19,49],[20,34],[20,57],[21,45],[23,43],[24,61],[25,51],[26,44],[27,50],[28,38],[29,46],[30,41],[32,54],[34,57],[35,36],[37,40],[39,55],[42,53],[47,64]];
+function _hdGateLine(lon){ const off=((lon-_HD_START)%360+360)%360; const idx=Math.floor(off/5.625); const within=off-idx*5.625; return {gate:_HD_WHEEL[idx], line:Math.min(6,Math.floor(within/(5.625/6))+1)}; }
+function _hdActs(date){
+  const A=_astro(); if(!A) return null;
+  const sunLon=_eclLon('Sun',date); if(sunLon==null) return null;
+  const jd=2440587.5+date.getTime()/86400000, T=(jd-2451545)/36525;
+  let node=(125.0445479-1934.1362891*T+0.0020754*T*T)%360; node=((node%360)+360)%360; // 평균 북교점
+  const pts=[ sunLon, (sunLon+180)%360, _eclLon('Moon',date), node, (node+180)%360 ];
+  for(const b of ['Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto']){ const bd=A.Body?A.Body[b]:null; pts.push(bd?_eclLon(bd,date):null); }
+  const acts=pts.map(l=> l==null?null:_hdGateLine(l)).filter(Boolean);
+  return { acts, sun:_hdGateLine(sunLon) };
+}
+function _humanDesign(data){
+  const A=_astro(); if(!A) return null;
+  try{
+    const h=(data.birthHour!=null)?data.birthHour:12;
+    const sel=(typeof document!=='undefined')?document.getElementById('birth-city'):null;
+    const bc=(sel && sel.value!=='' && typeof _CITIES!=='undefined' && _CITIES[+sel.value])?_CITIES[+sel.value]:null;
+    const birthUtc = bc ? new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,0,Math.round((h-bc[3])*60+(data.birthMinute||0))))
+                        : new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,h,(data.birthMinute||0)));
+    const P=_hdActs(birthUtc); if(!P) return null;
+    const sunLon=_eclLon('Sun',birthUtc); const target=((sunLon-88)%360+360)%360; // 디자인=88° 태양호 이전
+    let desDate=null;
+    try{ if(A.SearchSunLongitude){ const t=A.SearchSunLongitude(target, new Date(birthUtc.getTime()-95*86400000), 95); desDate=t?(t.date||null):null; } }catch(e){}
+    if(!desDate) desDate=new Date(birthUtc.getTime()-88*86400000);
+    const D=_hdActs(desDate); if(!D) return null;
+    const active=new Set(); P.acts.forEach(a=>active.add(a.gate)); D.acts.forEach(a=>active.add(a.gate));
+    const definedCenters=new Set(); const edges=[];
+    for(const [a,b] of _HD_CHANNELS){ if(active.has(a)&&active.has(b)){ definedCenters.add(_HD_GATE_CENTER[a]); definedCenters.add(_HD_GATE_CENTER[b]); edges.push([_HD_GATE_CENTER[a],_HD_GATE_CENTER[b]]); } }
+    const motors=['Sacral','Heart','SolarPlexus','Root'];
+    const adj={}; edges.forEach(([x,y])=>{(adj[x]=adj[x]||[]).push(y);(adj[y]=adj[y]||[]).push(x);});
+    function reaches(from,to){ if(!definedCenters.has(from)||!definedCenters.has(to))return false; const seen=new Set([from]),q=[from]; while(q.length){const n=q.shift(); if(n===to)return true; (adj[n]||[]).forEach(m=>{if(!seen.has(m)){seen.add(m);q.push(m);}});} return false; }
+    const sacral=definedCenters.has('Sacral'), throat=definedCenters.has('Throat');
+    const motorThroat = throat && motors.some(mo=>reaches(mo,'Throat'));
+    let type;
+    if(definedCenters.size===0) type='reflector';
+    else if(sacral) type = motorThroat?'mg':'generator';
+    else if(throat && motorThroat) type='manifestor';
+    else type='projector';
+    let auth;
+    if(definedCenters.has('SolarPlexus')) auth='emotional';
+    else if(definedCenters.has('Sacral')) auth='sacral';
+    else if(definedCenters.has('Spleen')) auth='splenic';
+    else if(definedCenters.has('Heart')) auth='ego';
+    else if(definedCenters.has('G')) auth='self';
+    else if(definedCenters.size>0) auth='mental';
+    else auth='lunar';
+    const profile = P.sun.line + '/' + D.sun.line;
+    return { type, auth, profile, definedCount:definedCenters.size };
+  }catch(e){ return null; }
+}
+function renderHumanDesignPanel(data){
+  const old=document.getElementById('humandesign-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.hd||!X.hd.types) return;
+  const HD=X.hd; const r=_humanDesign(data); if(!r) return;
+  const t=HD.types[r.type]; if(!t) return;
+  const au=(HD.authorities&&HD.authorities[r.auth])||{};
+  const pf=(HD.profiles&&HD.profiles[r.profile])||null;
+  const TYPE_EMJ={generator:'⚙️',mg:'⚡',projector:'🎯',manifestor:'🚀',reflector:'🌙'};
+  const panel=document.createElement('div');
+  panel.id='humandesign-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#0f172a,#1e1b4b);border-radius:16px;padding:16px;margin:16px 0;color:#e0e7ff;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#a5b4fc;margin-bottom:6px;text-transform:uppercase;">🧬 ${escHtml(HD.title)}</div>
+    <div style="font-size:11px;color:#c7d2fe;margin-bottom:12px;line-height:1.4;">${escHtml(HD.intro)}</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:11px;">
+      <div style="font-size:32px;line-height:1;">${TYPE_EMJ[r.type]||'🧬'}</div>
+      <div><div style="font-size:10px;color:#818cf8;font-weight:700;text-transform:uppercase;">${escHtml(HD.typeLabel)}</div>
+        <div style="font-size:18px;font-weight:900;color:#eef2ff;margin-top:1px;">${escHtml(t.name)}</div></div></div>
+    <div style="background:rgba(129,140,248,.15);border-radius:10px;padding:10px 13px;font-size:12px;color:#e0e7ff;line-height:1.6;margin-bottom:9px;">
+      <span style="color:#a5b4fc;font-weight:700;">▸ ${escHtml(HD.strategyLabel)}:</span> ${escHtml(t.strategy)}<br>${escHtml(t.desc)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:9px 11px;">
+        <div style="font-size:9.5px;color:#818cf8;font-weight:700;text-transform:uppercase;">${escHtml(HD.authorityLabel)}</div>
+        <div style="font-size:13px;font-weight:800;color:#eef2ff;margin:2px 0 3px;">${escHtml(au.name||'')}</div>
+        <div style="font-size:10.5px;color:#c7d2fe;line-height:1.45;">${escHtml(au.desc||'')}</div></div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:9px 11px;">
+        <div style="font-size:9.5px;color:#818cf8;font-weight:700;text-transform:uppercase;">${escHtml(HD.profileLabel)}</div>
+        <div style="font-size:13px;font-weight:800;color:#eef2ff;margin:2px 0 3px;">${escHtml(r.profile)}${pf?' · '+escHtml(pf.name):''}</div>
+        <div style="font-size:10.5px;color:#c7d2fe;line-height:1.45;">${pf?escHtml(pf.desc):''}</div></div></div>
+    <div style="font-size:10px;color:#818cf8;margin-top:9px;line-height:1.4;">${escHtml(HD.definedLabel)}: ${r.definedCount}/9 · ${escHtml(HD.cta)}</div>`;
   _luxInsert(panel);
 }
 
