@@ -1648,7 +1648,7 @@ function renderResults(data) {
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
    'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
-   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel'].forEach(id => {
+   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1743,6 +1743,8 @@ function renderResults(data) {
   try { renderTransitPanel(data); } catch(e){}
   try { renderSolarPanel(data); } catch(e){}
   try { renderSaturnPanel(data); } catch(e){}
+  try { renderAstroCartoPanel(data); } catch(e){}
+  try { renderLilithPanel(data); } catch(e){}
   try { renderRetroPanel(data); } catch(e){}
   try { renderElectionalPanel(data); } catch(e){}
   try { renderMoonRitualPanel(data); } catch(e){}
@@ -5754,6 +5756,86 @@ function _currentRising(data){
   const utc=new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,0,Math.round((data.birthHour-c[3])*60+(data.birthMinute||0))));
   const asc=_ascendant(utc, c[1], c[2]); if(asc==null) return null;
   return Math.floor(asc/30); // 0=양자리..11=물고기
+}
+
+// ── T7) 블랙문 릴리스 (달 평균 원지점) (Trend Wave5) ──────────
+function _lilithSign(data){
+  try{
+    const h=(data.birthHour!=null)?data.birthHour:12;
+    const jd=gregJD(data.year,(data.month||1),(data.day||1)) + (h-12)/24;
+    const T=(jd-2451545)/36525;
+    const peri=83.3532465 + 4069.0137287*T - 0.0103200*T*T - T*T*T/80053 + T*T*T*T/18999000;
+    const lil=((peri+180)%360+360)%360;
+    return Math.floor(lil/30); // 0=양자리..11=물고기
+  }catch(e){ return null; }
+}
+function renderLilithPanel(data){
+  const old=document.getElementById('lilith-panel'); if(old)old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.lilith||!X.lilith.signs) return;
+  const LI=X.lilith; const li=_lilithSign(data); if(li==null) return;
+  const signs=(X.sunSign&&X.sunSign.signs)?X.sunSign.signs:null;
+  const name=signs?signs[li].name:'';
+  const panel=document.createElement('div');
+  panel.id='lilith-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#18181b,#3b0764);border-radius:16px;padding:16px;margin:16px 0;color:#e9d5ff;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#d8b4fe;margin-bottom:6px;text-transform:uppercase;">🌑 ${escHtml(LI.title)}</div>
+    <div style="font-size:11px;color:#c4b5fd;margin-bottom:11px;line-height:1.4;">${escHtml(LI.intro)}</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+      <div style="font-size:34px;line-height:1;">⚸</div>
+      <div><div style="font-size:10px;color:#a78bfa;font-weight:700;text-transform:uppercase;">${escHtml(LI.label)}</div>
+        <div style="font-size:17px;font-weight:900;color:#f3e8ff;margin-top:1px;">${_SIGN_EMJ[li]} ${escHtml(name)}</div></div></div>
+    <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:11px 13px;font-size:12px;color:#e9d5ff;line-height:1.6;">${escHtml(LI.signs[li])}</div>`;
+  _luxInsert(panel);
+}
+
+// ── T8) 아스트로카토그래피 라이트 (행운의 도시) (Trend Wave5) ──
+function _astroCarto(data){
+  const A=_astro(); if(!A||!A.SiderealTime||typeof _CITIES==='undefined') return null;
+  try{
+    const h=(data.birthHour!=null)?data.birthHour:12;
+    const sel=(typeof document!=='undefined')?document.getElementById('birth-city'):null;
+    const bc=(sel && sel.value!=='' && _CITIES[+sel.value])?_CITIES[+sel.value]:null;
+    const utc = bc ? new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,0,Math.round((h-bc[3])*60+(data.birthMinute||0))))
+                   : new Date(Date.UTC(data.year,(data.month||1)-1,data.day||1,12,0));
+    const gastDeg=((A.SiderealTime(utc)*15)%360+360)%360;
+    const eps=23.4367, r=Math.PI/180, bodies=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn'];
+    const mcLon=bodies.map(b=>{ const lon=_eclLon(b==='Sun'?'Sun':(b==='Moon'?'Moon':A.Body[b]), utc); if(lon==null)return null;
+      const ra=((Math.atan2(Math.sin(lon*r)*Math.cos(eps*r), Math.cos(lon*r))/r)%360+360)%360;
+      let mc=((ra-gastDeg)%360+360)%360; if(mc>180)mc-=360; return mc; });
+    const ad=(a,b)=>{ let d=Math.abs(a-b)%360; if(d>180)d=360-d; return d; };
+    const W=[0.6,0,0,1,-0.7,1,-0.6]; // 태양+,금성+,화성-,목성+,토성- (달·수성 0)
+    const orb=8;
+    const out=_CITIES.map((c,ci)=>{ const clon=c[2]; let score=0,dom=-1,domD=999;
+      for(let p=0;p<7;p++){ if(mcLon[p]==null)continue;
+        const d=Math.min(ad(clon,mcLon[p]), ad(clon, mcLon[p]>0?mcLon[p]-180:mcLon[p]+180));
+        if(d<=orb){ const s=(orb-d)/orb; score+=(W[p]||0)*s*10; if(d<domD){domD=d;dom=p;} } }
+      return { name:c[0], score, dom, domD };
+    }).filter(x=>x.dom>=0);
+    out.sort((a,b)=>b.score-a.score);
+    return out;
+  }catch(e){ return null; }
+}
+function renderAstroCartoPanel(data){
+  const old=document.getElementById('astrocarto-panel'); if(old)old.remove();
+  const A=_astro(); if(!A) return;
+  const X=_luxGet(data.lang); if(!X||!X.astro||!X.astro.planets) return;
+  const sel=(typeof document!=='undefined')?document.getElementById('birth-city'):null;
+  if(data.birthHour==null || !sel || sel.value==='') return; // 출생시각+도시 필요(정확 UTC)
+  const AC=X.astro; const cs=_astroCarto(data); if(!cs||!cs.length) return;
+  const PSYM=['☉','☽','☿','♀','♂','♃','♄'];
+  const best=cs.filter(x=>x.score>0).slice(0,3);
+  if(!best.length) return;
+  const row=(x)=>{ const pl=AC.planets[x.dom]||{}; return `<div style="background:rgba(255,255,255,.6);border-radius:10px;padding:9px 12px;margin-bottom:6px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><span style="font-size:13px;font-weight:800;color:#0c4a6e;">📍 ${escHtml(x.name)}</span><span style="font-size:11px;font-weight:700;color:#0369a1;">${PSYM[x.dom]} ${escHtml(pl.name||'')}</span></div>
+    <div style="font-size:11px;color:#075985;line-height:1.5;margin-top:4px;">${escHtml(pl.vibe||'')}</div></div>`; };
+  const panel=document.createElement('div');
+  panel.id='astrocarto-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#f0f9ff,#bae6fd);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#0369a1;margin-bottom:6px;text-transform:uppercase;">🗺️ ${escHtml(AC.title)}</div>
+    <div style="font-size:11px;color:#0369a1;margin-bottom:10px;line-height:1.4;">${escHtml(AC.intro)}</div>
+    <div style="font-size:10.5px;color:#0c4a6e;font-weight:700;text-transform:uppercase;margin-bottom:7px;">✨ ${escHtml(AC.bestLabel)}</div>
+    ${best.map(row).join('')}`;
+  _luxInsert(panel);
 }
 
 // ── T5) 새턴 리턴 추적기 (Trend Wave3) ───────────────────────

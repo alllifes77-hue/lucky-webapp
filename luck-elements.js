@@ -1,5 +1,5 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising 빅3상승궁).
+// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising·astro·lilith).
 // 언어별 네이티브+적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -1245,6 +1245,62 @@ window.LUX = {
     "차분하고 어른스러우며 믿음직한 첫인상을 줘요. 가볍게 들뜨지 않는 태도 덕분에, 사람들은 당신을 실제 나이보다 '진중하고 능력 있는 사람'으로 봅니다.",
     "독특하고 쿨하며 어딘가 남다른 첫인상이에요. 유행을 그대로 따르지 않는 자기다움이 묻어나, 사람들은 당신을 '개성 강하고 흥미로운 사람'으로 기억합니다.",
     "몽환적이고 부드러우며 감성적인 분위기를 풍기는 첫인상이에요. 눈빛이 다정해서, 처음 본 사람도 '예술가 같고 마음이 따뜻한 사람'이라는 인상을 받습니다."
+   ]
+  },
+  "astro": {
+   "title": "아스트로카토그래피 · 행운의 도시",
+   "intro": "출생 차트의 행성 라인이 지나는 도시에 머물면, 그 행성이 상징하는 삶의 테마가 또렷하게 살아납니다.",
+   "bestLabel": "당신에게 좋은 도시",
+   "cautionLabel": "도전적인 도시",
+   "lineLabel": "강한 행성 라인",
+   "planets": [
+    {
+     "name": "태양",
+     "vibe": "이곳에선 존재감이 환하게 빛나고 자신감이 차오릅니다. 가는 곳마다 자연스럽게 인정받고, 어느새 무대의 중심에 서 있는 자신을 발견하게 돼요."
+    },
+    {
+     "name": "달",
+     "vibe": "마음이 깊이 편안해지는 땅이에요. 처음 온 곳인데도 고향처럼 포근하고, 정서적 안정과 소속감 속에서 가장 나다운 모습으로 쉬어가게 됩니다."
+    },
+    {
+     "name": "수성",
+     "vibe": "머리가 맑게 돌아가고 말과 글이 술술 풀려요. 공부·계약·네트워킹·사업 아이디어가 유난히 잘 맞아떨어지는 도시입니다."
+    },
+    {
+     "name": "금성",
+     "vibe": "사랑과 아름다움, 풍요가 흐르는 땅이에요. 인연이 자연스레 다가오고 감각이 깨어나며, 받는 복과 누리는 즐거움이 한결 늘어납니다."
+    },
+    {
+     "name": "화성",
+     "vibe": "추진력과 열정이 폭발하듯 솟아 일이 빠르게 진행돼요. 다만 다툼과 조급함도 따라오니, 넘치는 에너지는 운동이나 새로운 도전으로 풀어내세요."
+    },
+    {
+     "name": "목성",
+     "vibe": "행운과 확장의 기운이 가장 강한 곳이에요. 기회의 문이 넓어지고 만나는 사람과 시야가 커지며, 반가운 우연이 자주 찾아옵니다."
+    },
+    {
+     "name": "토성",
+     "vibe": "단련과 책임의 땅이라 어깨에 묵직한 무게가 느껴져요. 쉽진 않지만, 진득하게 쌓아 올린 노력이 단단한 실력과 결실로 오래 남습니다."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "블랙문 릴리스",
+   "intro": "릴리스는 차트 속 가장 깊은 그림자, 길들여지지 않은 원초적 욕망과 억눌러온 본능이 잠든 자리입니다.",
+   "label": "릴리스 자리",
+   "signs": [
+    "당신 안엔 누구의 허락도 구하지 않는 분노와 욕구가 있어요. 억눌러온 자기주장을 되찾을 때, 그 불은 비로소 당신을 앞으로 밀어주는 힘이 됩니다.",
+    "소유와 감각을 향한 깊은 갈망을 부끄러워해 왔을 거예요. 풍요와 쾌락을 원하는 마음을 인정할 때, 몸의 감각과 흔들림 없는 안정감을 온전히 되찾습니다.",
+    "말하지 못한 진실, 금기시한 호기심이 마음 깊이 고여 있어요. 자기 목소리를 솔직히 풀어낼 때, 위험하리만치 매혹적인 표현력이 깨어납니다.",
+    "보살핌이라는 이름 뒤에 숨겨둔 의존과 집착의 욕구가 있어요. 채워지지 못한 어린 마음을 끌어안을 때, 누구도 흔들 수 없는 내면의 안식처를 얻습니다.",
+    "주목과 사랑을 향한 굶주림을 자존심으로 가려 왔을 거예요. 빛나고 싶다는 욕망을 당당히 인정할 때, 꾸밈없는 진짜 카리스마가 터져 나옵니다.",
+    "완벽하지 못한 자신을 향한 냉혹한 비판이 당신의 그림자예요. 통제하려는 욕구와 결핍감을 용서할 때, 흠 많은 모습 그대로의 자신을 사랑하는 힘이 살아납니다.",
+    "갈등을 피하려 삼켜온 분노와 욕망이 안에 차곡차곡 쌓여 있어요. 관계 속에서 진짜 원하는 걸 말할 때, 균형은 비로소 당신 편이 됩니다.",
+    "파괴와 재생, 금기된 친밀함을 향한 강렬한 끌림이 있어요. 어둡고 깊은 자신을 두려워하지 않을 때, 모든 걸 새로 빚어내는 변형의 원초적 힘이 깨어납니다.",
+    "무엇에도 구속받지 않으려는 야성과 진실을 향한 갈증이 당신의 그림자예요. 떠돌고 싶은 자유를 인정할 때, 어디에도 길들지 않는 본연의 빛이 살아납니다.",
+    "야망과 인정받고 싶은 마음을 차갑게 억눌러 왔을 거예요. 정상에 서고 싶다는 마음을 부끄러워하지 않을 때, 누구도 막지 못할 단단한 권위가 세워집니다.",
+    "남다른 자신을 감추고 무리에 맞춰 살아왔을지 몰라요. 이질적이라 여겼던 본모습을 드러낼 때, 시대를 앞서는 독창적인 해방의 힘이 깨어납니다.",
+    "경계 없이 녹아들고 싶은 갈망과 현실에서 도피하려는 충동이 있어요. 환상과 연약함마저 끌어안을 때, 세상을 품는 깊고 신비로운 공감의 힘으로 피어납니다."
    ]
   }
  },
@@ -2492,6 +2548,62 @@ window.LUX = {
     "Aquarius Rising reads as cool, quirky, and a little detached, like you operate on your own frequency. People meet you as the original, unconventional one, friendly yet impossible to fully pin down.",
     "Pisces Rising drifts in with a dreamy, gentle softness and a faraway look in the eyes. You seem ethereal and empathetic, an easy presence people open up to without quite knowing why."
    ]
+  },
+  "astro": {
+   "title": "Astrocartography · Your Lucky Cities",
+   "intro": "Wherever one of your birth planets draws a strong line across the map, that planet's gifts show up louder in your daily life.",
+   "bestLabel": "Cities That Favor You",
+   "cautionLabel": "Challenging Cities",
+   "lineLabel": "Strong Planet Line",
+   "planets": [
+    {
+     "name": "Sun",
+     "vibe": "Under a strong Sun line you feel seen, energized, and quietly certain of who you are; recognition tends to find you with little effort here."
+    },
+    {
+     "name": "Moon",
+     "vibe": "A Moon line wraps a place in belonging and emotional ease, so you settle in, soften, and feel at home almost at once."
+    },
+    {
+     "name": "Mercury",
+     "vibe": "Where Mercury runs strong, words flow, deals click, and study or business move faster; your mind feels sharp, quick, and endlessly curious."
+    },
+    {
+     "name": "Venus",
+     "vibe": "A Venus line draws love, beauty, and abundance toward you, letting romance, art, and everyday pleasures bloom with ease."
+    },
+    {
+     "name": "Mars",
+     "vibe": "On a Mars line your drive and passion ignite and ambition surges, though tempers can run hot, so choose your battles wisely."
+    },
+    {
+     "name": "Jupiter",
+     "vibe": "Beneath a Jupiter line luck expands, doors open, and opportunity feels generous; this is where your world grows wider."
+    },
+    {
+     "name": "Saturn",
+     "vibe": "A Saturn line asks for discipline and responsibility; life feels heavier and slower, yet whatever you build here is built to last."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Black Moon Lilith",
+   "intro": "Lilith marks the place inside you where raw, untamed desire and disowned power were pushed into shadow, waiting to be reclaimed.",
+   "label": "Lilith Sign",
+   "signs": [
+    "In Aries, your shadow guards a fierce will to act first and apologize never; reclaim the right to want boldly, lead loudly, and stop shrinking your fire to keep others comfortable.",
+    "In Taurus, your buried hunger is for pleasure, ownership, and a body that takes up space; reclaim the freedom to crave comfort and worth without calling it greed or shame.",
+    "In Gemini, the silenced part of you holds the unspeakable thought, the forbidden question, the double truth; reclaim your right to say what others will not, and to think dangerously out loud.",
+    "In Cancer, your shadow protects a need that feels too vast and a love that feels too much; reclaim your right to be held, to mother fiercely, and to honor feelings you were taught to hide.",
+    "In Leo, the disowned self craves the spotlight, the devotion, the unapologetic ego; reclaim your right to be wanted and adored without dimming your shine to seem humble.",
+    "In Virgo, your shadow rebels against being the tireless servant who is never quite enough; reclaim your right to imperfection, to refuse the endless fixing, and to be valued exactly as you are.",
+    "In Libra, the buried longing is for a desire that needs no permission and no perfect balance; reclaim your right to want unfairly, to choose yourself, and to stop performing harmony.",
+    "In Scorpio, Lilith is most at home, guarding obsession, sexual power, and the truths others fear; reclaim your right to intensity, to merge fully, and to wield your depth without apology.",
+    "In Sagittarius, your shadow protects a wildness that refuses to be tamed or caged by belief; reclaim your right to roam, to question every dogma, and to live by your own restless truth.",
+    "In Capricorn, the disowned self resents the duty that buried your raw ambition; reclaim your right to crave power openly, to break the rules you outgrew, and to define your own authority.",
+    "In Aquarius, your buried hunger is to belong nowhere and answer to no one; reclaim your right to be strange, to break from the herd, and to honor the rebel the world tried to smooth away.",
+    "In Pisces, the silenced part of you longs to dissolve, to feel everything, to surrender completely; reclaim your right to your visions and longings without losing yourself to please others."
+   ]
   }
  },
  "ja": {
@@ -3737,6 +3849,62 @@ window.LUX = {
     "山羊座アセンダント。落ち着いた、頼れる大人の佇まい。控えめで隙がなく、責任感と品格を感じさせ、まわりから自然と一目置かれる印象を与えます。",
     "水瓶座アセンダント。どこか自由で独特な空気をまとった第一印象。人とは違う視点を持ち、軽やかに距離を保ちながら、新鮮で個性的な人として記憶されます。",
     "魚座アセンダント。夢見るようなやわらかい雰囲気。境界線がふんわりとして掴みどころがなく、優しく繊細で、そっと寄り添ってくれる人という印象を残します。"
+   ]
+  },
+  "astro": {
+   "title": "アストロカートグラフィー · 幸運の街",
+   "intro": "出生図の惑星ラインが強く走る街では、その惑星が司るテーマがあなたの人生に色濃く立ち上がります。",
+   "bestLabel": "あなたに恵みをもたらす街",
+   "cautionLabel": "試練を与える街",
+   "lineLabel": "強く響く惑星ライン",
+   "planets": [
+    {
+     "name": "太陽",
+     "vibe": "存在そのものが認められ、自信と活力が満ちて、あなたが主役として輝ける土地です。"
+    },
+    {
+     "name": "月",
+     "vibe": "心が深く安らぎ、まるで故郷のような帰属感に包まれて、情緒が静かに満たされる土地です。"
+    },
+    {
+     "name": "水星",
+     "vibe": "言葉と思考が冴え渡り、学び・対話・商いが軽やかに進んで、ご縁と情報が次々に巡る土地です。"
+    },
+    {
+     "name": "金星",
+     "vibe": "愛と美に恵まれ、人との心地よさや豊かさが自然と引き寄せられ、感性がやわらかくほどける土地です。"
+    },
+    {
+     "name": "火星",
+     "vibe": "情熱と行動力が燃え上がり、物事を一気に推し進められますが、衝突や焦りには注意が要る土地です。"
+    },
+    {
+     "name": "木星",
+     "vibe": "幸運の扉が大きく開き、出会い・機会・拡大の追い風に乗って、世界が広がっていく土地です。"
+    },
+    {
+     "name": "土星",
+     "vibe": "責任と試練を通じて鍛えられ、重さを感じつつも揺るがぬ実力と地盤が育っていく土地です。"
+    }
+   ]
+  },
+  "lilith": {
+   "title": "ブラックムーン・リリス",
+   "intro": "リリスとは、心の奥で抑え込まれた欲望や原初の力、あなた自身が目を背けてきた影を映す点です。",
+   "label": "リリスの座",
+   "signs": [
+    "牡羊座のリリスは、抑えてきた怒りと「自分のために生きたい」という衝動。攻撃性を恥じずに認めるとき、迷いなく前へ進む原初の勇気を取り戻します。",
+    "牡牛座のリリスは、欲しがることへの罪悪感と、快楽や豊かさを我慢する癖。心地よさを堂々と求めてよいと許すとき、揺るがぬ安心の力が芽生えます。",
+    "双子座のリリスは、本音を呑み込み「賢く見せねば」と縛る声。語ってはいけない言葉を解き放つとき、自由に思考し表現する原初の声を取り戻します。",
+    "蟹座のリリスは、甘えたい願いを隠し、強がってしまう癖。傷つきやすさと依存を恥じず受け入れるとき、深く愛し守る母なる力が目覚めます。",
+    "獅子座のリリスは、目立ちたい・愛されたいという渇望を抑える羞恥。脚光を望む自分を許すとき、惜しみなく輝く原初の自己表現が花開きます。",
+    "乙女座のリリスは、完璧でなければ価値がないという呪縛。乱れや欠点を抱えた自分を赦すとき、ありのままで役立つしなやかな力が戻ります。",
+    "天秤座のリリスは、嫌われたくなくて本心を譲る癖。一人で立ち、対立を恐れぬ自分を認めるとき、真に対等な関係を結ぶ力が芽生えます。",
+    "蠍座のリリスは、激しい執着や嫉妬、性の衝動を闇として封じる癖。深く求める情念を恐れず抱くとき、再生する原初の生命力を取り戻します。",
+    "射手座のリリスは、自由と冒険への渇望を「わがまま」と抑える声。境界を越えて旅する自分を許すとき、真理を追う野生の魂が解き放たれます。",
+    "山羊座のリリスは、認められたい野心と支配欲を律して隠す癖。力を望むことを恥じずに認めるとき、揺るがぬ威厳と統べる力が目覚めます。",
+    "水瓶座のリリスは、群れと違うことを恐れ、異端の自分を抑える癖。独自の感性を孤立ごと受け入れるとき、革新を起こす自由な力が花開きます。",
+    "魚座のリリスは、果てしない憧れや陶酔、逃避の願いを弱さと封じる癖。境界の溶ける感覚を許すとき、すべてと溶け合う原初の慈悲が戻ります。"
    ]
   }
  },
@@ -4984,6 +5152,62 @@ window.LUX = {
     "Wassermann-Aszendent gibt dir eine eigenwillige, etwas distanzierte Note. Du wirkst originell und unabhängig – jemand, der sich angenehm vom Erwartbaren abhebt.",
     "Fische-Aszendent umgibt dich mit einer träumerischen, weichen Aura. Du wirkst empfänglich und kaum greifbar, und andere spüren tendenziell etwas Sanftes, fast Verschwommenes an dir."
    ]
+  },
+  "astro": {
+   "title": "Astrokartografie · Glücksstädte",
+   "intro": "Wo eine deiner Geburtsplanetenlinien stark verläuft, verstärkt jener Ort das Thema dieses Planeten in deinem Leben.",
+   "bestLabel": "Städte, die dir guttun",
+   "cautionLabel": "Herausfordernde Städte",
+   "lineLabel": "Starke Planetenlinie",
+   "planets": [
+    {
+     "name": "Sonne",
+     "vibe": "Auf deiner Sonnenlinie blühst du sichtbar auf: mehr Vitalität, mehr Anerkennung und ein ruhiges, getragenes Selbstvertrauen."
+    },
+    {
+     "name": "Mond",
+     "vibe": "Orte deiner Mondlinie fühlen sich vertraut an, schenken emotionale Geborgenheit, Zugehörigkeit und das wohlige Gefühl, endlich heimzukommen."
+    },
+    {
+     "name": "Merkur",
+     "vibe": "Auf der Merkurlinie sprudeln Worte und Ideen: Lernen, Austausch, Handel und Vernetzung gelingen hier leichter und schneller."
+    },
+    {
+     "name": "Venus",
+     "vibe": "Deine Venuslinie umgibt dich mit Liebe, Schönheit und Genuss; Begegnungen werden zärtlicher und das Leben fühlt sich reicher an."
+    },
+    {
+     "name": "Mars",
+     "vibe": "Auf der Marslinie packt dich Tatkraft und Leidenschaft; du setzt Dinge durch, doch hüte dich vor Reibung und unnötigem Streit."
+    },
+    {
+     "name": "Jupiter",
+     "vibe": "Die Jupiterlinie öffnet Türen: Glück, Wachstum und großzügige Gelegenheiten finden dich hier wie von selbst."
+    },
+    {
+     "name": "Saturn",
+     "vibe": "Auf der Saturnlinie reifst du durch Disziplin und Verantwortung; es wird schwerer, doch was du aufbaust, hält für lange Zeit."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Schwarzer Mond Lilith",
+   "intro": "Lilith zeigt deinen Schattenraum: die verdrängte Begierde und die ungezähmte Urkraft, die du dir zurückholen darfst.",
+   "label": "Lilith-Stellung",
+   "signs": [
+    "Im Widder verbirgt sich unterdrückte Wut und ein Verlangen, ganz für dich einzustehen. Deine Urkraft ist der Mut, kompromisslos zu wollen, ohne dich kleinzumachen.",
+    "Im Stier liegt die verdrängte Sehnsucht nach Genuss, Besitz und körperlicher Lust. Versöhne dich mit deinem Begehren nach Fülle, ohne Scham vor deiner Sinnlichkeit.",
+    "In den Zwillingen schwelen das ungesagte Wort und der verbotene Gedanke. Deine Befreiung liegt darin, deine Wahrheit auszusprechen, auch wenn sie unbequem klingt.",
+    "Im Krebs verbergen sich die verleugnete Bedürftigkeit und alte familiäre Wunden. Hol dir das Recht zurück, genährt zu werden, ohne dich dafür zu entschuldigen.",
+    "Im Löwen lauert der unterdrückte Wunsch, gesehen und bewundert zu werden. Deine Urkraft ist es, dein Strahlen zuzulassen, ohne dich klein und brav zu geben.",
+    "In der Jungfrau verbirgt sich die Scham über das Unperfekte und Triebhafte. Befreie dich, indem du dein Chaos annimmst und deinen Körper nicht länger kontrollierst.",
+    "In der Waage schwelt die verdrängte Wut hinter erzwungener Harmonie. Deine Kraft liegt darin, ehrlichen Konflikt zu wagen, statt dich selbst stets zu verleugnen.",
+    "Im Skorpion brodeln verbotene Begierde, Macht und Obsession. Versöhne dich mit deiner Intensität und deinem Verlangen, statt deine Tiefe ängstlich zu verbergen.",
+    "Im Schützen lebt der unterdrückte Drang nach Freiheit und eigener Wahrheit. Hol dir das Recht zurück, ungebunden zu glauben und deinen Weg wild zu gehen.",
+    "Im Steinbock verbergen sich verleugneter Ehrgeiz und die Angst vor eigener Macht. Deine Befreiung ist, deine Autorität zu beanspruchen, ohne dich dafür zu rechtfertigen.",
+    "Im Wassermann lauert das unterdrückte Anderssein und der Wunsch nach Rebellion. Deine Urkraft ist es, deine Eigenart zu leben, statt dich heimlich anzupassen.",
+    "In den Fischen verbirgt sich grenzenlose Sehnsucht und verdrängter Rausch. Versöhne dich mit deiner Verletzlichkeit und deinem Hunger nach Auflösung und Hingabe."
+   ]
   }
  },
  "fr": {
@@ -6229,6 +6453,62 @@ window.LUX = {
     "Ascendant Capricorne : vous renvoyez une image sérieuse, maîtrisée et fiable. On vous perçoit comme posé et ambitieux ; votre première approche reste sobre et mesurée, dégageant une autorité tranquille et respectable.",
     "Ascendant Verseau : on vous trouve singulier, indépendant et un brin décalé. Vous dégagez une distance amicale et un grain d'originalité ; vous abordez le monde en observateur libre, à votre propre rythme.",
     "Ascendant Poissons : vous renvoyez une aura douce, rêveuse et insaisissable. On vous sent réceptif, empathique, presque fluide ; votre première approche est délicate, nimbée d'une sensibilité artistique et un peu lointaine."
+   ]
+  },
+  "astro": {
+   "title": "Astrocartographie · Villes de chance",
+   "intro": "Là où une ligne planétaire de votre thème natal traverse la carte, la ville amplifie le thème de cette planète dans votre vie.",
+   "bestLabel": "Villes qui vous portent",
+   "cautionLabel": "Villes exigeantes",
+   "lineLabel": "Lignes planétaires fortes",
+   "planets": [
+    {
+     "name": "Soleil",
+     "vibe": "Sur une ligne de Soleil, vous rayonnez davantage : la confiance grandit, les autres vous reconnaissent et votre vitalité remonte naturellement."
+    },
+    {
+     "name": "Lune",
+     "vibe": "Une ville de Lune vous enveloppe d'un sentiment d'appartenance ; vos émotions s'apaisent et vous vous y sentez profondément chez vous."
+    },
+    {
+     "name": "Mercure",
+     "vibe": "Là où Mercure domine, les idées circulent vite : études, échanges, contrats et petites affaires y trouvent un terrain particulièrement fertile."
+    },
+    {
+     "name": "Vénus",
+     "vibe": "Sous une ligne de Vénus, l'amour, la beauté et l'abondance s'invitent ; les rencontres y sont douces et le quotidien gagne en charme et en plaisir."
+    },
+    {
+     "name": "Mars",
+     "vibe": "Une ligne de Mars décuple votre élan et votre passion, mais attise aussi les tensions : avancez avec force, sans chercher inutilement le conflit."
+    },
+    {
+     "name": "Jupiter",
+     "vibe": "Sur une ligne de Jupiter, les portes s'ouvrent : opportunités, expansion et chance vous accompagnent quand vous osez voir plus grand."
+    },
+    {
+     "name": "Saturne",
+     "vibe": "Une ville de Saturne pèse et forge à la fois : responsabilités, discipline et leçons durables y construisent une réussite lente mais solide."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Lune noire Lilith",
+   "intro": "Lilith désigne la part indomptée de vous : désirs refoulés, force primitive et ombre que vous avez appris à taire pour plaire.",
+   "label": "Position de Lilith",
+   "signs": [
+    "Lilith en Bélier : vous avez étouffé votre colère et votre droit d'exister pour vous-même. Reprenez votre élan brut, votre audace et le courage d'affirmer vos désirs sans vous excuser.",
+    "Lilith en Taureau : on vous a fait honte de votre faim de plaisir, de corps et de sécurité. Réhabilitez votre sensualité et votre droit tranquille à posséder et à jouir.",
+    "Lilith en Gémeaux : vos pensées dérangeantes et vos vérités tranchantes ont été muselées. Reprenez votre parole libre, même curieuse, ambiguë ou indécemment honnête.",
+    "Lilith en Cancer : votre besoin viscéral d'être tenu a été jugé excessif. Accueillez votre vulnérabilité et votre instinct nourricier comme une puissance, et non comme une faiblesse à cacher.",
+    "Lilith en Lion : on vous a appris à éteindre votre désir d'éclat et d'admiration. Osez briller, créer et réclamer la scène sans vous diminuer pour rassurer les autres.",
+    "Lilith en Vierge : votre exigence et vos désirs charnels ont été refoulés sous le masque de la perfection. Acceptez votre part imparfaite, impure et pleinement vivante comme entièrement légitime.",
+    "Lilith en Balance : pour rester aimable, vous avez nié vos colères et vos désirs propres. Retrouvez le droit de déplaire, de rompre l'harmonie et de vous choisir d'abord.",
+    "Lilith en Scorpion : votre intensité, votre sexualité et votre soif de fusion ont dérangé. Reprenez ce feu obscur comme source de transformation, sans honte ni autocensure.",
+    "Lilith en Sagittaire : on a bridé votre faim de liberté, de vérité crue et d'ailleurs. Reconquérez votre droit d'explorer, de croire autrement et de refuser toute cage.",
+    "Lilith en Capricorne : votre ambition nue et votre soif de pouvoir ont été jugées indécentes. Assumez votre désir de réussir, de tenir votre vie en main et d'occuper l'autorité.",
+    "Lilith en Verseau : votre étrangeté et votre besoin de rompre les règles ont été mis à l'écart. Revendiquez votre singularité radicale et votre droit d'exister hors des normes.",
+    "Lilith en Poissons : vos émotions débordantes et votre sensibilité magique ont été recouvertes de honte. Récupérez votre intuition, votre fusion mystique et vos rêves comme une force sacrée."
    ]
   }
  },
@@ -7476,6 +7756,62 @@ window.LUX = {
     "Con Ascendente Acuario transmites originalidad, independencia y un aire distinto y fresco. Pareces moderno, amistoso y un punto excéntrico; los demás te ven libre, cerebral y difícil de encasillar en moldes convencionales.",
     "Con Ascendente Piscis envuelves a los demás en un aura suave, soñadora y empática. Pareces tierno, sensible y algo etéreo; la gente te siente cercano, artístico y fácil de querer desde el primer encuentro."
    ]
+  },
+  "astro": {
+   "title": "Astrocartografía · Tus ciudades de la suerte",
+   "intro": "Donde la línea de uno de tus planetas natales cruza el mapa, esa ciudad amplifica el tema de ese planeta en tu vida.",
+   "bestLabel": "Ciudades que te favorecen",
+   "cautionLabel": "Ciudades que te desafían",
+   "lineLabel": "Línea planetaria fuerte",
+   "planets": [
+    {
+     "name": "Sol",
+     "vibe": "Bajo tu línea solar resplandeces: ganas vitalidad, te ven y te reconocen, y encuentras la confianza para ocupar tu lugar."
+    },
+    {
+     "name": "Luna",
+     "vibe": "La línea lunar te envuelve en calma emocional; te sientes en casa, arropado y parte de algo, como si la ciudad te abrazara."
+    },
+    {
+     "name": "Mercurio",
+     "vibe": "Donde Mercurio manda, las ideas fluyen veloces: conversas mejor, estudias con claridad y los negocios y trámites se destraban solos."
+    },
+    {
+     "name": "Venus",
+     "vibe": "Tu línea de Venus endulza la vida: brotan el amor, la belleza, el placer y una abundancia que llega sin tanto esfuerzo."
+    },
+    {
+     "name": "Marte",
+     "vibe": "Marte enciende tu empuje y tu pasión hasta volverte imparable; cuida solo las prisas y los choques, porque esa chispa también quema."
+    },
+    {
+     "name": "Júpiter",
+     "vibe": "Bajo Júpiter la suerte se expande: surgen oportunidades, se abren puertas y aparece una sensación de crecer sin techo."
+    },
+    {
+     "name": "Saturno",
+     "vibe": "La línea de Saturno pesa, pero forja: aquí maduras, asumes responsabilidades y construyes algo sólido, aunque el camino exija disciplina."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Lilith · Luna Negra",
+   "intro": "Lilith es tu cara más indómita: el deseo que reprimes, la fuerza primaria que te enseñaron a esconder y la sombra que pide ser reconocida.",
+   "label": "Posición de Lilith",
+   "signs": [
+    "Con Lilith en Aries reprimes tu rabia y tu derecho a ir primero. Recuperar esa chispa indómita es atreverte a desear sin pedir permiso.",
+    "En Tauro, Lilith esconde un hambre intensa de placer, cuerpo y posesión. Tu poder vuelve cuando dejas de avergonzarte de querer disfrutar y tener.",
+    "Lilith en Géminis silencia una voz aguda y prohibida. Tu fuerza renace al decir lo incómodo, al pensar libre y al no morderte la lengua.",
+    "En Cáncer, Lilith guarda una necesidad feroz de ser cuidado que ocultas. Sanas al permitirte sentir, pedir refugio y mostrar tu vulnerabilidad.",
+    "Lilith en Leo reprime tu ansia de brillar y de ser adorado. Recuperas tu poder cuando ocupas el centro sin culpa y reclamas tu derecho a ser visto.",
+    "En Virgo, Lilith esconde el deseo bajo el control y la autocrítica. Te liberas al aceptar tu lado imperfecto, salvaje y deliciosamente humano.",
+    "Lilith en Libra reprime una sed de deseo desigual y de vínculos intensos. Tu fuerza vuelve cuando dejas de complacer y nombras lo que de verdad quieres.",
+    "En Escorpio, Lilith vive en su casa: deseo, poder y muerte simbólica. Sanas al abrazar tu intensidad sin temerla y al dejar de esconder tu oscuridad.",
+    "Lilith en Sagitario reprime una verdad y una libertad que incomodan. Recuperas tu poder al vivir tu propia fe y al no encadenar tu espíritu nómada.",
+    "En Capricornio, Lilith esconde ambición y deseo bajo la frialdad del deber. Te liberas al reconocer tu hambre de poder sin disfrazarla de sacrificio.",
+    "Lilith en Acuario reprime una rareza que te enseñaron a temer. Tu fuerza renace cuando honras lo que te vuelve distinto y dejas de pedir permiso para pertenecer.",
+    "En Piscis, Lilith disuelve los límites y oculta un deseo de fusión y éxtasis. Sanas al abrazar tu sensibilidad y tu lado místico sin perderte ni avergonzarte."
+   ]
   }
  },
  "pt": {
@@ -8721,6 +9057,62 @@ window.LUX = {
     "Ascendente em Capricórnio impõe uma seriedade elegante: você parece maduro, contido e ambicioso, transmitindo respeito e responsabilidade mesmo antes de dizer qualquer palavra.",
     "Ascendente em Aquário se mostra original e independente: você surge diferente, antenado e amigável de um jeito distante, passando a impressão de mente livre que não segue regra à toa.",
     "Ascendente em Peixes desperta um ar sonhador: você parece doce, sensível e meio etéreo, com olhar acolhedor e uma energia suave que faz as pessoas baixarem a guarda."
+   ]
+  },
+  "astro": {
+   "title": "Astrocartografia · Cidades da Sorte",
+   "intro": "Onde uma linha planetária do seu mapa natal cruza o globo, aquele tema planetário se intensifica na sua vida.",
+   "bestLabel": "Cidades boas para você",
+   "cautionLabel": "Cidades desafiadoras",
+   "lineLabel": "Linha planetária forte",
+   "planets": [
+    {
+     "name": "Sol",
+     "vibe": "Sob a linha do Sol você floresce em visibilidade, vitalidade e reconhecimento, sentindo-se enfim no centro da própria vida."
+    },
+    {
+     "name": "Lua",
+     "vibe": "Na linha da Lua você encontra acolhimento, pertencimento e paz emocional, como se aquela cidade fosse, no fundo, um lar antigo."
+    },
+    {
+     "name": "Mercúrio",
+     "vibe": "Sob a linha de Mercúrio sua mente acelera, os contatos se multiplicam e estudos, conversas e negócios fluem com rara clareza."
+    },
+    {
+     "name": "Vênus",
+     "vibe": "Na linha de Vênus o amor, a beleza e a abundância se aproximam, e a vida ganha um sabor doce, sensual e prazeroso."
+    },
+    {
+     "name": "Marte",
+     "vibe": "Sob a linha de Marte sua coragem e seu desejo explodem com força; tudo avança rápido, mas cuide para não atrair conflitos e atritos."
+    },
+    {
+     "name": "Júpiter",
+     "vibe": "Na linha de Júpiter a sorte se expande, portas se abrem e oportunidades de crescimento, viagem e fé chegam com generosidade."
+    },
+    {
+     "name": "Saturno",
+     "vibe": "Sob a linha de Saturno a vida pesa e exige disciplina, mas o que você construir ali terá raízes sólidas e duradouras."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Lua Negra Lilith",
+   "intro": "Lilith revela seu lado sombra: os desejos reprimidos, a força primal e tudo aquilo que você aprendeu a esconder para ser aceito.",
+   "label": "Signo de Lilith",
+   "signs": [
+    "Em Áries, Lilith guarda uma raiva primal e o medo de querer demais; sua libertação vem ao reivindicar o direito de existir com força, sem pedir licença para desejar.",
+    "Em Touro, Lilith esconde a fome de prazer, posse e segurança que você julga excessiva. Recuperar esse poder é permitir-se sentir o corpo e o gozo sem culpa nem vergonha.",
+    "Em Gêmeos, Lilith silencia a voz que teme ser julgada por pensar diferente. Sua sombra se cura quando você diz suas verdades inconvenientes em vez de engoli-las.",
+    "Em Câncer, Lilith abriga uma carência feroz e a mágoa de não ter sido cuidada. A libertação chega ao acolher essa necessidade em vez de mascará-la com falsa força.",
+    "Em Leão, Lilith esconde a sede de brilhar e ser vista que você reprime por orgulho ou medo. Recuperar esse fogo é assumir, sem culpa, o desejo de ser especial.",
+    "Em Virgem, Lilith guarda a vergonha do corpo e de tudo que parece imperfeito. Sua cura nasce ao abraçar o caos e o instinto que sua mente insiste em controlar.",
+    "Em Libra, Lilith esconde a raiva por trás da gentileza e o medo de desagradar. A libertação vem ao expressar discordância e desejar para si, não só para os outros.",
+    "Em Escorpião, Lilith é pura intensidade: desejo, ciúme e poder que assustam até você. Reivindicá-la é mergulhar nas suas profundezas sem se julgar monstruosa.",
+    "Em Sagitário, Lilith esconde a sede de liberdade absoluta e de verdades que rompem regras. Sua sombra se cura quando você ousa viver sua fé selvagem sem se domesticar.",
+    "Em Capricórnio, Lilith guarda a ambição crua e a fome de poder que você disfarça de dever. A libertação vem ao admitir que deseja o topo por desejo, não só por mérito.",
+    "Em Aquário, Lilith abriga a estranheza que você teme mostrar ao mundo. Recuperar esse poder é honrar sua diferença radical em vez de se diluir para pertencer.",
+    "Em Peixes, Lilith esconde desejos difusos, fugas e um êxtase que assusta. Sua cura nasce ao mergulhar na sensibilidade e na sedução sem se perder nem se anular."
    ]
   }
  },
@@ -9968,6 +10360,62 @@ window.LUX = {
     "Ascendente Acquario: ti presenti come originale e un po' fuori dagli schemi, con un tocco eccentrico e moderno. Sembri amichevole ma distaccato, una persona indipendente che osserva il mondo da una prospettiva tutta sua.",
     "Ascendente Pesci: emani una dolcezza sognante e un'aura sfumata, quasi eterea, difficile da definire. Appari sensibile, empatico e artistico, qualcuno che sembra appartenere a un mondo un po' più poetico del nostro."
    ]
+  },
+  "astro": {
+   "title": "Astrocartografia · Le città della fortuna",
+   "intro": "Dove una linea planetaria del tuo cielo natale passa forte, quella città amplifica nella tua vita il tema di quel pianeta.",
+   "bestLabel": "Le città giuste per te",
+   "cautionLabel": "Le città che ti mettono alla prova",
+   "lineLabel": "Linee planetarie forti",
+   "planets": [
+    {
+     "name": "Sole",
+     "vibe": "Dove brilla la tua linea del Sole ti senti più visibile e sicuro, riconosciuto per chi sei davvero."
+    },
+    {
+     "name": "Luna",
+     "vibe": "Sulla linea della Luna ritrovi calore, radici e un senso di appartenenza che placa il cuore inquieto."
+    },
+    {
+     "name": "Mercurio",
+     "vibe": "Sotto la linea di Mercurio le parole scorrono: studi, contatti e affari si sbloccano con sorprendente facilità."
+    },
+    {
+     "name": "Venere",
+     "vibe": "La linea di Venere apre il cuore alla bellezza e all'amore, e porta una dolce, inattesa abbondanza quotidiana."
+    },
+    {
+     "name": "Marte",
+     "vibe": "Sulla linea di Marte ti muove un'energia ardente e combattiva: grande slancio, ma occhio ai conflitti."
+    },
+    {
+     "name": "Giove",
+     "vibe": "Dove passa Giove tutto si dilata: occasioni, fortuna e crescita arrivano come se fossi nel posto giusto al momento giusto."
+    },
+    {
+     "name": "Saturno",
+     "vibe": "La linea di Saturno forma e fa maturare: chiede disciplina e responsabilità, e proprio il peso costruisce fondamenta solide."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Lilith, la Luna Nera",
+   "intro": "Lilith è la Luna Nera: il desiderio represso, la forza primordiale e l'ombra che custodisci nel profondo.",
+   "label": "La posizione di Lilith",
+   "signs": [
+    "Con Lilith in Ariete reprimi la rabbia e l'istinto di affermarti. La tua forza nascosta è il coraggio grezzo: smetti di chiedere permesso e reclama il tuo spazio senza scuse.",
+    "Con Lilith in Toro nascondi una fame profonda di piacere, possesso e sicurezza. Liberarti significa onorare i sensi e il diritto di godere senza colpa né vergogna del corpo.",
+    "Con Lilith in Gemelli soffochi pensieri e parole scomode per timore di disturbare. La tua forza primordiale è una voce libera: dire la verità nuda, anche quella che inquieta.",
+    "Con Lilith in Cancro nascondi un bisogno vorace di tenerezza e radici. Riappropriarti dell'ombra è permetterti di aver bisogno, senza vergogna della tua sete di intimità.",
+    "Con Lilith in Leone reprimi il desiderio di brillare e di essere amata al centro della scena. Riprenderti questa luce è splendere senza chiedere scusa del tuo orgoglio.",
+    "Con Lilith in Vergine nascondi un istinto critico e una fame di controllo sul corpo. La liberazione è accogliere l'imperfezione e servire per scelta, mai per dovere o paura.",
+    "Con Lilith in Bilancia soffochi la rabbia per mantenere l'armonia e piacere a tutti. La forza ritrovata è dire no, incrinare la pace finta e onorare i tuoi desideri.",
+    "Con Lilith in Scorpione custodisci desideri intensi, sessuali e di potere che temi di mostrare. Riappropriartene è scendere nel buio senza paura e rinascere senza vergogna.",
+    "Con Lilith in Sagittario reprimi una sete selvaggia di libertà e di verità senza confini. Riprenderti l'ombra è seguire la tua fede e fuggire ogni gabbia, anche quella altrui.",
+    "Con Lilith in Capricorno nascondi un'ambizione cruda e la voglia di comandare. La liberazione è desiderare il potere senza colpa e costruire il tuo regno a viso aperto.",
+    "Con Lilith in Acquario soffochi la tua diversità per timore dell'esclusione. La forza primordiale è la ribellione lucida: essere unica e libera, anche fuori da ogni gruppo.",
+    "Con Lilith in Pesci nascondi un'ombra fatta di fusione, fuga e desiderio dell'infinito. Riappropriartene è abbracciare la tua sensibilità senza perderti né dissolverti negli altri."
+   ]
   }
  },
  "id": {
@@ -11213,6 +11661,62 @@ window.LUX = {
     "Ascendant Capricorn membuat Anda terkesan dewasa, tenang, dan berwibawa. Orang cenderung melihat sosok serius yang dapat dipercaya, seolah Anda menguasai keadaan dengan kalem.",
     "Ascendant Aquarius menampilkan persona unik, mandiri, dan agak nyeleneh. Anda terkesan berbeda dan berpikiran terbuka, dengan aura ramah namun sedikit menjaga jarak.",
     "Ascendant Pisces memancarkan kesan lembut, hangat, dan penuh imajinasi. Orang merasakan aura empatik dan mengalir, seolah Anda mudah memahami dan menyerap suasana di sekitar."
+   ]
+  },
+  "astro": {
+   "title": "Astrokartografi · Kota Keberuntungan",
+   "intro": "Setiap kota tempat garis planet kelahiran Anda menguat akan menumbuhkan tema planet itu dalam hidup Anda.",
+   "bestLabel": "Kota yang Baik untuk Anda",
+   "cautionLabel": "Kota yang Menantang",
+   "lineLabel": "Garis Planet yang Menguat",
+   "planets": [
+    {
+     "name": "Matahari",
+     "vibe": "Di kota garis Matahari Anda, jati diri bersinar lebih terang, rasa percaya diri tumbuh, dan kehadiran Anda mudah diakui orang lain."
+    },
+    {
+     "name": "Bulan",
+     "vibe": "Kota garis Bulan terasa seperti rumah bagi hati Anda: emosi lebih tenang, rasa memiliki menguat, dan Anda merasa dirawat dengan lembut."
+    },
+    {
+     "name": "Merkurius",
+     "vibe": "Di garis Merkurius, pikiran mengalir lancar dan ide datang cepat; kota ini cocok untuk belajar, menulis, berdagang, serta menjalin koneksi baru."
+    },
+    {
+     "name": "Venus",
+     "vibe": "Kota garis Venus membuka ruang bagi cinta, keindahan, dan kenyamanan; pertemanan mengalir hangat dan rezeki terasa lebih lapang serta menyenangkan."
+    },
+    {
+     "name": "Mars",
+     "vibe": "Garis Mars membakar semangat dan dorongan untuk bertindak; ambisi Anda menyala, walau perlu kesabaran agar gesekan tidak berubah menjadi konflik."
+    },
+    {
+     "name": "Yupiter",
+     "vibe": "Kota garis Yupiter sering membawa peluang, perluasan, dan keberuntungan; pintu-pintu terbuka lebih mudah dan optimisme Anda mengundang hal-hal baik."
+    },
+    {
+     "name": "Saturnus",
+     "vibe": "Di garis Saturnus, hidup terasa lebih berat namun mematangkan; kota ini menempa disiplin, tanggung jawab, dan fondasi yang bertahan lama."
+    }
+   ]
+  },
+  "lilith": {
+   "title": "Lilith Bulan Hitam",
+   "intro": "Lilith melambangkan hasrat yang terpendam, kekuatan purba, dan sisi bayangan diri yang selama ini Anda sembunyikan dari dunia.",
+   "label": "Posisi Lilith",
+   "signs": [
+    "Lilith di Aries menyimpan amarah dan keberanian yang lama Anda redam. Saat Anda berani menyuarakan kemauan sendiri tanpa minta izin, kekuatan murni itu kembali menjadi milik Anda.",
+    "Lilith di Taurus berkisah tentang rasa lapar akan kenikmatan, kepemilikan, dan tubuh yang dulu dianggap tabu. Mengizinkan diri menikmati hidup secara utuh adalah jalan pembebasan Anda.",
+    "Lilith di Gemini menyembunyikan suara dan kebenaran yang takut Anda ucapkan. Saat Anda berhenti menyaring kata demi menyenangkan orang lain, pikiran liar Anda menjelma menjadi kekuatan.",
+    "Lilith di Cancer menyimpan luka soal pengasuhan dan rasa diterima yang terpendam dalam. Merangkul kebutuhan emosional Anda sendiri mengembalikan rasa aman yang dulu hilang.",
+    "Lilith di Leo menahan hasrat untuk dilihat, dipuja, dan bersinar tanpa rasa malu. Ketika Anda berani naik ke panggung sebagai diri sendiri, cahaya purba itu menyala kembali.",
+    "Lilith di Virgo menyimpan rasa tak pernah cukup baik dan tubuh yang terlalu sering dikritik. Menerima ketidaksempurnaan sebagai bagian indah dari diri adalah penyembuhan sejati Anda.",
+    "Lilith di Libra menyembunyikan amarah yang Anda telan demi menjaga kedamaian dan relasi. Saat Anda berani menuntut keadilan untuk diri sendiri, keseimbangan yang jujur pun lahir.",
+    "Lilith di Scorpio menyimpan gairah, kuasa, dan kedalaman yang paling Anda takuti. Merangkul intensitas dan transformasi tanpa rasa bersalah membuka kekuatan terbesar Anda.",
+    "Lilith di Sagittarius menahan kebebasan dan kebenaran liar yang dulu dianggap terlalu berani. Mengikuti panggilan untuk menjelajah dan berkata jujur mengembalikan api dalam diri Anda.",
+    "Lilith di Capricorn menyimpan ambisi dan keinginan berkuasa yang lama Anda sembunyikan. Saat Anda mengakui hasrat untuk memimpin dan dihormati, otoritas sejati Anda tumbuh.",
+    "Lilith di Aquarius menyembunyikan keanehan dan jiwa pemberontak yang dulu membuat Anda merasa terasing. Merayakan keunikan tanpa minta restu siapa pun adalah pembebasan Anda.",
+    "Lilith di Pisces menyimpan kerinduan, mimpi, dan sisi spiritual yang dulu Anda anggap terlalu rapuh. Menghormati intuisi dan air mata Anda mengubahnya menjadi kekuatan yang lembut."
    ]
   }
  }

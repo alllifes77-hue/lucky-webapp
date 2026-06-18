@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v18: 트렌드 빅3 상승궁(어센던트) + 도시 드롭다운
-const CACHE_NAME = 'lucky-v18';
+// v19: 트렌드 아스트로카토그래피(행운의 도시) + 블랙문 릴리스
+const CACHE_NAME = 'lucky-v19';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
