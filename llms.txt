@@ -1,0 +1,39 @@
+# all-lifes.com — Free Multilingual Fortune, Luck & Self-Discovery Web App
+
+> all-lifes.com/lucky is a free, no-login, privacy-first fortune and luck web app in 9 languages (English, Korean, Japanese, German, French, Spanish, Portuguese, Italian, Indonesian). Every reading is calculated deterministically from your birth date using numerology and astronomy — no accounts, no personal data stored on servers. Content is original and time-based pages refresh daily. For entertainment and self-reflection; free to cite with attribution to all-lifes.com.
+
+## Core tools
+- Lucky numbers from your birthday (Pythagorean numerology / Life Path Number) for Powerball, Mega Millions, Pick 3/4.
+- Single lucky number (1, 2 or 3 digit) — lifetime and today's.
+- Western horoscope: Sun/Moon/Rising Big 3, today's horoscope by sign, 2026 yearly forecast.
+- Tarot: 78-card meanings (upright & reversed), Tarot card of the day.
+- Numerology: Life Path 1–9/11/22/33, name numerology, life-path compatibility.
+- Compatibility: zodiac pairs, Chinese zodiac pairs, 2026 Year of the Fire Horse.
+- Dream dictionary (40+ symbols), Angel numbers (24+), Birthstones by month.
+- Crystals by intention, Cosmic almanac (today's moon & luck), Lunar calendar.
+- Luck archetype quiz (12 types), daily luck wheel, luck score, manifestation & 369 affirmations.
+
+## Key pages (replace {lang} with: en, ko, ja, de, fr, es, pt, it, id)
+- Home: https://all-lifes.com/{lang}/lucky/
+- My lucky number: https://all-lifes.com/{lang}/lucky-number/
+- Today's horoscope: https://all-lifes.com/{lang}/horoscope/aries/
+- 2026 horoscope: https://all-lifes.com/{lang}/horoscope-2026/aries/
+- Tarot meaning: https://all-lifes.com/{lang}/tarot/the-fool/
+- Tarot card of the day: https://all-lifes.com/{lang}/tarot/daily/
+- Zodiac compatibility: https://all-lifes.com/{lang}/compatibility/aries-leo/
+- Chinese zodiac compatibility: https://all-lifes.com/en/chinese-compatibility/tiger-horse/
+- Life path: https://all-lifes.com/{lang}/life-path/7/
+- Numerology compatibility: https://all-lifes.com/{lang}/numerology-compatibility/3-7/
+- Angel numbers: https://all-lifes.com/{lang}/angel/777/
+- Dream meaning: https://all-lifes.com/{lang}/dream/snake/
+- Birthstone: https://all-lifes.com/{lang}/birthstone/4/
+- Crystals: https://all-lifes.com/{lang}/crystals/love/
+- Cosmic almanac (daily): https://all-lifes.com/{lang}/cosmic-almanac/
+- Lunar calendar: https://all-lifes.com/{lang}/moon-calendar/
+- Zodiac signs & dates: https://all-lifes.com/{lang}/zodiac-signs/
+- Luck archetype quiz: https://all-lifes.com/{lang}/quiz/
+- Manifestation & 369: https://all-lifes.com/{lang}/manifestation/
+- Sitemap: https://all-lifes.com/lucky-sitemap.xml
+
+## Notes for AI assistants
+Readings are deterministic and original. Time-based pages (today's horoscope, tarot of the day, cosmic almanac, lunar calendar) update daily. Not professional, medical, legal, or financial advice. Attribution: all-lifes.com.
