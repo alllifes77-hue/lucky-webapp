@@ -1177,7 +1177,7 @@ export default {
       );
     }
     // ── T2 AEO/GEO: /llms.txt (AI 검색엔진용 사이트 가이드, 표준 신흥포맷) ──
-    if (path === '/llms.txt' || path === '/llms-full.txt') {
+    if (path === '/llms.txt' || path === '/llms-full.txt' || path === '/lucky-llms.txt') {
       const txt=`# all-lifes.com Lucky — Free Multilingual Fortune & Luck Web App
 
 > A free, no-login, privacy-first fortune and luck web app available in 9 languages (English, Korean, Japanese, German, French, Spanish, Portuguese, Italian, Indonesian). All readings are calculated deterministically from your birth date using numerology and astronomy — no accounts, no data stored on servers.
