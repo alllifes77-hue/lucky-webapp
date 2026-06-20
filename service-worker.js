@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v21: 단일 행운수 패널(1·2·3자리 평생/오늘) — "내 행운수 하나만"
-const CACHE_NAME = 'lucky-v21';
+// v22: 성장요소 — 행운점수 뱃지·스핀휠·천체카운트다운·이모지공유·PWA설치
+const CACHE_NAME = 'lucky-v22';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

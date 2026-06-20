@@ -1,5 +1,4 @@
-// luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising·astro·lilith·hd) + luckyOne(단일행운수).
+// luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 + luckyOne + growth/quiz).
 // 언어별 네이티브+적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -1458,6 +1457,238 @@ window.LUX = {
     {
      "q": "행운의 숫자는 매일 바뀌나요?",
      "a": "평생 행운수는 생일 기반이라 늘 똑같지만, 오늘의 행운수는 오늘 날짜를 더해 산출하기 때문에 매일 달라져요. 그래서 변하지 않는 나만의 숫자와 매일 새로 받는 숫자를 함께 즐길 수 있답니다."
+    }
+   ]
+  },
+  "growth": {
+   "spin": {
+    "title": "오늘의 행운 룰렛",
+    "button": "돌려요!",
+    "doneToday": "오늘은 끝! 내일 또 돌려요",
+    "numberLabel": "행운의 숫자",
+    "colorLabel": "행운의 색",
+    "charmLabel": "오늘의 부적"
+   },
+   "wordle": {
+    "copyButton": "결과 복사",
+    "copiedMsg": "복사됐어요!",
+    "shareIntro": "🍀 나의 행운의 날"
+   },
+   "countdown": {
+    "fullMoonLabel": "다음 보름달",
+    "newMoonLabel": "다음 초승달",
+    "mercuryRetroLabel": "수성 역행",
+    "mercuryActiveLabel": "진행 중",
+    "mercuryDirectLabel": "순행",
+    "daysLeft": "{n}일 남음",
+    "todayWord": "오늘"
+   },
+   "install": {
+    "title": "홈 화면에 추가",
+    "desc": "설치하면 매일 한 번의 탭으로 행운을 확인하고, 오프라인에서도 열려요.",
+    "button": "설치하기",
+    "later": "나중에"
+   },
+   "invite": {
+    "button": "💌 친구와 궁합 보기",
+    "title": "친구 초대하기",
+    "desc": "링크를 공유하면 친구가 바로 당신과의 궁합을 확인할 수 있어요.",
+    "shareText": "우리 궁합 한번 볼래? 💞 {name}",
+    "friendIntro": "친구가 당신과의 궁합을 보고 싶어 해요!",
+    "makeOwn": "내 궁합 보기"
+   },
+   "name": {
+    "title": "이름 행운수",
+    "placeholder": "이름을 입력하세요",
+    "button": "확인하기",
+    "numberLabel": "내 이름 숫자",
+    "vibeLabel": "이름 분위기",
+    "intro": "이름에 숨겨진 행운의 숫자와 분위기를 찾아보세요."
+   },
+   "score": {
+    "title": "오늘의 행운 점수",
+    "percentileTpl": "오늘의 우주 기운은 평소보다 {p}% 더 당신 편이에요",
+    "shareButton": "점수 공유",
+    "badgeTagline": "우주 행운 점수"
+   }
+  },
+  "quiz": {
+   "title": "당신의 행운 아키타입은?",
+   "intro": "8가지 질문으로 당신만의 행운 성격을 찾아보세요.",
+   "resultPrefix": "당신의 행운 아키타입은",
+   "startLabel": "시작하기",
+   "retakeLabel": "다시하기",
+   "shareLabel": "결과 공유",
+   "questions": [
+    {
+     "q": "행운이 문을 두드릴 때, 당신은…",
+     "opts": [
+      "망설임 없이 뛰어든다",
+      "딱 맞는 신호를 기다린다",
+      "모두와 함께 나눈다",
+      "조용히 차근차근 쌓아간다"
+     ]
+    },
+    {
+     "q": "친구들이 말하는 당신의 초능력은…",
+     "opts": [
+      "무엇이든 거뜬히 다시 일어서는 힘",
+      "모두를 든든하게 잡아주는 힘",
+      "분위기를 환하게 밝히는 힘",
+      "공기를 읽어내는 눈치"
+     ]
+    },
+    {
+     "q": "당신이 꿈꾸는 행운의 하루는…",
+     "opts": [
+      "즉흥적으로 떠나는 모험",
+      "노력 끝에 찾아온 조용한 성취",
+      "누군가의 길을 함께 찾아주는 일",
+      "뜻밖에 열리는 새로운 문"
+     ]
+    },
+    {
+     "q": "당신이 행운을 끌어당기는 방법은…",
+     "opts": [
+      "대담하게 나서서 존재감을 드러내기",
+      "느긋하고 꾸준하게 버티기",
+      "직감을 믿고 따르기",
+      "크게 꿈꾸기"
+     ]
+    },
+    {
+     "q": "시련이 닥쳤을 때, 당신은…",
+     "opts": [
+      "전보다 더 강하게 일어선다",
+      "나와 주변을 함께 다잡는다",
+      "새로운 길로 방향을 튼다",
+      "그 안에서 배움을 찾는다"
+     ]
+    },
+    {
+     "q": "당신의 행운 부적이라면…",
+     "opts": [
+      "불꽃처럼 환하게 빛나는 것",
+      "오래되고 의미 깊은 것",
+      "나아갈 길을 알려주는 것",
+      "열쇠 혹은 행운의 동전"
+     ]
+    },
+    {
+     "q": "사람들이 당신을 찾는 이유는…",
+     "opts": [
+      "영감과 큰 그림을 얻으려고",
+      "차분함과 안정감을 느끼려고",
+      "따뜻함과 응원을 받으려고",
+      "방향과 지혜를 구하려고"
+     ]
+    },
+    {
+     "q": "당신의 행운이 가장 빛날 때는…",
+     "opts": [
+      "과감히 뛰어들 때",
+      "나의 뿌리에 충실할 때",
+      "흐름에 자연스레 몸을 맡길 때",
+      "새롭게 다시 시작할 때"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "불사조",
+     "tagline": "다시 타오르다",
+     "desc": "어떤 좌절도 당신을 더 강하게 만들 뿐, 재가 되어도 다시 불꽃으로 피어납니다. 행운은 당신이 무너졌다 일어서는 순간마다 더 크게 찾아옵니다.",
+     "luckyColor": "주홍빛",
+     "strength": "회복탄력성",
+     "shareLine": "나는 #불사조 타입!"
+    },
+    {
+     "name": "등대",
+     "tagline": "흔들림 없는 빛",
+     "desc": "당신은 묵묵히 빛을 밝혀 길 잃은 이들에게 방향을 비춰줍니다. 누군가를 이끄는 그 마음이 당신에게 든든한 행운으로 돌아옵니다.",
+     "luckyColor": "은은한 백색",
+     "strength": "신뢰의 길잡이",
+     "shareLine": "나는 #등대 타입!"
+    },
+    {
+     "name": "혜성",
+     "tagline": "눈부신 한 방",
+     "desc": "대담하고 빠른 당신은 나타나는 순간 모두의 시선을 사로잡습니다. 망설임 없이 내지른 한 수가 눈부신 행운의 궤적을 그립니다.",
+     "luckyColor": "코발트블루",
+     "strength": "과감함",
+     "shareLine": "나는 #혜성 타입!"
+    },
+    {
+     "name": "거목",
+     "tagline": "뿌리 깊은 행운",
+     "desc": "단단히 뿌리내린 당신은 흔들리지 않고 오래 가는 복을 차곡차곡 쌓아갑니다. 꾸준함이 세월과 함께 든든한 행운의 그늘이 되어줍니다.",
+     "luckyColor": "짙은 초록",
+     "strength": "굳건함",
+     "shareLine": "나는 #거목 타입!"
+    },
+    {
+     "name": "강물",
+     "tagline": "막힘없이 흐르다",
+     "desc": "직감이 예리한 당신은 어떤 장애물도 부드럽게 돌아 흐릅니다. 유연하게 흐르다 보면 어느새 행운이 닿는 곳에 가 닿아 있습니다.",
+     "luckyColor": "청록빛",
+     "strength": "유연한 직감",
+     "shareLine": "나는 #강물 타입!"
+    },
+    {
+     "name": "태양",
+     "tagline": "환하게 끌어당기다",
+     "desc": "눈부시고 너그러운 당신은 빛만으로도 사람과 행운을 곁으로 불러 모읍니다. 아낌없이 베푸는 온기가 더 큰 복이 되어 되돌아옵니다.",
+     "luckyColor": "황금빛",
+     "strength": "넉넉함",
+     "shareLine": "나는 #태양 타입!"
+    },
+    {
+     "name": "나침반",
+     "tagline": "길을 찾는 지혜",
+     "desc": "지혜로운 탐험가인 당신은 언제나 올바른 길을 정확히 찾아냅니다. 흔들리지 않는 방향 감각이 당신을 행운 쪽으로 이끕니다.",
+     "luckyColor": "남색",
+     "strength": "방향 감각",
+     "shareLine": "나는 #나침반 타입!"
+    },
+    {
+     "name": "열쇠",
+     "tagline": "닫힌 문을 열다",
+     "desc": "기회를 알아보는 당신은 남들이 열지 못한 문을 거뜬히 열어젖힙니다. 결정적인 순간을 놓치지 않는 감각이 새로운 행운을 불러옵니다.",
+     "luckyColor": "샴페인 골드",
+     "strength": "기회 포착",
+     "shareLine": "나는 #열쇠 타입!"
+    },
+    {
+     "name": "별",
+     "tagline": "빛날 운명",
+     "desc": "영감 가득한 몽상가인 당신은 무대 위에서 빛나도록 타고났습니다. 크게 꿈꾸는 그 마음이 당신을 가장 환한 자리로 이끕니다.",
+     "luckyColor": "은빛",
+     "strength": "영감",
+     "shareLine": "나는 #별 타입!"
+    },
+    {
+     "name": "산",
+     "tagline": "정상을 향하여",
+     "desc": "끈기 있고 야심찬 당신은 한 걸음씩 묵묵히 높은 곳에 다다릅니다. 서두르지 않는 인내가 마침내 큰 행운의 정상을 안겨줍니다.",
+     "luckyColor": "짙은 회청색",
+     "strength": "인내",
+     "shareLine": "나는 #산 타입!"
+    },
+    {
+     "name": "나비",
+     "tagline": "가볍게 피어나다",
+     "desc": "자유롭고 즐거운 당신은 변화 속에서 더 아름답게 피어나 주위를 설레게 합니다. 가벼운 날갯짓이 가는 곳마다 기분 좋은 행운을 흩뿌립니다.",
+     "luckyColor": "라벤더",
+     "strength": "자유로움",
+     "shareLine": "나는 #나비 타입!"
+    },
+    {
+     "name": "닻",
+     "tagline": "든든한 버팀목",
+     "desc": "충직하고 안정감 있는 당신은 곁의 사람들에게 흔들리지 않는 안심을 줍니다. 한자리를 굳건히 지켜내는 그 마음이 깊고 단단한 행운을 불러옵니다.",
+     "luckyColor": "감청색",
+     "strength": "든든함",
+     "shareLine": "나는 #닻 타입!"
     }
    ]
   }
@@ -2920,6 +3151,238 @@ window.LUX = {
      "a": "Your lifetime lucky number stays the same forever, since it's based on your fixed birthday. But your today's lucky number shifts daily as the date's energy blends with yours — so it's fun to check back each morning for a fresh one."
     }
    ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Daily Luck Wheel",
+    "button": "Spin!",
+    "doneToday": "That's it for today! Come back tomorrow",
+    "numberLabel": "Lucky Number",
+    "colorLabel": "Lucky Color",
+    "charmLabel": "Today's Charm"
+   },
+   "wordle": {
+    "copyButton": "Copy result",
+    "copiedMsg": "Copied!",
+    "shareIntro": "🍀 My Lucky Day"
+   },
+   "countdown": {
+    "fullMoonLabel": "Next Full Moon",
+    "newMoonLabel": "Next New Moon",
+    "mercuryRetroLabel": "Mercury Retrograde",
+    "mercuryActiveLabel": "Active now",
+    "mercuryDirectLabel": "Direct",
+    "daysLeft": "{n} days left",
+    "todayWord": "Today"
+   },
+   "install": {
+    "title": "Add to Home Screen",
+    "desc": "Install for one-tap daily luck that works even offline.",
+    "button": "Install",
+    "later": "Maybe later"
+   },
+   "invite": {
+    "button": "💌 Check compatibility with a friend",
+    "title": "Invite a Friend",
+    "desc": "Share a link and your friend instantly sees your compatibility.",
+    "shareText": "Let's see our luck compatibility! 💞 {name}",
+    "friendIntro": "A friend wants to check your compatibility!",
+    "makeOwn": "See my own compatibility"
+   },
+   "name": {
+    "title": "Lucky Name Number",
+    "placeholder": "Enter your name",
+    "button": "Reveal",
+    "numberLabel": "Your Name Number",
+    "vibeLabel": "Name Vibe",
+    "intro": "Discover the lucky number and vibe hidden in your name."
+   },
+   "score": {
+    "title": "Today's Luck Score",
+    "percentileTpl": "Today's cosmic weather favors you more than {p}% of days",
+    "shareButton": "Share score",
+    "badgeTagline": "Cosmic Luck Score"
+   }
+  },
+  "quiz": {
+   "title": "What's Your Luck Archetype?",
+   "intro": "Answer 8 quick questions and discover the lucky force that guides your life.",
+   "resultPrefix": "Your luck archetype is",
+   "startLabel": "Start",
+   "retakeLabel": "Retake",
+   "shareLabel": "Share Result",
+   "questions": [
+    {
+     "q": "When luck knocks, you…",
+     "opts": [
+      "Charge in headfirst",
+      "Wait for the right sign",
+      "Share it with everyone",
+      "Quietly build on it"
+     ]
+    },
+    {
+     "q": "Friends say your superpower is…",
+     "opts": [
+      "Bouncing back from anything",
+      "Keeping everyone grounded",
+      "Lighting up the room",
+      "Reading the mood"
+     ]
+    },
+    {
+     "q": "Your ideal lucky day is…",
+     "opts": [
+      "A spontaneous adventure",
+      "A quiet win after hard work",
+      "Helping someone find their way",
+      "An unexpected door swinging open"
+     ]
+    },
+    {
+     "q": "You attract good fortune by…",
+     "opts": [
+      "Being bold and visible",
+      "Staying patient and steady",
+      "Trusting your gut",
+      "Dreaming big"
+     ]
+    },
+    {
+     "q": "A setback hits. You…",
+     "opts": [
+      "Rise stronger than before",
+      "Steady yourself and others",
+      "Pivot to a new path",
+      "Find the lesson in it"
+     ]
+    },
+    {
+     "q": "Your lucky charm would be…",
+     "opts": [
+      "Something fiery and bright",
+      "Something old and meaningful",
+      "Something that points the way",
+      "A key or a lucky coin"
+     ]
+    },
+    {
+     "q": "People come to you for…",
+     "opts": [
+      "Inspiration and big ideas",
+      "Calm and stability",
+      "Warmth and encouragement",
+      "Direction and wisdom"
+     ]
+    },
+    {
+     "q": "Your luck shines brightest when you…",
+     "opts": [
+      "Take a leap",
+      "Stay true to your roots",
+      "Go with the flow",
+      "Start fresh"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "The Phoenix 🔥",
+     "tagline": "Rise from the ashes",
+     "desc": "You turn every setback into a comeback, growing stronger each time life knocks you down. Your luck blazes brightest in moments of reinvention and bold new beginnings.",
+     "luckyColor": "Crimson",
+     "strength": "Resilience",
+     "shareLine": "I'm a #Phoenix type! 🔥"
+    },
+    {
+     "name": "The Lighthouse 🗼",
+     "tagline": "Steady the storm",
+     "desc": "You're the calm, guiding light that helps everyone around you find their way. Fortune favors you when you stand firm and lead others safely home.",
+     "luckyColor": "Ocean Blue",
+     "strength": "Guidance",
+     "shareLine": "I'm a #Lighthouse type! 🗼"
+    },
+    {
+     "name": "The Comet ☄️",
+     "tagline": "Bold and dazzling",
+     "desc": "Fast, fearless, and impossible to ignore, you leave a brilliant streak wherever you go. Luck rushes to you the moment you act boldly and seize your chance.",
+     "luckyColor": "Electric Silver",
+     "strength": "Boldness",
+     "shareLine": "I'm a #Comet type! ☄️"
+    },
+    {
+     "name": "The Oak 🌳",
+     "tagline": "Rooted and rising",
+     "desc": "Grounded and dependable, you build a fortune that lasts a lifetime. Patience and deep roots are your secret, and your luck grows slow but unshakable.",
+     "luckyColor": "Forest Green",
+     "strength": "Reliability",
+     "shareLine": "I'm an #Oak type! 🌳"
+    },
+    {
+     "name": "The River 🌊",
+     "tagline": "Flow around it",
+     "desc": "Adaptable and intuitive, you slip gracefully past every obstacle in your path. Good fortune finds you whenever you trust your instincts and let yourself flow.",
+     "luckyColor": "Aqua",
+     "strength": "Intuition",
+     "shareLine": "I'm a #River type! 🌊"
+    },
+    {
+     "name": "The Sun ☀️",
+     "tagline": "Radiate and attract",
+     "desc": "Warm, generous, and impossible not to love, you pull luck and people into your orbit. Share your light freely and your fortune only grows.",
+     "luckyColor": "Golden Yellow",
+     "strength": "Generosity",
+     "shareLine": "I'm a #Sun type! ☀️"
+    },
+    {
+     "name": "The Compass 🧭",
+     "tagline": "Always find north",
+     "desc": "A wise seeker at heart, you always sense the right path forward. Luck rewards you when you follow your inner direction with quiet confidence.",
+     "luckyColor": "Bronze",
+     "strength": "Wisdom",
+     "shareLine": "I'm a #Compass type! 🧭"
+    },
+    {
+     "name": "The Key 🔑",
+     "tagline": "Unlock every door",
+     "desc": "You have a gift for opening doors that stay shut for everyone else. Opportunity is your native language, and you always find the one that fits.",
+     "luckyColor": "Antique Gold",
+     "strength": "Opportunity",
+     "shareLine": "I'm a #Key type! 🔑"
+    },
+    {
+     "name": "The Star 🌟",
+     "tagline": "Born to shine",
+     "desc": "An inspired dreamer, you're destined for the spotlight and bigger things. Aim high and let your vision lead, and your luck begins to sparkle.",
+     "luckyColor": "Platinum",
+     "strength": "Inspiration",
+     "shareLine": "I'm a #Star type! 🌟"
+    },
+    {
+     "name": "The Mountain ⛰️",
+     "tagline": "Reach the summit",
+     "desc": "Patient and quietly ambitious, you climb steadily toward great heights. Fortune favors you for keeping going long after others have stopped.",
+     "luckyColor": "Slate Gray",
+     "strength": "Ambition",
+     "shareLine": "I'm a #Mountain type! ⛰️"
+    },
+    {
+     "name": "The Butterfly 🦋",
+     "tagline": "Transform and delight",
+     "desc": "Free-spirited and full of joy, you turn change into something beautiful. Luck flutters your way when you embrace fresh starts and follow your heart.",
+     "luckyColor": "Lavender",
+     "strength": "Joy",
+     "shareLine": "I'm a #Butterfly type! 🦋"
+    },
+    {
+     "name": "The Anchor ⚓",
+     "tagline": "Hold them steady",
+     "desc": "Loyal and dependable, you bring security and trust to everyone you love. Stay true and become the rock others rely on, and your luck runs deep.",
+     "luckyColor": "Navy",
+     "strength": "Loyalty",
+     "shareLine": "I'm an #Anchor type! ⚓"
+    }
+   ]
   }
  },
  "ja": {
@@ -4378,6 +4841,238 @@ window.LUX = {
     {
      "q": "ラッキーナンバーは毎日変わるの？",
      "a": "生年月日から出る「一生のラッキーナンバー」は変わりませんが、その日の日付と組み合わせて出る「今日のラッキーナンバー」は毎日変わります。朝にチェックして、今日のお守り数字として楽しんでみてください。"
+    }
+   ]
+  },
+  "growth": {
+   "spin": {
+    "title": "今日のラッキールーレット",
+    "button": "回す！",
+    "doneToday": "今日はおしまい！また明日回してね",
+    "numberLabel": "ラッキーナンバー",
+    "colorLabel": "ラッキーカラー",
+    "charmLabel": "今日のお守り"
+   },
+   "wordle": {
+    "copyButton": "結果をコピー",
+    "copiedMsg": "コピーしました！",
+    "shareIntro": "🍀 私のラッキーデー"
+   },
+   "countdown": {
+    "fullMoonLabel": "次の満月",
+    "newMoonLabel": "次の新月",
+    "mercuryRetroLabel": "水星逆行",
+    "mercuryActiveLabel": "進行中",
+    "mercuryDirectLabel": "順行",
+    "daysLeft": "あと{n}日",
+    "todayWord": "今日"
+   },
+   "install": {
+    "title": "ホーム画面に追加",
+    "desc": "インストールすればワンタップで毎日の運勢をチェック、オフラインでも開けます。",
+    "button": "インストール",
+    "later": "あとで"
+   },
+   "invite": {
+    "button": "💌 友だちと相性を見る",
+    "title": "友だちを招待",
+    "desc": "リンクを共有すれば、友だちがすぐにあなたとの相性をチェックできます。",
+    "shareText": "私たちの相性、見てみない？ 💞 {name}",
+    "friendIntro": "友だちがあなたとの相性を見たがっています！",
+    "makeOwn": "自分の相性を見る"
+   },
+   "name": {
+    "title": "名前の幸運数",
+    "placeholder": "名前を入力してください",
+    "button": "診断する",
+    "numberLabel": "あなたの名前数",
+    "vibeLabel": "名前の雰囲気",
+    "intro": "名前に隠れたラッキーナンバーと雰囲気を見つけましょう。"
+   },
+   "score": {
+    "title": "今日の運勢スコア",
+    "percentileTpl": "今日の宇宙の流れは、いつもより{p}%あなたに味方しています",
+    "shareButton": "スコアを共有",
+    "badgeTagline": "コズミック運勢スコア"
+   }
+  },
+  "quiz": {
+   "title": "あなたの「幸運アーキタイプ」は？",
+   "intro": "8つの質問で、あなたの中に眠る幸運のかたちを診断しちゃおう！",
+   "resultPrefix": "あなたの幸運アーキタイプは",
+   "startLabel": "スタート",
+   "retakeLabel": "もう一度",
+   "shareLabel": "結果をシェア",
+   "questions": [
+    {
+     "q": "幸運がドアをノックしてきたら、あなたは？",
+     "opts": [
+      "まっすぐ飛び込む",
+      "ベストなサインを待つ",
+      "みんなで分かち合う",
+      "こっそり積み上げる"
+     ]
+    },
+    {
+     "q": "友達が言う、あなたの“特殊能力”は？",
+     "opts": [
+      "どんな逆境からも立ち直る",
+      "みんなを地に足つけさせる",
+      "その場をパッと明るくする",
+      "空気を読むのが得意"
+     ]
+    },
+    {
+     "q": "あなたの理想の“ラッキーデー”は？",
+     "opts": [
+      "思いつきで冒険に出る日",
+      "努力が実った静かな勝利の日",
+      "誰かの道しるべになる日",
+      "思わぬ扉が開く日"
+     ]
+    },
+    {
+     "q": "あなたが幸運を引き寄せる方法は？",
+     "opts": [
+      "大胆に目立っていく",
+      "じっくり着実にいく",
+      "直感を信じる",
+      "大きな夢を描く"
+     ]
+    },
+    {
+     "q": "ピンチが訪れたとき、あなたは？",
+     "opts": [
+      "前より強くなって立ち上がる",
+      "自分も周りも落ち着かせる",
+      "新しい道へ切り替える",
+      "そこから学びを見つける"
+     ]
+    },
+    {
+     "q": "あなたのラッキーチャームは？",
+     "opts": [
+      "炎みたいに鮮やかなもの",
+      "古くて意味のあるもの",
+      "あなたを導いてくれるもの",
+      "鍵やラッキーコイン"
+     ]
+    },
+    {
+     "q": "人があなたに求めてくるのは？",
+     "opts": [
+      "ひらめきと大きなアイデア",
+      "落ち着きと安定感",
+      "あたたかさと励まし",
+      "方向性と知恵"
+     ]
+    },
+    {
+     "q": "あなたの幸運が一番輝くのは？",
+     "opts": [
+      "思い切って飛び込むとき",
+      "自分のルーツを大切にするとき",
+      "流れに身をまかせるとき",
+      "ゼロから始めるとき"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "不死鳥（フェニックス）🔥",
+     "tagline": "灰から、再び",
+     "desc": "どんな挫折も糧にして、前より強くよみがえる再生の達人。幸運は、あなたが立ち上がる瞬間にこそ最大の輝きを放ちます。",
+     "luckyColor": "スカーレットレッド",
+     "strength": "再生力",
+     "shareLine": "私は #不死鳥タイプ ！"
+    },
+    {
+     "name": "灯台（ライトハウス）🗼",
+     "tagline": "迷う人の、道しるべ",
+     "desc": "ブレない光で、まわりの人が進む道を照らしてあげるタイプ。誰かを導くたびに、あなた自身にも幸運が返ってきます。",
+     "luckyColor": "マリンブルー",
+     "strength": "導きの力",
+     "shareLine": "私は #灯台タイプ ！"
+    },
+    {
+     "name": "彗星（コメット）☄️",
+     "tagline": "大胆に、鮮やかに",
+     "desc": "スピードと勢いで、まわりを一瞬でハッとさせる存在。思い切った一歩が、まばゆいチャンスを連れてきます。",
+     "luckyColor": "エレクトリックパープル",
+     "strength": "瞬発力",
+     "shareLine": "私は #彗星タイプ ！"
+    },
+    {
+     "name": "樫の木（オーク）🌳",
+     "tagline": "根を張り、揺るがず",
+     "desc": "地に足をつけ、信頼を一歩ずつ築いていく安定のタイプ。コツコツ積み上げた先に、長く続く幸運が実ります。",
+     "luckyColor": "フォレストグリーン",
+     "strength": "安定感",
+     "shareLine": "私は #樫の木タイプ ！"
+    },
+    {
+     "name": "川（リバー）🌊",
+     "tagline": "流れるように、しなやかに",
+     "desc": "直感を信じ、障害をするりとかわして進む柔軟なタイプ。どんな状況にもなじみながら、自然と幸運の流れに乗ります。",
+     "luckyColor": "アクアブルー",
+     "strength": "柔軟さ",
+     "shareLine": "私は #川タイプ ！"
+    },
+    {
+     "name": "太陽（サン）☀️",
+     "tagline": "あたため、惹きつける",
+     "desc": "明るさと気前の良さで、人も幸運も自然と集まってくるタイプ。あなたが輝くほど、まわりみんながハッピーになります。",
+     "luckyColor": "サンシャインイエロー",
+     "strength": "求心力",
+     "shareLine": "私は #太陽タイプ ！"
+    },
+    {
+     "name": "羅針盤（コンパス）🧭",
+     "tagline": "いつも、正しい道へ",
+     "desc": "知恵を求め、迷っても必ず正しい方向を見つけ出す探究者。冷静な判断が、思いがけない幸運へと導いてくれます。",
+     "luckyColor": "ブロンズゴールド",
+     "strength": "洞察力",
+     "shareLine": "私は #羅針盤タイプ ！"
+    },
+    {
+     "name": "鍵（キー）🔑",
+     "tagline": "閉じた扉を、開く",
+     "desc": "チャンスをつかみ、誰も開けられない扉さえ開いてしまうタイプ。あなたが動けば、新しい可能性が次々と広がります。",
+     "luckyColor": "アンティークゴールド",
+     "strength": "開拓力",
+     "shareLine": "私は #鍵タイプ ！"
+    },
+    {
+     "name": "星（スター）🌟",
+     "tagline": "夢見て、輝く",
+     "desc": "インスピレーションにあふれ、スポットライトを浴びる運命のタイプ。大きな夢を描くほど、幸運があなたを照らし出します。",
+     "luckyColor": "スターシルバー",
+     "strength": "発想力",
+     "shareLine": "私は #星タイプ ！"
+    },
+    {
+     "name": "山（マウンテン）⛰️",
+     "tagline": "一歩ずつ、頂へ",
+     "desc": "忍耐強く、大きな目標へ着実に登っていく野心家タイプ。焦らず歩み続けた先に、高みの幸運が待っています。",
+     "luckyColor": "ストーングレー",
+     "strength": "忍耐力",
+     "shareLine": "私は #山タイプ ！"
+    },
+    {
+     "name": "蝶（バタフライ）🦋",
+     "tagline": "自由に、軽やかに",
+     "desc": "自由と喜びを大切に、変化を楽しみながら花咲かせるタイプ。あなたが舞うところに、ワクワクする幸運が集まります。",
+     "luckyColor": "パステルピンク",
+     "strength": "変身力",
+     "shareLine": "私は #蝶タイプ ！"
+    },
+    {
+     "name": "錨（アンカー）⚓",
+     "tagline": "そばで、支える",
+     "desc": "誠実で、まわりに安心と信頼をもたらす心の支えになるタイプ。あなたのブレなさが、確かな幸運を引き寄せます。",
+     "luckyColor": "ネイビーブルー",
+     "strength": "信頼感",
+     "shareLine": "私は #錨タイプ ！"
     }
    ]
   }
@@ -5840,6 +6535,238 @@ window.LUX = {
      "a": "Deine Lebens-Glückszahl bleibt fest, denn sie kommt aus deinem Geburtsdatum und gehört für immer zu dir. Zusätzlich gibt es die Glückszahl des Tages, die sich täglich ändert – so hast du einen festen Anker und gleichzeitig jeden Tag eine frische Portion Glück."
     }
    ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Glücksrad des Tages",
+    "button": "Drehen!",
+    "doneToday": "Für heute war's das! Morgen wieder",
+    "numberLabel": "Glückszahl",
+    "colorLabel": "Glücksfarbe",
+    "charmLabel": "Glücksbringer des Tages"
+   },
+   "wordle": {
+    "copyButton": "Ergebnis kopieren",
+    "copiedMsg": "Kopiert!",
+    "shareIntro": "🍀 Mein Glückstag"
+   },
+   "countdown": {
+    "fullMoonLabel": "Nächster Vollmond",
+    "newMoonLabel": "Nächster Neumond",
+    "mercuryRetroLabel": "Merkur rückläufig",
+    "mercuryActiveLabel": "Jetzt aktiv",
+    "mercuryDirectLabel": "Direkt",
+    "daysLeft": "noch {n} Tage",
+    "todayWord": "Heute"
+   },
+   "install": {
+    "title": "Zum Startbildschirm hinzufügen",
+    "desc": "Installiere die App für tägliches Glück per Tipp – funktioniert sogar offline.",
+    "button": "Installieren",
+    "later": "Vielleicht später"
+   },
+   "invite": {
+    "button": "💌 Kompatibilität mit Freund:in checken",
+    "title": "Freund:in einladen",
+    "desc": "Teile einen Link und deine Freund:in sieht sofort eure Kompatibilität.",
+    "shareText": "Lass uns unsere Glücks-Kompatibilität checken! 💞 {name}",
+    "friendIntro": "Jemand möchte eure Kompatibilität checken!",
+    "makeOwn": "Meine eigene Kompatibilität ansehen"
+   },
+   "name": {
+    "title": "Glückszahl deines Namens",
+    "placeholder": "Namen eingeben",
+    "button": "Anzeigen",
+    "numberLabel": "Deine Namenszahl",
+    "vibeLabel": "Namens-Vibe",
+    "intro": "Entdecke die Glückszahl und den Vibe, die in deinem Namen stecken."
+   },
+   "score": {
+    "title": "Glücks-Score von heute",
+    "percentileTpl": "Das kosmische Wetter ist dir heute günstiger als an {p}% der Tage",
+    "shareButton": "Score teilen",
+    "badgeTagline": "Kosmischer Glücks-Score"
+   }
+  },
+  "quiz": {
+   "title": "Was ist dein Glücks-Archetyp?",
+   "intro": "Beantworte 8 Fragen und entdecke, welche Glückskraft wirklich in dir steckt.",
+   "resultPrefix": "Dein Glücks-Archetyp ist",
+   "startLabel": "Los geht's",
+   "retakeLabel": "Nochmal machen",
+   "shareLabel": "Ergebnis teilen",
+   "questions": [
+    {
+     "q": "Wenn das Glück anklopft, dann …",
+     "opts": [
+      "stürmst du Hals über Kopf los",
+      "wartest du auf das richtige Zeichen",
+      "teilst du es mit allen",
+      "baust du in aller Ruhe darauf auf"
+     ]
+    },
+    {
+     "q": "Deine Superkraft ist laut Freunden …",
+     "opts": [
+      "dass du nach allem wieder aufstehst",
+      "dass du allen Halt gibst",
+      "dass du jeden Raum zum Strahlen bringst",
+      "dass du die Stimmung sofort spürst"
+     ]
+    },
+    {
+     "q": "Dein perfekter Glückstag ist …",
+     "opts": [
+      "ein spontanes Abenteuer",
+      "ein stiller Sieg nach harter Arbeit",
+      "jemandem den Weg zu zeigen",
+      "eine Tür, die sich unerwartet öffnet"
+     ]
+    },
+    {
+     "q": "Du ziehst Glück an, indem du …",
+     "opts": [
+      "mutig und sichtbar bist",
+      "geduldig und beständig bleibst",
+      "deinem Bauchgefühl vertraust",
+      "groß träumst"
+     ]
+    },
+    {
+     "q": "Ein Rückschlag trifft dich. Du …",
+     "opts": [
+      "stehst stärker auf als zuvor",
+      "gibst dir und anderen Halt",
+      "schlägst einen neuen Weg ein",
+      "findest die Lektion darin"
+     ]
+    },
+    {
+     "q": "Dein Glücksbringer wäre …",
+     "opts": [
+      "etwas Feuriges und Leuchtendes",
+      "etwas Altes mit Bedeutung",
+      "etwas, das dir den Weg weist",
+      "ein Schlüssel oder eine Glücksmünze"
+     ]
+    },
+    {
+     "q": "Die Leute kommen zu dir für …",
+     "opts": [
+      "Inspiration und große Ideen",
+      "Ruhe und Stabilität",
+      "Wärme und Ermutigung",
+      "Orientierung und Weisheit"
+     ]
+    },
+    {
+     "q": "Dein Glück leuchtet am hellsten, wenn du …",
+     "opts": [
+      "einen Sprung wagst",
+      "deinen Wurzeln treu bleibst",
+      "dich treiben lässt",
+      "neu anfängst"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "Der Phönix 🔥",
+     "tagline": "Auferstehung aus der Asche",
+     "desc": "Du gehst aus jedem Rückschlag stärker hervor und erfindest dich immer wieder neu. Dein Glück liegt in der Wandlung: Wo andere ein Ende sehen, beginnt für dich ein strahlender Neuanfang.",
+     "luckyColor": "Feuerrot",
+     "strength": "Unbesiegbarkeit",
+     "shareLine": "Ich bin der Typ #Phönix!"
+    },
+    {
+     "name": "Der Leuchtturm 🚨",
+     "tagline": "Halt in jedem Sturm",
+     "desc": "Du stehst fest und gibst anderen verlässliche Orientierung, wenn es um sie herum dunkel wird. Dein Glück entsteht, indem du Menschen sicher durch ihre stürmischen Zeiten führst.",
+     "luckyColor": "Meerblau",
+     "strength": "Beständigkeit",
+     "shareLine": "Ich bin der Typ #Leuchtturm!"
+    },
+    {
+     "name": "Der Komet ☄️",
+     "tagline": "Schnell und unvergesslich",
+     "desc": "Du bist kühn und blitzschnell und hinterlässt überall einen funkelnden Eindruck. Dein Glück kommt im richtigen Moment mit voller Wucht – und alle schauen dir nach.",
+     "luckyColor": "Silberweiß",
+     "strength": "Mut",
+     "shareLine": "Ich bin der Typ #Komet!"
+    },
+    {
+     "name": "Die Eiche 🌳",
+     "tagline": "Tief verwurzelt, ewig stark",
+     "desc": "Du bist geerdet und verlässlich und baust ein Glück, das über Jahre wächst. Wo andere hetzen, schaffst du in Ruhe etwas, das wirklich Bestand hat.",
+     "luckyColor": "Waldgrün",
+     "strength": "Verlässlichkeit",
+     "shareLine": "Ich bin der Typ #Eiche!"
+    },
+    {
+     "name": "Der Fluss 🌊",
+     "tagline": "Immer im Fluss",
+     "desc": "Du bist anpassungsfähig und intuitiv und findest mühelos einen Weg um jedes Hindernis. Dein Glück liegt darin, dass du dich nie verbeißt, sondern elegant fließt.",
+     "luckyColor": "Türkis",
+     "strength": "Intuition",
+     "shareLine": "Ich bin der Typ #Fluss!"
+    },
+    {
+     "name": "Die Sonne ☀️",
+     "tagline": "Strahlend und großzügig",
+     "desc": "Du strahlst Wärme aus und ziehst wie von selbst Menschen und Glück an. Deine Großzügigkeit kommt vielfach zu dir zurück – das ist dein ganz eigenes Geheimnis.",
+     "luckyColor": "Goldgelb",
+     "strength": "Ausstrahlung",
+     "shareLine": "Ich bin der Typ #Sonne!"
+    },
+    {
+     "name": "Der Kompass 🧭",
+     "tagline": "Immer die richtige Richtung",
+     "desc": "Du bist ein weiser Sucher und findest auch im Chaos stets den richtigen Weg. Dein Glück besteht darin, dass du nie die Orientierung verlierst – und andere mitnimmst.",
+     "luckyColor": "Tiefblau",
+     "strength": "Weisheit",
+     "shareLine": "Ich bin der Typ #Kompass!"
+    },
+    {
+     "name": "Der Schlüssel 🔑",
+     "tagline": "Türen, die sich öffnen",
+     "desc": "Du erkennst Chancen, wo andere nur verschlossene Türen sehen. Dein Glück liegt darin, im richtigen Moment genau das Schloss zu öffnen, das alles verändert.",
+     "luckyColor": "Bronze",
+     "strength": "Gelegenheit",
+     "shareLine": "Ich bin der Typ #Schlüssel!"
+    },
+    {
+     "name": "Der Stern 🌟",
+     "tagline": "Geboren fürs Rampenlicht",
+     "desc": "Du bist ein inspirierter Träumer, der für die große Bühne bestimmt ist. Dein Glück folgt deinen kühnen Visionen – du musst sie nur leuchten lassen.",
+     "luckyColor": "Violett",
+     "strength": "Inspiration",
+     "shareLine": "Ich bin der Typ #Stern!"
+    },
+    {
+     "name": "Der Berg ⛰️",
+     "tagline": "Geduldig zur Spitze",
+     "desc": "Du bist geduldig und ehrgeizig und erreichst Schritt für Schritt große Höhen. Dein Glück wartet ganz oben – und du weißt genau, dass du den Gipfel schaffst.",
+     "luckyColor": "Granitgrau",
+     "strength": "Ehrgeiz",
+     "shareLine": "Ich bin der Typ #Berg!"
+    },
+    {
+     "name": "Der Schmetterling 🦋",
+     "tagline": "Frei und voller Freude",
+     "desc": "Du bist frei und fröhlich und verwandelst alles, was du berührst, in etwas Schönes. Dein Glück tanzt leicht durchs Leben und steckt einfach jeden an.",
+     "luckyColor": "Zartrosa",
+     "strength": "Leichtigkeit",
+     "shareLine": "Ich bin der Typ #Schmetterling!"
+    },
+    {
+     "name": "Der Anker ⚓",
+     "tagline": "Treu und sicher",
+     "desc": "Du bist loyal und gibst Halt, wenn alles um dich herum wankt. Dein Glück liegt in der Sicherheit und im Vertrauen, das du anderen schenkst.",
+     "luckyColor": "Marineblau",
+     "strength": "Treue",
+     "shareLine": "Ich bin der Typ #Anker!"
+    }
+   ]
   }
  },
  "fr": {
@@ -7298,6 +8225,238 @@ window.LUX = {
     {
      "q": "Mon chiffre porte-bonheur change-t-il chaque jour ?",
      "a": "Ton chiffre de toute une vie, lui, reste fixe : il est lié à ta date de naissance. En revanche, le chiffre porte-bonheur du jour change chaque matin selon l'énergie de la date. Tu as donc un repère stable et une petite surprise quotidienne, c'est tout l'intérêt !"
+    }
+   ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Roue de la chance du jour",
+    "button": "Tourner !",
+    "doneToday": "C'est fini pour aujourd'hui ! Reviens demain",
+    "numberLabel": "Chiffre porte-bonheur",
+    "colorLabel": "Couleur porte-bonheur",
+    "charmLabel": "Porte-bonheur du jour"
+   },
+   "wordle": {
+    "copyButton": "Copier le résultat",
+    "copiedMsg": "Copié !",
+    "shareIntro": "🍀 Mon jour de chance"
+   },
+   "countdown": {
+    "fullMoonLabel": "Prochaine pleine lune",
+    "newMoonLabel": "Prochaine nouvelle lune",
+    "mercuryRetroLabel": "Mercure rétrograde",
+    "mercuryActiveLabel": "En cours",
+    "mercuryDirectLabel": "Direct",
+    "daysLeft": "{n} jours restants",
+    "todayWord": "Aujourd'hui"
+   },
+   "install": {
+    "title": "Ajouter à l'écran d'accueil",
+    "desc": "Installe l'appli pour ta chance quotidienne en un tap, même hors ligne.",
+    "button": "Installer",
+    "later": "Plus tard"
+   },
+   "invite": {
+    "button": "💌 Voir la compatibilité avec un ami",
+    "title": "Inviter un ami",
+    "desc": "Partage un lien et ton ami découvre aussitôt votre compatibilité.",
+    "shareText": "On regarde notre compatibilité chance ? 💞 {name}",
+    "friendIntro": "Un ami veut voir votre compatibilité !",
+    "makeOwn": "Voir ma propre compatibilité"
+   },
+   "name": {
+    "title": "Chiffre porte-bonheur du prénom",
+    "placeholder": "Entre ton prénom",
+    "button": "Révéler",
+    "numberLabel": "Ton chiffre de prénom",
+    "vibeLabel": "Vibe du prénom",
+    "intro": "Découvre le chiffre porte-bonheur et la vibe cachés dans ton prénom."
+   },
+   "score": {
+    "title": "Score de chance du jour",
+    "percentileTpl": "La météo cosmique te favorise plus qu'à {p}% des jours",
+    "shareButton": "Partager le score",
+    "badgeTagline": "Score de chance cosmique"
+   }
+  },
+  "quiz": {
+   "title": "Quel est ton archétype de chance ?",
+   "intro": "Réponds à 8 questions et révèle la force secrète qui attire la chance vers toi.",
+   "resultPrefix": "Ton archétype de chance est",
+   "startLabel": "Commencer",
+   "retakeLabel": "Recommencer",
+   "shareLabel": "Partager le résultat",
+   "questions": [
+    {
+     "q": "Quand la chance frappe à ta porte, tu…",
+     "opts": [
+      "fonces tête baissée",
+      "attends le bon signe",
+      "la partages avec tout le monde",
+      "construis dessus en silence"
+     ]
+    },
+    {
+     "q": "Tes amis disent que ton super-pouvoir, c'est…",
+     "opts": [
+      "rebondir après n'importe quoi",
+      "garder tout le monde les pieds sur terre",
+      "illuminer la pièce",
+      "lire l'ambiance"
+     ]
+    },
+    {
+     "q": "Ton jour de chance idéal, c'est…",
+     "opts": [
+      "une aventure spontanée",
+      "une victoire tranquille après l'effort",
+      "aider quelqu'un à trouver sa voie",
+      "une porte qui s'ouvre par surprise"
+     ]
+    },
+    {
+     "q": "Tu attires la chance en…",
+     "opts": [
+      "osant et en te montrant",
+      "restant patient et constant",
+      "écoutant ton instinct",
+      "voyant les choses en grand"
+     ]
+    },
+    {
+     "q": "Un coup dur arrive. Tu…",
+     "opts": [
+      "te relèves plus fort qu'avant",
+      "te stabilises et rassures les autres",
+      "bifurques vers une nouvelle voie",
+      "y trouves la leçon"
+     ]
+    },
+    {
+     "q": "Ton porte-bonheur serait…",
+     "opts": [
+      "quelque chose de flamboyant et lumineux",
+      "quelque chose d'ancien et chargé de sens",
+      "quelque chose qui te guide",
+      "une clé ou une pièce porte-bonheur"
+     ]
+    },
+    {
+     "q": "On vient te voir pour…",
+     "opts": [
+      "de l'inspiration et de grandes idées",
+      "du calme et de la stabilité",
+      "de la chaleur et des encouragements",
+      "une direction et de la sagesse"
+     ]
+    },
+    {
+     "q": "Ta chance brille le plus quand tu…",
+     "opts": [
+      "te lances dans le vide",
+      "restes fidèle à tes racines",
+      "te laisses porter par le courant",
+      "prends un nouveau départ"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "Le Phénix 🔥",
+     "tagline": "Renaître, encore et encore",
+     "desc": "Tu transformes chaque épreuve en tremplin et tu renais toujours plus fort. Ta chance jaillit des cendres, juste au moment où tout semblait perdu.",
+     "luckyColor": "Rouge écarlate",
+     "strength": "Résilience",
+     "shareLine": "Je suis du type #Phénix !"
+    },
+    {
+     "name": "Le Phare 🗼",
+     "tagline": "Une lumière qui guide",
+     "desc": "Solide et rassurant, tu éclaires le chemin de ceux qui se sentent perdus. Ta chance grandit chaque fois que tu aides quelqu'un à retrouver sa voie.",
+     "luckyColor": "Bleu marine",
+     "strength": "Guidance",
+     "shareLine": "Je suis du type #Phare !"
+    },
+    {
+     "name": "La Comète ☄️",
+     "tagline": "Vive et éblouissante",
+     "desc": "Audacieuse et rapide, tu marques les esprits d'un éclat fulgurant. Ta chance fonce à toute allure et laisse une traînée de lumière partout où tu passes.",
+     "luckyColor": "Argent étincelant",
+     "strength": "Audace",
+     "shareLine": "Je suis du type #Comète !"
+    },
+    {
+     "name": "Le Chêne 🌳",
+     "tagline": "Enraciné et fidèle",
+     "desc": "Ancré et fiable, tu bâtis une fortune qui dure dans le temps. Ta chance pousse lentement mais sûrement, comme des racines profondes et inébranlables.",
+     "luckyColor": "Vert forêt",
+     "strength": "Solidité",
+     "shareLine": "Je suis du type #Chêne !"
+    },
+    {
+     "name": "La Rivière 🌊",
+     "tagline": "Fluide et intuitive",
+     "desc": "Adaptable et intuitive, tu contournes chaque obstacle sans jamais t'arrêter. Ta chance suit le courant et trouve toujours un passage vers la suite.",
+     "luckyColor": "Turquoise",
+     "strength": "Souplesse",
+     "shareLine": "Je suis du type #Rivière !"
+    },
+    {
+     "name": "Le Soleil ☀️",
+     "tagline": "Rayonnant et généreux",
+     "desc": "Lumineux et généreux, tu attires autant la chance que les gens. Ta présence réchauffe tout le monde et la fortune se laisse séduire par ta chaleur.",
+     "luckyColor": "Jaune doré",
+     "strength": "Rayonnement",
+     "shareLine": "Je suis du type #Soleil !"
+    },
+    {
+     "name": "La Boussole 🧭",
+     "tagline": "Toujours la bonne voie",
+     "desc": "Chercheur avisé, tu trouves toujours la bonne direction quand les autres hésitent. Ta chance vient de ta sagesse à choisir le chemin juste.",
+     "luckyColor": "Bronze",
+     "strength": "Sagesse",
+     "shareLine": "Je suis du type #Boussole !"
+    },
+    {
+     "name": "La Clé 🔑",
+     "tagline": "Toutes les portes s'ouvrent",
+     "desc": "Symbole d'opportunité, tu ouvres des portes que personne d'autre ne peut franchir. Ta chance se cache là où les autres ne voient qu'un mur.",
+     "luckyColor": "Or ancien",
+     "strength": "Opportunité",
+     "shareLine": "Je suis du type #Clé !"
+    },
+    {
+     "name": "L'Étoile 🌟",
+     "tagline": "Née pour briller",
+     "desc": "Rêveuse inspirée, tu es destinée à occuper le devant de la scène. Ta chance scintille dès que tu oses suivre tes plus grands rêves.",
+     "luckyColor": "Violet améthyste",
+     "strength": "Inspiration",
+     "shareLine": "Je suis du type #Étoile !"
+    },
+    {
+     "name": "La Montagne ⛰️",
+     "tagline": "Patiente et ambitieuse",
+     "desc": "Patiente et ambitieuse, tu vises les sommets sans jamais te presser. Ta chance se mérite pas à pas, jusqu'à des hauteurs que peu atteignent.",
+     "luckyColor": "Gris ardoise",
+     "strength": "Persévérance",
+     "shareLine": "Je suis du type #Montagne !"
+    },
+    {
+     "name": "Le Papillon 🦋",
+     "tagline": "Libre et joyeux",
+     "desc": "Libre et joyeux, tu te transformes sans cesse et tu enchantes ceux qui t'entourent. Ta chance danse de fleur en fleur, légère et pleine de surprises.",
+     "luckyColor": "Rose corail",
+     "strength": "Légèreté",
+     "shareLine": "Je suis du type #Papillon !"
+    },
+    {
+     "name": "L'Ancre ⚓",
+     "tagline": "Loyale et rassurante",
+     "desc": "Loyale et stabilisante, tu apportes sécurité et confiance autour de toi. Ta chance naît de ta fidélité : on sait qu'on peut toujours compter sur toi.",
+     "luckyColor": "Bleu nuit",
+     "strength": "Loyauté",
+     "shareLine": "Je suis du type #Ancre !"
     }
    ]
   }
@@ -8760,6 +9919,238 @@ window.LUX = {
      "a": "Tu número de por vida no cambia, porque depende de tu fecha de nacimiento, que es fija. Lo que sí se actualiza cada día es el número de hoy, que combina tu base personal con la energía de la jornada para darte un guiño fresco a diario."
     }
    ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Ruleta de la suerte de hoy",
+    "button": "¡Girar!",
+    "doneToday": "¡Por hoy se acabó! Vuelve mañana",
+    "numberLabel": "Número de la suerte",
+    "colorLabel": "Color de la suerte",
+    "charmLabel": "Amuleto de hoy"
+   },
+   "wordle": {
+    "copyButton": "Copiar resultado",
+    "copiedMsg": "¡Copiado!",
+    "shareIntro": "🍀 Mi día de suerte"
+   },
+   "countdown": {
+    "fullMoonLabel": "Próxima luna llena",
+    "newMoonLabel": "Próxima luna nueva",
+    "mercuryRetroLabel": "Mercurio retrógrado",
+    "mercuryActiveLabel": "En curso",
+    "mercuryDirectLabel": "Directo",
+    "daysLeft": "quedan {n} días",
+    "todayWord": "Hoy"
+   },
+   "install": {
+    "title": "Añadir a la pantalla de inicio",
+    "desc": "Instálala para tu suerte diaria con un toque, incluso sin conexión.",
+    "button": "Instalar",
+    "later": "Quizá luego"
+   },
+   "invite": {
+    "button": "💌 Ver compatibilidad con un amigo",
+    "title": "Invita a un amigo",
+    "desc": "Comparte un enlace y tu amigo verá al instante vuestra compatibilidad.",
+    "shareText": "¿Vemos nuestra compatibilidad de suerte? 💞 {name}",
+    "friendIntro": "¡Un amigo quiere ver vuestra compatibilidad!",
+    "makeOwn": "Ver mi propia compatibilidad"
+   },
+   "name": {
+    "title": "Número de la suerte de tu nombre",
+    "placeholder": "Escribe tu nombre",
+    "button": "Revelar",
+    "numberLabel": "Tu número de nombre",
+    "vibeLabel": "Vibra del nombre",
+    "intro": "Descubre el número de la suerte y la vibra ocultos en tu nombre."
+   },
+   "score": {
+    "title": "Puntuación de suerte de hoy",
+    "percentileTpl": "El clima cósmico te favorece más que en el {p}% de los días",
+    "shareButton": "Compartir puntuación",
+    "badgeTagline": "Puntuación de suerte cósmica"
+   }
+  },
+  "quiz": {
+   "title": "¿Cuál es tu arquetipo de la suerte?",
+   "intro": "Responde 8 preguntas y descubre qué fuerza guía tu buena fortuna.",
+   "resultPrefix": "Tu arquetipo de la suerte es",
+   "startLabel": "Empezar",
+   "retakeLabel": "Repetir",
+   "shareLabel": "Compartir resultado",
+   "questions": [
+    {
+     "q": "Cuando la suerte llama a tu puerta, tú…",
+     "opts": [
+      "te lanzas de cabeza",
+      "esperas la señal correcta",
+      "la compartes con todos",
+      "la cultivas en silencio"
+     ]
+    },
+    {
+     "q": "Tus amigos dicen que tu superpoder es…",
+     "opts": [
+      "levantarte ante cualquier cosa",
+      "mantener a todos con los pies en la tierra",
+      "iluminar la sala entera",
+      "leer el ambiente al instante"
+     ]
+    },
+    {
+     "q": "Tu día de suerte ideal es…",
+     "opts": [
+      "una aventura espontánea",
+      "un triunfo tranquilo tras esforzarte",
+      "ayudar a alguien a encontrar su rumbo",
+      "una puerta que se abre sin avisar"
+     ]
+    },
+    {
+     "q": "Atraes la buena fortuna…",
+     "opts": [
+      "siendo audaz y visible",
+      "manteniéndote paciente y firme",
+      "confiando en tu instinto",
+      "soñando a lo grande"
+     ]
+    },
+    {
+     "q": "Llega un revés. Tú…",
+     "opts": [
+      "te levantas más fuerte que antes",
+      "te calmas y calmas a los demás",
+      "giras hacia un nuevo camino",
+      "encuentras la lección detrás"
+     ]
+    },
+    {
+     "q": "Tu amuleto de la suerte sería…",
+     "opts": [
+      "algo ardiente y brillante",
+      "algo antiguo y con significado",
+      "algo que te guíe el camino",
+      "una llave o una moneda de la suerte"
+     ]
+    },
+    {
+     "q": "La gente acude a ti en busca de…",
+     "opts": [
+      "inspiración y grandes ideas",
+      "calma y estabilidad",
+      "calidez y ánimo",
+      "dirección y sabiduría"
+     ]
+    },
+    {
+     "q": "Tu suerte brilla más cuando tú…",
+     "opts": [
+      "das el salto",
+      "eres fiel a tus raíces",
+      "te dejas llevar por la corriente",
+      "empiezas de cero"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "El Fénix 🔥",
+     "tagline": "Renace y arde",
+     "desc": "Cada caída te impulsa a renacer con más fuerza que nunca. Tu suerte llega cuando transformas los finales en nuevos comienzos.",
+     "luckyColor": "Rojo carmesí",
+     "strength": "Resiliencia",
+     "shareLine": "¡Soy del tipo #ElFénix! 🔥"
+    },
+    {
+     "name": "El Faro 🌅",
+     "tagline": "Guía constante",
+     "desc": "Iluminas el camino de los demás con una calma firme y segura. Tu fortuna crece cuando ayudas a otros a encontrar su rumbo.",
+     "luckyColor": "Azul marino",
+     "strength": "Guía",
+     "shareLine": "¡Soy del tipo #ElFaro! 🌅"
+    },
+    {
+     "name": "El Cometa ☄️",
+     "tagline": "Veloz y deslumbrante",
+     "desc": "Eres audaz y rápido, y dejas una huella brillante por donde pasas. Tu suerte chispea en los momentos atrevidos e inesperados.",
+     "luckyColor": "Turquesa eléctrico",
+     "strength": "Audacia",
+     "shareLine": "¡Soy del tipo #ElCometa! ☄️"
+    },
+    {
+     "name": "El Roble 🌳",
+     "tagline": "Firme y constante",
+     "desc": "Tienes los pies en la tierra y construyes una fortuna que perdura. Tu suerte florece con paciencia, raíces profundas y trabajo sólido.",
+     "luckyColor": "Verde bosque",
+     "strength": "Solidez",
+     "shareLine": "¡Soy del tipo #ElRoble! 🌳"
+    },
+    {
+     "name": "El Río 🌊",
+     "tagline": "Fluye e intuye",
+     "desc": "Te adaptas con intuición y rodeas cualquier obstáculo sin esfuerzo. Tu suerte aparece cuando te dejas llevar por la corriente.",
+     "luckyColor": "Aguamarina",
+     "strength": "Adaptabilidad",
+     "shareLine": "¡Soy del tipo #ElRío! 🌊"
+    },
+    {
+     "name": "El Sol ☀️",
+     "tagline": "Radiante y generoso",
+     "desc": "Brillas con calidez y atraes a la gente y a la buena suerte por igual. Tu fortuna se multiplica cuando compartes tu luz con los demás.",
+     "luckyColor": "Dorado",
+     "strength": "Magnetismo",
+     "shareLine": "¡Soy del tipo #ElSol! ☀️"
+    },
+    {
+     "name": "La Brújula 🧭",
+     "tagline": "Guía sabia",
+     "desc": "Eres un alma sabia que siempre encuentra el camino correcto. Tu suerte se revela cuando confías en tu propio sentido de la dirección.",
+     "luckyColor": "Bronce",
+     "strength": "Sabiduría",
+     "shareLine": "¡Soy del tipo #LaBrújula! 🧭"
+    },
+    {
+     "name": "La Llave 🔑",
+     "tagline": "Abre oportunidades",
+     "desc": "Eres la oportunidad en persona y abres puertas que otros no pueden. Tu suerte aparece justo cuando surge la ocasión perfecta.",
+     "luckyColor": "Ámbar",
+     "strength": "Oportunidad",
+     "shareLine": "¡Soy del tipo #LaLlave! 🔑"
+    },
+    {
+     "name": "La Estrella 🌟",
+     "tagline": "Sueña e inspira",
+     "desc": "Eres un alma inspirada destinada a brillar bajo los focos. Tu fortuna resplandece cuando persigues tus sueños más grandes.",
+     "luckyColor": "Violeta",
+     "strength": "Inspiración",
+     "shareLine": "¡Soy del tipo #LaEstrella! 🌟"
+    },
+    {
+     "name": "La Montaña ⛰️",
+     "tagline": "Paciente y ambiciosa",
+     "desc": "Con paciencia y ambición, alcanzas alturas que pocos imaginan. Tu suerte se conquista paso a paso, sin rendirte jamás.",
+     "luckyColor": "Gris pizarra",
+     "strength": "Ambición",
+     "shareLine": "¡Soy del tipo #LaMontaña! ⛰️"
+    },
+    {
+     "name": "La Mariposa 🦋",
+     "tagline": "Libre y alegre",
+     "desc": "Eres libre y alegre, y transformas todo lo que tocas en algo bello. Tu suerte llega cuando te reinventas y disfrutas del momento.",
+     "luckyColor": "Rosa coral",
+     "strength": "Libertad",
+     "shareLine": "¡Soy del tipo #LaMariposa! 🦋"
+    },
+    {
+     "name": "El Ancla ⚓",
+     "tagline": "Leal y firme",
+     "desc": "Eres leal y das estabilidad, aportando seguridad y confianza a todos. Tu fortuna se asienta cuando eres el apoyo firme de los demás.",
+     "luckyColor": "Azul acero",
+     "strength": "Lealtad",
+     "shareLine": "¡Soy del tipo #ElAncla! ⚓"
+    }
+   ]
   }
  },
  "pt": {
@@ -10218,6 +11609,238 @@ window.LUX = {
     {
      "q": "O número da sorte muda todo dia?",
      "a": "Depende de qual: o seu número da vida toda vem da data de nascimento e não muda nunca. Já o número da sorte de hoje é calculado a partir da data do dia, então ele se renova a cada 24 horas pra dar aquela variada."
+    }
+   ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Roleta da sorte de hoje",
+    "button": "Girar!",
+    "doneToday": "Por hoje chega! Volte amanhã",
+    "numberLabel": "Número da sorte",
+    "colorLabel": "Cor da sorte",
+    "charmLabel": "Amuleto de hoje"
+   },
+   "wordle": {
+    "copyButton": "Copiar resultado",
+    "copiedMsg": "Copiado!",
+    "shareIntro": "🍀 Meu dia de sorte"
+   },
+   "countdown": {
+    "fullMoonLabel": "Próxima lua cheia",
+    "newMoonLabel": "Próxima lua nova",
+    "mercuryRetroLabel": "Mercúrio retrógrado",
+    "mercuryActiveLabel": "Em curso",
+    "mercuryDirectLabel": "Direto",
+    "daysLeft": "faltam {n} dias",
+    "todayWord": "Hoje"
+   },
+   "install": {
+    "title": "Adicionar à tela inicial",
+    "desc": "Instale para sua sorte diária com um toque, até offline.",
+    "button": "Instalar",
+    "later": "Talvez depois"
+   },
+   "invite": {
+    "button": "💌 Ver compatibilidade com um amigo",
+    "title": "Convide um amigo",
+    "desc": "Compartilhe um link e seu amigo vê na hora a compatibilidade de vocês.",
+    "shareText": "Vamos ver nossa compatibilidade da sorte? 💞 {name}",
+    "friendIntro": "Um amigo quer ver a compatibilidade de vocês!",
+    "makeOwn": "Ver minha própria compatibilidade"
+   },
+   "name": {
+    "title": "Número da sorte do seu nome",
+    "placeholder": "Digite seu nome",
+    "button": "Revelar",
+    "numberLabel": "Número do seu nome",
+    "vibeLabel": "Vibe do nome",
+    "intro": "Descubra o número da sorte e a vibe escondidos no seu nome."
+   },
+   "score": {
+    "title": "Pontuação de sorte de hoje",
+    "percentileTpl": "O clima cósmico te favorece mais do que em {p}% dos dias",
+    "shareButton": "Compartilhar pontuação",
+    "badgeTagline": "Pontuação de sorte cósmica"
+   }
+  },
+  "quiz": {
+   "title": "Qual é o seu arquétipo da sorte?",
+   "intro": "Responda 8 perguntinhas e descubra qual força da sorte vive dentro de você!",
+   "resultPrefix": "O seu arquétipo da sorte é",
+   "startLabel": "Começar",
+   "retakeLabel": "Refazer",
+   "shareLabel": "Compartilhar resultado",
+   "questions": [
+    {
+     "q": "Quando a sorte bate à porta, você...",
+     "opts": [
+      "parte pra cima de cabeça",
+      "espera o sinal certo",
+      "divide com todo mundo",
+      "vai construindo aos poucos"
+     ]
+    },
+    {
+     "q": "Seus amigos dizem que seu superpoder é...",
+     "opts": [
+      "dar a volta por cima de tudo",
+      "manter todo mundo com o pé no chão",
+      "iluminar o ambiente",
+      "sentir o clima na hora"
+     ]
+    },
+    {
+     "q": "Seu dia de sorte perfeito é...",
+     "opts": [
+      "uma aventura sem planejar",
+      "uma vitória tranquila depois de muito esforço",
+      "ajudar alguém a achar o caminho",
+      "uma porta inesperada se abrindo"
+     ]
+    },
+    {
+     "q": "Você atrai a boa sorte...",
+     "opts": [
+      "sendo ousado e aparecendo",
+      "com paciência e firmeza",
+      "confiando na intuição",
+      "sonhando bem alto"
+     ]
+    },
+    {
+     "q": "Um tropeço acontece. Você...",
+     "opts": [
+      "renasce mais forte que antes",
+      "se firma e firma os outros também",
+      "muda de rota na hora",
+      "tira a lição daquilo"
+     ]
+    },
+    {
+     "q": "Seu amuleto da sorte seria...",
+     "opts": [
+      "algo cheio de fogo e brilho",
+      "algo antigo e cheio de significado",
+      "algo que te guia",
+      "uma chave ou uma moeda da sorte"
+     ]
+    },
+    {
+     "q": "As pessoas te procuram por...",
+     "opts": [
+      "inspiração e grandes ideias",
+      "calma e estabilidade",
+      "carinho e incentivo",
+      "direção e sabedoria"
+     ]
+    },
+    {
+     "q": "Sua sorte brilha mais forte quando você...",
+     "opts": [
+      "dá um salto",
+      "fica fiel às suas raízes",
+      "se deixa levar pela maré",
+      "começa do zero"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "A Fênix 🔥",
+     "tagline": "Renasce das cinzas",
+     "desc": "Você transforma cada queda em um recomeço ainda mais brilhante. Sua sorte mora justamente na coragem de renascer e voltar mais forte de qualquer tombo.",
+     "luckyColor": "Vermelho-fogo",
+     "strength": "Resiliência",
+     "shareLine": "Eu sou do tipo #Fênix! 🔥"
+    },
+    {
+     "name": "O Farol 🗼",
+     "tagline": "Luz que guia",
+     "desc": "Firme e constante, você ilumina o caminho de quem está perdido. Sua sorte cresce quando você se torna ponto de referência para os outros.",
+     "luckyColor": "Azul-marinho",
+     "strength": "Orientação",
+     "shareLine": "Eu sou do tipo #Farol! 🗼"
+    },
+    {
+     "name": "O Cometa ☄️",
+     "tagline": "Brilho fugaz",
+     "desc": "Ousado e veloz, você passa deixando um rastro de impacto inesquecível. Sua sorte aparece nos momentos em que você arrisca e deslumbra.",
+     "luckyColor": "Prateado",
+     "strength": "Audácia",
+     "shareLine": "Eu sou do tipo #Cometa! ☄️"
+    },
+    {
+     "name": "O Carvalho 🌳",
+     "tagline": "Raiz firme",
+     "desc": "Com os pés no chão e total confiança, você constrói uma fortuna que dura. Sua sorte vem da paciência de plantar hoje e colher por muitos anos.",
+     "luckyColor": "Verde-musgo",
+     "strength": "Solidez",
+     "shareLine": "Eu sou do tipo #Carvalho! 🌳"
+    },
+    {
+     "name": "O Rio 🌊",
+     "tagline": "Fluir sem parar",
+     "desc": "Intuitivo e adaptável, você contorna qualquer obstáculo com leveza. Sua sorte está em saber fluir e encontrar sempre um novo caminho.",
+     "luckyColor": "Azul-turquesa",
+     "strength": "Adaptação",
+     "shareLine": "Eu sou do tipo #Rio! 🌊"
+    },
+    {
+     "name": "O Sol ☀️",
+     "tagline": "Brilho generoso",
+     "desc": "Radiante e generoso, você atrai a sorte e as pessoas pelo seu calor. Onde você chega, a boa energia e a fortuna vêm junto.",
+     "luckyColor": "Dourado",
+     "strength": "Magnetismo",
+     "shareLine": "Eu sou do tipo #Sol! ☀️"
+    },
+    {
+     "name": "A Bússola 🧭",
+     "tagline": "Sempre no rumo",
+     "desc": "Sábio e curioso, você sempre encontra a direção certa. Sua sorte está na clareza de saber para onde ir, mesmo no meio da névoa.",
+     "luckyColor": "Bronze",
+     "strength": "Sabedoria",
+     "shareLine": "Eu sou do tipo #Bússola! 🧭"
+    },
+    {
+     "name": "A Chave 🔑",
+     "tagline": "Abre portas",
+     "desc": "Você é a oportunidade em pessoa, capaz de destravar portas que ninguém mais consegue. Sua sorte aparece nas aberturas que só você enxerga.",
+     "luckyColor": "Ouro-velho",
+     "strength": "Oportunidade",
+     "shareLine": "Eu sou do tipo #Chave! 🔑"
+    },
+    {
+     "name": "A Estrela 🌟",
+     "tagline": "Nasceu pra brilhar",
+     "desc": "Sonhador e inspirado, você tem o destino traçado para os holofotes. Sua sorte floresce quando você acredita nos seus sonhos mais grandiosos.",
+     "luckyColor": "Lilás",
+     "strength": "Inspiração",
+     "shareLine": "Eu sou do tipo #Estrela! 🌟"
+    },
+    {
+     "name": "A Montanha ⛰️",
+     "tagline": "Rumo ao topo",
+     "desc": "Paciente e ambicioso, você alcança alturas que poucos chegam. Sua sorte se conquista passo a passo, com a calma de quem sabe aonde quer ir.",
+     "luckyColor": "Cinza-pedra",
+     "strength": "Ambição",
+     "shareLine": "Eu sou do tipo #Montanha! ⛰️"
+    },
+    {
+     "name": "A Borboleta 🦋",
+     "tagline": "Livre e leve",
+     "desc": "Livre e cheio de alegria, você se transforma e encanta por onde passa. Sua sorte vem da leveza de aceitar cada mudança como um presente.",
+     "luckyColor": "Rosa-coral",
+     "strength": "Leveza",
+     "shareLine": "Eu sou do tipo #Borboleta! 🦋"
+    },
+    {
+     "name": "A Âncora ⚓",
+     "tagline": "Porto seguro",
+     "desc": "Leal e estável, você traz segurança e confiança para quem está ao seu lado. Sua sorte mora na firmeza de ser o porto seguro de todos.",
+     "luckyColor": "Azul-petróleo",
+     "strength": "Lealdade",
+     "shareLine": "Eu sou do tipo #Âncora! ⚓"
     }
    ]
   }
@@ -11680,6 +13303,238 @@ window.LUX = {
      "a": "In parte. Il numero di sempre resta fisso perché legato alla tua nascita, mentre quello di oggi cambia ogni giorno combinando la tua data con la data odierna. Così hai un portafortuna stabile e una piccola sorpresa fresca ogni mattina."
     }
    ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Ruota della fortuna di oggi",
+    "button": "Gira!",
+    "doneToday": "Per oggi è finita! Torna domani",
+    "numberLabel": "Numero fortunato",
+    "colorLabel": "Colore fortunato",
+    "charmLabel": "Portafortuna di oggi"
+   },
+   "wordle": {
+    "copyButton": "Copia risultato",
+    "copiedMsg": "Copiato!",
+    "shareIntro": "🍀 Il mio giorno fortunato"
+   },
+   "countdown": {
+    "fullMoonLabel": "Prossima luna piena",
+    "newMoonLabel": "Prossima luna nuova",
+    "mercuryRetroLabel": "Mercurio retrogrado",
+    "mercuryActiveLabel": "In corso",
+    "mercuryDirectLabel": "Diretto",
+    "daysLeft": "{n} giorni rimasti",
+    "todayWord": "Oggi"
+   },
+   "install": {
+    "title": "Aggiungi alla schermata Home",
+    "desc": "Installala per la tua fortuna quotidiana con un tap, anche offline.",
+    "button": "Installa",
+    "later": "Più tardi"
+   },
+   "invite": {
+    "button": "💌 Vedi l'affinità con un amico",
+    "title": "Invita un amico",
+    "desc": "Condividi un link e il tuo amico vede subito la vostra affinità.",
+    "shareText": "Vediamo la nostra affinità fortunata? 💞 {name}",
+    "friendIntro": "Un amico vuole vedere la vostra affinità!",
+    "makeOwn": "Vedi la mia affinità"
+   },
+   "name": {
+    "title": "Numero fortunato del nome",
+    "placeholder": "Inserisci il tuo nome",
+    "button": "Rivela",
+    "numberLabel": "Il numero del tuo nome",
+    "vibeLabel": "Vibe del nome",
+    "intro": "Scopri il numero fortunato e la vibe nascosti nel tuo nome."
+   },
+   "score": {
+    "title": "Punteggio fortuna di oggi",
+    "percentileTpl": "Il meteo cosmico ti favorisce più che nel {p}% dei giorni",
+    "shareButton": "Condividi punteggio",
+    "badgeTagline": "Punteggio fortuna cosmica"
+   }
+  },
+  "quiz": {
+   "title": "Qual è il tuo archetipo della fortuna?",
+   "intro": "Rispondi a 8 domande veloci e scopri quale forza fortunata si nasconde in te.",
+   "resultPrefix": "Il tuo archetipo della fortuna è",
+   "startLabel": "Inizia",
+   "retakeLabel": "Rifai il test",
+   "shareLabel": "Condividi il risultato",
+   "questions": [
+    {
+     "q": "Quando la fortuna bussa, tu…",
+     "opts": [
+      "ti lanci a testa bassa",
+      "aspetti il segno giusto",
+      "la condividi con tutti",
+      "la coltivi in silenzio"
+     ]
+    },
+    {
+     "q": "Gli amici dicono che il tuo superpotere è…",
+     "opts": [
+      "rialzarti da qualsiasi cosa",
+      "tenere tutti con i piedi per terra",
+      "illuminare la stanza",
+      "leggere l'atmosfera"
+     ]
+    },
+    {
+     "q": "Il tuo giorno fortunato ideale è…",
+     "opts": [
+      "un'avventura improvvisa",
+      "una vittoria silenziosa dopo tanto impegno",
+      "aiutare qualcuno a trovare la sua strada",
+      "una porta che si apre all'improvviso"
+     ]
+    },
+    {
+     "q": "Attiri la buona sorte…",
+     "opts": [
+      "osando e stando al centro della scena",
+      "restando paziente e costante",
+      "fidandoti dell'istinto",
+      "sognando in grande"
+     ]
+    },
+    {
+     "q": "Arriva un imprevisto. Tu…",
+     "opts": [
+      "ti rialzi più forte di prima",
+      "dai stabilità a te e agli altri",
+      "cambi rotta verso una nuova via",
+      "trovi la lezione nascosta"
+     ]
+    },
+    {
+     "q": "Il tuo portafortuna sarebbe…",
+     "opts": [
+      "qualcosa di acceso e luminoso",
+      "qualcosa di antico e prezioso",
+      "qualcosa che ti guida",
+      "una chiave o una moneta fortunata"
+     ]
+    },
+    {
+     "q": "Le persone vengono da te per…",
+     "opts": [
+      "ispirazione e grandi idee",
+      "calma e stabilità",
+      "calore e incoraggiamento",
+      "direzione e saggezza"
+     ]
+    },
+    {
+     "q": "La tua fortuna brilla di più quando…",
+     "opts": [
+      "fai il grande salto",
+      "resti fedele alle tue radici",
+      "ti lasci portare dalla corrente",
+      "ricominci da capo"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "La Fenice 🔥",
+     "tagline": "Rinasci ogni volta",
+     "desc": "Trasformi ogni caduta in un nuovo inizio e ne esci sempre più forte. La tua fortuna nasce dalla rinascita: dove gli altri si fermano, tu prendi il volo.",
+     "luckyColor": "Rosso fuoco",
+     "strength": "Rinascita",
+     "shareLine": "Sono il tipo #Fenice! 🔥"
+    },
+    {
+     "name": "Il Faro 🗼",
+     "tagline": "Guida sicura",
+     "desc": "Sei un punto di riferimento stabile e illumini la rotta a chi ti sta intorno. La tua fortuna cresce ogni volta che aiuti qualcuno a ritrovare la propria strada.",
+     "luckyColor": "Bianco luce",
+     "strength": "Guida",
+     "shareLine": "Sono il tipo #Faro! 🗼"
+    },
+    {
+     "name": "La Cometa ☄️",
+     "tagline": "Audace e veloce",
+     "desc": "Ti muovi con coraggio e lasci sempre il segno con la tua scia luminosa. La tua fortuna arriva di slancio: agisci in fretta e accendi tutto ciò che tocchi.",
+     "luckyColor": "Azzurro elettrico",
+     "strength": "Audacia",
+     "shareLine": "Sono il tipo #Cometa! ☄️"
+    },
+    {
+     "name": "La Quercia 🌳",
+     "tagline": "Radici profonde",
+     "desc": "Concretezza e affidabilità ti definiscono, e costruisci una fortuna destinata a durare. Passo dopo passo metti radici solide e raccogli i frutti del tuo impegno.",
+     "luckyColor": "Verde bosco",
+     "strength": "Solidità",
+     "shareLine": "Sono il tipo #Quercia! 🌳"
+    },
+    {
+     "name": "Il Fiume 🌊",
+     "tagline": "Fluido e intuitivo",
+     "desc": "Ti adatti a tutto e segui il tuo istinto con naturalezza. La tua fortuna scorre aggirando gli ostacoli e trovando sempre una nuova via.",
+     "luckyColor": "Turchese",
+     "strength": "Intuito",
+     "shareLine": "Sono il tipo #Fiume! 🌊"
+    },
+    {
+     "name": "Il Sole ☀️",
+     "tagline": "Caldo e generoso",
+     "desc": "Splendi di luce propria e doni energia a tutti quelli che ti circondano. La tua generosità attira fortuna e persone come una calamita.",
+     "luckyColor": "Giallo oro",
+     "strength": "Generosità",
+     "shareLine": "Sono il tipo #Sole! ☀️"
+    },
+    {
+     "name": "La Bussola 🧭",
+     "tagline": "Ricerca saggia",
+     "desc": "Esplori con saggezza e trovi sempre la direzione giusta. La tua fortuna sta nel saper scegliere il sentiero che conta davvero.",
+     "luckyColor": "Bronzo",
+     "strength": "Saggezza",
+     "shareLine": "Sono il tipo #Bussola! 🧭"
+    },
+    {
+     "name": "La Chiave 🔑",
+     "tagline": "Apri ogni porta",
+     "desc": "Sei l'occasione che cambia tutto e sblocchi porte che altri non riescono nemmeno a vedere. La tua fortuna sta nel cogliere le opportunità al momento giusto.",
+     "luckyColor": "Oro antico",
+     "strength": "Opportunità",
+     "shareLine": "Sono il tipo #Chiave! 🔑"
+    },
+    {
+     "name": "La Stella 🌟",
+     "tagline": "Sogni che ispirano",
+     "desc": "Hai la testa piena di sogni e di idee, nata per stare sotto i riflettori. La tua fortuna brilla quando insegui in grande ciò in cui credi.",
+     "luckyColor": "Argento",
+     "strength": "Ispirazione",
+     "shareLine": "Sono il tipo #Stella! 🌟"
+    },
+    {
+     "name": "La Montagna ⛰️",
+     "tagline": "Paziente e ambiziosa",
+     "desc": "Con pazienza e ambizione punti sempre alle vette più alte. La tua fortuna si conquista passo dopo passo, senza mai perdere di vista la cima.",
+     "luckyColor": "Grigio pietra",
+     "strength": "Ambizione",
+     "shareLine": "Sono il tipo #Montagna! ⛰️"
+    },
+    {
+     "name": "La Farfalla 🦋",
+     "tagline": "Libera e gioiosa",
+     "desc": "Libera e gioiosa, ti trasformi portando leggerezza ovunque vai. La tua fortuna nasce dalla capacità di cambiare e di goderti ogni istante.",
+     "luckyColor": "Rosa cipria",
+     "strength": "Leggerezza",
+     "shareLine": "Sono il tipo #Farfalla! 🦋"
+    },
+    {
+     "name": "L'Ancora ⚓",
+     "tagline": "Fedele e sicura",
+     "desc": "Sei una presenza leale e dai stabilità a chi ti circonda. La tua fortuna sta nel creare sicurezza e fiducia che resistono a ogni tempesta.",
+     "luckyColor": "Blu navy",
+     "strength": "Fedeltà",
+     "shareLine": "Sono il tipo #Ancora! ⚓"
+    }
+   ]
   }
  },
  "id": {
@@ -13138,6 +14993,238 @@ window.LUX = {
     {
      "q": "Apakah angka keberuntungan berubah setiap hari?",
      "a": "Angka keberuntungan seumur hidup yang berdasarkan tanggal lahir selalu tetap. Namun ada juga Angka Keberuntungan Hari Ini yang ikut bergeser setiap hari, jadi kamu bisa mengeceknya tiap pagi untuk sentuhan semangat yang baru. Anggap saja ini hiburan ringan, ya, bukan kepastian."
+    }
+   ]
+  },
+  "growth": {
+   "spin": {
+    "title": "Roda Keberuntungan Hari Ini",
+    "button": "Putar!",
+    "doneToday": "Cukup untuk hari ini! Kembali besok ya",
+    "numberLabel": "Angka Keberuntungan",
+    "colorLabel": "Warna Keberuntungan",
+    "charmLabel": "Jimat Hari Ini"
+   },
+   "wordle": {
+    "copyButton": "Salin hasil",
+    "copiedMsg": "Tersalin!",
+    "shareIntro": "🍀 Hari Keberuntunganku"
+   },
+   "countdown": {
+    "fullMoonLabel": "Bulan Purnama Berikutnya",
+    "newMoonLabel": "Bulan Baru Berikutnya",
+    "mercuryRetroLabel": "Merkurius Retrograde",
+    "mercuryActiveLabel": "Sedang aktif",
+    "mercuryDirectLabel": "Langsung",
+    "daysLeft": "{n} hari lagi",
+    "todayWord": "Hari ini"
+   },
+   "install": {
+    "title": "Tambah ke Layar Utama",
+    "desc": "Pasang untuk keberuntungan harian sekali ketuk, bahkan saat offline.",
+    "button": "Pasang",
+    "later": "Nanti saja"
+   },
+   "invite": {
+    "button": "💌 Cek kecocokan dengan teman",
+    "title": "Undang Teman",
+    "desc": "Bagikan tautan dan temanmu langsung lihat kecocokan kalian.",
+    "shareText": "Yuk lihat kecocokan keberuntungan kita! 💞 {name}",
+    "friendIntro": "Seorang teman ingin lihat kecocokan kalian!",
+    "makeOwn": "Lihat kecocokanku sendiri"
+   },
+   "name": {
+    "title": "Angka Keberuntungan Nama",
+    "placeholder": "Masukkan namamu",
+    "button": "Ungkap",
+    "numberLabel": "Angka Namamu",
+    "vibeLabel": "Nuansa Nama",
+    "intro": "Temukan angka keberuntungan dan nuansa yang tersembunyi di namamu."
+   },
+   "score": {
+    "title": "Skor Keberuntungan Hari Ini",
+    "percentileTpl": "Cuaca kosmik hari ini lebih berpihak padamu dari {p}% hari biasanya",
+    "shareButton": "Bagikan skor",
+    "badgeTagline": "Skor Keberuntungan Kosmik"
+   }
+  },
+  "quiz": {
+   "title": "Apa Arketipe Keberuntunganmu?",
+   "intro": "Jawab 8 pertanyaan singkat ini dan temukan kekuatan keberuntungan sejati yang ada di dalam dirimu!",
+   "resultPrefix": "Arketipe keberuntunganmu adalah",
+   "startLabel": "Mulai",
+   "retakeLabel": "Ulangi",
+   "shareLabel": "Bagikan Hasil",
+   "questions": [
+    {
+     "q": "Saat keberuntungan datang mengetuk, kamu…",
+     "opts": [
+      "langsung menyambarnya tanpa ragu",
+      "menunggu pertanda yang tepat",
+      "membaginya dengan semua orang",
+      "diam-diam mengembangkannya"
+     ]
+    },
+    {
+     "q": "Menurut teman-teman, kekuatan supermu adalah…",
+     "opts": [
+      "bangkit lagi dari apa pun",
+      "membuat semua orang tetap tenang",
+      "menghidupkan suasana ruangan",
+      "membaca suasana hati orang lain"
+     ]
+    },
+    {
+     "q": "Hari keberuntungan idealmu adalah…",
+     "opts": [
+      "petualangan spontan tanpa rencana",
+      "kemenangan tenang setelah kerja keras",
+      "membantu seseorang menemukan jalannya",
+      "pintu tak terduga yang tiba-tiba terbuka"
+     ]
+    },
+    {
+     "q": "Kamu menarik keberuntungan dengan cara…",
+     "opts": [
+      "tampil berani dan menonjol",
+      "tetap sabar dan teguh",
+      "mempercayai kata hatimu",
+      "bermimpi setinggi langit"
+     ]
+    },
+    {
+     "q": "Saat kegagalan menerpa, kamu…",
+     "opts": [
+      "bangkit lebih kuat dari sebelumnya",
+      "menenangkan diri dan orang lain",
+      "berbelok ke jalan yang baru",
+      "menemukan pelajaran di baliknya"
+     ]
+    },
+    {
+     "q": "Jimat keberuntunganmu pasti…",
+     "opts": [
+      "sesuatu yang menyala dan berapi",
+      "sesuatu yang tua dan penuh makna",
+      "sesuatu yang menuntun langkahmu",
+      "sebuah kunci atau koin keberuntungan"
+     ]
+    },
+    {
+     "q": "Orang-orang datang padamu untuk…",
+     "opts": [
+      "inspirasi dan ide-ide besar",
+      "ketenangan dan kestabilan",
+      "kehangatan dan semangat",
+      "arah dan kebijaksanaan"
+     ]
+    },
+    {
+     "q": "Keberuntunganmu paling bersinar saat kamu…",
+     "opts": [
+      "mengambil lompatan berani",
+      "setia pada jati dirimu",
+      "mengalir mengikuti arus",
+      "memulai lagi dari awal"
+     ]
+    }
+   ],
+   "archetypes": [
+    {
+     "name": "Sang Phoenix 🔥",
+     "tagline": "Bangkit dari Abu",
+     "desc": "Kamu adalah jiwa yang terus terlahir kembali, selalu bangkit lebih kuat dari setiap kegagalan. Keberuntunganmu justru mengalir saat kamu berani memulai babak baru dari titik terendah.",
+     "luckyColor": "Merah menyala",
+     "strength": "Daya bangkit",
+     "shareLine": "Aku tipe #SangPhoenix! 🔥"
+    },
+    {
+     "name": "Sang Mercusuar 🗼",
+     "tagline": "Cahaya yang Menuntun",
+     "desc": "Kamu memancarkan ketenangan yang membantu orang lain menemukan arah di tengah kegelapan. Keberuntungan datang lewat kestabilan dan bimbingan tulus yang kamu berikan tanpa pamrih.",
+     "luckyColor": "Biru laut",
+     "strength": "Bimbingan",
+     "shareLine": "Aku tipe #SangMercusuar! 🗼"
+    },
+    {
+     "name": "Sang Komet ☄️",
+     "tagline": "Kilau yang Memukau",
+     "desc": "Kamu berani, gesit, dan meninggalkan jejak memesona ke mana pun kamu melaju. Keberuntungan menyukai keberanianmu untuk bergerak lebih dulu sebelum yang lain sempat berpikir.",
+     "luckyColor": "Ungu galaksi",
+     "strength": "Keberanian",
+     "shareLine": "Aku tipe #SangKomet! ☄️"
+    },
+    {
+     "name": "Sang Pohon Ek 🌳",
+     "tagline": "Akar yang Kokoh",
+     "desc": "Kamu membumi dan bisa diandalkan, membangun keberuntungan yang tahan lama selangkah demi selangkah. Kesabaran dan ketekunanmu menjadi fondasi rezeki yang tak mudah goyah.",
+     "luckyColor": "Hijau zaitun",
+     "strength": "Kestabilan",
+     "shareLine": "Aku tipe #SangPohonEk! 🌳"
+    },
+    {
+     "name": "Sang Sungai 🌊",
+     "tagline": "Mengalir Tanpa Henti",
+     "desc": "Kamu luwes dan penuh intuisi, selalu menemukan celah untuk mengalir melewati setiap rintangan. Keberuntunganmu lahir dari kemampuan beradaptasi dan mempercayai kata hatimu.",
+     "luckyColor": "Toska",
+     "strength": "Adaptasi",
+     "shareLine": "Aku tipe #SangSungai! 🌊"
+    },
+    {
+     "name": "Sang Mentari ☀️",
+     "tagline": "Hangat dan Bersinar",
+     "desc": "Kamu memancarkan kehangatan dan kemurahan hati yang menarik keberuntungan sekaligus orang-orang baik. Senyummu saja sudah cukup untuk mengubah suasana hari menjadi cerah.",
+     "luckyColor": "Kuning keemasan",
+     "strength": "Kemurahan hati",
+     "shareLine": "Aku tipe #SangMentari! ☀️"
+    },
+    {
+     "name": "Sang Kompas 🧭",
+     "tagline": "Selalu Tahu Arah",
+     "desc": "Kamu seorang penjelajah bijak yang selalu menemukan jalan paling tepat. Keberuntungan menghampirimu karena kamu tahu ke mana harus melangkah, bahkan saat yang lain tersesat.",
+     "luckyColor": "Cokelat tembaga",
+     "strength": "Kebijaksanaan",
+     "shareLine": "Aku tipe #SangKompas! 🧭"
+    },
+    {
+     "name": "Sang Kunci 🔑",
+     "tagline": "Pembuka Peluang",
+     "desc": "Kamu bagai peluang yang berjalan, mampu membuka pintu yang tertutup rapat bagi orang lain. Keberuntungan selalu menemukan jalannya lewat tangan dan tekadmu yang penuh siasat.",
+     "luckyColor": "Emas",
+     "strength": "Peluang",
+     "shareLine": "Aku tipe #SangKunci! 🔑"
+    },
+    {
+     "name": "Sang Bintang 🌟",
+     "tagline": "Ditakdirkan Bersinar",
+     "desc": "Kamu seorang pemimpi penuh inspirasi yang ditakdirkan untuk panggung utama. Keberuntungan tertarik pada cahaya impianmu yang besar dan tak takut menjangkau setinggi langit.",
+     "luckyColor": "Perak berkilau",
+     "strength": "Inspirasi",
+     "shareLine": "Aku tipe #SangBintang! 🌟"
+    },
+    {
+     "name": "Sang Gunung ⛰️",
+     "tagline": "Menuju Puncak",
+     "desc": "Kamu sabar sekaligus ambisius, menapaki ketinggian luar biasa dengan langkah yang mantap. Keberuntungan menanti di puncak bagi mereka yang tak pernah menyerah saat mendaki.",
+     "luckyColor": "Abu-abu batu",
+     "strength": "Ketekunan",
+     "shareLine": "Aku tipe #SangGunung! ⛰️"
+    },
+    {
+     "name": "Sang Kupu-Kupu 🦋",
+     "tagline": "Bebas dan Ceria",
+     "desc": "Kamu bebas, riang, dan selalu bermetamorfosis menjadi versi diri yang lebih indah. Keberuntungan mengikutimu ke mana pun kamu menebarkan keceriaan dan keindahan.",
+     "luckyColor": "Merah muda lembut",
+     "strength": "Transformasi",
+     "shareLine": "Aku tipe #SangKupuKupu! 🦋"
+    },
+    {
+     "name": "Sang Jangkar ⚓",
+     "tagline": "Pijakan yang Setia",
+     "desc": "Kamu setia dan menjadi penopang yang menghadirkan rasa aman serta kepercayaan. Keberuntunganmu tumbuh dari kestabilan yang kamu berikan bagi orang-orang di sekelilingmu.",
+     "luckyColor": "Biru dongker",
+     "strength": "Kesetiaan",
+     "shareLine": "Aku tipe #SangJangkar! ⚓"
     }
    ]
   }

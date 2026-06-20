@@ -1647,7 +1647,7 @@ function renderResults(data) {
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
-   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','score-panel','spin-panel','countdown-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
    'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
@@ -1731,7 +1731,12 @@ function renderResults(data) {
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
   // ── 신규 행운요소 (모든 언어 결과화면 공통 노출) ──
+  window._lastLuckyData = data;
   renderLuckyOnePanel(data);
+  try { renderScorePanel(data); } catch(e){}
+  try { renderSpinPanel(data); } catch(e){}
+  try { renderCountdownPanel(data); } catch(e){}
+  try { _initInstallPrompt(); _maybeShowInstall(); } catch(e){}
   renderSunSignPanel(data);
   renderLifePathPanel(data);
   renderBiorhythmPanel(data);
@@ -4313,6 +4318,11 @@ function renderShareBtns(data) {
   container.insertAdjacentHTML('beforeend',
     `<button class="share-btn copy" onclick="renderShareCard()" style="background:linear-gradient(135deg,#4c1d95,#7c3aed);border:none;color:#fff;font-weight:800;"><span class="sb-icon">✨</span><span>${CARD_BTN[lang]||CARD_BTN.en}</span></button>`);
 
+  // G3) Wordle식 이모지 결과 복사 (채팅 바이럴)
+  const _wl=(_gL(data,'wordle'))||{copyButton:'📋'};
+  container.insertAdjacentHTML('beforeend',
+    `<button class="share-btn copy" onclick="copyLuckyEmoji(this)" style="background:#ecfdf5;border:1.5px solid #6ee7b7;color:#047857;font-weight:700;"><span class="sb-icon">🟩</span><span>${escHtml(_wl.copyButton||'Copy')}</span></button>`);
+
   // 모바일 OS 공유시트 (지원 브라우저에서만)
   if (navigator.share) {
     const NS = { ko:'공유하기', en:'Share', ja:'共有', de:'Teilen', fr:'Partager', es:'Compartir', pt:'Compartilhar', it:'Condividi', id:'Bagikan' };
@@ -5387,6 +5397,138 @@ function renderTarotPanel(data){
 }
 
 // ── 5) 행운의 4요소 (색·숫자·방위·시간) ─────────────────────
+// ════════ 타 산업 성장요소 (그로스) ════════
+function _gGet(data){ const X=_luxGet(data.lang); return (X&&X.growth)?X.growth:null; }
+function _gL(data,feat){ const g=_gGet(data); return (g&&g[feat])?g[feat]:null; }
+// 결정론 데일리 행운점수(40~99) + 정직한 "오늘 에너지" 백분위
+function _dailyLuckScore(data){ const r=mkRng((data.seed||1)+_luxDayNum()*7919)(); return 40+Math.floor(r*60); }
+
+// ── G9) 오늘의 행운 점수 뱃지 + 백분위 (게이미피케이션) ──────────
+function renderScorePanel(data){
+  const old=document.getElementById('score-panel'); if(old) old.remove();
+  const S=_gL(data,'score'); if(!S) return;
+  const sc=_dailyLuckScore(data); const pct=Math.max(5,Math.min(95,sc-3)); // 점수≈백분위(날짜에너지 기준)
+  const deg=Math.round(sc*3.6); const col=sc>=80?'#16a34a':sc>=65?'#d97706':sc>=50?'#0ea5e9':'#7c3aed';
+  const ptxt=(S.percentileTpl||'{p}%').replace('{p}',pct);
+  const panel=document.createElement('div');
+  panel.id='score-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#fff,#f8fafc);border-radius:16px;padding:18px 16px;margin:16px 0;text-align:center;box-shadow:0 2px 12px rgba(15,23,42,.07);';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#64748b;margin-bottom:10px;text-transform:uppercase;">⚡ ${escHtml(S.title)}</div>
+    <div style="position:relative;width:128px;height:128px;margin:0 auto;">
+      <div style="width:128px;height:128px;border-radius:50%;background:conic-gradient(${col} ${deg}deg,#e2e8f0 ${deg}deg);"></div>
+      <div style="position:absolute;inset:11px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="font-size:38px;font-weight:900;color:${col};line-height:1;">${sc}</div>
+        <div style="font-size:10px;color:#94a3b8;font-weight:700;">/ 100</div></div></div>
+    <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;margin-top:9px;">${escHtml(S.badgeTagline||'')}</div>
+    <div style="font-size:12.5px;color:#475569;line-height:1.5;margin-top:6px;max-width:300px;margin-left:auto;margin-right:auto;">${escHtml(ptxt)}</div>`;
+  _luxInsert(panel);
+}
+
+// ── G6) 천체 라이브 카운트다운 (보름달·신월·수성역행) ──────────
+function renderCountdownPanel(data){
+  const old=document.getElementById('countdown-panel'); if(old) old.remove();
+  const C=_gL(data,'countdown'); const A=_astro(); if(!C||!A) return;
+  try{
+    const now=new Date(); const dWord=(C.daysLeft||'{n}d');
+    const dleft=(d)=>{ if(!d) return null; return Math.max(0,Math.ceil((d.getTime()-now.getTime())/86400000)); };
+    const full=_nextPhaseDate(180,now), nw=_nextPhaseDate(0,now);
+    const fL=dleft(full), nL=dleft(nw);
+    const merc=_isRetro(A.Body?A.Body.Mercury:'Mercury', now);
+    const chip=(emj,lbl,val)=>`<div style="flex:1;min-width:calc(33% - 6px);background:rgba(255,255,255,.7);border-radius:11px;padding:10px 6px;text-align:center;">
+      <div style="font-size:20px;line-height:1;">${emj}</div>
+      <div style="font-size:9px;color:#3730a3;font-weight:700;text-transform:uppercase;margin-top:3px;line-height:1.2;">${escHtml(lbl)}</div>
+      <div style="font-size:14px;font-weight:900;color:#1e1b4b;margin-top:2px;">${escHtml(val)}</div></div>`;
+    const dStr=(n)=>n===0?(C.todayWord||'Today'):dWord.replace('{n}',n);
+    const mercVal=merc===true?(C.mercuryActiveLabel||'Retrograde'):(C.mercuryDirectLabel||'Direct');
+    const CD_TITLE={ko:'천체 카운트다운',en:'Cosmic Countdown',ja:'天体カウントダウン',de:'Kosmischer Countdown',fr:'Compte à rebours cosmique',es:'Cuenta atrás cósmica',pt:'Contagem cósmica',it:'Conto alla rovescia cosmico',id:'Hitung Mundur Kosmik'};
+    const cdTitle=C.title||CD_TITLE[data.lang]||CD_TITLE.en;
+    const panel=document.createElement('div');
+    panel.id='countdown-panel';
+    panel.style.cssText='background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-radius:16px;padding:14px 16px;margin:16px 0;';
+    panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#3730a3;margin-bottom:9px;text-transform:uppercase;">⏳ ${escHtml(cdTitle)}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        ${chip('🌕',C.fullMoonLabel||'Full Moon',fL!=null?dStr(fL):'—')}
+        ${chip('🌑',C.newMoonLabel||'New Moon',nL!=null?dStr(nL):'—')}
+        ${chip(merc?'☿️':'☿',C.mercuryRetroLabel||'Mercury',mercVal)}
+      </div>`;
+    _luxInsert(panel);
+  }catch(e){}
+}
+
+// ── G5) 오늘의 행운 룰렛 (가챠식 데일리 리워드, 하루 1회) ────────
+const _LS_SPIN='lucky_spin_v1';
+function renderSpinPanel(data){
+  const old=document.getElementById('spin-panel'); if(old) old.remove();
+  const SP=_gL(data,'spin'); if(!SP) return;
+  const today=_ymd(new Date());
+  const seg=8; const r=mkRng((data.seed||1)+_luxDayNum()*104729)();
+  const win=Math.floor(r*seg); // 결정론 당첨 칸(0~7)
+  const num=1+Math.floor(mkRng((data.seed||1)+_luxDayNum()*15485863)()*99); // 1~99
+  const colHex=(data.colorData&&data.colorData.hex)||'#f59e0b';
+  const L=window.LUCKY_LANG||{}; const colName=(data.colorData)?((L.colorNames&&L.colorNames[data.colorData.en])||data.colorData.en):'';
+  const COLW=['#f59e0b','#ef4444','#8b5cf6','#10b981','#0ea5e9','#ec4899','#f97316','#14b8a6'];
+  let st=null; try{ st=JSON.parse(localStorage.getItem(_LS_SPIN)||'null'); }catch(e){}
+  const doneToday=st&&st.d===today;
+  const segDeg=360/seg; const targetDeg=360*4 + (360 - (win*segDeg + segDeg/2)); // 포인터(위)에 당첨칸 정렬
+  const conic=COLW.map((c,i)=>`${c} ${i*segDeg}deg ${(i+1)*segDeg}deg`).join(',');
+  const panel=document.createElement('div');
+  panel.id='spin-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#1e1b4b,#4c1d95);border-radius:16px;padding:18px 16px;margin:16px 0;text-align:center;color:#fff;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#c4b5fd;margin-bottom:12px;text-transform:uppercase;">🎡 ${escHtml(SP.title)}</div>
+    <div style="position:relative;width:184px;height:184px;margin:0 auto 6px;">
+      <div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:22px;z-index:2;">🔻</div>
+      <div id="spin-wheel" style="width:184px;height:184px;border-radius:50%;background:conic-gradient(${conic});border:5px solid #fbbf24;box-shadow:0 4px 18px rgba(0,0,0,.35);transition:transform 4s cubic-bezier(.17,.67,.16,1);transform:rotate(0deg);"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:34px;height:34px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);"></div></div>
+    </div>
+    <div id="spin-result" style="min-height:54px;margin-top:8px;"></div>
+    <button id="spin-btn" style="background:#fbbf24;color:#1e1b4b;border:none;font-weight:900;font-size:15px;padding:11px 30px;border-radius:50px;cursor:pointer;${doneToday?'opacity:.55;':''}">${escHtml(SP.button)}</button>`;
+  _luxInsert(panel);
+  const wheel=panel.querySelector('#spin-wheel'), btn=panel.querySelector('#spin-btn'), res=panel.querySelector('#spin-result');
+  const showResult=()=>{ res.innerHTML=`<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <span style="background:rgba(255,255,255,.14);border-radius:10px;padding:7px 11px;font-size:13px;font-weight:800;">🔢 ${escHtml(SP.numberLabel)}: ${num}</span>
+      <span style="background:rgba(255,255,255,.14);border-radius:10px;padding:7px 11px;font-size:13px;font-weight:800;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${colHex};margin-right:4px;"></span>${escHtml(colName||SP.colorLabel)}</span></div>`; };
+  if(doneToday){ wheel.style.transition='none'; wheel.style.transform=`rotate(${(360 - (win*segDeg+segDeg/2))}deg)`; showResult(); btn.textContent=SP.doneToday||'✓'; btn.disabled=true; }
+  btn.addEventListener('click',()=>{ if(btn.disabled) return; btn.disabled=true; btn.style.opacity='.55';
+    wheel.style.transform=`rotate(${targetDeg}deg)`;
+    setTimeout(()=>{ showResult(); btn.textContent=SP.doneToday||'✓'; try{localStorage.setItem(_LS_SPIN,JSON.stringify({d:today}));}catch(e){} },4100);
+  });
+}
+
+// ── G3) Wordle식 이모지 결과 복사 (채팅 바이럴) ────────────────
+function copyLuckyEmoji(btn){
+  const data=window._lastLuckyData; if(!data) return;
+  const W=_gL(data,'wordle')||{}; const sc=_dailyLuckScore(data);
+  const bars=Math.round(sc/20); const bar='🟩'.repeat(bars)+'⬜'.repeat(5-bars);
+  const n1=((_ld_lpn(data)-1)%9)+1;
+  const txt=`${W.shareIntro||'🍀 Lucky'} ${_ymd(new Date())}\n${bar} ${sc}/100\n🎯 ${n1}\nall-lifes.com/lucky`;
+  const done=()=>{ if(btn){ const o=btn.querySelector('span:last-child'); if(o){ const t=o.textContent; o.textContent=W.copiedMsg||'✓'; setTimeout(()=>o.textContent=t,1500);} } };
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(done).catch(done); } else { done(); }
+}
+function _ld_lpn(data){ try{ return calcNumerology(data.year,data.month||1,data.day||1).lpn; }catch(e){ return 1; } }
+
+// ── G7) PWA 설치 프롬프트 (A2HS 리텐션) ────────────────────────
+let _deferredInstall=null;
+function _initInstallPrompt(){
+  if(window._installInited) return; window._installInited=true;
+  window.addEventListener('beforeinstallprompt',(e)=>{ e.preventDefault(); _deferredInstall=e; _maybeShowInstall(); });
+}
+function _maybeShowInstall(){
+  if(!_deferredInstall) return;
+  try{ if(localStorage.getItem('lucky_install_dismiss')==='1') return; }catch(e){}
+  if(document.getElementById('pwa-install')) return;
+  const lang=window.LUCKY_CURRENT_LANG||'ko'; const X=window.LUX&&(window.LUX[lang]||window.LUX.en);
+  const I=(X&&X.growth&&X.growth.install)||{title:'Add to Home Screen',desc:'',button:'Install',later:'Later'};
+  const bar=document.createElement('div');
+  bar.id='pwa-install';
+  bar.style.cssText='position:fixed;left:10px;right:10px;bottom:12px;max-width:460px;margin:0 auto;background:#1e1b4b;color:#fff;border-radius:14px;padding:13px 15px;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:9999;display:flex;align-items:center;gap:12px;';
+  bar.innerHTML=`<div style="font-size:26px;">🎯</div><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:800;">${escHtml(I.title)}</div><div style="font-size:11px;color:#c7d2fe;line-height:1.35;">${escHtml(I.desc||'')}</div></div>
+    <button id="pwa-yes" style="background:#fbbf24;color:#1e1b4b;border:none;font-weight:800;font-size:13px;padding:8px 14px;border-radius:30px;cursor:pointer;white-space:nowrap;">${escHtml(I.button)}</button>
+    <button id="pwa-no" style="background:none;border:none;color:#a5b4fc;font-size:18px;cursor:pointer;line-height:1;">×</button>`;
+  document.body.appendChild(bar);
+  bar.querySelector('#pwa-yes').addEventListener('click',async()=>{ bar.remove(); if(_deferredInstall){ _deferredInstall.prompt(); try{await _deferredInstall.userChoice;}catch(e){} _deferredInstall=null; } });
+  bar.querySelector('#pwa-no').addEventListener('click',()=>{ bar.remove(); try{localStorage.setItem('lucky_install_dismiss','1');}catch(e){} });
+}
+
 // ── 단일 행운수 (1·2·3자리, 평생/오늘) — "그냥 내 행운수 하나만" ──
 function renderLuckyOnePanel(data){
   const old=document.getElementById('luckyone-panel'); if(old) old.remove();
