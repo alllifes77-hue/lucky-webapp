@@ -1647,7 +1647,7 @@ function renderResults(data) {
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
-   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','score-panel','spin-panel','countdown-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','quiz-launcher','score-panel','spin-panel','countdown-panel','invite-panel','nametool-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
    'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
@@ -1733,9 +1733,12 @@ function renderResults(data) {
   // ── 신규 행운요소 (모든 언어 결과화면 공통 노출) ──
   window._lastLuckyData = data;
   renderLuckyOnePanel(data);
+  try { renderQuizLauncher(data); } catch(e){}
   try { renderScorePanel(data); } catch(e){}
   try { renderSpinPanel(data); } catch(e){}
   try { renderCountdownPanel(data); } catch(e){}
+  try { renderInvitePanel(data); } catch(e){}
+  try { renderNameToolPanel(data); } catch(e){}
   try { _initInstallPrompt(); _maybeShowInstall(); } catch(e){}
   renderSunSignPanel(data);
   renderLifePathPanel(data);
@@ -5529,6 +5532,111 @@ function _maybeShowInstall(){
   bar.querySelector('#pwa-no').addEventListener('click',()=>{ bar.remove(); try{localStorage.setItem('lucky_install_dismiss','1');}catch(e){} });
 }
 
+// ── G1) 행운 아키타입 퀴즈 (BuzzFeed식) ───────────────────────
+// 선택지→아키타입 인덱스(0~11) 고정 매핑. 아키타입 순서: 🔥불사조0 🗼등대1 ☄️혜성2 🌳거목3 🌊강물4 ☀️태양5 🧭나침반6 🔑열쇠7 🌟별8 ⛰️산9 🦋나비10 ⚓닻11
+const _QUIZ_MAP=[[2,6,5,3],[0,11,8,4],[10,9,1,7],[5,3,4,8],[0,11,10,6],[2,9,1,7],[8,11,5,6],[2,3,4,0]];
+const _QUIZ_EMJ=['🔥','🗼','☄️','🌳','🌊','☀️','🧭','🔑','🌟','⛰️','🦋','⚓'];
+function startLuckQuiz(){
+  const lang=window.LUCKY_CURRENT_LANG||'ko'; const X=window.LUX&&(window.LUX[lang]||window.LUX.en);
+  const Q=X&&X.quiz; if(!Q||!Q.questions) return;
+  let ov=document.getElementById('quiz-overlay'); if(ov) ov.remove();
+  ov=document.createElement('div'); ov.id='quiz-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:linear-gradient(160deg,#1e1b4b,#4c1d95);z-index:10000;overflow-y:auto;padding:0;';
+  document.body.appendChild(ov); document.body.style.overflow='hidden';
+  const votes=new Array(12).fill(0); let qi=0;
+  const close=()=>{ ov.remove(); document.body.style.overflow=''; };
+  const head=(sub)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;"><div style="color:#c4b5fd;font-size:13px;font-weight:800;">🎯 ${escHtml(Q.title)}</div><button id="qx-close" style="background:none;border:none;color:#a5b4fc;font-size:26px;line-height:1;cursor:pointer;">×</button></div>${sub||''}`;
+  function renderQ(){
+    const q=Q.questions[qi]; const pct=Math.round((qi/Q.questions.length)*100);
+    ov.innerHTML=head(`<div style="height:5px;background:rgba(255,255,255,.15);"><div style="height:100%;width:${pct}%;background:#fbbf24;transition:width .3s;"></div></div>`)+
+      `<div style="max-width:520px;margin:0 auto;padding:24px 20px 40px;">
+        <div style="color:#ddd6fe;font-size:12px;font-weight:700;margin-bottom:8px;">${qi+1} / ${Q.questions.length}</div>
+        <h2 style="color:#fff;font-size:clamp(19px,5vw,26px);font-weight:900;line-height:1.35;margin-bottom:22px;">${escHtml(q.q)}</h2>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          ${q.opts.map((o,i)=>`<button class="qx-opt" data-i="${i}" style="text-align:left;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.18);color:#fff;font-size:15px;font-weight:600;padding:15px 17px;border-radius:13px;cursor:pointer;transition:all .15s;">${escHtml(o)}</button>`).join('')}
+        </div></div>`;
+    ov.querySelector('#qx-close').onclick=close;
+    ov.querySelectorAll('.qx-opt').forEach(b=>{ b.onmouseenter=()=>{b.style.background='rgba(251,191,36,.25)';b.style.borderColor='#fbbf24';}; b.onmouseleave=()=>{b.style.background='rgba(255,255,255,.1)';b.style.borderColor='rgba(255,255,255,.18)';};
+      b.onclick=()=>{ const i=+b.dataset.i; const arch=_QUIZ_MAP[qi][i]; if(arch!=null) votes[arch]+=1; qi++; if(qi<Q.questions.length) renderQ(); else renderResult(); }; });
+  }
+  function renderResult(){
+    let best=0; for(let i=1;i<12;i++) if(votes[i]>votes[best]) best=i;
+    const a=Q.archetypes[best]||Q.archetypes[0]; const emj=_QUIZ_EMJ[best];
+    const shareTxt=`${a.shareLine||a.name}\n${(window.LUX[lang]&&window.LUX[lang].quiz.title)||''}\nall-lifes.com/lucky`;
+    ov.innerHTML=head()+
+      `<div style="max-width:520px;margin:0 auto;padding:6px 20px 50px;text-align:center;">
+        <div style="font-size:13px;color:#c4b5fd;font-weight:700;margin-bottom:6px;">${escHtml(Q.resultPrefix||'')}</div>
+        <div style="font-size:72px;line-height:1;margin:8px 0;">${emj}</div>
+        <h1 style="color:#fff;font-size:clamp(26px,7vw,38px);font-weight:900;">${escHtml(a.name)}</h1>
+        <div style="color:#fbbf24;font-size:15px;font-weight:800;margin:4px 0 16px;">${escHtml(a.tagline||'')}</div>
+        <div style="background:rgba(255,255,255,.1);border-radius:14px;padding:17px 19px;color:#ede9fe;font-size:14.5px;line-height:1.75;text-align:left;">${escHtml(a.desc||'')}</div>
+        <div style="display:flex;gap:10px;margin:14px 0;">
+          <div style="flex:1;background:rgba(255,255,255,.08);border-radius:12px;padding:12px;"><div style="font-size:10px;color:#a5b4fc;font-weight:700;text-transform:uppercase;">🎨</div><div style="color:#fff;font-weight:800;font-size:14px;margin-top:3px;">${escHtml(a.luckyColor||'')}</div></div>
+          <div style="flex:1;background:rgba(255,255,255,.08);border-radius:12px;padding:12px;"><div style="font-size:10px;color:#a5b4fc;font-weight:700;text-transform:uppercase;">💪</div><div style="color:#fff;font-weight:800;font-size:14px;margin-top:3px;">${escHtml(a.strength||'')}</div></div>
+        </div>
+        <button id="qx-share" style="width:100%;background:#fbbf24;color:#1e1b4b;border:none;font-weight:900;font-size:16px;padding:14px;border-radius:50px;cursor:pointer;margin-bottom:10px;">📤 ${escHtml(Q.shareLabel||'Share')}</button>
+        <button id="qx-retake" style="width:100%;background:rgba(255,255,255,.12);color:#fff;border:none;font-weight:700;font-size:14px;padding:12px;border-radius:50px;cursor:pointer;">↻ ${escHtml(Q.retakeLabel||'Retake')}</button>
+      </div>`;
+    ov.querySelector('#qx-close').onclick=close;
+    ov.querySelector('#qx-retake').onclick=()=>{ for(let i=0;i<12;i++)votes[i]=0; qi=0; renderQ(); };
+    ov.querySelector('#qx-share').onclick=()=>{ if(navigator.share){ navigator.share({text:shareTxt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(shareTxt); const b=ov.querySelector('#qx-share'); const t=b.textContent; b.textContent='✓'; setTimeout(()=>b.textContent=t,1500); } };
+  }
+  renderQ();
+}
+function _maybeAutoQuiz(){ try{ if(new URLSearchParams(location.search).get('openquiz')==='1') setTimeout(startLuckQuiz,400); }catch(e){} }
+function renderQuizLauncher(data){
+  const old=document.getElementById('quiz-launcher'); if(old)old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.quiz) return; const Q=X.quiz;
+  const panel=document.createElement('div'); panel.id='quiz-launcher';
+  panel.style.cssText='background:linear-gradient(135deg,#7c3aed,#db2777);border-radius:16px;padding:17px;margin:16px 0;text-align:center;color:#fff;cursor:pointer;';
+  panel.innerHTML=`<div style="font-size:30px;line-height:1;">🎯</div><div style="font-size:16px;font-weight:900;margin:5px 0 3px;">${escHtml(Q.title)}</div><div style="font-size:12px;color:rgba(255,255,255,.85);margin-bottom:12px;line-height:1.4;">${escHtml(Q.intro)}</div><span style="display:inline-block;background:#fbbf24;color:#1e1b4b;font-weight:800;font-size:14px;padding:9px 26px;border-radius:50px;">${escHtml(Q.startLabel||'Start')} →</span>`;
+  panel.onclick=startLuckQuiz;
+  _luxInsert(panel);
+}
+
+// ── G2) 바이럴 궁합 초대링크 (데이팅식 k-factor) ───────────────
+const _CMP_SLUG={ko:'gunghap',en:'compatibility',ja:'compatibility',de:'partnerschaft',fr:'compatibilite',es:'compatibilidad',pt:'compatibilidade',it:'compatibilita',id:'kecocokan'};
+function _inviteUrl(data){ const y=data.year, m=('0'+(data.month||1)).slice(-2), d=('0'+(data.day||1)).slice(-2);
+  const sl=_CMP_SLUG[data.lang]||'compatibility'; const base=data.lang==='ko'?`https://all-lifes.com/${sl}/`:`https://all-lifes.com/${data.lang}/${sl}/`;
+  return `${base}?bd=${y}${m}${d}`; }
+function shareInviteLink(){ const data=window._lastLuckyData; if(!data) return;
+  const I=_gL(data,'invite')||{}; const url=_inviteUrl(data); const txt=(I.shareText||'{name}').replace('{name}','')+' '+url;
+  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); } else if(navigator.clipboard){ navigator.clipboard.writeText(txt); const b=document.getElementById('invite-btn'); if(b){ const t=b.innerHTML; b.innerHTML='✓'; setTimeout(()=>b.innerHTML=t,1500);} } }
+function renderInvitePanel(data){
+  const old=document.getElementById('invite-panel'); if(old)old.remove();
+  const I=_gL(data,'invite'); if(!I) return;
+  const panel=document.createElement('div'); panel.id='invite-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#be185d,#db2777);border-radius:16px;padding:17px;margin:16px 0;text-align:center;color:#fff;';
+  panel.innerHTML=`<div style="font-size:14px;font-weight:900;margin-bottom:3px;">${escHtml(I.title)}</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.88);margin-bottom:12px;line-height:1.45;">${escHtml(I.desc)}</div>
+    <button id="invite-btn" style="background:#fff;color:#be185d;border:none;font-weight:800;font-size:14.5px;padding:11px 22px;border-radius:50px;cursor:pointer;">${escHtml(I.button)}</button>`;
+  panel.querySelector('#invite-btn').onclick=shareInviteLink;
+  _luxInsert(panel);
+}
+
+// ── G8) 럭키 네임 (이름 수비학 도구) ──────────────────────────
+function renderNameToolPanel(data){
+  const old=document.getElementById('nametool-panel'); if(old)old.remove();
+  const N=_gL(data,'name'); const X=_luxGet(data.lang); if(!N||!X) return;
+  const panel=document.createElement('div'); panel.id='nametool-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#fdf4ff,#fae8ff);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#a21caf;margin-bottom:4px;text-transform:uppercase;">🔤 ${escHtml(N.title)}</div>
+    <div style="font-size:11px;color:#86198f;margin-bottom:11px;line-height:1.4;">${escHtml(N.intro)}</div>
+    <div style="display:flex;gap:8px;"><input id="nt-input" type="text" placeholder="${escHtml(N.placeholder)}" style="flex:1;border:1.5px solid #e9d5ff;border-radius:10px;padding:10px 12px;font-size:14px;outline:none;" maxlength="40">
+      <button id="nt-btn" style="background:#c026d3;color:#fff;border:none;font-weight:800;font-size:14px;padding:10px 18px;border-radius:10px;cursor:pointer;white-space:nowrap;">${escHtml(N.button)}</button></div>
+    <div id="nt-result" style="margin-top:12px;"></div>`;
+  _luxInsert(panel);
+  const inp=panel.querySelector('#nt-input'), btn=panel.querySelector('#nt-btn'), res=panel.querySelector('#nt-result');
+  const run=()=>{ const nm=(inp.value||'').trim(); if(!nm) return;
+    let r; try{ r=(/[가-힣]/.test(nm)?calcHangulNumerology(nm):calcNameNumerology(nm)); }catch(e){ r=null; }
+    const dn=r?r.destinyNum:1; const d1=((dn-1)%9)+1; const vibe=(X.luckyOne&&X.luckyOne.meanings&&X.luckyOne.meanings[d1-1])||'';
+    res.innerHTML=`<div style="display:flex;gap:9px;align-items:center;background:#fff;border-radius:12px;padding:13px 15px;">
+      <div style="font-size:34px;font-weight:900;color:#c026d3;line-height:1;">${dn}</div>
+      <div style="flex:1;"><div style="font-size:10px;color:#a21caf;font-weight:700;text-transform:uppercase;">${escHtml(N.numberLabel)}</div>
+        <div style="font-size:12.5px;color:#6b21a8;line-height:1.5;margin-top:2px;">${escHtml(vibe)}</div></div></div>`; };
+  btn.onclick=run; inp.addEventListener('keydown',e=>{ if(e.key==='Enter') run(); });
+}
+
 // ── 단일 행운수 (1·2·3자리, 평생/오늘) — "그냥 내 행운수 하나만" ──
 function renderLuckyOnePanel(data){
   const old=document.getElementById('luckyone-panel'); if(old) old.remove();
@@ -6895,4 +7003,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── 편의 기능 초기화 (생일 복원 + 최근 기록 칩) ──────────────
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => { _restoreBirthInfo(); _renderHistoryChips(); _renderStreak(); _renderPrivacyNote(); _renderDateLuckTool(); }, 50);
+  try { _initInstallPrompt(); } catch(e){}
+  try { _maybeAutoQuiz(); } catch(e){}
 });
