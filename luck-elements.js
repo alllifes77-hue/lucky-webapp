@@ -1,5 +1,5 @@
 // luck-elements.js — 행운요소 9개 언어 콘텐츠 (top-10 + 트렌드 확장)
-// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising·astro·lilith·hd).
+// 기존 + 트렌드(retro·electional·moonRitual·transits·saturn·solar·rising·astro·lilith·hd) + luckyOne(단일행운수).
 // 언어별 네이티브+적대검증 워크플로. 더블쿼트 JSON. 렌더는 lucky-app.js.
 window.LUX = {
  "ko": {
@@ -1419,6 +1419,47 @@ window.LUX = {
      "desc": "깊이 다진 신념을 가까운 관계망을 통해 펼치는, 방향성이 또렷하고 흔들림이 적은 고정형이에요."
     }
    }
+  },
+  "luckyOne": {
+   "title": "나의 행운의 숫자",
+   "intro": "생년월일만 넣으면 나만의 한 자리·두 자리·세 자리 행운수를 한 번에 알려드려요. 복잡한 로또 세트는 필요 없어요. 딱 내 숫자 하나면 충분하니까요.",
+   "lifetimeLabel": "평생 행운수",
+   "todayLabel": "오늘의 행운수",
+   "personalLabel": "나만의 행운수",
+   "d1Label": "한 자리 숫자",
+   "d2Label": "두 자리 숫자",
+   "d3Label": "세 자리 숫자",
+   "meanings": [
+    "1은 시작과 리더십의 숫자, 새로운 도전을 밀고 나가는 추진력을 줘요.",
+    "2는 조화와 균형의 숫자, 관계와 파트너십에서 빛을 발해요.",
+    "3은 창의와 표현의 숫자, 아이디어와 즐거움이 샘솟게 해줘요.",
+    "4는 안정과 성실의 숫자, 단단한 기반과 꾸준함을 상징해요.",
+    "5는 변화와 자유의 숫자, 새로운 경험과 모험으로 이끌어줘요.",
+    "6은 사랑과 돌봄의 숫자, 가족과 인연에 따뜻함을 더해줘요.",
+    "7은 지혜와 통찰의 숫자, 깊은 생각과 직관을 깨워줘요.",
+    "8은 성취와 풍요의 숫자, 노력에 결실과 보상을 안겨줘요.",
+    "9는 완성과 베풂의 숫자, 한 사이클을 마무리하는 너른 마음을 뜻해요."
+   ],
+   "howTitle": "행운수는 어떻게 계산되나요",
+   "howText": "입력하신 생년월일을 수비학 방식으로 한 자리가 될 때까지 더해 핵심 숫자를 뽑아내요. 예를 들어 2026년 6월 20일이라면 2+0+2+6+6+2+0처럼 모든 자리를 합한 뒤, 한 자리가 될 때까지 계속 더해 평생 행운수를 만들죠. 같은 원리로 두 자리·세 자리 조합까지 자동으로 산출하고, 오늘 날짜를 더하면 매일 바뀌는 오늘의 행운수가 나와요. 어려운 계산은 앱이 다 알아서 하니, 생일만 입력하면 끝이에요.",
+   "useTitle": "행운수, 이렇게 써보세요",
+   "useText": "복권이나 추첨에서 번호를 고를 때 가볍게 참고하거나, 중요한 약속·면접·계약 날짜를 정할 때 마음의 기준으로 삼아보세요. 새 비밀번호나 사물함·좌석 번호를 고를 때, 또 식당에서 어느 자리에 앉을지 같은 소소한 선택에도 슬쩍 써먹으면 일상이 한층 재미있어져요. 거창한 의미를 둘 필요는 없어요. 오늘 하루 나를 기분 좋게 만들어 줄 작은 부적 하나라고 생각하면 딱이에요.",
+   "tip": "평생 행운수는 지갑이나 휴대폰 잠금화면에 적어두고, 오늘의 행운수는 아침에 한 번씩 확인해 보세요.",
+   "pageTitleSuffix": "내 행운의 숫자 — 생년월일로 보는 1·2·3자리 행운수",
+   "faq": [
+    {
+     "q": "내 행운의 숫자는 어떻게 정해지나요?",
+     "a": "생년월일을 수비학 방식으로 한 자리가 될 때까지 더해 핵심 숫자를 뽑아내요. 이 평생 행운수는 생일에 따라 정해지는 고정값이라 바뀌지 않고, 같은 원리로 두 자리·세 자리 조합까지 자동으로 만들어 드려요."
+    },
+    {
+     "q": "한 자리·두 자리·세 자리 중 뭘 써야 하나요?",
+     "a": "정답은 없어요. 단순하게 한 가지만 쓰고 싶으면 한 자리 숫자가 가장 깔끔하고, 복권 번호나 비밀번호처럼 자릿수가 필요할 땐 두 자리·세 자리를 골라 쓰면 돼요. 그날그날 끌리는 숫자를 직감으로 고르는 것도 좋은 방법이에요."
+    },
+    {
+     "q": "행운의 숫자는 매일 바뀌나요?",
+     "a": "평생 행운수는 생일 기반이라 늘 똑같지만, 오늘의 행운수는 오늘 날짜를 더해 산출하기 때문에 매일 달라져요. 그래서 변하지 않는 나만의 숫자와 매일 새로 받는 숫자를 함께 즐길 수 있답니다."
+    }
+   ]
   }
  },
  "en": {
@@ -2838,6 +2879,47 @@ window.LUX = {
      "desc": "You stand on a fixed, deeply researched foundation and express it through your network — a stable, influential bridge between solid knowledge and the right people."
     }
    }
+  },
+  "luckyOne": {
+   "title": "My Lucky Number",
+   "intro": "Skip the full lottery set — just get your one lucky number. Enter your birthday and we'll reveal your personal single-, double-, and triple-digit lucky numbers all at once.",
+   "lifetimeLabel": "Lifetime Lucky Number",
+   "todayLabel": "Today's Lucky Number",
+   "personalLabel": "Your Personal Lucky Number",
+   "d1Label": "Single Digit",
+   "d2Label": "Double Digit",
+   "d3Label": "Triple Digit",
+   "meanings": [
+    "1 is the number of leadership and fresh starts — bold, independent, and ready to lead the way.",
+    "2 is the number of harmony and partnership — gentle, diplomatic, and great at bringing people together.",
+    "3 is the number of creativity and joy — expressive, playful, and full of bright ideas.",
+    "4 is the number of stability and order — grounded, reliable, and the one who builds things to last.",
+    "5 is the number of change and freedom — adventurous, curious, and always up for something new.",
+    "6 is the number of love and care — warm, nurturing, and devoted to the people who matter.",
+    "7 is the number of wisdom and insight — thoughtful, intuitive, and drawn to life's deeper questions.",
+    "8 is the number of achievement and abundance — ambitious, capable, and built for big wins.",
+    "9 is the number of completion and compassion — generous, wise, and ready to give back to the world."
+   ],
+   "howTitle": "How your lucky number is calculated",
+   "howText": "Your lucky number comes straight from your date of birth using simple numerology. We add up the digits of your birthday and reduce them step by step until a single core number (1–9) appears — that's your single-digit lucky number. From the same calculation, we pull out a matching two-digit and three-digit number, so you get all three at once. Because it's built from your birthday, your lifetime lucky number never changes — it's uniquely yours.",
+   "useTitle": "How to use your lucky number",
+   "useText": "Think of your lucky number as a little good-vibes companion for everyday choices. Drop it onto a lottery slip or raffle ticket, lean on it when you're picking a date for something important, or weave it into a PIN or password you'll actually remember. Some people even choose seats, jersey numbers, or house numbers with it in mind. It won't run your life — but it's a fun, personal nudge whenever you're on the fence and want a little luck on your side.",
+   "tip": "Save your three lucky numbers in your phone — single, double, and triple — so they're ready whenever luck comes knocking.",
+   "pageTitleSuffix": "My Lucky Number — Find Your 1-, 2- & 3-Digit Numbers by Birthday",
+   "faq": [
+    {
+     "q": "How is my lucky number decided?",
+     "a": "It's drawn entirely from your date of birth using classic numerology. We add up and reduce the digits of your birthday to land on a core single-digit number, then derive a matching two-digit and three-digit number from the same result — so it's 100% personal to you, with no guessing involved."
+    },
+    {
+     "q": "Should I use the single-, double-, or triple-digit number?",
+     "a": "Whichever feels right for the moment! The single digit is your simplest, strongest lucky number and works almost anywhere. The double and triple digits come in handy when you need more options — like longer lottery slips, codes, or picking from a bigger range. They all share the same lucky energy, so feel free to mix and match."
+    },
+    {
+     "q": "Does my lucky number change every day?",
+     "a": "Your lifetime lucky number stays the same forever, since it's based on your fixed birthday. But your today's lucky number shifts daily as the date's energy blends with yours — so it's fun to check back each morning for a fresh one."
+    }
+   ]
   }
  },
  "ja": {
@@ -4257,6 +4339,47 @@ window.LUX = {
      "desc": "揺るぎない土台と確かな信念を持ち、信頼で結ばれた人間関係を通じて、ぶれない使命をまっすぐ伝えていく存在です。"
     }
    }
+  },
+  "luckyOne": {
+   "title": "わたしのラッキーナンバー",
+   "intro": "複雑なロト6の組み合わせはいりません。生年月日から導く、あなただけの「1桁・2桁・3桁」のラッキーナンバーを、いちどにまとめてお届けします。",
+   "lifetimeLabel": "一生のラッキーナンバー",
+   "todayLabel": "今日のラッキーナンバー",
+   "personalLabel": "あなただけのラッキーナンバー",
+   "d1Label": "1桁の数字",
+   "d2Label": "2桁の数字",
+   "d3Label": "3桁の数字",
+   "meanings": [
+    "1は、先頭を走るリーダーの数字。新しいことを始める日にぴったりの一歩を後押し。",
+    "2は、まわりと調和する数字。人とのつながりや協力がうまくいきやすいムード。",
+    "3は、ひらめきと表現の数字。楽しい発想やおしゃべりがはずむクリエイティブな日に。",
+    "4は、コツコツ積み上げる安定の数字。地に足のついた選択で土台を固めたいときに。",
+    "5は、変化と自由の数字。フットワーク軽く、新しい風を取り入れたい場面で味方に。",
+    "6は、愛とやさしさの数字。家族や大切な人へのケア、思いやりがうれしい結果を呼ぶ。",
+    "7は、静かな知恵の数字。じっくり考えたり、自分の内側と向き合いたいときにぴったり。",
+    "8は、実りと成功の数字。仕事やお金まわりで、ぐっと結果を出したい勝負の場面に。",
+    "9は、ものごとを締めくくる完成の数字。やり残しを手放して、次へ進む準備が整う日に。"
+   ],
+   "howTitle": "どうやって決まるの？",
+   "howText": "あなたのラッキーナンバーは、生年月日をもとにした数秘術（ヌメロロジー）の考え方で導きます。生まれた年・月・日のすべての数字を足し合わせ、1桁になるまで計算したものが「一生のラッキーナンバー」。さらにその過程で出てくる数を組み合わせて、おなじみの2桁・3桁の数字もまとめてお届けします。むずかしい計算はこちらにおまかせ。生年月日を入れるだけで、あなただけの3つの数字がすぐにそろいます。",
+   "useTitle": "ラッキーナンバーの使い方",
+   "useText": "使い方は自由です。宝くじやくじ引きの番号選びにそえたり、大事な約束やイベントの日取りを決めるときの背中押しに。スマホやロッカーの暗証番号、待ち合わせの席番号、ちょっとした「どっちにしよう」の二択にも。難しく考えず、迷ったときの小さなお守りとして気軽に取り入れてみてください。数字が目に入るだけで、なんだか今日はうまくいきそう——そんな前向きな気分のきっかけになれば十分です。",
+   "tip": "財布やスマホの待ち受けに自分の数字をひとつ忍ばせておくと、迷った瞬間にサッと使えて便利ですよ。",
+   "pageTitleSuffix": "わたしのラッキーナンバー — 生年月日でわかる1桁・2桁・3桁",
+   "faq": [
+    {
+     "q": "わたしのラッキーナンバーはどうやって決まるの？",
+     "a": "生年月日をもとにした数秘術で導きます。生まれた年・月・日の数字を足し合わせて計算するので、一生変わらない「あなただけの数字」になります。占いというより、自分を表すお守りの数字だと思ってくださいね。"
+    },
+    {
+     "q": "1桁・2桁・3桁のうち、どれを使えばいいの？",
+     "a": "場面で使い分けるのがおすすめです。サッと選びたいときは1桁、暗証番号や席番号には2桁、宝くじやくじ引きのように長めの番号には3桁、と気分で選んでOK。ぜんぶ持っておけば、どんな場面でも迷いません。"
+    },
+    {
+     "q": "ラッキーナンバーは毎日変わるの？",
+     "a": "生年月日から出る「一生のラッキーナンバー」は変わりませんが、その日の日付と組み合わせて出る「今日のラッキーナンバー」は毎日変わります。朝にチェックして、今日のお守り数字として楽しんでみてください。"
+    }
+   ]
   }
  },
  "de": {
@@ -5676,6 +5799,47 @@ window.LUX = {
      "desc": "Du stehst auf einem festen Fundament aus tiefem Wissen und festen Überzeugungen, das du über dein vertrautes Beziehungsnetz mit der Welt teilst."
     }
    }
+  },
+  "luckyOne": {
+   "title": "Meine Glückszahl",
+   "intro": "Du willst nicht gleich einen ganzen Lottoschein, sondern einfach deine eine Glückszahl? Aus deinem Geburtsdatum berechnen wir auf einen Schlag deine persönliche ein-, zwei- und dreistellige Glückszahl.",
+   "lifetimeLabel": "Lebens-Glückszahl",
+   "todayLabel": "Glückszahl des Tages",
+   "personalLabel": "Meine persönliche Glückszahl",
+   "d1Label": "Einstellige Zahl",
+   "d2Label": "Zweistellige Zahl",
+   "d3Label": "Dreistellige Zahl",
+   "meanings": [
+    "1 steht für Führungsstärke, Mut und frische Anfänge – du gibst den Ton an.",
+    "2 bringt Harmonie, Feingefühl und ein gutes Händchen für Beziehungen.",
+    "3 sprüht vor Kreativität, Lebensfreude und guter Laune.",
+    "4 sorgt für Stabilität, Ordnung und einen festen Boden unter den Füßen.",
+    "5 liebt Veränderung, Abenteuer und die große Freiheit.",
+    "6 dreht sich um Liebe, Geborgenheit und Fürsorge für andere.",
+    "7 steht für Weisheit, Tiefe und einen klugen, neugierigen Geist.",
+    "8 zieht Erfolg, Fülle und materielle Belohnung an.",
+    "9 steht für Vollendung, Großzügigkeit und einen runden Abschluss."
+   ],
+   "howTitle": "Wie wird deine Glückszahl berechnet?",
+   "howText": "Alles beginnt mit deinem Geburtsdatum. Wir addieren Tag, Monat und Jahr nach den klassischen Regeln der Numerologie und reduzieren das Ergebnis Schritt für Schritt zu einer einstelligen Basiszahl von 1 bis 9 – das ist deine Lebens-Glückszahl. Aus denselben Berechnungen leiten wir dann auch eine harmonische zweistellige und dreistellige Variante ab. So bekommst du nicht nur eine, sondern gleich drei Zahlen, die alle zu dir passen – ganz ohne Kopfrechnen.",
+   "useTitle": "So nutzt du deine Glückszahl",
+   "useText": "Deine Glückszahl ist ein kleiner Begleiter für den Alltag: Setz sie auf den Lottoschein oder ins Rubbellos, leg ein wichtiges Date oder einen Vertragstermin auf einen Tag mit der passenden Zahl, oder bau sie in ein Passwort oder eine PIN ein. Auch bei kleinen Entscheidungen – welche Sitzreihe, welches Los, welche Tür – kann sie dir einen Anhaltspunkt geben. Nimm sie mit einem Augenzwinkern: Sie soll dir ein gutes Gefühl und ein bisschen Schwung geben, nicht die Zukunft diktieren.",
+   "tip": "Notier deine drei Glückszahlen im Handy – dann hast du sie beim nächsten Lottotipp oder spontanen Glücksmoment sofort parat.",
+   "pageTitleSuffix": "Meine Glückszahl — aus dem Geburtsdatum: ein-, zwei- und dreistellig",
+   "faq": [
+    {
+     "q": "Wie wird meine Glückszahl bestimmt?",
+     "a": "Wir nehmen dein Geburtsdatum und berechnen daraus mit den Regeln der Numerologie deine einstellige Basiszahl von 1 bis 9. Daraus leiten wir zusätzlich eine passende zwei- und dreistellige Glückszahl ab – ganz automatisch, ohne dass du selbst rechnen musst."
+    },
+    {
+     "q": "Ein-, zwei- oder dreistellig – welche soll ich nehmen?",
+     "a": "Das hängt vom Anlass ab. Die einstellige Zahl ist dein Kern und passt für schnelle Bauchentscheidungen. Die zweistellige eignet sich gut für Termine oder kurze Tipps, die dreistellige zum Beispiel für Lose und längere Zahlenfelder. Nimm einfach die, die sich für dich gerade richtig anfühlt – falsch machst du nichts."
+    },
+    {
+     "q": "Ändert sich meine Glückszahl jeden Tag?",
+     "a": "Deine Lebens-Glückszahl bleibt fest, denn sie kommt aus deinem Geburtsdatum und gehört für immer zu dir. Zusätzlich gibt es die Glückszahl des Tages, die sich täglich ändert – so hast du einen festen Anker und gleichzeitig jeden Tag eine frische Portion Glück."
+    }
+   ]
   }
  },
  "fr": {
@@ -7095,6 +7259,47 @@ window.LUX = {
      "desc": "Profil de transmission stable, vous diffusez par votre réseau des fondations solidement ancrées et une direction de vie pleinement assumée."
     }
    }
+  },
+  "luckyOne": {
+   "title": "Mon chiffre porte-bonheur",
+   "intro": "Pas besoin d'une grille de loto compliquée : à partir de ta date de naissance, on te révèle d'un coup ton chiffre porte-bonheur à 1, 2 et 3 chiffres. Un seul clic, et tu sais quel nombre est vraiment le tien.",
+   "lifetimeLabel": "Chiffre porte-bonheur de toute une vie",
+   "todayLabel": "Chiffre porte-bonheur du jour",
+   "personalLabel": "Mon chiffre porte-bonheur",
+   "d1Label": "Nombre à un chiffre",
+   "d2Label": "Nombre à deux chiffres",
+   "d3Label": "Nombre à trois chiffres",
+   "meanings": [
+    "Le 1, c'est l'élan du leader : initiative, audace et envie de tracer ta propre route.",
+    "Le 2 respire l'harmonie : douceur, diplomatie et ces belles connexions à deux.",
+    "Le 3 déborde de créativité : expression, fantaisie et joie de partager tes idées.",
+    "Le 4 pose les fondations : stabilité, méthode et un sens du concret rassurant.",
+    "Le 5 adore le changement : liberté, voyages et ce petit vent d'aventure qui réveille tout.",
+    "Le 6 vibre pour l'amour : tendresse, attention aux autres et chaleur du foyer.",
+    "Le 7 cultive la sagesse : intuition, réflexion et soif de comprendre les coulisses du monde.",
+    "Le 8 vise la réussite : ambition, énergie et cette belle abondance qui se construit.",
+    "Le 9 incarne l'accomplissement : générosité, recul et ce sentiment d'un cercle qui se referme en beauté."
+   ],
+   "howTitle": "Comment ton chiffre est-il calculé ?",
+   "howText": "Tout part de ta date de naissance. On additionne le jour, le mois et l'année selon les principes de la numérologie, puis on réduit le total jusqu'à obtenir ton chiffre clé à un seul chiffre. C'est ce socle, propre à toi seul, qui sert ensuite à composer tes nombres porte-bonheur à deux et trois chiffres. Rien de sorcier : juste un petit jeu d'additions qui transforme ta date de naissance en un nombre rien que pour toi.",
+   "useTitle": "Comment utiliser ton chiffre porte-bonheur ?",
+   "useText": "Glisse-le partout où la chance peut donner un coup de pouce : remplis une grille de loto ou un ticket à gratter, choisis une date pour un rendez-vous important, intègre-le dans un mot de passe ou un code, ou laisse-le te guider dans les petits choix du quotidien (quel siège, quel étage, quel numéro de file). L'idée n'est pas de tout miser dessus, mais d'ajouter une touche ludique et une bonne dose de bonne humeur à tes décisions.",
+   "tip": "Note ton chiffre à un seul chiffre dans ton téléphone : il te suit partout et te porte chance en un coup d'œil.",
+   "pageTitleSuffix": "Mon chiffre porte-bonheur — calculé selon ta date de naissance, à 1, 2 et 3 chiffres",
+   "faq": [
+    {
+     "q": "Comment mon chiffre porte-bonheur est-il déterminé ?",
+     "a": "Il découle de ta date de naissance : on additionne le jour, le mois et l'année, puis on réduit le résultat selon la numérologie pour obtenir ton chiffre clé. À partir de ce socle, on génère aussi tes versions à deux et trois chiffres."
+    },
+    {
+     "q": "Un, deux ou trois chiffres : lequel choisir ?",
+     "a": "Tout dépend de l'occasion ! Le nombre à un chiffre est parfait pour les petits choix du quotidien, celui à deux chiffres pour une date ou un code, et celui à trois chiffres quand un jeu ou un ticket demande davantage de chiffres. Utilise celui qui colle le mieux au moment, ou les trois pour t'amuser."
+    },
+    {
+     "q": "Mon chiffre porte-bonheur change-t-il chaque jour ?",
+     "a": "Ton chiffre de toute une vie, lui, reste fixe : il est lié à ta date de naissance. En revanche, le chiffre porte-bonheur du jour change chaque matin selon l'énergie de la date. Tu as donc un repère stable et une petite surprise quotidienne, c'est tout l'intérêt !"
+    }
+   ]
   }
  },
  "es": {
@@ -8514,6 +8719,47 @@ window.LUX = {
      "desc": "Eres un perfil de propósito fijo: tu base de conocimiento es inquebrantable y tu influencia se transmite a través de tu red de relaciones íntimas y leales."
     }
    }
+  },
+  "luckyOne": {
+   "title": "Mi número de la suerte",
+   "intro": "A partir de tu fecha de nacimiento calculamos tu número de la suerte de una, dos y tres cifras, todo de una sola vez. Sin combinaciones complicadas: solo tus números, claros y listos para usar.",
+   "lifetimeLabel": "Número de por vida",
+   "todayLabel": "Número de hoy",
+   "personalLabel": "Mi número personal",
+   "d1Label": "Número de una cifra",
+   "d2Label": "Número de dos cifras",
+   "d3Label": "Número de tres cifras",
+   "meanings": [
+    "El 1 es liderazgo puro: iniciativa, voluntad y ganas de abrir camino tú primero.",
+    "El 2 trae armonía y diplomacia, ideal para llevarte bien con todo el mundo.",
+    "El 3 desborda creatividad y optimismo: comunicación, arte y buen rollo.",
+    "El 4 es estabilidad y orden: trabajo constante y bases sólidas que aguantan.",
+    "El 5 es puro cambio y aventura: libertad, viajes y ganas de probar cosas nuevas.",
+    "El 6 va de amor y cuidado: familia, hogar y ese instinto de proteger a los tuyos.",
+    "El 7 es sabiduría e intuición: mente curiosa que busca el porqué de todo.",
+    "El 8 apunta al logro y la abundancia: ambición, éxito y resultados que se notan.",
+    "El 9 representa la plenitud y el cierre: generosidad y la sensación de completar un ciclo."
+   ],
+   "howTitle": "¿Cómo se calcula?",
+   "howText": "Tu número de la suerte nace de tu fecha de nacimiento mediante numerología sencilla: sumamos los dígitos de tu día, mes y año hasta reducirlos a una cifra, y de ahí derivamos también tus versiones de dos y tres cifras. Es un cálculo personal y único para ti, no un número al azar. El de por vida se mantiene fijo porque tu fecha de nacimiento nunca cambia, mientras que el de hoy se actualiza cada día combinando tu número base con la energía de la jornada.",
+   "useTitle": "¿Para qué usarlo?",
+   "useText": "Úsalo cuando quieras darle un toque de buena vibra a tus decisiones: elegir cifras para la lotería o una rifa, fijar la fecha de una cita importante, crear una contraseña fácil de recordar o simplemente desempatar entre dos opciones del día a día. El número de una cifra es el más personal y profundo; el de dos te viene genial para juegos y apuestas; y el de tres es perfecto cuando necesitas un número más largo. Tómalo como un guiño divertido, no como una verdad escrita en piedra.",
+   "tip": "Apunta tus tres números en el móvil y tenlos a mano para esas decisiones rápidas del día.",
+   "pageTitleSuffix": "Mi número de la suerte — según tu fecha de nacimiento, de 1, 2 y 3 cifras",
+   "faq": [
+    {
+     "q": "¿Cómo se decide cuál es mi número de la suerte?",
+     "a": "Se calcula a partir de tu fecha de nacimiento con numerología sencilla: sumamos y reducimos los dígitos de tu día, mes y año hasta obtener tu número base, y de ahí salen tus versiones de una, dos y tres cifras. Es totalmente personal y único para ti."
+    },
+    {
+     "q": "¿Debería usar el de una, dos o tres cifras?",
+     "a": "Depende de para qué lo quieras. El de una cifra es el más personal y resume tu energía; el de dos cifras va perfecto para loterías y apuestas; y el de tres cifras es ideal cuando te piden un número más largo. Puedes usar el que mejor encaje en cada momento."
+    },
+    {
+     "q": "¿Mi número de la suerte cambia cada día?",
+     "a": "Tu número de por vida no cambia, porque depende de tu fecha de nacimiento, que es fija. Lo que sí se actualiza cada día es el número de hoy, que combina tu base personal con la energía de la jornada para darte un guiño fresco a diario."
+    }
+   ]
   }
  },
  "pt": {
@@ -9933,6 +10179,47 @@ window.LUX = {
      "desc": "Você tem uma base de propósito firme e estável, e transmite esse conhecimento profundo por meio de uma rede sólida de pessoas que confiam em você."
     }
    }
+  },
+  "luckyOne": {
+   "title": "Meu número da sorte",
+   "intro": "Esqueça os jogos cheios de dezenas: aqui você descobre, de uma vez só, o seu número da sorte de 1, 2 e 3 dígitos, calculado a partir da sua data de nascimento.",
+   "lifetimeLabel": "Número da sorte da vida toda",
+   "todayLabel": "Número da sorte de hoje",
+   "personalLabel": "Meu número pessoal da sorte",
+   "d1Label": "Número de um dígito",
+   "d2Label": "Número de dois dígitos",
+   "d3Label": "Número de três dígitos",
+   "meanings": [
+    "1 traz vibe de liderança: um empurrãozinho pra começar algo novo e tomar a frente.",
+    "2 é pura harmonia: bom pra parcerias, conversas e fazer as pazes com alguém.",
+    "3 solta a criatividade: ótimo pra ideias, papo animado e momentos divertidos.",
+    "4 é a base firme: passa segurança, organização e aquela sensação de chão sólido.",
+    "5 chama mudança: aventura, viagem e a coragem de sair da rotina.",
+    "6 vibra no amor: cuidado, família e carinho com quem você gosta.",
+    "7 é o número da sabedoria: convida a olhar pra dentro, refletir e confiar na intuição.",
+    "8 fala de conquista: dinheiro, metas e aquele resultado que você tanto quer.",
+    "9 fecha o ciclo: hora de concluir, agradecer e abrir espaço pro próximo capítulo."
+   ],
+   "howTitle": "Como o seu número é calculado",
+   "howText": "A gente parte da sua data de nascimento e usa a lógica da numerologia: somamos dia, mês e ano e vamos reduzindo os algarismos até chegar nos seus números de um, dois e três dígitos. É um cálculo simples, feito só com a sua data, então o seu resultado é único e não se mistura com o de mais ninguém. Pense nele como um pequeno mapa numérico só seu, mais pra inspirar do que pra cravar o futuro.",
+   "useTitle": "Como usar o seu número da sorte",
+   "useText": "Use à vontade e na brincadeira: escolha um joguinho na loteria, marque aquela reunião ou primeiro encontro num dia que combine com o seu número, use como inspiração pra criar uma senha (sem repetir a do banco, claro!) ou só pra dar aquela animada nas pequenas escolhas do dia. O número de um dígito é o seu favorito do dia a dia; os de dois e três dígitos rendem bem quando você precisa de uma combinação maior. No fim, ele é um empurrãozinho de bom humor, não uma regra.",
+   "tip": "Anote o seu número de um dígito no celular e dê uma olhadinha nele antes de tomar aquela decisão boba do dia.",
+   "pageTitleSuffix": "Meu número da sorte — descubra 1, 2 e 3 dígitos pela sua data de nascimento",
+   "faq": [
+    {
+     "q": "Como o meu número da sorte é definido?",
+     "a": "Ele sai da sua data de nascimento: a gente soma e reduz os algarismos do seu dia, mês e ano pela numerologia até chegar nos seus números de um, dois e três dígitos. Como ninguém nasce exatamente igual a você, esse resultado fica só seu."
+    },
+    {
+     "q": "Devo usar o número de um, dois ou três dígitos?",
+     "a": "Vai do momento! O de um dígito é prático pro dia a dia e pra escolhas rápidas. Os de dois e três dígitos são perfeitos quando você precisa de algo maior, como uma combinação de números ou uma sequência pra um joguinho. Pode usar o que mais te agradar."
+    },
+    {
+     "q": "O número da sorte muda todo dia?",
+     "a": "Depende de qual: o seu número da vida toda vem da data de nascimento e não muda nunca. Já o número da sorte de hoje é calculado a partir da data do dia, então ele se renova a cada 24 horas pra dar aquela variada."
+    }
+   ]
   }
  },
  "it": {
@@ -11352,6 +11639,47 @@ window.LUX = {
      "desc": "Sei la più stabile delle configurazioni: poggi su basi solide e su una direzione interiore chiara, e influenzi il mondo attraverso la forza dei tuoi legami fissi."
     }
    }
+  },
+  "luckyOne": {
+   "title": "Il mio numero fortunato",
+   "intro": "Dalla tua data di nascita ricaviamo il tuo numero fortunato personale a una, due e tre cifre, tutto in un colpo solo. Niente schedine complicate: solo il numero che fa per te.",
+   "lifetimeLabel": "Numero fortunato di sempre",
+   "todayLabel": "Numero fortunato di oggi",
+   "personalLabel": "Il mio numero fortunato",
+   "d1Label": "Numero a una cifra",
+   "d2Label": "Numero a due cifre",
+   "d3Label": "Numero a tre cifre",
+   "meanings": [
+    "Il numero 1 è leadership e nuovi inizi: ti dà la spinta per fare il primo passo.",
+    "Il numero 2 è armonia ed equilibrio: porta intesa, ascolto e relazioni serene.",
+    "Il numero 3 è creatività e allegria: accende idee, parole e voglia di esprimerti.",
+    "Il numero 4 è stabilità e concretezza: costruisce basi solide passo dopo passo.",
+    "Il numero 5 è cambiamento e libertà: porta avventura, movimento e nuove occasioni.",
+    "Il numero 6 è amore e cura: scalda i legami, la famiglia e il senso di casa.",
+    "Il numero 7 è saggezza e intuito: invita a riflettere, capire e ascoltare la voce interiore.",
+    "Il numero 8 è successo e abbondanza: spinge verso traguardi, ambizione e risultati concreti.",
+    "Il numero 9 è compimento e generosità: chiude i cerchi e apre il cuore agli altri."
+   ],
+   "howTitle": "Come si calcola",
+   "howText": "Il tuo numero fortunato nasce dalla numerologia della tua data di nascita: sommiamo le cifre di giorno, mese e anno e le riduciamo fino a ottenere un numero base. Da lì ricaviamo la versione a una cifra (la più essenziale, da 1 a 9), quella a due cifre e quella a tre cifre, così hai una piccola famiglia di numeri tutti tuoi. La parte di sempre resta fissa perché legata alla nascita, mentre quella del giorno cambia combinando la tua data con quella di oggi.",
+   "useTitle": "Come usarlo",
+   "useText": "Il tuo numero fortunato è un piccolo portafortuna da tenere a portata di mano. Usalo per giocare una schedina o scegliere i numeri di un biglietto, per fissare un appuntamento importante o un piccolo evento, come ingrediente di una password facile da ricordare, o semplicemente per decidere tra due opzioni quando sei indeciso. La cifra singola è perfetta per i gesti veloci di ogni giorno, mentre due e tre cifre tornano utili quando ti serve un numero più lungo.",
+   "tip": "Tieni il tuo numero a una cifra nel portafoglio o salvalo sul telefono: averlo sempre con te lo rende un mini rituale quotidiano.",
+   "pageTitleSuffix": "Il mio numero fortunato — dalla data di nascita a 1, 2 e 3 cifre",
+   "faq": [
+    {
+     "q": "Come viene scelto il mio numero fortunato?",
+     "a": "Parte dalla tua data di nascita: sommiamo e riduciamo le cifre con la numerologia per ottenere il tuo numero base, da cui ricaviamo le versioni a una, due e tre cifre. È un calcolo personale, pensato per divertire più che per predire il futuro."
+    },
+    {
+     "q": "Quale dovrei usare tra una, due e tre cifre?",
+     "a": "Dipende da cosa ti serve. La cifra singola è ottima per le scelte rapide e i gesti di tutti i giorni; due o tre cifre sono comode quando ti serve un numero più lungo, come per una schedina o una password. Puoi tranquillamente usarle tutte e tre."
+    },
+    {
+     "q": "Il numero fortunato cambia ogni giorno?",
+     "a": "In parte. Il numero di sempre resta fisso perché legato alla tua nascita, mentre quello di oggi cambia ogni giorno combinando la tua data con la data odierna. Così hai un portafortuna stabile e una piccola sorpresa fresca ogni mattina."
+    }
+   ]
   }
  },
  "id": {
@@ -12771,6 +13099,47 @@ window.LUX = {
      "desc": "Kamu memiliki fondasi diri yang kokoh dan teguh, lalu menyebarkan pengetahuan serta pengaruhmu melalui jaringan relasi dekat yang kamu bangun dengan tulus."
     }
    }
+  },
+  "luckyOne": {
+   "title": "Angka Keberuntunganku",
+   "intro": "Cukup masukkan tanggal lahir, dan langsung tahu angka keberuntunganmu — versi satu digit, dua digit, dan tiga digit sekaligus. Tidak perlu repot menyusun deretan angka lotre yang panjang.",
+   "lifetimeLabel": "Angka Keberuntungan Seumur Hidup",
+   "todayLabel": "Angka Keberuntungan Hari Ini",
+   "personalLabel": "Angka Keberuntunganku",
+   "d1Label": "Angka Satu Digit",
+   "d2Label": "Angka Dua Digit",
+   "d3Label": "Angka Tiga Digit",
+   "meanings": [
+    "Angka 1 — energi pemimpin: percaya diri, berani mengambil langkah pertama, dan suka memulai hal baru.",
+    "Angka 2 — energi keseimbangan: lembut, penuh empati, dan pandai menjaga keharmonisan.",
+    "Angka 3 — energi kreatif: ceria, ekspresif, dan selalu punya ide segar.",
+    "Angka 4 — energi stabil: tekun, rapi, dan bisa diandalkan dalam segala hal.",
+    "Angka 5 — energi perubahan: bebas, suka petualangan, dan cepat beradaptasi.",
+    "Angka 6 — energi kasih sayang: hangat, perhatian, dan tulus menjaga orang terdekat.",
+    "Angka 7 — energi kebijaksanaan: tenang, suka merenung, dan punya intuisi yang tajam.",
+    "Angka 8 — energi pencapaian: ambisius, fokus pada hasil, dan pandai mengelola rezeki.",
+    "Angka 9 — energi penyempurnaan: berjiwa besar, penuh kasih, dan peduli pada sesama."
+   ],
+   "howTitle": "Bagaimana Angka Keberuntunganmu Dihitung?",
+   "howText": "Semuanya dihitung dari tanggal lahirmu memakai dasar numerologi. Seluruh angka pada tanggal, bulan, dan tahun lahir dijumlahkan, lalu disederhanakan sampai menjadi satu digit (1–9) sebagai angka inti keberuntunganmu. Dari proses yang sama, kami juga menyusun versi dua digit dan tiga digit, sehingga kamu langsung punya tiga pilihan angka pribadi dalam sekali klik — angka yang tetap seumur hidup, plus sentuhan angka harian yang ikut bergerak setiap hari.",
+   "useTitle": "Cara Memakai Angka Keberuntunganmu",
+   "useText": "Angka keberuntungan paling asyik dipakai sebagai pemanis keputusan sehari-hari. Coba pakai untuk memilih nomor saat beli undian atau lotre, menentukan tanggal atau jam untuk janji penting, jadi sentuhan untuk PIN dan kata sandi, atau sekadar pegangan saat ragu memilih kursi, antrean, atau tanggal acara. Pakai versi satu digit untuk hal simpel, dua digit untuk pilihan harian, dan tiga digit saat butuh nomor yang lebih spesifik. Anggap saja teman pembawa semangat, bukan ramalan pasti — yang penting kamu jadi lebih pede.",
+   "tip": "Simpan angka satu digitmu sebagai \"jimat\" pribadi, lalu cek angka harian tiap pagi untuk suntikan semangat ekstra.",
+   "pageTitleSuffix": "Angka Keberuntunganku — Lihat Angka 1, 2 & 3 Digit dari Tanggal Lahir",
+   "faq": [
+    {
+     "q": "Bagaimana angka keberuntunganku ditentukan?",
+     "a": "Angkanya dihitung dari tanggal lahirmu memakai numerologi. Semua angka pada tanggal lahir dijumlahkan lalu disederhanakan menjadi satu digit, dan dari pola yang sama kami juga membuat versi dua dan tiga digit. Karena berbasis tanggal lahir, angka inti keberuntunganmu tetap sama seumur hidup."
+    },
+    {
+     "q": "Sebaiknya pakai angka satu, dua, atau tiga digit?",
+     "a": "Tergantung kebutuhanmu. Angka satu digit pas untuk hal sederhana dan mudah diingat, dua digit cocok untuk pilihan sehari-hari, dan tiga digit berguna saat kamu butuh nomor yang lebih spesifik seperti pada undian. Tidak ada yang salah — pilih yang paling terasa pas untukmu."
+    },
+    {
+     "q": "Apakah angka keberuntungan berubah setiap hari?",
+     "a": "Angka keberuntungan seumur hidup yang berdasarkan tanggal lahir selalu tetap. Namun ada juga Angka Keberuntungan Hari Ini yang ikut bergeser setiap hari, jadi kamu bisa mengeceknya tiap pagi untuk sentuhan semangat yang baru. Anggap saja ini hiburan ringan, ya, bukan kepastian."
+    }
+   ]
   }
  }
 };

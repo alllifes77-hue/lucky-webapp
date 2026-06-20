@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v20: 트렌드 휴먼디자인(64게이트·9센터·36채널 결정론)
-const CACHE_NAME = 'lucky-v20';
+// v21: 단일 행운수 패널(1·2·3자리 평생/오늘) — "내 행운수 하나만"
+const CACHE_NAME = 'lucky-v21';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

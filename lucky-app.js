@@ -1647,7 +1647,7 @@ function renderResults(data) {
    'single-fortune-section','gunghap-section','geokkuk-panel','kyusei-sansei-panel',
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
-   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
+   'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
    'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
@@ -1731,6 +1731,7 @@ function renderResults(data) {
   renderDailyEnergyPanel(data);
   renderChineseZodiacBadge(data);
   // ── 신규 행운요소 (모든 언어 결과화면 공통 노출) ──
+  renderLuckyOnePanel(data);
   renderSunSignPanel(data);
   renderLifePathPanel(data);
   renderBiorhythmPanel(data);
@@ -5386,6 +5387,42 @@ function renderTarotPanel(data){
 }
 
 // ── 5) 행운의 4요소 (색·숫자·방위·시간) ─────────────────────
+// ── 단일 행운수 (1·2·3자리, 평생/오늘) — "그냥 내 행운수 하나만" ──
+function renderLuckyOnePanel(data){
+  const old=document.getElementById('luckyone-panel'); if(old) old.remove();
+  const X=_luxGet(data.lang); if(!X||!X.luckyOne||!X.luckyOne.meanings) return;
+  const O=X.luckyOne;
+  const nm=calcNumerology(data.year, data.month||1, data.day||1);
+  const seed=nm.seed;
+  const d1=((nm.lpn-1)%9)+1;                          // 평생 1자리 = 라이프패스 환원(1~9)
+  const life2=Math.floor(mkRng(seed*7+13)()*100);     // 평생 2자리 0~99 (고정)
+  const life3=Math.floor(mkRng(seed*13+101)()*1000);  // 평생 3자리 0~999 (고정)
+  const t1=1+_luxPick(seed,3,9);                       // 오늘 1자리 1~9 (일변동)
+  const t2=_luxPick(seed,7,100);                       // 오늘 2자리 0~99
+  const t3=_luxPick(seed,13,1000);                     // 오늘 3자리 0~999
+  const p2=n=>('0'+n).slice(-2), p3=n=>('00'+n).slice(-3);
+  const mean=O.meanings[d1-1]||'';
+  const big=(lbl,val)=>`<div style="flex:1;background:#fff;border-radius:13px;padding:13px 6px;text-align:center;box-shadow:0 2px 10px rgba(180,83,9,.13);">
+    <div style="font-size:9.5px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.02em;">${escHtml(lbl)}</div>
+    <div style="font-size:33px;font-weight:900;color:#b45309;line-height:1.05;margin-top:3px;letter-spacing:-1px;">${escHtml(String(val))}</div></div>`;
+  const sml=(lbl,val)=>`<div style="flex:1;background:rgba(255,255,255,.72);border-radius:11px;padding:9px 4px;text-align:center;">
+    <div style="font-size:9px;color:#a16207;font-weight:700;text-transform:uppercase;">${escHtml(lbl)}</div>
+    <div style="font-size:22px;font-weight:900;color:#a16207;margin-top:1px;">${escHtml(String(val))}</div></div>`;
+  const panel=document.createElement('div');
+  panel.id='luckyone-panel';
+  panel.style.cssText='background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:16px;padding:16px;margin:16px 0;';
+  panel.innerHTML=`
+    <div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#b45309;margin-bottom:4px;text-transform:uppercase;">🎯 ${escHtml(O.title)}</div>
+    <div style="font-size:11px;color:#92400e;margin-bottom:12px;line-height:1.45;">${escHtml(O.intro)}</div>
+    <div style="font-size:10px;font-weight:800;color:#b45309;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px;">★ ${escHtml(O.lifetimeLabel)}</div>
+    <div style="display:flex;gap:8px;margin-bottom:7px;">${big(O.d1Label,d1)}${big(O.d2Label,p2(life2))}${big(O.d3Label,p3(life3))}</div>
+    <div style="background:rgba(180,83,9,.08);border-radius:9px;padding:8px 11px;font-size:11.5px;color:#92400e;line-height:1.5;margin-bottom:13px;"><b>${escHtml(O.d1Label)} ${d1}</b> · ${escHtml(mean)}</div>
+    <div style="font-size:10px;font-weight:800;color:#a16207;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px;">📅 ${escHtml(O.todayLabel)}</div>
+    <div style="display:flex;gap:8px;">${sml(O.d1Label,t1)}${sml(O.d2Label,p2(t2))}${sml(O.d3Label,p3(t3))}</div>
+    <div style="background:rgba(217,119,6,.1);border-radius:10px;padding:9px 12px;font-size:11.5px;color:#92400e;line-height:1.5;margin-top:11px;">🍀 ${escHtml(O.tip)}</div>`;
+  _luxInsert(panel);
+}
+
 function renderLuckyFourPanel(data){
   const old=document.getElementById('luckyfour-panel'); if(old) old.remove();
   const X=_luxGet(data.lang); if(!X||!X.luckyFour) return;
