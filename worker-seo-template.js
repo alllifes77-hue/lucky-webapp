@@ -552,6 +552,10 @@ const _NAV_CAT_LABELS = {
 };
 const _NAV_MAIN = {ko:'🍀 행운의 번호',ja:'🍀 幸運の数字',en:'🍀 Lucky Numbers',de:'🍀 Glückszahlen',fr:'🍀 Numéros de Chance',es:'🍀 Números de Suerte',pt:'🍀 Números da Sorte',it:'🍀 Numeri Fortunati',id:'🍀 Angka Keberuntungan'};
 
+// ★광고 자동화 규칙★ 새 콘텐츠 페이지는 본문 끝에 `${buildNavFooter(lang,'...')}` 만 호출하면
+// AdSense(상단+하단)·AliExpress 스트립·ko 쿠팡이 전부 자동 주입된다. ADS_TAG(head)·.hero 는 선택사항
+// (ADS_TOP_INJECT 가 로더 자동삽입 + 앵커 폴백 처리). 광고 없이 내보낼 페이지(embed/widget iframe 페이로드)
+// 만 buildNavFooter 를 호출하지 않으면 된다.
 function buildNavFooter(lang, activePage) {
   const catSlugs = CAT_SLUGS[lang] || {};
   const labels = _NAV_CAT_LABELS[lang] || _NAV_CAT_LABELS.en;
@@ -701,9 +705,25 @@ const ADS_TAG = `<script async src="https://pagead2.googlesyndication.com/pagead
 // 파비콘 — 워커 SEO 페이지 전용. 절대 URL(/lucky/)이라 /en/today/·/saju/ 등 어느 경로에서도 정상.
 // (미선언 시 브라우저가 도메인 루트 /favicon.ico = 블로그 파비콘으로 폴백하던 문제 해결)
 const FAVICON_TAGS = `<link rel="icon" type="image/png" sizes="32x32" href="${APP_URL}/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="${APP_URL}/favicon-16x16.png"><link rel="shortcut icon" href="${APP_URL}/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="${APP_URL}/apple-touch-icon.png">`;
-const ADS_UNIT = `<div class="ads-unit-wrap"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>`;
-// 상단 광고 주입(전 SEO 페이지 공통): .hero 바로 아래에 1개 — 가장 잘 보이는 위치. 크기 축소(520px).
-const ADS_TOP_INJECT = `<script>(function(){try{var h=document.querySelector('.hero');if(!h||document.getElementById('ads-top'))return;var d=document.createElement('div');d.id='ads-top';d.className='ads-unit-wrap';d.style.maxWidth='520px';d.innerHTML='<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';h.parentNode.insertBefore(d,h.nextSibling);(adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}})();</script>`;
+// 하단 디스플레이 유닛. iframe(타사 임베드) 내부에서는 push 생략(AdSense 정책).
+const ADS_UNIT = `<div class="ads-unit-wrap"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins><script>if(window.self===window.top){(adsbygoogle=window.adsbygoogle||[]).push({});}</script></div>`;
+// 상단 광고 자동 주입(buildNavFooter 경유 전 SEO 페이지 공통). 자급자족:
+//  (1) AdSense 로더가 head에 없으면 자동 삽입 → 향후 템플릿이 ADS_TAG 를 빠뜨려도 광고 보장
+//  (2) 앵커 폴백 .hero→첫 h1블록→main/.wrap→body최상단 → .hero 없는 새 레이아웃도 자동 대응
+//  (3) iframe(타사 임베드) 내부에서는 미표시(AdSense 정책)
+const ADS_TOP_INJECT = `<script>(function(){try{
+  if(window.self!==window.top)return;
+  if(!document.querySelector('script[src*="adsbygoogle.js"]')){var ls=document.createElement('script');ls.async=true;ls.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1378943893051810';ls.crossOrigin='anonymous';(document.head||document.documentElement).appendChild(ls);}
+  if(document.getElementById('ads-top'))return;
+  var anchor=document.querySelector('.hero'),mode='after';
+  if(!anchor){var h1=document.querySelector('h1');if(h1)anchor=h1.closest('header,section,article,div')||h1;}
+  if(!anchor){anchor=document.querySelector('main,.wrap,.content,article');mode='before';}
+  if(!anchor){anchor=document.body&&document.body.firstElementChild;mode='before';}
+  if(!anchor||!anchor.parentNode)return;
+  var d=document.createElement('div');d.id='ads-top';d.className='ads-unit-wrap';d.style.maxWidth='520px';d.style.margin='12px auto';d.innerHTML='<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+  if(mode==='after')anchor.parentNode.insertBefore(d,anchor.nextSibling);else anchor.parentNode.insertBefore(d,anchor);
+  (adsbygoogle=window.adsbygoogle||[]).push({});
+}catch(e){}})();</script>`;
 
 // ── 어필리에이트 슬롯 (링크 확보 시 AFF_OFFERS 만 채우면 전 페이지에 표시) ──
 // 형식: lang: [{ icon, title, desc, cta, url }] — url 은 어필리에이트 트래킹 링크.
@@ -733,8 +753,9 @@ function TOP_AFF_INJECT(lang){
   </div>${koCp}
 </div>
 <script>(function(){try{
-  var src=document.getElementById('top-aff-src');var h=document.querySelector('.hero');if(!src||!h)return;
-  var anchor=document.getElementById('ads-top')||h;
+  var src=document.getElementById('top-aff-src');if(!src)return;
+  var anchor=document.getElementById('ads-top')||document.querySelector('.hero')||document.querySelector('main,.wrap,.content,article')||(document.body&&document.body.firstElementChild);
+  if(!anchor||!anchor.parentNode){src.remove();return;}
   while(src.firstElementChild){anchor.parentNode.insertBefore(src.firstElementChild,anchor.nextSibling);anchor=anchor.nextSibling;}
   src.remove();
   var box=document.getElementById('ae-top');var w=box&&box.querySelector('.ae-top-cards');
