@@ -6520,6 +6520,23 @@ function showScreen(id) {
       window.parent.postMessage({ type: 'lucky-resize', height: document.body.scrollHeight }, '*');
     }, 200);
   }
+  // AdSense bottom unit shows ONLY on the result screen (kept off the home/main
+  // screen per owner request); cleared elsewhere. self===top → no AdSense in iframe.
+  try {
+    const ab = document.getElementById('ad-bottom');
+    if (ab) {
+      if (id === 's-result' && window.self === window.top) {
+        if (!ab.dataset.loaded) {
+          ab.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+          ab.dataset.loaded = '1';
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      } else {
+        ab.innerHTML = '';
+        delete ab.dataset.loaded;
+      }
+    }
+  } catch (e) {}
 }
 
 function selectSets(btn) {

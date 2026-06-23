@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v24: 행운 룰렛 카테고리(자리수 선택·매 스핀 랜덤·하나씩 출력) 추가
-const CACHE_NAME = 'lucky-v24';
+// v25: 메인(홈) 화면 AdSense 제거 — 광고는 결과 화면(#ad-bottom)에서만 노출
+const CACHE_NAME = 'lucky-v25';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

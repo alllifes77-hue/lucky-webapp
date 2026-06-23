@@ -467,8 +467,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
         <div id="recent-history" style="display:none;margin-top:18px;text-align:left;"></div>
       </div>
 
-      <!-- AdSense 디스플레이 — 홈(입력) 화면, iframe 임베드 시 미삽입 (하단 스크립트가 주입) -->
-      <div id="ad-home" style="max-width:500px;margin:0 auto 24px;"></div>
+      <!-- (홈 화면 AdSense 제거됨 — 광고는 결과 화면에서만 노출) -->
 
       <!-- 특정 날짜 길흉 계산기 (Astro-Seek식 도구) -->
       <div class="input-card" style="max-width:500px;margin:0 auto 24px;">
@@ -573,15 +572,8 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
 <div id="coupang-bottom" style="max-width:712px;margin:8px auto 24px;padding:0 16px;text-align:center;"></div>
 <script>
 if (window.self === window.top) {
-  try {
-    document.getElementById('ad-bottom').innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {}
-  // 홈(입력) 화면 광고 — 결과로 가기 전 노출
-  try {
-    document.getElementById('ad-home').innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {}
+  // AdSense는 메인(홈) 화면에서 제외 — 결과 화면(s-result)에서만 노출한다.
+  // #ad-bottom 디스플레이 유닛 주입은 showScreen('s-result')에서 처리(lucky-app.js).
 
   // 쿠팡 다이내믹 위젯 — 한국어 페이지에서만, 화면 폭 맞춤
   if ((window.LUCKY_CURRENT_LANG || 'ko') === 'ko') try {
@@ -604,7 +596,7 @@ if (window.self === window.top) {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2/astronomy.browser.min.js" defer></script>
 <script src="luck-elements.js?v=20260615m" defer></script>
-<script src="lucky-app.js?v=20260623b" defer></script>
+<script src="lucky-app.js?v=20260623c" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () =>
