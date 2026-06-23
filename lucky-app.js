@@ -1714,55 +1714,60 @@ function renderResults(data) {
     if (fortuneCard)    fortuneCard.style.display    = 'none';
     renderGunghapPanel(data);
 
-  // ══ FORTUNE: 연애/금전/직업/성취운 전용 ══════════════════
+  // ══ FORTUNE: 연애/금전/직업/성취운 전용 (집중형 — 선택한 운만) ══
   } else {
     if (lotterySection) lotterySection.style.display = 'none';
     if (fortuneCard)    fortuneCard.style.display    = 'none';
 
-    renderFortuneSummaryGrid(data); // all 4 scores for context, selected highlighted
-    renderTodayIlchin(data); // today's day stem + interaction
-    renderSingleFortuneCatCard(data, cat, L); // full single-cat reading
-    renderLuckyTips(data); // category-specific tips
+    renderFortuneSummaryGrid(data, cat); // 선택한 운 점수만 (다른 운 숨김)
+    renderSingleFortuneCatCard(data, cat, L); // 선택 운 상세 풀이
+    renderLuckyTips(data); // 선택 운 맞춤 팁
   }
 
-  renderAuspiciousCalendarPanel(data);
-  const personName = ((document.getElementById('person-name') || {}).value || '').trim();
-  if (personName) renderNamePanel(calcNameNumerology(personName));
-  renderDailyEnergyPanel(data);
-  renderChineseZodiacBadge(data);
-  // ── 신규 행운요소 (모든 언어 결과화면 공통 노출) ──
+  // ── 신규 행운요소 ──
   window._lastLuckyData = data;
-  renderLuckyOnePanel(data);
-  try { renderQuizLauncher(data); } catch(e){}
-  try { renderScorePanel(data); } catch(e){}
-  try { renderSpinPanel(data); } catch(e){}
-  try { renderCountdownPanel(data); } catch(e){}
-  try { renderInvitePanel(data); } catch(e){}
-  try { renderNameToolPanel(data); } catch(e){}
+  // 집중형 단일 운(연애·금전·직업·성취) 조회 시: 선택한 운 + 핵심 행운정보(행운번호)만 노출하고
+  // 다른 운·부가 운세·점성 패널은 숨긴다. 종합 모드(행운번호·사주·궁합)는 전체 노출.
+  const _focusedCat = (cat === 'love' || cat === 'money' || cat === 'career' || cat === 'achievement');
+  if (_focusedCat) {
+    renderLuckyOnePanel(data); // 핵심 행운정보(행운번호)
+  } else {
+    renderAuspiciousCalendarPanel(data);
+    const personName = ((document.getElementById('person-name') || {}).value || '').trim();
+    if (personName) renderNamePanel(calcNameNumerology(personName));
+    renderDailyEnergyPanel(data);
+    renderChineseZodiacBadge(data);
+    renderLuckyOnePanel(data);
+    try { renderQuizLauncher(data); } catch(e){}
+    try { renderScorePanel(data); } catch(e){}
+    try { renderSpinPanel(data); } catch(e){}
+    try { renderCountdownPanel(data); } catch(e){}
+    try { renderInvitePanel(data); } catch(e){}
+    try { renderNameToolPanel(data); } catch(e){}
+    renderSunSignPanel(data);
+    renderLifePathPanel(data);
+    renderBiorhythmPanel(data);
+    renderTarotPanel(data);
+    renderBirthstonePanel(data);
+    renderLuckyFourPanel(data);
+    renderDreamPanel(data);
+    renderAngelPanel(data);
+    // 트렌드 코스믹 웨더 (오늘 날짜 기반). 천체계산 실패가 체인을 끊지 않도록 격리
+    try { renderTransitPanel(data); } catch(e){}
+    try { renderSolarPanel(data); } catch(e){}
+    try { renderSaturnPanel(data); } catch(e){}
+    try { renderAstroCartoPanel(data); } catch(e){}
+    try { renderLilithPanel(data); } catch(e){}
+    try { renderHumanDesignPanel(data); } catch(e){}
+    try { renderRetroPanel(data); } catch(e){}
+    try { renderElectionalPanel(data); } catch(e){}
+    try { renderMoonRitualPanel(data); } catch(e){}
+  }
   try { _initInstallPrompt(); _maybeShowInstall(); } catch(e){}
-  renderSunSignPanel(data);
-  renderLifePathPanel(data);
-  renderBiorhythmPanel(data);
-  renderTarotPanel(data);
-  renderBirthstonePanel(data);
-  renderLuckyFourPanel(data);
-  renderDreamPanel(data);
-  renderAngelPanel(data);
-  // 트렌드 코스믹 웨더 (오늘 날짜 기반, 전 사용자 공통). 천체계산 실패가 체인을 끊지 않도록 격리
-  try { renderTransitPanel(data); } catch(e){}
-  try { renderSolarPanel(data); } catch(e){}
-  try { renderSaturnPanel(data); } catch(e){}
-  try { renderAstroCartoPanel(data); } catch(e){}
-  try { renderLilithPanel(data); } catch(e){}
-  try { renderHumanDesignPanel(data); } catch(e){}
-  try { renderRetroPanel(data); } catch(e){}
-  try { renderElectionalPanel(data); } catch(e){}
-  try { renderMoonRitualPanel(data); } catch(e){}
-  // 결과 중간 광고 — 패널들 사이에 한 번 더 노출 (알리·쿠팡은 상단으로 이동됨)
-  _resultAdSense('ad-result-mid', 400);
   renderShareBtns(data);
-  renderAIChat(data);
+  if (!_focusedCat) renderAIChat(data); // 집중형에서는 일반 AI챗 숨김
   renderFaq();
+  _distributeResultAds(); // 콘텐츠 비례 애드센스 자동 분배(self===top·iframe 제외)
   _saveBirthAndHistory(data);
 }
 
@@ -2994,18 +2999,19 @@ function getSytemName(key, lang) {
 }
 
 // ── Fortune Summary Grid (4 mini circles) ─────────────────
-function renderFortuneSummaryGrid(data) {
+function renderFortuneSummaryGrid(data, onlyCat) {
   const el = document.getElementById('fortune-summary-grid');
   if (!el || !data.fortuneScores) return;
   const L = window.LUCKY_LANG || {};
   const S = data.fortuneScores;
   const activeCat = window.LUCKY_SELECTED_CAT || 'lucky';
-  const cats = [
+  let cats = [
     { key:'love',        icon: L.catLoveIcon||'💝',        label: L.catLove||'연애운',   color:'#ec4899' },
     { key:'money',       icon: L.catMoneyIcon||'💰',       label: L.catMoney||'금전운',  color:'#d97706' },
     { key:'career',      icon: L.catCareerIcon||'💼',      label: L.catCareer||'직업운', color:'#4338ca' },
     { key:'achievement', icon: L.catAchievementIcon||'🏆', label: L.catAchievement||'성취운', color:'#7c3aed' },
   ];
+  if (onlyCat) cats = cats.filter(c => c.key === onlyCat); // 집중형: 선택한 운만 표시
   el.innerHTML = cats.map(c => {
     const s = S[c.key] || {};
     const isActive = activeCat === c.key;
@@ -6314,6 +6320,33 @@ function _resultAdSense(id, maxW){
   w.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
   share.parentNode.insertBefore(w, share);
   try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+}
+// 결과 콘텐츠 비례 애드센스 자동 분배 — 노출 패널 수에 맞춰 광고 수 결정(최대 4 추가).
+// self===top·iframe 제외. 모든 패널 렌더 후 호출, 재렌더 시 이전 분배 광고 제거 후 재배치.
+function _distributeResultAds(){
+  if (window.self !== window.top) return;
+  const inner = document.querySelector('.result-inner');
+  if (!inner) return;
+  inner.querySelectorAll('.result-ad-dist').forEach(el => el.remove());
+  const kids = Array.from(inner.children).filter(el => {
+    if (el.id && /^ad-/.test(el.id)) return false;
+    if (el.classList && (el.classList.contains('share-section') || el.classList.contains('retry-row') || el.classList.contains('seo-section'))) return false;
+    try { if (getComputedStyle(el).display === 'none') return false; } catch(e){}
+    return true;
+  });
+  if (!kids.length) return;
+  const targetAds = Math.min(4, Math.max(1, Math.round(kids.length / 4)));
+  const step = Math.max(1, Math.floor(kids.length / (targetAds + 1)));
+  let added = 0;
+  for (let pos = step; pos < kids.length && added < targetAds; pos += step, added++){
+    const anchor = kids[pos];
+    const w = document.createElement('div');
+    w.className = 'result-ad-dist';
+    w.style.cssText = 'max-width:400px;margin:18px auto;min-height:1px;';
+    w.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+    anchor.parentNode.insertBefore(w, anchor.nextSibling);
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
+  }
 }
 function _resultCoupang(lang){
   if (window.self !== window.top) return;

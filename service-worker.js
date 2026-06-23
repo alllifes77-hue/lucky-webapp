@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v22: 성장요소 — 행운점수 뱃지·스핀휠·천체카운트다운·이모지공유·PWA설치
-const CACHE_NAME = 'lucky-v22';
+// v23: 결과페이지 집중형(단일 운만 표시) + 콘텐츠 비례 애드센스 자동 분배
+const CACHE_NAME = 'lucky-v23';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
