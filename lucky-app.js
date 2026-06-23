@@ -6535,6 +6535,17 @@ function adaptInputForm(cat) {
   const L = window.LUCKY_LANG || {};
   const lang = window.LUCKY_CURRENT_LANG || 'ko';
 
+  // 🎰 룰렛 카테고리: 생일 흐름 불필요 — 입력폼 전체를 숨기고 룰렛 패널만 노출
+  const _rlForm = ['lottery-wrap','sets-wrap','bday-block','draw-date-section','birth-time-wrap','name-input-wrap','gender-section','partner-section','btn-generate','txt-input-note','privacy-note'];
+  const _rp = document.getElementById('roulette-panel');
+  if (cat === 'roulette') {
+    _rlForm.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    if (_rp) { _rp.style.display = 'block'; _rlMountAd(); }
+    return;
+  }
+  if (_rp) _rp.style.display = 'none';
+  _rlForm.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; }); // 룰렛→타 카테고리 복귀 시 폼 복원
+
   // Show/hide lottery-only sections
   ['lottery-wrap', 'sets-wrap', 'draw-date-section'].forEach(id => {
     const el = document.getElementById(id);
@@ -6612,6 +6623,68 @@ function adaptInputForm(cat) {
       note.textContent = catLabel + (SFXS[lang] || ' analysis.');
     }
   }
+}
+
+// ══ 🎰 행운 룰렛 (홈 카테고리 'roulette') ════════════════════
+// 매 스핀 랜덤(생일 불필요). 자리수(1/2/3) 단일선택 → 돌리면 숫자 하나씩 누적 출력.
+const ROULETTE_I18N = {
+  ko:{cat:'룰렛',title:'🎰 행운 룰렛',sub:'자리수를 고르고 돌려서 행운의 숫자를 하나씩 뽑으세요',d1:'1자리',d2:'2자리',d3:'3자리',spin:'돌리기',reset:'초기화',count:n=>`뽑은 숫자 ${n}개`,note:'오락용 무작위 추첨입니다. 당첨을 보장하지 않습니다.'},
+  en:{cat:'Roulette',title:'🎰 Lucky Roulette',sub:'Pick a digit length and spin to draw lucky numbers one by one',d1:'1 digit',d2:'2 digits',d3:'3 digits',spin:'SPIN',reset:'Reset',count:n=>`${n} drawn`,note:'For entertainment only — random draw, no win guaranteed.'},
+  ja:{cat:'ルーレット',title:'🎰 ラッキールーレット',sub:'桁数を選んで回し、幸運の数字を一つずつ引きましょう',d1:'1桁',d2:'2桁',d3:'3桁',spin:'回す',reset:'リセット',count:n=>`${n}個`,note:'娯楽用のランダム抽選です。当選を保証しません。'},
+  de:{cat:'Roulette',title:'🎰 Glücksroulette',sub:'Stellenzahl wählen und drehen — Zahlen einzeln ziehen',d1:'1-stellig',d2:'2-stellig',d3:'3-stellig',spin:'DREHEN',reset:'Zurücksetzen',count:n=>`${n} gezogen`,note:'Nur zur Unterhaltung — Zufallsziehung, kein Gewinn garantiert.'},
+  fr:{cat:'Roulette',title:'🎰 Roulette Chance',sub:'Choisissez le nombre de chiffres et tournez un à un',d1:'1 chiffre',d2:'2 chiffres',d3:'3 chiffres',spin:'TOURNER',reset:'Réinitialiser',count:n=>`${n} tirés`,note:'À titre de divertissement — tirage aléatoire, gain non garanti.'},
+  es:{cat:'Ruleta',title:'🎰 Ruleta de la Suerte',sub:'Elige los dígitos y gira para sacar números uno a uno',d1:'1 dígito',d2:'2 dígitos',d3:'3 dígitos',spin:'GIRAR',reset:'Reiniciar',count:n=>`${n} sacados`,note:'Solo entretenimiento — sorteo aleatorio, sin garantía.'},
+  pt:{cat:'Roleta',title:'🎰 Roleta da Sorte',sub:'Escolha os dígitos e gire para tirar números um a um',d1:'1 dígito',d2:'2 dígitos',d3:'3 dígitos',spin:'GIRAR',reset:'Limpar',count:n=>`${n} tirados`,note:'Apenas entretenimento — sorteio aleatório, sem garantia.'},
+  it:{cat:'Roulette',title:'🎰 Roulette Fortunata',sub:'Scegli le cifre e gira per estrarre numeri uno a uno',d1:'1 cifra',d2:'2 cifre',d3:'3 cifre',spin:'GIRA',reset:'Azzera',count:n=>`${n} estratti`,note:'Solo intrattenimento — estrazione casuale, nessuna vincita garantita.'},
+  id:{cat:'Rolet',title:'🎰 Rolet Keberuntungan',sub:'Pilih jumlah digit dan putar untuk menarik angka satu per satu',d1:'1 digit',d2:'2 digit',d3:'3 digit',spin:'PUTAR',reset:'Atur ulang',count:n=>`${n} ditarik`,note:'Hanya hiburan — undian acak, tanpa jaminan menang.'},
+};
+let _rlDigits = 1, _rlSpinning = false, _rlCount = 0;
+function _rlT(){ return ROULETTE_I18N[window.LUCKY_CURRENT_LANG] || ROULETTE_I18N.en; }
+function _applyRouletteI18n(lang){
+  const t = ROULETTE_I18N[lang] || ROULETTE_I18N.en;
+  const set = (id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
+  set('cat-name-7', t.cat);
+  set('rl-title', t.title); set('rl-sub', t.sub);
+  set('rl-d1', t.d1); set('rl-d2', t.d2); set('rl-d3', t.d3);
+  set('rl-spin-txt', t.spin); set('rl-reset', t.reset); set('rl-note', t.note);
+  _rlUpdateCount();
+}
+function setRouletteDigits(n){
+  _rlDigits = n;
+  [1,2,3].forEach(d=>{ const b=document.getElementById('rl-d'+d); if(b) b.classList.toggle('active', d===n); });
+  const disp=document.getElementById('rl-display'); if(disp) disp.textContent = '0'.repeat(n);
+}
+function _rlUpdateCount(){ const c=document.getElementById('rl-count'); if(c) c.textContent = _rlCount ? _rlT().count(_rlCount) : ''; }
+function spinRoulette(){
+  if(_rlSpinning) return;
+  const disp=document.getElementById('rl-display'); const btn=document.getElementById('rl-spin');
+  if(!disp) return;
+  _rlSpinning = true; if(btn) btn.disabled = true; disp.classList.add('spin');
+  const range = Math.pow(10, _rlDigits);
+  const fmt = v => String(v).padStart(_rlDigits,'0');
+  const tick = setInterval(()=>{ disp.textContent = fmt(Math.floor(Math.random()*range)); }, 70);
+  setTimeout(()=>{
+    clearInterval(tick);
+    const final = Math.floor(Math.random()*range);
+    disp.textContent = fmt(final);
+    disp.classList.remove('spin');
+    const res=document.getElementById('rl-results');
+    if(res){ const chip=document.createElement('span'); chip.className='rl-chip'; chip.textContent=fmt(final); res.appendChild(chip); }
+    _rlCount++; _rlUpdateCount();
+    _rlSpinning=false; if(btn) btn.disabled=false;
+  }, 1100);
+}
+function resetRoulette(){
+  const res=document.getElementById('rl-results'); if(res) res.innerHTML='';
+  _rlCount=0; _rlUpdateCount();
+  const disp=document.getElementById('rl-display'); if(disp) disp.textContent='0'.repeat(_rlDigits);
+}
+function _rlMountAd(){
+  if(window.self !== window.top) return;            // iframe 내 AdSense 미표시(정책)
+  const slot=document.getElementById('rl-ad'); if(!slot || slot.dataset.filled) return;
+  slot.dataset.filled='1';
+  slot.innerHTML='<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+  try{ (adsbygoogle=window.adsbygoogle||[]).push({}); }catch(e){}
 }
 
 function selectCategory(cat) {
@@ -6908,6 +6981,7 @@ function applyLang() {
       if (L.catNames[i]) el.textContent = L.catNames[i];
     });
   }
+  _applyRouletteI18n(lang); // 🎰 룰렛(8번째 카테고리) 라벨 + 패널 현지화
 
   // Trust chips
   if (L.trustChips) {

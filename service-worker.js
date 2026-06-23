@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v23: 결과페이지 집중형(단일 운만 표시) + 콘텐츠 비례 애드센스 자동 분배
-const CACHE_NAME = 'lucky-v23';
+// v24: 행운 룰렛 카테고리(자리수 선택·매 스핀 랜덤·하나씩 출력) 추가
+const CACHE_NAME = 'lucky-v24';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

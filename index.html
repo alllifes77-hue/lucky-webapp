@@ -310,7 +310,50 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
               <span class="cat-btn-icon">💑</span>
               <span class="cat-btn-label" id="cat-name-6">궁합</span>
             </button>
+            <button class="cat-btn" data-cat="roulette" onclick="selectCategory('roulette')">
+              <span class="cat-btn-icon">🎰</span>
+              <span class="cat-btn-label" id="cat-name-7">룰렛</span>
+            </button>
           </div>
+        </div>
+
+        <!-- 🎰 행운 룰렛 (자리수 선택 → 매 스핀 랜덤 → 하나씩 출력) -->
+        <style>
+        #roulette-panel{display:none;}
+        .rl-digits{display:flex;gap:8px;margin:14px 0;}
+        .rl-digit-btn{flex:1;padding:12px 0;border:2px solid var(--border2,#e7e5e4);border-radius:12px;background:#fff;font-size:14px;font-weight:800;color:var(--text2,#57534e);cursor:pointer;transition:all .15s;}
+        .rl-digit-btn.active{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.35);}
+        .rl-display{margin:6px auto 14px;max-width:320px;height:120px;border-radius:18px;background:linear-gradient(135deg,#1e1b4b,#4c1d95);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 2px 18px rgba(0,0,0,.4);}
+        .rl-display-num{font-size:60px;font-weight:900;color:#fde68a;font-variant-numeric:tabular-nums;letter-spacing:4px;text-shadow:0 2px 10px rgba(253,230,138,.5);}
+        .rl-display-num.spin{animation:rlflick .08s infinite;}
+        @keyframes rlflick{0%{opacity:.55;transform:translateY(-2px);}100%{opacity:1;transform:translateY(2px);}}
+        .rl-spin-btn{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 6px 18px rgba(217,119,6,.4);transition:transform .12s;}
+        .rl-spin-btn:active{transform:scale(.97);}
+        .rl-spin-btn:disabled{opacity:.6;cursor:default;}
+        .rl-results{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center;min-height:4px;}
+        .rl-chip{padding:9px 14px;border-radius:11px;background:#fff;border:2px solid #ddd6fe;color:#5b21b6;font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;animation:rlpop .3s ease;}
+        @keyframes rlpop{0%{transform:scale(.4);opacity:0;}60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+        .rl-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
+        .rl-count{font-size:12px;color:var(--text3,#a8a29e);font-weight:700;}
+        .rl-reset{background:none;border:none;color:#9ca3af;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline;}
+        </style>
+        <div id="roulette-panel">
+          <div class="input-label" id="rl-title">🎰 행운 룰렛</div>
+          <p class="input-note" id="rl-sub" style="margin:2px 0 6px;">자리수를 고르고 돌려서 행운의 숫자를 하나씩 뽑으세요</p>
+          <div class="rl-digits">
+            <button class="rl-digit-btn active" id="rl-d1" onclick="setRouletteDigits(1)">1자리</button>
+            <button class="rl-digit-btn" id="rl-d2" onclick="setRouletteDigits(2)">2자리</button>
+            <button class="rl-digit-btn" id="rl-d3" onclick="setRouletteDigits(3)">3자리</button>
+          </div>
+          <div class="rl-display"><span class="rl-display-num" id="rl-display">0</span></div>
+          <button class="rl-spin-btn" id="rl-spin" onclick="spinRoulette()">🎰 <span id="rl-spin-txt">돌리기</span></button>
+          <div class="rl-results" id="rl-results"></div>
+          <div class="rl-foot">
+            <span class="rl-count" id="rl-count"></span>
+            <button class="rl-reset" id="rl-reset" onclick="resetRoulette()">초기화</button>
+          </div>
+          <div id="rl-ad" style="max-width:400px;margin:18px auto 0;min-height:1px;"></div>
+          <p class="draw-date-note" id="rl-note" style="text-align:center;margin-top:12px;">오락용 무작위 추첨입니다. 당첨을 보장하지 않습니다.</p>
         </div>
 
         <!-- 복권 선택 -->
@@ -331,6 +374,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
         </div>
 
         <!-- 생년월일 -->
+        <div id="bday-block">
         <div class="input-label" id="txt-birthday-label">생년월일 입력</div>
         <div class="date-3-wrap">
           <input type="number" id="bday-year"  class="date-3-input" placeholder="연도" min="1920" max="2009" inputmode="numeric">
@@ -338,6 +382,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           <input type="number" id="bday-day"   class="date-3-input" placeholder="일"   min="1"    max="31"   inputmode="numeric">
         </div>
         <div class="date-hint" id="date-hint">예) 1985 · 10 · 15</div>
+        </div>
 
         <!-- 추첨일 (선택) -->
         <div class="draw-date-wrap" id="draw-date-section">
@@ -411,7 +456,7 @@ body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'맑은 고딕',san
           </div>
         </div>
 
-        <button class="btn-lucky" onclick="startGenerate()">
+        <button class="btn-lucky" id="btn-generate" onclick="startGenerate()">
           <span class="btn-icon">🍀</span>
           <span id="txt-btn-generate">행운의 번호 뽑기</span>
         </button>
@@ -559,7 +604,7 @@ if (window.self === window.top) {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2/astronomy.browser.min.js" defer></script>
 <script src="luck-elements.js?v=20260615m" defer></script>
-<script src="lucky-app.js?v=20260623a" defer></script>
+<script src="lucky-app.js?v=20260623b" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () =>
