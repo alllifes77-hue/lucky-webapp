@@ -159,14 +159,29 @@ try {
   $sm = Invoke-WebRequest -Uri "https://all-lifes.com/lucky-sitemap.xml" -UseBasicParsing -TimeoutSec 15
   Ok "사이트맵 응답 ($($sm.StatusCode))"
   if ($INDEXNOW_KEY) {
-    $inUrls = [regex]::Matches($sm.Content, '<loc>([^<]+)</loc>') | ForEach-Object { $_.Groups[1].Value }
-    $inPayload = @{ host="all-lifes.com"; key=$INDEXNOW_KEY; keyLocation="https://all-lifes.com/$INDEXNOW_KEY.txt"; urlList=$inUrls } | ConvertTo-Json -Depth 3
-    $inFile = Join-Path $env:TEMP "indexnow-deploy.json"
-    [System.IO.File]::WriteAllText($inFile, $inPayload, [System.Text.UTF8Encoding]::new($false))
-    $inCode = curl.exe -s -o "$env:TEMP\indexnow-resp.txt" -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" -H "Content-Type: application/json; charset=utf-8" --data "@$inFile" --max-time 40
-    Remove-Item $inFile -Force -ErrorAction SilentlyContinue
-    if ($inCode -eq "200" -or $inCode -eq "202") { Ok "IndexNow 핑 완료 ($($inUrls.Count)개 URL, HTTP $inCode)" }
-    else { Warn "IndexNow 핑 실패 (HTTP $inCode — 키 검증 대기 중이면 다음 배포 때 자동 재시도)" }
+    # IndexNow 1회 요청 한도는 10,000 URL → 사이트맵을 1만 단위로 청크 분할 전송
+    $inUrls = @([regex]::Matches($sm.Content, '<loc>([^<]+)</loc>') | ForEach-Object { $_.Groups[1].Value })
+    $chunkSize = 10000
+    $total = $inUrls.Count
+    $chunks = [int][math]::Ceiling($total / [double]$chunkSize)
+    $okChunks = 0; $sent = 0; $lastCode = ""
+    for ($ci = 0; $ci -lt $chunks; $ci++) {
+      $start = $ci * $chunkSize
+      $end = [math]::Min($start + $chunkSize, $total) - 1
+      $slice = @($inUrls[$start..$end])
+      $inPayload = @{ host="all-lifes.com"; key=$INDEXNOW_KEY; keyLocation="https://all-lifes.com/$INDEXNOW_KEY.txt"; urlList=$slice } | ConvertTo-Json -Depth 3
+      $inFile = Join-Path $env:TEMP "indexnow-deploy.json"
+      [System.IO.File]::WriteAllText($inFile, $inPayload, [System.Text.UTF8Encoding]::new($false))
+      $inCode = curl.exe -s -o "$env:TEMP\indexnow-resp.txt" -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" -H "Content-Type: application/json; charset=utf-8" --data "@$inFile" --max-time 60
+      Remove-Item $inFile -Force -ErrorAction SilentlyContinue
+      $lastCode = $inCode
+      if ($inCode -eq "200" -or $inCode -eq "202") { $okChunks++; $sent += $slice.Count }
+      else { Warn "IndexNow 청크 $($ci+1)/$chunks 실패 (HTTP $inCode)" }
+    }
+    if ($chunks -eq 0) { Warn "IndexNow: 사이트맵 URL 0개 (건너뜀)" }
+    elseif ($okChunks -eq $chunks) { Ok "IndexNow 핑 완료 ($sent개 URL, $chunks개 청크)" }
+    elseif ($okChunks -gt 0) { Warn "IndexNow 부분 성공 ($okChunks/$chunks 청크, $sent개 URL — 나머지는 다음 배포 때 재시도)" }
+    else { Warn "IndexNow 핑 실패 (HTTP $lastCode — 키 검증 대기 중이면 다음 배포 때 자동 재시도)" }
   } else { Warn "INDEXNOW_KEY 미설정 → IndexNow 핑 건너뜀" }
 } catch { Warn "사이트맵/IndexNow 단계 실패 (무시 가능): $($_.Exception.Message)" }
 
