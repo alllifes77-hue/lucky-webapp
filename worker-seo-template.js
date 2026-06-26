@@ -1325,6 +1325,9 @@ All content is original, deterministic, and updated daily for time-based pages. 
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.flatMap(s=>[{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/weekly/`,priority:'0.7',lm:todayStr},{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/monthly/`,priority:'0.7',lm:todayStr}])),
         ...ALL_LANGS.filter(l=>typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[l]).flatMap(l=>CP_ZSLUG.map(s=>({lang:l,loc:`${SITE_URL}/${l}/soulmate/${s}/`,priority:'0.72'}))),
         ...ALL_LANGS.filter(l=>typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[l]&&typeof LIFEPATH!=='undefined'&&LIFEPATH[l]).flatMap(l=>{ const dim=[31,29,31,30,31,30,31,31,30,31,30,31]; const a=[]; for(let mm=1;mm<=12;mm++)for(let dd=1;dd<=dim[mm-1];dd++) a.push({lang:l,loc:`${SITE_URL}/${l}/birthday/${mm}-${dd}/`,priority:'0.5'}); return a; }),
+        ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]).flatMap(l=>CZ_ANIMALS.map(a=>({lang:l,loc:`${SITE_URL}/${l}/zodiac/${a}/`,priority:'0.75',lm:todayStr}))),
+        ...ALL_LANGS.filter(l=>typeof TAROT!=='undefined'&&TAROT[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/tarot/three-card/`,priority:'0.75',lm:todayStr})),
+        ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.map(s=>({lang:l,loc:`${SITE_URL}/${l}/lucky-color/${s}/`,priority:'0.72',lm:todayStr}))),
         ...ALL_LANGS.filter(l=>typeof CRYSTALS!=='undefined'&&CRYSTALS[l]).flatMap(l=>CRYSTAL_INTENTS.map(x=>({lang:l,loc:`${SITE_URL}/${l}/crystals/${x}/`,priority:'0.75'}))),
         ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]&&CZ_COMPAT_SLUG[l]).flatMap(l=>{ const arr=[]; for(let a=0;a<12;a++)for(let b=a;b<12;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/${CZ_COMPAT_SLUG[l]}/${CZ_ANIMALS[a]}-${CZ_ANIMALS[b]}/`,priority:'0.65'}); return arr; }),
         ...ALL_LANGS.filter(l=>typeof MANIFEST!=='undefined'&&MANIFEST[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/manifestation/`,priority:'0.75',lm:todayStr})),
@@ -3286,6 +3289,119 @@ iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;marg
 <div class="nb"><a href="${SITE_URL}/${bl}/birthday/${prevD}/">‹ ${esc(prevD)}</a><a href="${SITE_URL}/${bl}/birthday/${nextD}/">${esc(nextD)} ›</a></div>
 <iframe src="${esc(`${APP_URL}/?lang=${bl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(bl,'lucky')}</body></html>`;
           return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── Y4 별자리 행운의 색 (/{lang}/lucky-color/{sign}/) — 매일 결정론 ──
+    {
+      const lkM = path.match(/^\/([a-z]{2})\/lucky-color\/([a-z]+)\/?$/);
+      if (lkM && typeof DAILYHORO!=='undefined' && DAILYHORO[lkM[1]] && LANGS[lkM[1]]) {
+        const cl=lkM[1], si=H26_SIGNS.indexOf(lkM[2]); const D=DAILYHORO[cl];
+        if (si>=0 && D.signs && D.signs[si]) {
+          const sName=D.signs[si].name; const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+          const COLORS=[{h:'#ef4444',e:'🔴',n:{ko:'빨강',en:'Red',ja:'赤',de:'Rot',fr:'Rouge',es:'Rojo',pt:'Vermelho',it:'Rosso',id:'Merah'}},{h:'#f59e0b',e:'🟠',n:{ko:'주황',en:'Orange',ja:'オレンジ',de:'Orange',fr:'Orange',es:'Naranja',pt:'Laranja',it:'Arancione',id:'Oranye'}},{h:'#facc15',e:'🟡',n:{ko:'노랑',en:'Yellow',ja:'黄',de:'Gelb',fr:'Jaune',es:'Amarillo',pt:'Amarelo',it:'Giallo',id:'Kuning'}},{h:'#22c55e',e:'🟢',n:{ko:'초록',en:'Green',ja:'緑',de:'Grün',fr:'Vert',es:'Verde',pt:'Verde',it:'Verde',id:'Hijau'}},{h:'#3b82f6',e:'🔵',n:{ko:'파랑',en:'Blue',ja:'青',de:'Blau',fr:'Bleu',es:'Azul',pt:'Azul',it:'Blu',id:'Biru'}},{h:'#8b5cf6',e:'🟣',n:{ko:'보라',en:'Purple',ja:'紫',de:'Lila',fr:'Violet',es:'Morado',pt:'Roxo',it:'Viola',id:'Ungu'}},{h:'#ec4899',e:'🌸',n:{ko:'분홍',en:'Pink',ja:'ピンク',de:'Rosa',fr:'Rose',es:'Rosa',pt:'Rosa',it:'Rosa',id:'Merah Muda'}},{h:'#14b8a6',e:'🩵',n:{ko:'청록',en:'Teal',ja:'ティール',de:'Türkis',fr:'Turquoise',es:'Turquesa',pt:'Turquesa',it:'Turchese',id:'Tosca'}}];
+          const WD={ko:['일','월','화','수','목','금','토'],en:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],ja:['日曜','月曜','火曜','水曜','木曜','金曜','土曜'],de:['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'],fr:['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],es:['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],pt:['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],it:['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],id:['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']};
+          const LC={ko:{suf:'행운의 색',cl:'🎨 오늘의 행운 색',dl:'📅 행운의 요일',nl:'🔢 행운 숫자',faqQ:'행운의 색은 매일 바뀌나요?',faqA:'네, 별자리와 날짜를 시드로 매일 자정(UTC)에 갱신되며 같은 날엔 동일합니다. 오락·참고용이에요.'},en:{suf:'Lucky Color',cl:'🎨 Today\'s lucky color',dl:'📅 Lucky day',nl:'🔢 Lucky number',faqQ:'Does the lucky color change daily?',faqA:'Yes — seeded by your sign and the date, refreshed every midnight (UTC), identical for everyone that day. For entertainment.'},ja:{suf:'ラッキーカラー',cl:'🎨 今日のラッキーカラー',dl:'📅 ラッキー曜日',nl:'🔢 ラッキーナンバー',faqQ:'ラッキーカラーは毎日変わる？',faqA:'はい、星座と日付をシードに毎日UTC深夜更新、同じ日は同じです。娯楽用です。'},de:{suf:'Glücksfarbe',cl:'🎨 Heutige Glücksfarbe',dl:'📅 Glückstag',nl:'🔢 Glückszahl',faqQ:'Ändert sich die Glücksfarbe täglich?',faqA:'Ja — aus Zeichen und Datum, jede Mitternacht (UTC), für alle gleich. Zur Unterhaltung.'},fr:{suf:'Couleur Chance',cl:'🎨 Couleur chance du jour',dl:'📅 Jour de chance',nl:'🔢 Numéro chanceux',faqQ:'La couleur change-t-elle chaque jour ?',faqA:'Oui — selon le signe et la date, chaque minuit (UTC), identique pour tous. Pour s\'amuser.'},es:{suf:'Color de la Suerte',cl:'🎨 Color de hoy',dl:'📅 Día de suerte',nl:'🔢 Número de la suerte',faqQ:'¿El color cambia a diario?',faqA:'Sí — según tu signo y la fecha, cada medianoche (UTC), igual para todos. Por diversión.'},pt:{suf:'Cor da Sorte',cl:'🎨 Cor de hoje',dl:'📅 Dia de sorte',nl:'🔢 Número da sorte',faqQ:'A cor muda diariamente?',faqA:'Sim — pelo signo e data, à meia-noite (UTC), igual para todos. Diversão.'},it:{suf:'Colore Fortunato',cl:'🎨 Colore di oggi',dl:'📅 Giorno fortunato',nl:'🔢 Numero fortunato',faqQ:'Il colore cambia ogni giorno?',faqA:'Sì — da segno e data, ogni mezzanotte (UTC), uguale per tutti. Per divertimento.'},id:{suf:'Warna Keberuntungan',cl:'🎨 Warna hari ini',dl:'📅 Hari keberuntungan',nl:'🔢 Angka keberuntungan',faqQ:'Apakah warna berubah harian?',faqA:'Ya — dari zodiak dan tanggal, tiap tengah malam (UTC), sama untuk semua. Untuk hiburan.'}};
+          const col=COLORS[_lnHash(dn*13+si*7)%COLORS.length]; const colName=col.n[cl]||col.n.en;
+          const wd=(WD[cl]||WD.en)[_lnHash(dn*5+si*11+2)%7]; const lnum=1+(_lnHash(dn*3+si*17+5)%9);
+          const X=LC[cl]||LC.en; const ttl=`${sName} ${X.suf}`; const cTitle=`${ttl} — ${colName} — all-lifes.com`; const cDesc=`${ttl}: ${colName}. ${X.cl}`.slice(0,155);
+          const canonical=`${SITE_URL}/${cl}/lucky-color/${lkM[2]}/`;
+          const hl=buildHreflang(ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/lucky-color/${lkM[2]}/`})), `${SITE_URL}/en/lucky-color/${lkM[2]}/`);
+          const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':X.faqQ,'acceptedAnswer':{'@type':'Answer','text':X.faqA}}]});
+          const others=H26_SIGNS.map((x,i)=>i===si?'':(D.signs[i]?`<a href="${SITE_URL}/${cl}/lucky-color/${x}/">${ZEMOJI12[i]} ${esc(D.signs[i].name)}</a>`:'')).join('');
+          const html=`<!DOCTYPE html><html lang="${cl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(ttl)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${cl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1c1917;}
+.hero{background:linear-gradient(135deg,${col.h},#1e293b);color:#fff;padding:30px 20px;text-align:center;}.hero .dt{font-size:12px;opacity:.85;font-weight:700;}.hero .em{font-size:48px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:4px 0;}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px;text-align:center;}
+.sw{width:120px;height:120px;border-radius:24px;margin:6px auto 10px;box-shadow:0 6px 20px rgba(0,0,0,.18);}
+.cn{font-size:26px;font-weight:900;color:${col.h};}
+.card{background:#fff;border-radius:13px;padding:14px;margin:10px 0;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 8px rgba(15,23,42,.06);}.card b{font-size:13px;color:#64748b;}.card span{font-size:17px;font-weight:900;color:#1e293b;}
+.more{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0;}.more a{background:#e2e8f0;color:#334155;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:16px;text-decoration:none;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:12px 0;text-align:left;box-shadow:0 2px 12px rgba(15,23,42,.06);}.faq h2{font-size:14px;font-weight:800;color:#334155;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="dt">${t.toISOString().slice(0,10)}</div><div class="em">${ZEMOJI12[si]}</div><h1>${esc(ttl)}</h1></div>
+<div class="wrap"><div class="sw" style="background:${col.h};"></div><div class="cn">${col.e} ${esc(colName)}</div>
+<div class="card"><b>${esc(X.dl)}</b><span>${esc(wd)}</span></div>
+<div class="card"><b>${esc(X.nl)}</b><span>${lnum}</span></div>
+<div class="more">${others}</div>
+<div class="faq"><h2>❓ ${esc(X.faqQ)}</h2><p>${esc(X.faqA)}</p></div></div>${buildNavFooter(cl,'lucky')}</body></html>`;
+          return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=43200','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── Y8 띠별 오늘의 운세 (/{lang}/zodiac/{animal}/) — CZCOMPAT 재사용, 매일 ──
+    {
+      const zaM = path.match(/^\/([a-z]{2})\/zodiac\/([a-z]+)\/?$/);
+      if (zaM && typeof CZCOMPAT!=='undefined' && CZCOMPAT[zaM[1]] && LANGS[zaM[1]]) {
+        const zl=zaM[1], ai=CZ_ANIMALS.indexOf(zaM[2]); const C=CZCOMPAT[zl];
+        if (ai>=0 && C.animals && C.animals[ai]) {
+          const A=C.animals[ai]; const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+          const score=10+(_lnHash(dn*17+ai*7)%90); const band=score>=80?0:score>=60?1:score>=40?2:3;
+          const nums=[]; { let s=(dn*5+ai*13+1)>>>0; while(nums.length<6){ s=(s*1103515245+12345)>>>0; const v=(s%45)+1; if(nums.indexOf(v)<0)nums.push(v);} nums.sort((a,b)=>a-b); }
+          const ZA={ko:{suf:'오늘의 운세',today:'오늘의 운세 지수',per:'🐾 띠 성격',lucky:'🍀 행운 번호',bands:['최고의 하루! 🌟','좋은 흐름이에요 👍','무난한 하루 🌤️','신중함이 필요한 날 🌧️'],faqQ:'띠 운세는 매일 바뀌나요?',faqA:'네, 매일 자정(UTC)에 갱신되며 같은 날엔 누구에게나 동일합니다. 오락용입니다.'},en:{suf:"Today's Fortune",today:"Today's luck score",per:'🐾 Sign Personality',lucky:'🍀 Lucky Numbers',bands:['A great day! 🌟','Good flow 👍','A steady day 🌤️','A day for caution 🌧️'],faqQ:'Does it change daily?',faqA:'Yes — refreshed every midnight (UTC), identical for everyone on a given day. For entertainment.'},ja:{suf:'今日の運勢',today:'今日の運勢指数',per:'🐾 干支の性格',lucky:'🍀 幸運の数字',bands:['最高の一日！🌟','良い流れ 👍','穏やかな一日 🌤️','慎重に過ごす日 🌧️'],faqQ:'毎日変わりますか？',faqA:'はい、毎日UTC深夜に更新され同じ日は誰でも同じです。娯楽用です。'},de:{suf:'Heutiges Schicksal',today:'Heutiger Glücks-Score',per:'🐾 Tier-Persönlichkeit',lucky:'🍀 Glückszahlen',bands:['Ein toller Tag! 🌟','Guter Fluss 👍','Ein ruhiger Tag 🌤️','Ein Tag der Vorsicht 🌧️'],faqQ:'Ändert es sich täglich?',faqA:'Ja — jede Mitternacht (UTC) aktualisiert, für alle gleich. Zur Unterhaltung.'},fr:{suf:'Fortune du jour',today:'Score de chance du jour',per:'🐾 Personnalité du signe',lucky:'🍀 Numéros chanceux',bands:['Une superbe journée ! 🌟','Bon courant 👍','Une journée stable 🌤️','Une journée de prudence 🌧️'],faqQ:'Change-t-il chaque jour ?',faqA:'Oui — actualisé chaque minuit (UTC), identique pour tous. Pour s\'amuser.'},es:{suf:'Fortuna de hoy',today:'Puntuación de suerte de hoy',per:'🐾 Personalidad del signo',lucky:'🍀 Números de la suerte',bands:['¡Un gran día! 🌟','Buen flujo 👍','Un día estable 🌤️','Un día de cautela 🌧️'],faqQ:'¿Cambia a diario?',faqA:'Sí — se actualiza a medianoche (UTC), igual para todos. Por diversión.'},pt:{suf:'Sorte de hoje',today:'Pontuação de sorte de hoje',per:'🐾 Personalidade do signo',lucky:'🍀 Números da sorte',bands:['Um ótimo dia! 🌟','Bom fluxo 👍','Um dia estável 🌤️','Um dia de cautela 🌧️'],faqQ:'Muda diariamente?',faqA:'Sim — atualizado à meia-noite (UTC), igual para todos. Diversão.'},it:{suf:'Fortuna di oggi',today:'Punteggio fortuna di oggi',per:'🐾 Personalità del segno',lucky:'🍀 Numeri fortunati',bands:['Una grande giornata! 🌟','Buon flusso 👍','Una giornata stabile 🌤️','Una giornata di cautela 🌧️'],faqQ:'Cambia ogni giorno?',faqA:'Sì — aggiornato a mezzanotte (UTC), uguale per tutti. Per divertimento.'},id:{suf:'Nasib Hari Ini',today:'Skor keberuntungan hari ini',per:'🐾 Kepribadian Shio',lucky:'🍀 Angka Keberuntungan',bands:['Hari yang hebat! 🌟','Aliran baik 👍','Hari yang stabil 🌤️','Hari untuk berhati-hati 🌧️'],faqQ:'Berubah harian?',faqA:'Ya — diperbarui tiap tengah malam (UTC), sama untuk semua. Untuk hiburan.'}};
+          const Z=ZA[zl]||ZA.en; const ttl=`${A.name} ${Z.suf}`; const cTitle=`${ttl} ${t.toISOString().slice(0,10)} — all-lifes.com`; const cDesc=`${A.name} ${Z.suf} ${score}/100. ${Z.bands[band]}`.slice(0,155);
+          const canonical=`${SITE_URL}/${zl}/zodiac/${zaM[2]}/`;
+          const hl=buildHreflang(ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/zodiac/${zaM[2]}/`})), `${SITE_URL}/en/zodiac/${zaM[2]}/`);
+          const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':ttl,'acceptedAnswer':{'@type':'Answer','text':A.essence||''}}]});
+          const balls=nums.map(n=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-weight:900;font-size:15px;margin:3px;">${n}</span>`).join('');
+          const others=CZ_ANIMALS.map((an,k)=>k===ai?'':`<a href="${SITE_URL}/${zl}/zodiac/${an}/">${CZ_EMJ[an]} ${esc(C.animals[k].name)}</a>`).join('');
+          const czl = (typeof CZ_COMPAT_SLUG!=='undefined'&&CZ_COMPAT_SLUG[zl])?`<a href="${SITE_URL}/${zl}/${CZ_COMPAT_SLUG[zl]}/${CZ_ANIMALS[ai]}-${CZ_ANIMALS[(ai+1)%12]}/">${esc(C.catLabel||'')} →</a>`:'';
+          const html=`<!DOCTYPE html><html lang="${zl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(ttl)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${zl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;padding:28px 20px;text-align:center;}.hero .dt{font-size:12px;color:#fff7ed;font-weight:700;}.hero .em{font-size:54px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:4px 0;}
+.sco{font-size:40px;font-weight:900;color:#fde68a;}.scb{font-size:14px;color:#fff7ed;font-weight:800;}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px;}.card{background:#fff;border-radius:13px;padding:15px 18px;margin:11px 0;box-shadow:0 1px 8px rgba(180,83,9,.08);}.card h2{font-size:14px;font-weight:800;color:#b45309;margin-bottom:6px;}.card p{font-size:14.5px;line-height:1.75;color:#44403c;}
+.more{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}.more a{background:#fef3c7;color:#b45309;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:16px;text-decoration:none;}
+iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;margin-top:10px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="dt">${t.toISOString().slice(0,10)}</div><div class="em">${CZ_EMJ[zaM[2]]}</div><h1>${esc(ttl)}</h1><div class="sco">${score}</div><div class="scb">${esc(Z.bands[band])}</div></div>
+<div class="wrap"><div class="card"><h2>${esc(Z.per)} · ${esc(A.name)}</h2><p>${esc(A.essence||'')}</p></div>
+<div class="card"><h2>${esc(Z.lucky)}</h2><div style="text-align:center;">${balls}</div></div>
+<div class="more">${czl}</div><div class="more">${others}</div>
+<iframe src="${esc(`${APP_URL}/?lang=${zl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(zl,'lucky')}</body></html>`;
+          return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── Y7 타로 3카드 스프레드 (/{lang}/tarot/three-card/) — TAROT 재사용, 매일 ──
+    {
+      const t3M = path.match(/^\/([a-z]{2})\/tarot\/three-card\/?$/);
+      if (t3M && TAROT[t3M[1]] && TAROT_LABELS[t3M[1]] && LANGS[t3M[1]]) {
+        const dl=t3M[1], T=TAROT[dl], TL=TAROT_LABELS[dl];
+        const allSlugs=TAROT_MAJOR_SLUG.concat(TAROT_SUITS.flatMap(s=>TAROT_RANKS.map(r=>`${r}-of-${s}`)));
+        const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+        const picks=[]; let k=0; while(picks.length<3 && k<60){ const sl=allSlugs[_lnHash(dn*31+k*101+7)%allSlugs.length]; if(picks.indexOf(sl)<0 && T[sl])picks.push(sl); k++; }
+        if (picks.length===3) {
+          const POS={ko:['과거','현재','미래'],en:['Past','Present','Future'],ja:['過去','現在','未来'],de:['Vergangenheit','Gegenwart','Zukunft'],fr:['Passé','Présent','Futur'],es:['Pasado','Presente','Futuro'],pt:['Passado','Presente','Futuro'],it:['Passato','Presente','Futuro'],id:['Masa Lalu','Sekarang','Masa Depan']};
+          const T3={ko:{t:'타로 3카드 스프레드',intro:'과거·현재·미래를 비추는 오늘의 3카드 리딩. 매일 갱신.',faqQ:'3카드 스프레드란?',faqA:'과거·현재·미래 세 장으로 흐름을 읽는 고전 타로 배열입니다. 매일 자정(UTC) 갱신, 오락용.'},en:{t:'Three-Card Tarot Spread',intro:'Today\'s past–present–future tarot reading. Updated daily.',faqQ:'What is a three-card spread?',faqA:'A classic tarot layout reading past, present and future. Refreshed every midnight (UTC), for entertainment.'},ja:{t:'タロット3カードスプレッド',intro:'過去・現在・未来を映す今日の3枚リーディング。毎日更新。',faqQ:'3カードスプレッドとは？',faqA:'過去・現在・未来を3枚で読む古典的な配置です。毎日UTC深夜更新、娯楽用。'},de:{t:'Drei-Karten-Tarot-Legung',intro:'Heutige Vergangenheit–Gegenwart–Zukunft-Legung. Täglich aktualisiert.',faqQ:'Was ist eine Drei-Karten-Legung?',faqA:'Eine klassische Legung für Vergangenheit, Gegenwart und Zukunft. Mitternacht (UTC) aktualisiert, zur Unterhaltung.'},fr:{t:'Tirage Tarot 3 Cartes',intro:'Tirage passé–présent–futur du jour. Mis à jour chaque jour.',faqQ:'Qu\'est-ce qu\'un tirage 3 cartes ?',faqA:'Une disposition classique lisant passé, présent et futur. Minuit (UTC), pour s\'amuser.'},es:{t:'Tirada de Tarot de 3 Cartas',intro:'Tirada pasado–presente–futuro de hoy. Actualizada a diario.',faqQ:'¿Qué es una tirada de 3 cartas?',faqA:'Una disposición clásica que lee pasado, presente y futuro. Medianoche (UTC), por diversión.'},pt:{t:'Tiragem de Tarô de 3 Cartas',intro:'Tiragem passado–presente–futuro de hoje. Atualizada diariamente.',faqQ:'O que é uma tiragem de 3 cartas?',faqA:'Um layout clássico que lê passado, presente e futuro. Meia-noite (UTC), diversão.'},it:{t:'Stesa Tarocchi 3 Carte',intro:'Stesa passato–presente–futuro di oggi. Aggiornata ogni giorno.',faqQ:'Cos\'è una stesa a 3 carte?',faqA:'Una disposizione classica che legge passato, presente e futuro. Mezzanotte (UTC), per divertimento.'},id:{t:'Bentangan Tarot 3 Kartu',intro:'Bacaan masa lalu–sekarang–masa depan hari ini. Diperbarui harian.',faqQ:'Apa itu bentangan 3 kartu?',faqA:'Tata letak klasik membaca masa lalu, sekarang, masa depan. Tengah malam (UTC), untuk hiburan.'}};
+          const P=POS[dl]||POS.en, X=T3[dl]||T3.en;
+          const cards=picks.map((sl,i)=>{ const c=T[sl]||{}; const m=tarotMeta(sl)||{}; const emj=m.suit?TAROT_SUIT_EMOJI[m.suit]:'🔮'; return {sl,c,emj,pos:P[i]}; });
+          const cTitle=`${X.t} ${t.toISOString().slice(0,10)} — all-lifes.com`; const cDesc=`${X.intro} ${cards.map(x=>x.c.name).join(' · ')}`.slice(0,155);
+          const canonical=`${SITE_URL}/${dl}/tarot/three-card/`;
+          const hl=buildHreflang(ALL_LANGS.filter(l=>TAROT[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/tarot/three-card/`})), `${SITE_URL}/en/tarot/three-card/`);
+          const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':X.faqQ,'acceptedAnswer':{'@type':'Answer','text':X.faqA}}]});
+          const cardHtml=cards.map(x=>`<div class="card"><div class="pos">${esc(x.pos)}</div><div class="cn">${x.emj} ${esc(x.c.name||x.sl)}</div><div class="kw">${esc(x.c.keyword||'')}</div><p>${esc(x.c.line||'')}</p><a class="cl" href="${SITE_URL}/${dl}/tarot/${x.sl}/">${esc(x.c.name||x.sl)} →</a></div>`).join('');
+          const html=`<!DOCTYPE html><html lang="${dl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(X.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${dl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1429;color:#e9e3f5;}
+.hero{background:linear-gradient(160deg,#2e1065,#6d28d9);color:#fff;padding:28px 20px;text-align:center;}.hero .dt{font-size:12px;color:#c4b5fd;font-weight:700;}.hero .em{font-size:44px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:4px 0;}.hero p{font-size:12.5px;color:#ddd6fe;max-width:520px;margin:0 auto;line-height:1.5;}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px;}.card{background:#241a3a;border-radius:14px;padding:16px 18px;margin:12px 0;}.pos{font-size:12px;font-weight:800;color:#fbbf24;}.cn{font-size:17px;font-weight:900;color:#fff;margin:3px 0;}.kw{font-size:12px;color:#a78bfa;font-weight:700;margin-bottom:5px;}.card p{font-size:14px;line-height:1.75;color:#e0d8f0;}.cl{display:inline-block;margin-top:8px;color:#c4b5fd;font-weight:700;font-size:13px;text-decoration:none;}
+.faq{background:#241a3a;border-radius:14px;padding:16px 18px;margin:12px 0;}.faq h2{font-size:14px;font-weight:800;color:#a78bfa;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#cfc6e6;}
+iframe{width:100%;border:none;display:block;height:540px;border-radius:12px;margin-top:10px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="dt">${t.toISOString().slice(0,10)}</div><div class="em">🃏🔮🃏</div><h1>${esc(X.t)}</h1><p>${esc(X.intro)}</p></div>
+<div class="wrap">${cardHtml}<div class="faq"><h2>❓ ${esc(X.faqQ)}</h2><p>${esc(X.faqA)}</p></div>
+<iframe src="${esc(`${APP_URL}/?lang=${dl}`)}" title="${esc(X.t)}" loading="lazy"></iframe></div>${buildNavFooter(dl,'lucky')}</body></html>`;
+          return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
         }
       }
     }
