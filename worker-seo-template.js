@@ -1323,6 +1323,7 @@ All content is original, deterministic, and updated daily for time-based pages. 
         // 트렌디 신규 — 콘텐츠형(보유 언어만): 오늘의운세·크리스탈·십이지궁합·매니페스테이션
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.map(s=>({lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/`,priority:'0.85',lm:todayStr}))),
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.flatMap(s=>[{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/weekly/`,priority:'0.7',lm:todayStr},{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/monthly/`,priority:'0.7',lm:todayStr}])),
+        ...ALL_LANGS.filter(l=>typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[l]).flatMap(l=>CP_ZSLUG.map(s=>({lang:l,loc:`${SITE_URL}/${l}/soulmate/${s}/`,priority:'0.72'}))),
         ...ALL_LANGS.filter(l=>typeof CRYSTALS!=='undefined'&&CRYSTALS[l]).flatMap(l=>CRYSTAL_INTENTS.map(x=>({lang:l,loc:`${SITE_URL}/${l}/crystals/${x}/`,priority:'0.75'}))),
         ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]&&CZ_COMPAT_SLUG[l]).flatMap(l=>{ const arr=[]; for(let a=0;a<12;a++)for(let b=a;b<12;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/${CZ_COMPAT_SLUG[l]}/${CZ_ANIMALS[a]}-${CZ_ANIMALS[b]}/`,priority:'0.65'}); return arr; }),
         ...ALL_LANGS.filter(l=>typeof MANIFEST!=='undefined'&&MANIFEST[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/manifestation/`,priority:'0.75',lm:todayStr})),
@@ -3200,6 +3201,49 @@ ${NAV_FOOTER_CSS}</style></head><body>
 <div class="wrap"><div class="msg">"${esc(msg)}"</div><div class="lk">${esc(f.lucky)}</div><div>${balls}</div>
 <div class="faq"><h2>❓ ${esc(f.faqQ)}</h2><p>${esc(f.faqA)}</p></div></div>${buildNavFooter(fl,'lucky')}</body></html>`;
         return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Y9 별자리 소울메이트 (/{lang}/soulmate/{sign}/) — COMPAT_PAIR 재사용·궁합 내부링크 ──
+    {
+      const smM = path.match(/^\/([a-z]{2})\/soulmate\/([a-z]+)\/?$/);
+      if (smM && typeof COMPAT_PAIR!=='undefined' && COMPAT_PAIR[smM[1]] && LANGS[smM[1]]) {
+        const sl=smM[1], si=CP_ZSLUG.indexOf(smM[2]); const C=COMPAT_PAIR[sl];
+        if (si>=0 && C.signs && C.signs[si]) {
+          const _zc=(i,j)=>{ const d=Math.abs(i-j); const dd=Math.min(d,12-d); const sameEl=(i%4)===(j%4); let base=sameEl?93:dd===6?82:dd===2?85:dd===3?60:dd===1?56:dd===5?66:72; return Math.max(45,Math.min(98,base+(_lnHash(i*31+j*7)%7-3))); };
+          const ranked=CP_ZSLUG.map((_,j)=>j).filter(j=>j!==si).map(j=>({j,sc:_zc(si,j)})).sort((a,b)=>b.sc-a.sc);
+          const best=ranked.slice(0,3), growth=ranked[ranked.length-1];
+          const compatPaths={ko:'gunghap',en:'compatibility',ja:'compatibility',de:'partnerschaft',fr:'compatibilite',es:'compatibilidad',pt:'compatibilidade',it:'compatibilita',id:'kecocokan'};
+          const cps=compatPaths[sl]||'compatibility'; const myName=C.signs[si].name; const myEm=CP_ZEMOJI[si];
+          const SM={ko:{t:`${myName} 소울메이트 — 천생연분 별자리`,intro:`${myName}와(과) 가장 잘 맞는 베스트 3 별자리와 성장의 인연을 확인하세요. 별자리 궁합 기반.`,best:'💞 베스트 매치',growth:'🌱 성장의 인연',faqQ:'소울메이트 별자리는 어떻게 정해지나요?',faqA:'별자리 원소와 각도(삼각·대립 등) 궁합을 바탕으로 가장 잘 맞는 별자리를 산출합니다. 오락·참고용이에요.'},en:{t:`${myName} Soulmate — Best Match Signs`,intro:`Discover the top 3 most compatible signs for ${myName} and the sign that helps you grow. Based on zodiac compatibility.`,best:'💞 Best matches',growth:'🌱 Growth match',faqQ:'How are soulmate signs decided?',faqA:'We use zodiac element and aspect (trine, opposition, etc.) compatibility to find your best matches. For entertainment.'},ja:{t:`${myName}のソウルメイト — 相性最高の星座`,intro:`${myName}と最も相性の良いベスト3星座と成長の縁をチェック。星座相性に基づきます。`,best:'💞 ベストマッチ',growth:'🌱 成長の縁',faqQ:'ソウルメイト星座はどう決まる？',faqA:'星座のエレメントとアスペクト(三分・対立など)の相性で最適な星座を算出します。娯楽用です。'},de:{t:`${myName} Seelenverwandte — Beste Sternzeichen`,intro:`Entdecke die 3 kompatibelsten Zeichen für ${myName} und das Wachstums-Zeichen. Basierend auf Tierkreis-Kompatibilität.`,best:'💞 Beste Matches',growth:'🌱 Wachstum',faqQ:'Wie werden Seelenverwandte bestimmt?',faqA:'Wir nutzen Element- und Aspekt-Kompatibilität (Trigon, Opposition usw.). Zur Unterhaltung.'},fr:{t:`Âme sœur ${myName} — Meilleurs signes`,intro:`Découvrez les 3 signes les plus compatibles avec ${myName} et le signe de croissance. Basé sur la compatibilité du zodiaque.`,best:'💞 Meilleurs matchs',growth:'🌱 Signe de croissance',faqQ:'Comment sont choisies les âmes sœurs ?',faqA:'Nous utilisons la compatibilité par élément et aspect (trigone, opposition…). Pour s\'amuser.'},es:{t:`Alma gemela de ${myName} — Mejores signos`,intro:`Descubre los 3 signos más compatibles con ${myName} y el signo de crecimiento. Basado en compatibilidad zodiacal.`,best:'💞 Mejores parejas',growth:'🌱 Signo de crecimiento',faqQ:'¿Cómo se deciden las almas gemelas?',faqA:'Usamos compatibilidad por elemento y aspecto (trígono, oposición…). Por diversión.'},pt:{t:`Alma gêmea de ${myName} — Melhores signos`,intro:`Descubra os 3 signos mais compatíveis com ${myName} e o signo de crescimento. Baseado na compatibilidade do zodíaco.`,best:'💞 Melhores pares',growth:'🌱 Signo de crescimento',faqQ:'Como as almas gêmeas são decididas?',faqA:'Usamos compatibilidade por elemento e aspecto (trígono, oposição…). Para diversão.'},it:{t:`Anima gemella ${myName} — Segni migliori`,intro:`Scopri i 3 segni più compatibili con ${myName} e il segno della crescita. Basato sulla compatibilità zodiacale.`,best:'💞 Migliori intese',growth:'🌱 Segno di crescita',faqQ:'Come si scelgono le anime gemelle?',faqA:'Usiamo la compatibilità per elemento e aspetto (trigono, opposizione…). Per divertimento.'},id:{t:`Belahan Jiwa ${myName} — Zodiak Tercocok`,intro:`Temukan 3 zodiak paling cocok untuk ${myName} dan zodiak pertumbuhan. Berdasarkan kecocokan zodiak.`,best:'💞 Pasangan terbaik',growth:'🌱 Zodiak pertumbuhan',faqQ:'Bagaimana belahan jiwa ditentukan?',faqA:'Kami memakai kecocokan elemen dan aspek (trine, oposisi, dll). Untuk hiburan.'}};
+          const T=SM[sl]||SM.en;
+          const link=(j)=>{ const lo=Math.min(si,j),hi=Math.max(si,j); return `${SITE_URL}/${sl}/${cps}/${CP_ZSLUG[lo]}-${CP_ZSLUG[hi]}/`; };
+          const cTitle=`${T.t} — all-lifes.com`; const cDesc=T.intro.slice(0,155);
+          const canonical=`${SITE_URL}/${sl}/soulmate/${smM[2]}/`;
+          const hl=buildHreflang(ALL_LANGS.filter(l=>typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/soulmate/${smM[2]}/`})), `${SITE_URL}/en/soulmate/${smM[2]}/`);
+          const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':T.faqQ,'acceptedAnswer':{'@type':'Answer','text':T.faqA}}]});
+          const row=(b)=>`<a class="mt" href="${link(b.j)}"><span class="me">${CP_ZEMOJI[b.j]}</span><span class="mn"><b>${esc(C.signs[b.j].name)}</b><span class="md">${esc((C.signs[b.j].essence||'').slice(0,60))}</span></span><span class="ms">${b.sc}%</span></a>`;
+          const others=CP_ZSLUG.map((sg,j)=>j===si?'':`<a href="${SITE_URL}/${sl}/soulmate/${sg}/">${CP_ZEMOJI[j]} ${esc(C.signs[j].name)}</a>`).join('');
+          const html=`<!DOCTYPE html><html lang="${sl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(T.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${sl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fdf2f8;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#9d174d,#db2777);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:50px;}.hero h1{font-size:clamp(19px,5vw,29px);font-weight:900;margin:4px 0;}.hero p{font-size:13px;color:#fce7f3;max-width:520px;margin:0 auto;line-height:1.55;}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px;}.sec{font-size:15px;font-weight:900;color:#9d174d;margin:14px 0 8px;}
+.mt{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:13px 16px;margin:8px 0;text-decoration:none;color:#1c1917;box-shadow:0 1px 8px rgba(219,39,119,.1);}
+.me{font-size:28px;}.mn{flex:1;display:flex;flex-direction:column;}.mn b{font-size:15px;}.md{font-size:11.5px;color:#9ca3af;}.ms{font-size:18px;font-weight:900;color:#db2777;}
+.more{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;}.more a{background:#fce7f3;color:#9d174d;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:16px;text-decoration:none;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:12px 0;box-shadow:0 2px 12px rgba(219,39,119,.08);}.faq h2{font-size:14px;font-weight:800;color:#9d174d;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;margin-top:10px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">${myEm}💞</div><h1>${esc(T.t)}</h1><p>${esc(T.intro)}</p></div>
+<div class="wrap"><div class="sec">${esc(T.best)}</div>${best.map(row).join('')}
+<div class="sec">${esc(T.growth)}</div>${row(growth)}
+<div class="more">${others}</div>
+<div class="faq"><h2>❓ ${esc(T.faqQ)}</h2><p>${esc(T.faqA)}</p></div>
+<iframe src="${esc(`${APP_URL}/?lang=${sl}`)}" title="${esc(T.t)}" loading="lazy"></iframe></div>${buildNavFooter(sl,'lucky')}</body></html>`;
+          return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+        }
       }
     }
 
