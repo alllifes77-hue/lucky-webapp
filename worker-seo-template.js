@@ -578,6 +578,8 @@ function buildNavFooter(lang, activePage) {
     _hubL(`${SITE_URL}/${lang}/quiz/`, _qzL?`🎯 ${_qzL}`:''),
     _hubL(`${SITE_URL}/${lang}/cosmic-almanac/`, _amL?`📜 ${_amL}`:''),
     _hubL(`${SITE_URL}/${lang}/zodiac-signs/`, '♈ '+({ko:'별자리',en:'Zodiac',ja:'星座',de:'Sternzeichen',fr:'Zodiaque',es:'Zodiaco',pt:'Zodíaco',it:'Zodiaco',id:'Zodiak'}[lang]||'Zodiac')),
+    _hubL(`${SITE_URL}/${lang}/lucky-ranking/`, '🏆 '+({ko:'행운 순위',en:'Lucky Ranking',ja:'幸運ランキング',de:'Glücks-Ranking',fr:'Classement',es:'Ranking suerte',pt:'Ranking sorte',it:'Classifica',id:'Peringkat'}[lang]||'Ranking')),
+    _hubL(`${SITE_URL}/${lang}/lucky-report/`, '📊 '+({ko:'행운 리포트',en:'Lucky Report',ja:'幸運レポート',de:'Glücks-Report',fr:'Rapport',es:'Informe',pt:'Relatório',it:'Report',id:'Laporan'}[lang]||'Report')),
     _hubL(`${SITE_URL}/${lang}/crystals/love/`, (typeof CRYSTALS!=='undefined'&&CRYSTALS[lang])?'💎 '+({ko:'크리스탈',en:'Crystals',ja:'クリスタル',de:'Kristalle',fr:'Cristaux',es:'Cristales',pt:'Cristais',it:'Cristalli',id:'Kristal'}[lang]||'Crystals'):''),
     _hubL(`${SITE_URL}/${lang}/manifestation/`, (typeof MANIFEST!=='undefined'&&MANIFEST[lang])?'✨ '+({ko:'매니페스테이션',en:'Manifest',ja:'引き寄せ',de:'Manifestieren',fr:'Manifester',es:'Manifestar',pt:'Manifestar',it:'Manifestare',id:'Manifestasi'}[lang]||'Manifest'):''),
     _hubL(`${SITE_URL}/${lang}/tarot/`, _tl.title),
@@ -997,6 +999,30 @@ const CRYSTAL_INTENTS=['love','wealth','protection','healing','calm','confidence
 const CRYSTAL_EMJ={love:'💗',wealth:'💰',protection:'🛡️',healing:'💚',calm:'🧘',confidence:'🦁',sleep:'😴',intuition:'🔮',success:'🏆',balance:'⚖️'};
 const CZ_ANIMALS=['rat','ox','tiger','rabbit','dragon','snake','horse','goat','monkey','rooster','dog','pig'];
 const CZ_EMJ={rat:'🐀',ox:'🐂',tiger:'🐅',rabbit:'🐇',dragon:'🐉',snake:'🐍',horse:'🐎',goat:'🐐',monkey:'🐒',rooster:'🐓',dog:'🐕',pig:'🐖'};
+// ── X7 오늘의 행운 띠 순위 i18n ──
+const RANK_I18N={
+  ko:{t:'오늘의 행운 띠 순위',intro:n=>`오늘 가장 운 좋은 띠는 ${n}! 12지 띠별 오늘의 행운 지수를 순위로 확인하세요. 매일 자정 갱신.`,luckiest:'오늘의 행운 띠',faqQ:'행운 띠 순위는 어떻게 정해지나요?',faqA:'매일 날짜를 시드로 12지 각 띠의 행운 지수를 결정론적으로 계산해 순위를 매깁니다. 같은 날엔 누구에게나 동일하며 매일 자정(UTC)에 갱신됩니다. 오락용입니다.',cta:'내 행운 번호 뽑기'},
+  en:{t:"Today's Lucky Zodiac Ranking",intro:n=>`The luckiest sign today is the ${n}! All 12 Chinese zodiac signs ranked by today's luck score. Updated daily.`,luckiest:"Today's Luckiest",faqQ:'How is the lucky ranking decided?',faqA:'Each day we use the date as a seed to deterministically compute a luck score for all 12 zodiac animals and rank them. It is identical for everyone on a given day and refreshes every midnight (UTC). For entertainment.',cta:'Get my lucky numbers'},
+  ja:{t:'今日の幸運干支ランキング',intro:n=>`今日最も運の良い干支は${n}！十二支の今日の運勢ランキングを毎日チェック。毎日更新。`,luckiest:'今日の幸運干支',faqQ:'ランキングはどう決まりますか？',faqA:'毎日、日付をシードに十二支それぞれの運勢指数を決定論的に計算してランク付けします。同じ日は誰でも同じで、毎日UTC深夜に更新。娯楽用です。',cta:'私の幸運数を引く'},
+  de:{t:'Glücks-Tierkreis-Ranking heute',intro:n=>`Das glücklichste Zeichen heute ist ${n}! Alle 12 Tierkreiszeichen nach dem heutigen Glücks-Score. Täglich aktualisiert.`,luckiest:'Heute am glücklichsten',faqQ:'Wie wird das Ranking bestimmt?',faqA:'Wir verwenden täglich das Datum als Seed, um für alle 12 Tierkreiszeichen deterministisch einen Glücks-Score zu berechnen und zu ranken. An einem Tag für alle gleich, Aktualisierung um Mitternacht (UTC). Zur Unterhaltung.',cta:'Meine Glückszahlen'},
+  fr:{t:'Classement chance du zodiaque',intro:n=>`Le signe le plus chanceux aujourd'hui est ${n} ! Les 12 signes du zodiaque chinois classés par chance du jour. Mis à jour chaque jour.`,luckiest:'Le plus chanceux',faqQ:'Comment le classement est-il établi ?',faqA:`Chaque jour, la date sert de graine pour calculer de façon déterministe un score de chance pour les 12 signes et les classer. Identique pour tous un jour donné, mis à jour à minuit (UTC). Divertissement.`,cta:'Mes numéros chanceux'},
+  es:{t:'Ranking de suerte del zodiaco',intro:n=>`¡El signo más afortunado hoy es ${n}! Los 12 signos del zodiaco chino clasificados por la suerte de hoy. Actualizado a diario.`,luckiest:'El más afortunado',faqQ:'¿Cómo se decide el ranking?',faqA:'Cada día usamos la fecha como semilla para calcular de forma determinista una puntuación de suerte de los 12 signos y clasificarlos. Igual para todos un día dado, se actualiza a medianoche (UTC). Entretenimiento.',cta:'Mis números de la suerte'},
+  pt:{t:'Ranking da sorte do zodíaco',intro:n=>`O signo mais sortudo hoje é ${n}! Os 12 signos do zodíaco chinês classificados pela sorte de hoje. Atualizado diariamente.`,luckiest:'Mais sortudo hoje',faqQ:'Como o ranking é decidido?',faqA:'A cada dia usamos a data como semente para calcular de forma determinística uma pontuação de sorte dos 12 signos e classificá-los. Igual para todos no dia, atualiza à meia-noite (UTC). Entretenimento.',cta:'Meus números da sorte'},
+  it:{t:'Classifica fortuna zodiaco',intro:n=>`Il segno più fortunato oggi è ${n}! I 12 segni dello zodiaco cinese in classifica per la fortuna di oggi. Aggiornato ogni giorno.`,luckiest:'Più fortunato oggi',faqQ:'Come si decide la classifica?',faqA:'Ogni giorno usiamo la data come seme per calcolare in modo deterministico un punteggio di fortuna per i 12 segni e classificarli. Uguale per tutti in un dato giorno, aggiornato a mezzanotte (UTC). Intrattenimento.',cta:'I miei numeri fortunati'},
+  id:{t:'Peringkat Keberuntungan Shio',intro:n=>`Shio paling beruntung hari ini adalah ${n}! 12 shio diperingkat berdasarkan skor keberuntungan hari ini. Diperbarui harian.`,luckiest:'Paling beruntung',faqQ:'Bagaimana peringkat ditentukan?',faqA:'Setiap hari kami memakai tanggal sebagai seed untuk menghitung skor keberuntungan 12 shio secara deterministik dan memeringkatnya. Sama untuk semua orang pada hari itu, diperbarui tiap tengah malam (UTC). Untuk hiburan.',cta:'Angka keberuntunganku'},
+};
+// ── X2 나의 행운 리포트 랜딩 i18n ──
+const REPORT_I18N={
+  ko:{t:'나의 행운 리포트',intro:'생년월일 하나로 나만의 행운 리포트를 무료로 받아보세요 — 행운 번호·행운 색·라이프패스·별자리·오늘의 행운 점수를 한 장에. 친구에게 공유하기 좋아요.',items:['🎯 나의 행운 번호 & 행운 색','🔢 라이프패스·별자리·띠','📊 오늘의 행운 점수 & 희귀 등급'],cta:'내 리포트 만들기',faqQ:'행운 리포트는 무료인가요?',faqA:'네, 완전 무료이며 회원가입이 필요 없습니다. 생년월일만 입력하면 결정론적으로 같은 리포트가 생성되어 언제든 다시 확인할 수 있습니다.'},
+  en:{t:'My Lucky Report',intro:"Get your personal lucky report free from just your birth date — lucky numbers, lucky color, life path, zodiac and today's luck score on one card. Great to share.",items:['🎯 Your lucky numbers & color','🔢 Life path, zodiac & sign','📊 Today\'s luck score & rarity'],cta:'Create my report',faqQ:'Is the lucky report free?',faqA:'Yes, completely free and no sign-up needed. Enter your birth date and the same report is generated deterministically, so you can revisit it anytime.'},
+  ja:{t:'私の幸運レポート',intro:'生年月日だけで自分だけの幸運レポートを無料で。幸運数・ラッキーカラー・ライフパス・星座・今日の運勢点数を一枚に。シェアにも最適。',items:['🎯 幸運数 & ラッキーカラー','🔢 ライフパス・星座・干支','📊 今日の運勢点数 & レア度'],cta:'レポートを作る',faqQ:'幸運レポートは無料ですか？',faqA:'はい、完全無料で登録不要です。生年月日を入れると決定論的に同じレポートが生成され、いつでも再確認できます。'},
+  de:{t:'Mein Glücks-Report',intro:'Hol dir deinen persönlichen Glücks-Report kostenlos – nur mit dem Geburtsdatum: Glückszahlen, Glücksfarbe, Lebenszahl, Sternzeichen und heutiger Glücks-Score auf einer Karte. Ideal zum Teilen.',items:['🎯 Glückszahlen & -farbe','🔢 Lebenszahl, Tierkreis & Zeichen','📊 Heutiger Glücks-Score & Seltenheit'],cta:'Report erstellen',faqQ:'Ist der Glücks-Report kostenlos?',faqA:'Ja, völlig kostenlos und ohne Anmeldung. Gib dein Geburtsdatum ein und derselbe Report wird deterministisch erstellt – jederzeit erneut abrufbar.'},
+  fr:{t:'Mon Rapport Chance',intro:"Obtenez votre rapport chance personnel gratuitement avec votre seule date de naissance — numéros chanceux, couleur, chemin de vie, zodiaque et score de chance du jour sur une carte. Parfait à partager.",items:['🎯 Vos numéros & couleur chance','🔢 Chemin de vie, zodiaque & signe','📊 Score de chance du jour & rareté'],cta:'Créer mon rapport',faqQ:'Le rapport chance est-il gratuit ?',faqA:'Oui, entièrement gratuit et sans inscription. Entrez votre date de naissance et le même rapport est généré de façon déterministe, consultable à tout moment.'},
+  es:{t:'Mi Informe de Suerte',intro:'Obtén tu informe de suerte personal gratis solo con tu fecha de nacimiento — números de la suerte, color, camino de vida, zodiaco y puntuación de suerte de hoy en una tarjeta. Ideal para compartir.',items:['🎯 Tus números y color de la suerte','🔢 Camino de vida, zodiaco y signo','📊 Puntuación de suerte de hoy y rareza'],cta:'Crear mi informe',faqQ:'¿El informe de suerte es gratis?',faqA:'Sí, totalmente gratis y sin registro. Introduce tu fecha de nacimiento y el mismo informe se genera de forma determinista, para volver a verlo cuando quieras.'},
+  pt:{t:'Meu Relatório da Sorte',intro:'Receba seu relatório da sorte pessoal grátis só com a data de nascimento — números da sorte, cor, caminho de vida, zodíaco e pontuação de sorte de hoje em um cartão. Ótimo para compartilhar.',items:['🎯 Seus números e cor da sorte','🔢 Caminho de vida, zodíaco e signo','📊 Pontuação de sorte de hoje e raridade'],cta:'Criar meu relatório',faqQ:'O relatório da sorte é grátis?',faqA:'Sim, totalmente grátis e sem cadastro. Insira sua data de nascimento e o mesmo relatório é gerado de forma determinística, para rever quando quiser.'},
+  it:{t:'Il Mio Report Fortuna',intro:'Ottieni il tuo report fortuna personale gratis con la sola data di nascita — numeri fortunati, colore, sentiero di vita, zodiaco e punteggio fortuna di oggi su una scheda. Perfetto da condividere.',items:['🎯 I tuoi numeri e colore fortunati','🔢 Sentiero di vita, zodiaco e segno','📊 Punteggio fortuna di oggi e rarità'],cta:'Crea il mio report',faqQ:'Il report fortuna è gratuito?',faqA:'Sì, completamente gratuito e senza registrazione. Inserisci la data di nascita e lo stesso report viene generato in modo deterministico, riconsultabile in ogni momento.'},
+  id:{t:'Laporan Keberuntunganku',intro:'Dapatkan laporan keberuntungan pribadi gratis hanya dari tanggal lahir — angka keberuntungan, warna, jalan hidup, zodiak, dan skor keberuntungan hari ini dalam satu kartu. Cocok untuk dibagikan.',items:['🎯 Angka & warna keberuntunganmu','🔢 Jalan hidup, zodiak & shio','📊 Skor keberuntungan hari ini & kelangkaan'],cta:'Buat laporanku',faqQ:'Apakah laporan keberuntungan gratis?',faqA:'Ya, sepenuhnya gratis dan tanpa daftar. Masukkan tanggal lahir dan laporan yang sama dibuat secara deterministik, bisa dilihat lagi kapan saja.'},
+};
 const CZ_COMPAT_SLUG={ko:'tti-gunghap',en:'chinese-compatibility',ja:'eto-aisho',de:'chinesische-partnerschaft',fr:'compatibilite-chinoise',es:'compatibilidad-china',pt:'compatibilidade-chinesa',it:'compatibilita-cinese',id:'kecocokan-shio'};
 // 삼합 그룹·육합 짝
 const CZ_TRINE=[[0,4,8],[1,5,9],[2,6,10],[3,7,11]];
@@ -1287,6 +1313,8 @@ All content is original, deterministic, and updated daily for time-based pages. 
           {lang:l,loc:`${SITE_URL}/${l}/tarot/daily/`,priority:'0.8',lm:todayStr},
           {lang:l,loc:`${SITE_URL}/${l}/moon-calendar/`,priority:'0.75',lm:todayStr},
           {lang:l,loc:`${SITE_URL}/${l}/birthday/`,priority:'0.75'},
+          {lang:l,loc:`${SITE_URL}/${l}/lucky-ranking/`,priority:'0.8',lm:todayStr},
+          {lang:l,loc:`${SITE_URL}/${l}/lucky-report/`,priority:'0.7'},
         ]),
         ...ALL_LANGS.flatMap(l=>{ const arr=[]; for(let a=1;a<=9;a++)for(let b=a;b<=9;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/numerology-compatibility/${a}-${b}/`,priority:'0.6'}); return arr; }),
         // 트렌디 신규 — 콘텐츠형(보유 언어만): 오늘의운세·크리스탈·십이지궁합·매니페스테이션
@@ -3137,6 +3165,77 @@ iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;marg
 <div class="card"><h2>🌟 ${esc(M.tipsTitle)}</h2><ul>${tipsHtml}</ul></div>
 <iframe src="${esc(`${APP_URL}/?lang=${mll}`)}" title="${esc(M.title)}" loading="lazy"></iframe></div>${buildNavFooter(mll,'lucky')}</body></html>`;
         return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── X7 오늘의 행운 띠 순위 (/{lang}/lucky-ranking/) — 매일 결정론 갱신 ──
+    {
+      const lrM = path.match(/^\/([a-z]{2})\/lucky-ranking\/?$/);
+      if (lrM && typeof CZCOMPAT!=='undefined' && CZCOMPAT[lrM[1]] && RANK_I18N[lrM[1]] && LANGS[lrM[1]]) {
+        const ll=lrM[1], R=RANK_I18N[ll]; const animals=(CZCOMPAT[ll].animals)||[];
+        const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000); const today=t.toISOString().slice(0,10);
+        const ranked=CZ_ANIMALS.map((a,i)=>({a,i,emj:CZ_EMJ[a],name:(animals[i]&&animals[i].name)||a,score:10+(_lnHash(dn*13+i*7)%90)})).sort((x,y)=>y.score-x.score);
+        const top=ranked[0];
+        const cTitle=`${R.t} ${today} — all-lifes.com`; const cDesc=R.intro(top.name).slice(0,155);
+        const canonical=`${SITE_URL}/${ll}/lucky-ranking/`;
+        const hl=buildHreflang(ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]&&RANK_I18N[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/lucky-ranking/`})), `${SITE_URL}/en/lucky-ranking/`);
+        const ilSchema=JSON.stringify({"@context":"https://schema.org","@type":"ItemList","name":R.t,"numberOfItems":12,"itemListElement":ranked.map((r,idx)=>({"@type":"ListItem","position":idx+1,"name":r.name}))});
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':R.faqQ,'acceptedAnswer':{'@type':'Answer','text':R.faqA}}]});
+        const homeHref = ll==='ko' ? `${SITE_URL}/lucky/` : `${SITE_URL}/${ll}/lucky/`;
+        const rows=ranked.map((r,idx)=>{const medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':`${idx+1}`;return `<div class="rk${idx<3?' top':''}"><span class="rkn">${medal}</span><span class="rke">${r.emj}</span><span class="rkname">${esc(r.name)}</span><span class="rkbar"><span class="rkfill" style="width:${r.score}%;"></span></span><span class="rksc">${r.score}</span></div>`;}).join('');
+        const html=`<!DOCTYPE html><html lang="${ll}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(R.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${APP_URL}/og-${ll}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${ilSchema}</script><script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:50px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:4px 0;}.hero p{font-size:13px;color:#fff7ed;max-width:520px;margin:0 auto;line-height:1.55;}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px;}
+.rk{display:flex;align-items:center;gap:11px;background:#fff;border-radius:12px;padding:11px 14px;margin:7px 0;box-shadow:0 1px 8px rgba(180,83,9,.08);}
+.rk.top{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fde68a;}
+.rkn{font-size:16px;font-weight:900;width:30px;text-align:center;color:#b45309;}.rke{font-size:25px;}.rkname{flex:0 0 90px;font-weight:800;font-size:13.5px;}
+.rkbar{flex:1;height:9px;background:#f1f5f9;border-radius:5px;overflow:hidden;}.rkfill{display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:5px;}
+.rksc{font-weight:900;font-size:15px;color:#b45309;width:32px;text-align:right;}
+.cta{display:block;text-align:center;background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-weight:800;font-size:15px;padding:15px;border-radius:13px;text-decoration:none;margin:16px 0;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:12px 0;box-shadow:0 2px 12px rgba(180,83,9,.08);}.faq h2{font-size:14px;font-weight:800;color:#b45309;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">🏆</div><h1>${esc(R.t)}</h1><p>${today} · ${esc(R.luckiest)}: ${top.emj} ${esc(top.name)}</p></div>
+<div class="wrap">${rows}
+<a class="cta" href="${esc(homeHref)}">${esc(R.cta)} →</a>
+<div class="faq"><h2>❓ ${esc(R.faqQ)}</h2><p>${esc(R.faqA)}</p></div>
+</div>${buildNavFooter(ll,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=3600','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── X2 나의 행운 리포트 랜딩 (/{lang}/lucky-report/) ──
+    {
+      const rpM = path.match(/^\/([a-z]{2})\/lucky-report\/?$/);
+      if (rpM && REPORT_I18N[rpM[1]] && LANGS[rpM[1]]) {
+        const rl=rpM[1], RP=REPORT_I18N[rl]; const t=new Date();
+        const cTitle=`${RP.t} — all-lifes.com`; const cDesc=RP.intro.slice(0,155);
+        const canonical=`${SITE_URL}/${rl}/lucky-report/`;
+        const hl=buildHreflang(ALL_LANGS.filter(l=>REPORT_I18N[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/lucky-report/`})), `${SITE_URL}/en/lucky-report/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':RP.faqQ,'acceptedAnswer':{'@type':'Answer','text':RP.faqA}}]});
+        const artSchema=JSON.stringify({"@context":"https://schema.org","@type":"WebApplication","name":RP.t,"applicationCategory":"EntertainmentApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"inLanguage":rl,"description":cDesc});
+        const itemsHtml=RP.items.map(s=>`<div class="rpi">${esc(s)}</div>`).join('');
+        const html=`<!DOCTYPE html><html lang="${rl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(RP.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${APP_URL}/og-${rl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script><script type="application/ld+json">${artSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef2ff;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#312e81,#6d28d9);color:#fff;padding:34px 20px;text-align:center;}.hero .em{font-size:52px;}.hero h1{font-size:clamp(21px,5vw,32px);font-weight:900;margin:6px 0;}.hero p{font-size:13.5px;color:#e0e7ff;max-width:540px;margin:0 auto;line-height:1.6;}
+.wrap{max-width:620px;margin:0 auto;padding:18px 16px;}
+.rpi{background:#fff;border-radius:13px;padding:15px 18px;margin:9px 0;font-size:15px;font-weight:700;color:#3730a3;box-shadow:0 2px 12px rgba(76,29,149,.08);}
+.cta{display:block;text-align:center;background:linear-gradient(135deg,#6d28d9,#a855f7);color:#fff;font-weight:800;font-size:16px;padding:16px;border-radius:14px;text-decoration:none;margin:16px 0;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:12px 0;box-shadow:0 2px 12px rgba(76,29,149,.08);}.faq h2{font-size:14px;font-weight:800;color:#6d28d9;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;margin-top:12px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">📊</div><h1>${esc(RP.t)}</h1><p>${esc(RP.intro)}</p></div>
+<div class="wrap">${itemsHtml}
+<a class="cta" href="${esc(APP_URL)}/?lang=${rl}">${esc(RP.cta)} →</a>
+<iframe src="${esc(`${APP_URL}/?lang=${rl}`)}" title="${esc(RP.t)}" loading="lazy"></iframe>
+<div class="faq"><h2>❓ ${esc(RP.faqQ)}</h2><p>${esc(RP.faqA)}</p></div>
+</div>${buildNavFooter(rl,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
       }
     }
 

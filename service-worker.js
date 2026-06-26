@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v29: 타분야 상위기능 X9 — 다크모드(시스템연동·토글·localStorage)
-const CACHE_NAME = 'lucky-v29';
+// v30: 타분야 상위기능 최종 — X7 행운 랭킹·X2 행운 리포트(워커 SEO + 앱 추천 연결)
+const CACHE_NAME = 'lucky-v30';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
