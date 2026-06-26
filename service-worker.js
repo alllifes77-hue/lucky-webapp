@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v31: 최신 UX 10 — 토스트·복사·햅틱·컨페티·스크롤FAB·언어스위처·자동입력·a11y·전환·카운트업
-const CACHE_NAME = 'lucky-v31';
+// v32: 네비게이션 — 좌상단 홈배너(전 페이지)·둘러보기 디렉터리·별자리/띠 허브 드릴다운·홈 explore 링크
+const CACHE_NAME = 'lucky-v32';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

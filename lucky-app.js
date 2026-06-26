@@ -6965,7 +6965,10 @@ function _xInitHome(){
     if(tc && !document.getElementById('home-social')){
       const t=_xT(); const s=document.createElement('div'); s.id='home-social';
       s.style.cssText='margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';
-      s.innerHTML=`<span style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fde68a;font-weight:700;font-size:12px;padding:6px 13px;border-radius:20px;">${t.viewed(_xViewed(1))}</span><button onclick="openCollection()" style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#e0e7ff;font-weight:700;font-size:12px;padding:6px 13px;border-radius:20px;cursor:pointer;">${t.coll}</button>`;
+      const _lng=window.LUCKY_CURRENT_LANG||'ko';
+      const _exL={ko:'📂 전체 메뉴',en:'📂 Explore All',ja:'📂 すべて見る',de:'📂 Alle entdecken',fr:'📂 Tout explorer',es:'📂 Explorar todo',pt:'📂 Explorar tudo',it:'📂 Esplora tutto',id:'📂 Jelajahi Semua'}[_lng]||'📂 Explore All';
+      const _chip='background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);font-weight:700;font-size:12px;padding:6px 13px;border-radius:20px;';
+      s.innerHTML=`<span style="${_chip}color:#fde68a;">${t.viewed(_xViewed(1))}</span><a href="/${_lng}/explore/" style="${_chip}color:#c7d2fe;text-decoration:none;">${_exL}</a><button onclick="openCollection()" style="${_chip}color:#e0e7ff;cursor:pointer;">${t.coll}</button>`;
       tc.parentNode.insertBefore(s, tc.nextSibling);
     }
   }catch(e){}
