@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v27: 타분야 상위기능 배치2 — 무드 저널·네이티브 공유
-const CACHE_NAME = 'lucky-v27';
+// v28: 타분야 상위기능 배치3 — 재방문자 환영 배너(온보딩 개인화)
+const CACHE_NAME = 'lucky-v28';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

@@ -6820,8 +6820,37 @@ function _doNativeShare(){
   try{ navigator.share({ title:document.title, text:(TXT[lang]||TXT.en), url:homeUrl }).catch(function(){}); }catch(e){}
 }
 
+// X1 온보딩 개인화 (Noom/Duolingo식) — 재방문자 환영 배너 (생일 자동복원·최근기록·스트릭은 기존)
+const WELCOME_I18N = {
+  ko:{back:'다시 오신 걸 환영해요! ✨',streak:d=>`🔥 ${d}일 연속 방문 중`,cta:'오늘의 행운이 기다리고 있어요'},
+  en:{back:'Welcome back! ✨',streak:d=>`🔥 ${d}-day streak`,cta:"Today's luck is waiting for you"},
+  ja:{back:'おかえりなさい！✨',streak:d=>`🔥 ${d}日連続`,cta:'今日の運勢が待っています'},
+  de:{back:'Willkommen zurück! ✨',streak:d=>`🔥 ${d} Tage in Folge`,cta:'Dein Glück wartet heute'},
+  fr:{back:'Bon retour ! ✨',streak:d=>`🔥 ${d} jours d'affilée`,cta:'Votre chance vous attend'},
+  es:{back:'¡Bienvenido de nuevo! ✨',streak:d=>`🔥 ${d} días seguidos`,cta:'Tu suerte te espera hoy'},
+  pt:{back:'Bem-vindo de volta! ✨',streak:d=>`🔥 ${d} dias seguidos`,cta:'Sua sorte espera por você'},
+  it:{back:'Bentornato! ✨',streak:d=>`🔥 ${d} giorni di fila`,cta:'La tua fortuna ti aspetta'},
+  id:{back:'Selamat datang kembali! ✨',streak:d=>`🔥 ${d} hari beruntun`,cta:'Keberuntunganmu menanti'},
+};
+function _xWelcomeBack(){
+  try{
+    const birth=JSON.parse(localStorage.getItem(_LS_BIRTH)||'null');
+    const streak=JSON.parse(localStorage.getItem(_LS_STREAK)||'null');
+    const days=(streak&&streak.count)||0;
+    if(!birth && days<1) return;                  // 신규 방문자에겐 표시 안 함
+    const cont=document.querySelector('.home-content .container');
+    if(!cont || document.getElementById('welcome-back')) return;
+    const t=WELCOME_I18N[window.LUCKY_CURRENT_LANG]||WELCOME_I18N.en;
+    const b=document.createElement('div'); b.id='welcome-back';
+    b.style.cssText='max-width:500px;margin:0 auto 16px;background:linear-gradient(135deg,#312e81,#6d28d9);color:#fff;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(76,29,149,.3);';
+    b.innerHTML=`<span style="font-size:30px;">👋</span><div style="flex:1;min-width:0;"><div style="font-weight:900;font-size:15px;">${t.back}</div><div style="font-size:12.5px;color:#ddd6fe;margin-top:2px;">${days>=1?t.streak(days)+' · ':''}${t.cta}</div></div>`;
+    cont.insertBefore(b, cont.firstChild);
+  }catch(e){}
+}
+
 // 홈 소셜프루프 칩 + 보관함 진입 주입
 function _xInitHome(){
+  try{ _xWelcomeBack(); }catch(e){}
   try{
     const tc=document.querySelector('.trust-chips');
     if(tc && !document.getElementById('home-social')){
