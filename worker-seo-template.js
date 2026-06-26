@@ -1324,6 +1324,7 @@ All content is original, deterministic, and updated daily for time-based pages. 
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.map(s=>({lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/`,priority:'0.85',lm:todayStr}))),
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.flatMap(s=>[{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/weekly/`,priority:'0.7',lm:todayStr},{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/monthly/`,priority:'0.7',lm:todayStr}])),
         ...ALL_LANGS.filter(l=>typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[l]).flatMap(l=>CP_ZSLUG.map(s=>({lang:l,loc:`${SITE_URL}/${l}/soulmate/${s}/`,priority:'0.72'}))),
+        ...ALL_LANGS.filter(l=>typeof COMPAT_PAIR!=='undefined'&&COMPAT_PAIR[l]&&typeof LIFEPATH!=='undefined'&&LIFEPATH[l]).flatMap(l=>{ const dim=[31,29,31,30,31,30,31,31,30,31,30,31]; const a=[]; for(let mm=1;mm<=12;mm++)for(let dd=1;dd<=dim[mm-1];dd++) a.push({lang:l,loc:`${SITE_URL}/${l}/birthday/${mm}-${dd}/`,priority:'0.5'}); return a; }),
         ...ALL_LANGS.filter(l=>typeof CRYSTALS!=='undefined'&&CRYSTALS[l]).flatMap(l=>CRYSTAL_INTENTS.map(x=>({lang:l,loc:`${SITE_URL}/${l}/crystals/${x}/`,priority:'0.75'}))),
         ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]&&CZ_COMPAT_SLUG[l]).flatMap(l=>{ const arr=[]; for(let a=0;a<12;a++)for(let b=a;b<12;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/${CZ_COMPAT_SLUG[l]}/${CZ_ANIMALS[a]}-${CZ_ANIMALS[b]}/`,priority:'0.65'}); return arr; }),
         ...ALL_LANGS.filter(l=>typeof MANIFEST!=='undefined'&&MANIFEST[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/manifestation/`,priority:'0.75',lm:todayStr})),
@@ -3242,6 +3243,48 @@ iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;marg
 <div class="more">${others}</div>
 <div class="faq"><h2>❓ ${esc(T.faqQ)}</h2><p>${esc(T.faqA)}</p></div>
 <iframe src="${esc(`${APP_URL}/?lang=${sl}`)}" title="${esc(T.t)}" loading="lazy"></iframe></div>${buildNavFooter(sl,'lucky')}</body></html>`;
+          return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── Y1 생일별 성격·운세 (/{lang}/birthday/{m}-{d}/) — 별자리+생일수 재사용, 366×9 ──
+    {
+      const byM = path.match(/^\/([a-z]{2})\/birthday\/(\d{1,2})-(\d{1,2})\/?$/);
+      if (byM && typeof COMPAT_PAIR!=='undefined' && COMPAT_PAIR[byM[1]] && typeof LIFEPATH!=='undefined' && LIFEPATH[byM[1]] && LANGS[byM[1]]) {
+        const bl=byM[1]; const m=+byM[2], d=+byM[3]; const dim=[31,29,31,30,31,30,31,31,30,31,30,31];
+        if (m>=1 && m<=12 && d>=1 && d<=dim[m-1]) {
+          const cuts=[[19,9,10],[18,10,11],[20,11,0],[19,0,1],[20,1,2],[20,2,3],[22,3,4],[22,4,5],[22,5,6],[22,6,7],[21,7,8],[21,8,9]];
+          const cc=cuts[m-1]; const si=d<=cc[0]?cc[1]:cc[2];
+          let bn=m+d; while(bn>9) bn=String(bn).split('').reduce((a,c)=>a+ +c,0);
+          const C=COMPAT_PAIR[bl], LP=LIFEPATH[bl]; const sign=C.signs[si], lpn=LP[bn]||LP[1];
+          const nums=[]; { let s=(m*100+d)>>>0; while(nums.length<6){ s=(s*1103515245+12345)>>>0; const v=(s%45)+1; if(nums.indexOf(v)<0)nums.push(v);} nums.sort((a,b)=>a-b); }
+          const DF={ko:`${m}월 ${d}일생`,ja:`${m}月${d}日生まれ`,en:`Born on ${m}/${d}`,de:`Geboren am ${d}.${m}.`,fr:`Né(e) le ${d}/${m}`,es:`Nacido el ${d}/${m}`,pt:`Nascido em ${d}/${m}`,it:`Nato il ${d}/${m}`,id:`Lahir ${d}/${m}`};
+          const BT={ko:{suf:'성격·운세',per:'🌟 타고난 성격',num:'🔢 생일 수비학',lucky:'🍀 행운 번호',faqQ:'생일로 무엇을 알 수 있나요?',faqA:'태어난 날의 별자리와 생일 수비학으로 타고난 성격과 기질을 풀이합니다. 오락·참고용이에요.'},en:{suf:'Personality & Fortune',per:'🌟 Core Personality',num:'🔢 Birthday Numerology',lucky:'🍀 Lucky Numbers',faqQ:'What can my birthday reveal?',faqA:'Your birth date’s zodiac sign and birthday numerology reveal your core personality and traits. For entertainment.'},ja:{suf:'性格・運勢',per:'🌟 生まれ持った性格',num:'🔢 誕生日数秘術',lucky:'🍀 幸運の数字',faqQ:'誕生日で何が分かる？',faqA:'生まれた日の星座と誕生日数秘術で性格や気質を読み解きます。娯楽用です。'},de:{suf:'Persönlichkeit & Schicksal',per:'🌟 Kern-Persönlichkeit',num:'🔢 Geburtstags-Numerologie',lucky:'🍀 Glückszahlen',faqQ:'Was verrät mein Geburtstag?',faqA:'Dein Sternzeichen und die Geburtstags-Numerologie zeigen deine Persönlichkeit. Zur Unterhaltung.'},fr:{suf:'Personnalité & Destin',per:'🌟 Personnalité',num:'🔢 Numérologie de naissance',lucky:'🍀 Numéros chanceux',faqQ:'Que révèle ma date de naissance ?',faqA:'Votre signe et la numérologie de naissance révèlent votre personnalité. Pour s\'amuser.'},es:{suf:'Personalidad y Destino',per:'🌟 Personalidad',num:'🔢 Numerología del cumpleaños',lucky:'🍀 Números de la suerte',faqQ:'¿Qué revela mi cumpleaños?',faqA:'Tu signo y la numerología del cumpleaños revelan tu personalidad. Por diversión.'},pt:{suf:'Personalidade e Destino',per:'🌟 Personalidade',num:'🔢 Numerologia do aniversário',lucky:'🍀 Números da sorte',faqQ:'O que meu aniversário revela?',faqA:'Seu signo e a numerologia do aniversário revelam sua personalidade. Diversão.'},it:{suf:'Personalità e Destino',per:'🌟 Personalità',num:'🔢 Numerologia del compleanno',lucky:'🍀 Numeri fortunati',faqQ:'Cosa rivela il mio compleanno?',faqA:'Il tuo segno e la numerologia del compleanno rivelano la personalità. Per divertimento.'},id:{suf:'Kepribadian & Nasib',per:'🌟 Kepribadian',num:'🔢 Numerologi Ulang Tahun',lucky:'🍀 Angka Keberuntungan',faqQ:'Apa yang diungkap tanggal lahir?',faqA:'Zodiak dan numerologi tanggal lahir mengungkap kepribadianmu. Untuk hiburan.'}};
+          const B=BT[bl]||BT.en; const dfmt=DF[bl]||DF.en;
+          const ttl=`${dfmt} — ${sign.name} ${B.suf}`; const cTitle=`${ttl} — all-lifes.com`; const cDesc=`${dfmt}: ${sign.name}. ${(sign.essence||'').slice(0,110)}`.slice(0,155);
+          const canonical=`${SITE_URL}/${bl}/birthday/${m}-${d}/`;
+          const hl=buildHreflang(ALL_LANGS.filter(l=>COMPAT_PAIR[l]&&LIFEPATH[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/birthday/${m}-${d}/`})), `${SITE_URL}/en/birthday/${m}-${d}/`);
+          const artSchema=JSON.stringify({"@context":"https://schema.org","@type":"Article","headline":cTitle,"inLanguage":bl,"author":{"@type":"Organization","name":"all-lifes.com"},"publisher":{"@type":"Organization","name":"all-lifes.com"},"description":cDesc});
+          const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':B.faqQ,'acceptedAnswer':{'@type':'Answer','text':B.faqA}}]});
+          const balls=nums.map(n=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:900;font-size:15px;margin:3px;">${n}</span>`).join('');
+          const adj=(x)=>{ let a=d-1; if(a<1){a=d+1;} return `${SITE_URL}/${bl}/birthday/${m}-${x}/`; };
+          const prevD=d>1?`${m}-${d-1}`:(m>1?`${m-1}-${dim[m-2]}`:`12-31`); const nextD=d<dim[m-1]?`${m}-${d+1}`:(m<12?`${m+1}-1`:`1-1`);
+          const html=`<!DOCTYPE html><html lang="${bl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(ttl)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${bl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${artSchema}</script><script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef2ff;color:#1e293b;}
+.hero{background:linear-gradient(135deg,#3730a3,#7c3aed);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:48px;}.hero h1{font-size:clamp(19px,5vw,28px);font-weight:900;margin:4px 0;}.hero .sg{font-size:13px;color:#c7d2fe;font-weight:700;}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px;}.card{background:#fff;border-radius:13px;padding:15px 18px;margin:11px 0;box-shadow:0 1px 8px rgba(99,102,241,.08);}.card h2{font-size:14px;font-weight:800;color:#4338ca;margin-bottom:6px;}.card p{font-size:14.5px;line-height:1.75;color:#334155;}
+.nb{display:flex;justify-content:space-between;gap:8px;margin:12px 0;}.nb a{flex:1;text-align:center;background:#e0e7ff;color:#3730a3;font-size:13px;font-weight:700;padding:10px;border-radius:11px;text-decoration:none;}
+iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;margin-top:10px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">${CP_ZEMOJI[si]}🎂</div><h1>${esc(dfmt)}</h1><div class="sg">${esc(sign.name)}</div></div>
+<div class="wrap"><div class="card"><h2>${esc(B.per)} · ${esc(sign.name)}</h2><p>${esc(sign.essence||'')}</p></div>
+<div class="card"><h2>${esc(B.num)} · ${bn} ${esc(lpn.title||'')}</h2><p>${esc(lpn.essence||'')}</p></div>
+<div class="card"><h2>${esc(B.lucky)}</h2><div style="text-align:center;">${balls}</div></div>
+<div class="nb"><a href="${SITE_URL}/${bl}/birthday/${prevD}/">‹ ${esc(prevD)}</a><a href="${SITE_URL}/${bl}/birthday/${nextD}/">${esc(nextD)} ›</a></div>
+<iframe src="${esc(`${APP_URL}/?lang=${bl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(bl,'lucky')}</body></html>`;
           return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
         }
       }
