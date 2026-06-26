@@ -1315,6 +1315,9 @@ All content is original, deterministic, and updated daily for time-based pages. 
           {lang:l,loc:`${SITE_URL}/${l}/birthday/`,priority:'0.75'},
           {lang:l,loc:`${SITE_URL}/${l}/lucky-ranking/`,priority:'0.8',lm:todayStr},
           {lang:l,loc:`${SITE_URL}/${l}/lucky-report/`,priority:'0.7'},
+          {lang:l,loc:`${SITE_URL}/${l}/love-calculator/`,priority:'0.75'},
+          {lang:l,loc:`${SITE_URL}/${l}/lottery-stats/`,priority:'0.7',lm:todayStr},
+          {lang:l,loc:`${SITE_URL}/${l}/fortune-cookie/`,priority:'0.7',lm:todayStr},
         ]),
         ...ALL_LANGS.flatMap(l=>{ const arr=[]; for(let a=1;a<=9;a++)for(let b=a;b<=9;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/numerology-compatibility/${a}-${b}/`,priority:'0.6'}); return arr; }),
         // 트렌디 신규 — 콘텐츠형(보유 언어만): 오늘의운세·크리스탈·십이지궁합·매니페스테이션
@@ -3131,6 +3134,112 @@ iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;marg
 <div class="more">${others}</div><iframe src="${esc(`${APP_URL}/?lang=${dl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(dl,'lucky')}</body></html>`;
           return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=43200','X-Robots-Tag':'index,follow'}});
         }
+      }
+    }
+
+    // ── Y5 이름 사랑 궁합 계산기 (/{lang}/love-calculator/) — 바이럴 도구 ──
+    {
+      const lcM = path.match(/^\/([a-z]{2})\/love-calculator\/?$/);
+      if (lcM && LANGS[lcM[1]]) {
+        const ll=lcM[1];
+        const LC={ko:{t:'이름 사랑 궁합 계산기',intro:'두 사람의 이름을 넣고 사랑 궁합 점수를 확인하세요. 무료·재미로 즐기는 이름 궁합!',a:'내 이름',b:'상대 이름',btn:'궁합 보기 💘',res:'궁합 점수',bands:['천생연분 소울메이트! 💞','환상의 커플 💖','좋은 인연이에요 💗','노력하면 빛나요 💓'],faqQ:'이름 궁합은 어떻게 계산되나요?',faqA:'두 이름을 조합해 결정론적으로 점수를 산출합니다. 같은 이름쌍은 항상 같은 결과예요. 재미로 즐기는 오락용입니다.'},en:{t:'Love Name Compatibility Calculator',intro:'Enter two names to see your love match score. Free, fun name compatibility!',a:'Your name',b:'Their name',btn:'Calculate 💘',res:'Match score',bands:['Destined soulmates! 💞','A magical couple 💖','A lovely connection 💗','Shines with effort 💓'],faqQ:'How is the score calculated?',faqA:'We combine the two names to compute a deterministic score. The same pair always gives the same result. Just for fun.'},ja:{t:'名前で恋愛相性診断',intro:'二人の名前を入れて恋の相性スコアをチェック。無料・遊び心の名前相性！',a:'あなたの名前',b:'相手の名前',btn:'相性を見る 💘',res:'相性スコア',bands:['運命のソウルメイト！💞','最高のカップル 💖','素敵な縁です 💗','努力で輝く 💓'],faqQ:'相性はどう計算しますか？',faqA:'二つの名前を組み合わせ決定論的に算出します。同じ組は常に同じ結果。娯楽用です。'},de:{t:'Liebes-Namens-Rechner',intro:'Gib zwei Namen ein und sieh euren Liebes-Score. Kostenlos und zum Spaß!',a:'Dein Name',b:'Sein/Ihr Name',btn:'Berechnen 💘',res:'Match-Score',bands:['Seelenverwandte! 💞','Ein magisches Paar 💖','Eine schöne Verbindung 💗','Strahlt mit Mühe 💓'],faqQ:'Wie wird berechnet?',faqA:'Wir kombinieren beide Namen für einen deterministischen Score. Gleiches Paar, gleiches Ergebnis. Nur zum Spaß.'},fr:{t:'Calculateur d\'Amour par Prénom',intro:'Entrez deux prénoms et voyez votre score d\'amour. Gratuit et amusant !',a:'Ton prénom',b:'Son prénom',btn:'Calculer 💘',res:'Score',bands:['Âmes sœurs ! 💞','Un couple magique 💖','Une belle connexion 💗','Brille avec effort 💓'],faqQ:'Comment est-ce calculé ?',faqA:'Nous combinons les deux prénoms pour un score déterministe. Même paire, même résultat. Pour s\'amuser.'},es:{t:'Calculadora de Amor por Nombre',intro:'Ingresa dos nombres y ve tu puntuación de amor. ¡Gratis y divertido!',a:'Tu nombre',b:'Su nombre',btn:'Calcular 💘',res:'Puntuación',bands:['¡Almas gemelas! 💞','Una pareja mágica 💖','Una linda conexión 💗','Brilla con esfuerzo 💓'],faqQ:'¿Cómo se calcula?',faqA:'Combinamos los dos nombres para una puntuación determinista. Misma pareja, mismo resultado. Solo por diversión.'},pt:{t:'Calculadora de Amor por Nome',intro:'Insira dois nomes e veja sua pontuação de amor. Grátis e divertido!',a:'Seu nome',b:'Nome dele(a)',btn:'Calcular 💘',res:'Pontuação',bands:['Almas gêmeas! 💞','Um casal mágico 💖','Uma linda conexão 💗','Brilha com esforço 💓'],faqQ:'Como é calculado?',faqA:'Combinamos os dois nomes para uma pontuação determinística. Mesmo par, mesmo resultado. Só diversão.'},it:{t:'Calcolatore d\'Amore dei Nomi',intro:'Inserisci due nomi e scopri il punteggio d\'amore. Gratis e divertente!',a:'Il tuo nome',b:'Il suo nome',btn:'Calcola 💘',res:'Punteggio',bands:['Anime gemelle! 💞','Una coppia magica 💖','Un bel legame 💗','Brilla con impegno 💓'],faqQ:'Come si calcola?',faqA:'Combiniamo i due nomi per un punteggio deterministico. Stessa coppia, stesso risultato. Solo per divertimento.'},id:{t:'Kalkulator Cinta Nama',intro:'Masukkan dua nama dan lihat skor cintamu. Gratis dan seru!',a:'Namamu',b:'Nama dia',btn:'Hitung 💘',res:'Skor',bands:['Belahan jiwa! 💞','Pasangan ajaib 💖','Koneksi indah 💗','Bersinar dengan usaha 💓'],faqQ:'Bagaimana dihitung?',faqA:'Kami menggabungkan dua nama untuk skor deterministik. Pasangan sama, hasil sama. Hanya untuk hiburan.'}};
+        const C=LC[ll]||LC.en;
+        const cTitle=`${C.t} — all-lifes.com`; const cDesc=C.intro.slice(0,155);
+        const canonical=`${SITE_URL}/${ll}/love-calculator/`;
+        const hl=buildHreflang(ALL_LANGS.map(l=>({lang:l,url:`${SITE_URL}/${l}/love-calculator/`})), `${SITE_URL}/en/love-calculator/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':C.faqQ,'acceptedAnswer':{'@type':'Answer','text':C.faqA}}]});
+        const html=`<!DOCTYPE html><html lang="${ll}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(C.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${APP_URL}/og-${ll}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff1f2;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#be185d,#ec4899);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:50px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:4px 0;}.hero p{font-size:13px;color:#fce7f3;max-width:520px;margin:0 auto;line-height:1.55;}
+.wrap{max-width:480px;margin:0 auto;padding:18px 16px;}
+.lcin{width:100%;padding:14px;border:2px solid #fbcfe8;border-radius:12px;font-size:16px;margin:7px 0;outline:none;}
+.lcbtn{width:100%;padding:15px;border:none;border-radius:13px;background:linear-gradient(135deg,#db2777,#ec4899);color:#fff;font-size:16px;font-weight:800;cursor:pointer;margin-top:8px;}
+#lcR{display:none;background:#fff;border-radius:16px;padding:22px;text-align:center;margin-top:16px;box-shadow:0 4px 18px rgba(219,39,119,.15);}
+#lcP{font-size:54px;font-weight:900;color:#db2777;}#lcM{font-size:16px;font-weight:800;color:#9d174d;margin-top:6px;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:14px 0;box-shadow:0 2px 12px rgba(219,39,119,.08);}.faq h2{font-size:14px;font-weight:800;color:#be185d;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">💘</div><h1>${esc(C.t)}</h1><p>${esc(C.intro)}</p></div>
+<div class="wrap"><input class="lcin" id="lcA" placeholder="${esc(C.a)}" maxlength="40"><input class="lcin" id="lcB" placeholder="${esc(C.b)}" maxlength="40"><button class="lcbtn" onclick="lc()">${esc(C.btn)}</button>
+<div id="lcR"><div style="font-size:12px;font-weight:700;color:#9d174d;">${esc(C.res)}</div><div id="lcP">0%</div><div id="lcM"></div></div>
+<div class="faq"><h2>❓ ${esc(C.faqQ)}</h2><p>${esc(C.faqA)}</p></div></div>
+<script>var LB=${JSON.stringify(C.bands)};function lc(){var a=(document.getElementById('lcA').value||'').trim().toLowerCase(),b=(document.getElementById('lcB').value||'').trim().toLowerCase();if(!a||!b)return;var s=a+'+'+b,h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;var p=h%101;var bi=p>=85?0:p>=65?1:p>=40?2:3;document.getElementById('lcR').style.display='block';document.getElementById('lcP').textContent=p+'%';document.getElementById('lcM').textContent=LB[bi];}</script>
+${buildNavFooter(ll,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Y10 데일리 포춘쿠키 (/{lang}/fortune-cookie/) — MANIFEST 확언 재사용 ──
+    {
+      const fcM = path.match(/^\/([a-z]{2})\/fortune-cookie\/?$/);
+      if (fcM && typeof MANIFEST!=='undefined' && MANIFEST[fcM[1]] && MANIFEST[fcM[1]].affirmations && LANGS[fcM[1]]) {
+        const fl=fcM[1], M=MANIFEST[fl]; const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+        const msg=M.affirmations[_lnHash(dn*11+3)%M.affirmations.length];
+        const nums=[]; { let s=(dn*7+19)>>>0; while(nums.length<6){ s=(s*1103515245+12345)>>>0; const v=(s%45)+1; if(nums.indexOf(v)<0)nums.push(v);} nums.sort((a,b)=>a-b); }
+        const FC={ko:{t:'오늘의 포춘쿠키',intro:'매일 깨지는 행운의 한마디와 행운 번호',lucky:'행운 번호',faqQ:'포춘쿠키는 매일 바뀌나요?',faqA:'네, 매일 자정(UTC)에 새 메시지로 바뀌며 같은 날엔 누구에게나 동일합니다. 오락용입니다.'},en:{t:'Daily Fortune Cookie',intro:'A lucky message and lucky numbers, cracked fresh every day',lucky:'Lucky numbers',faqQ:'Does it change daily?',faqA:'Yes — a new message every midnight (UTC), identical for everyone on a given day. For entertainment.'},ja:{t:'今日のフォーチュンクッキー',intro:'毎日割れる幸運の一言と幸運の数字',lucky:'幸運の数字',faqQ:'毎日変わりますか？',faqA:'はい、毎日UTC深夜に新しいメッセージに変わり、同じ日は誰でも同じです。娯楽用です。'},de:{t:'Täglicher Glückskeks',intro:'Eine Glücksbotschaft und Glückszahlen, täglich frisch',lucky:'Glückszahlen',faqQ:'Ändert er sich täglich?',faqA:'Ja – jede Mitternacht (UTC) eine neue Botschaft, für alle gleich. Zur Unterhaltung.'},fr:{t:'Biscuit de la Chance du Jour',intro:'Un message porte-bonheur et des numéros, chaque jour',lucky:'Numéros chanceux',faqQ:'Change-t-il chaque jour ?',faqA:'Oui — un nouveau message à minuit (UTC), identique pour tous. Pour s\'amuser.'},es:{t:'Galleta de la Fortuna Diaria',intro:'Un mensaje de suerte y números, cada día',lucky:'Números de la suerte',faqQ:'¿Cambia a diario?',faqA:'Sí — un mensaje nuevo a medianoche (UTC), igual para todos. Por diversión.'},pt:{t:'Biscoito da Sorte Diário',intro:'Uma mensagem de sorte e números, todo dia',lucky:'Números da sorte',faqQ:'Muda diariamente?',faqA:'Sim — uma nova mensagem à meia-noite (UTC), igual para todos. Diversão.'},it:{t:'Biscotto della Fortuna del Giorno',intro:'Un messaggio fortunato e numeri, ogni giorno',lucky:'Numeri fortunati',faqQ:'Cambia ogni giorno?',faqA:'Sì — un nuovo messaggio a mezzanotte (UTC), uguale per tutti. Per divertimento.'},id:{t:'Kue Keberuntungan Harian',intro:'Pesan keberuntungan dan angka, setiap hari',lucky:'Angka keberuntungan',faqQ:'Berubah harian?',faqA:'Ya — pesan baru tiap tengah malam (UTC), sama untuk semua. Untuk hiburan.'}};
+        const f=FC[fl]||FC.en;
+        const cTitle=`${f.t} ${t.toISOString().slice(0,10)} — all-lifes.com`; const cDesc=`${msg}`.slice(0,155);
+        const canonical=`${SITE_URL}/${fl}/fortune-cookie/`;
+        const hl=buildHreflang(ALL_LANGS.filter(l=>typeof MANIFEST!=='undefined'&&MANIFEST[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/fortune-cookie/`})), `${SITE_URL}/en/fortune-cookie/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':f.faqQ,'acceptedAnswer':{'@type':'Answer','text':f.faqA}}]});
+        const balls=nums.map(n=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:900;font-size:16px;margin:3px;">${n}</span>`).join('');
+        const html=`<!DOCTYPE html><html lang="${fl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(f.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${fl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fffbeb;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:54px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:4px 0;}.hero .dt{font-size:12px;color:#fff7ed;font-weight:700;}
+.wrap{max-width:520px;margin:0 auto;padding:18px 16px;text-align:center;}
+.msg{background:#fff;border-radius:16px;padding:26px 22px;margin:14px 0;box-shadow:0 4px 18px rgba(180,83,9,.12);font-size:18px;font-weight:800;color:#92400e;line-height:1.6;}
+.lk{font-size:12px;color:#a8a29e;font-weight:700;margin-top:8px;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:14px 0;text-align:left;box-shadow:0 2px 12px rgba(180,83,9,.08);}.faq h2{font-size:14px;font-weight:800;color:#b45309;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="dt">${t.toISOString().slice(0,10)}</div><div class="em">🥠</div><h1>${esc(f.t)}</h1></div>
+<div class="wrap"><div class="msg">"${esc(msg)}"</div><div class="lk">${esc(f.lucky)}</div><div>${balls}</div>
+<div class="faq"><h2>❓ ${esc(f.faqQ)}</h2><p>${esc(f.faqA)}</p></div></div>${buildNavFooter(fl,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Y6 로또 번호 통계 핫·콜드 (/{lang}/lottery-stats/) — 결정론 주간 ──
+    {
+      const lsM = path.match(/^\/([a-z]{2})\/lottery-stats\/?$/);
+      if (lsM && LANGS[lsM[1]]) {
+        const sl=lsM[1]; const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000); const wk=Math.floor(dn/7);
+        const freq=[]; for(let n=1;n<=45;n++){ freq.push({n,f:8+(_lnHash(wk*97+n*7)%40)}); }
+        const sorted=[...freq].sort((a,b)=>b.f-a.f);
+        const hot=sorted.slice(0,6).map(x=>x.n).sort((a,b)=>a-b);
+        const cold=sorted.slice(-6).map(x=>x.n).sort((a,b)=>a-b);
+        const LS={ko:{t:'로또 번호 통계 — 핫·콜드',intro:'이번 주 자주/드물게 나오는 행운 번호 분석. 매주 갱신.',hot:'🔥 핫 넘버',cold:'❄️ 콜드 넘버',disc:'본 통계는 오락·참고용 시뮬레이션이며 실제 당첨을 예측하지 않습니다.',faqQ:'핫·콜드 번호란?',faqA:'자주 나온 번호(핫)와 드물게 나온 번호(콜드)를 뜻합니다. 결정론적 시뮬레이션으로 매주 갱신되며 오락용입니다.'},en:{t:'Lottery Number Stats — Hot & Cold',intro:"This week's most and least frequent lucky numbers. Updated weekly.",hot:'🔥 Hot numbers',cold:'❄️ Cold numbers',disc:'These stats are an entertainment simulation and do not predict real results.',faqQ:'What are hot & cold numbers?',faqA:'Hot = frequently drawn, cold = rarely drawn. This is a deterministic simulation updated weekly, for entertainment.'},ja:{t:'ロト番号統計 — ホット・コールド',intro:'今週よく出る/出にくい幸運番号の分析。毎週更新。',hot:'🔥 ホット番号',cold:'❄️ コールド番号',disc:'本統計は娯楽用シミュレーションで実際の当選を予測しません。',faqQ:'ホット・コールド番号とは？',faqA:'よく出た番号(ホット)と出にくい番号(コールド)です。決定論的シミュレーションで毎週更新、娯楽用です。'},de:{t:'Lotto-Statistik — Heiß & Kalt',intro:'Häufigste und seltenste Glückszahlen dieser Woche. Wöchentlich aktualisiert.',hot:'🔥 Heiße Zahlen',cold:'❄️ Kalte Zahlen',disc:'Diese Statistik ist eine Unterhaltungssimulation und sagt keine echten Ergebnisse voraus.',faqQ:'Was sind heiße & kalte Zahlen?',faqA:'Heiß = oft gezogen, kalt = selten. Eine deterministische, wöchentlich aktualisierte Simulation, zur Unterhaltung.'},fr:{t:'Stats Loto — Chauds & Froids',intro:'Numéros chanceux les plus et moins fréquents de la semaine. Mis à jour chaque semaine.',hot:'🔥 Numéros chauds',cold:'❄️ Numéros froids',disc:'Ces stats sont une simulation de divertissement et ne prédisent pas de vrais résultats.',faqQ:'Numéros chauds et froids ?',faqA:'Chaud = souvent tiré, froid = rarement. Simulation déterministe mise à jour chaque semaine, pour s\'amuser.'},es:{t:'Estadísticas de Lotería — Calientes y Fríos',intro:'Números más y menos frecuentes de la semana. Actualizado semanalmente.',hot:'🔥 Números calientes',cold:'❄️ Números fríos',disc:'Estas estadísticas son una simulación de entretenimiento y no predicen resultados reales.',faqQ:'¿Números calientes y fríos?',faqA:'Caliente = sale a menudo, frío = raramente. Simulación determinista actualizada semanalmente, por diversión.'},pt:{t:'Estatísticas da Loteria — Quentes e Frios',intro:'Números mais e menos frequentes da semana. Atualizado semanalmente.',hot:'🔥 Números quentes',cold:'❄️ Números frios',disc:'Estas estatísticas são uma simulação de entretenimento e não preveem resultados reais.',faqQ:'Números quentes e frios?',faqA:'Quente = sai muito, frio = raramente. Simulação determinística atualizada semanalmente, diversão.'},it:{t:'Statistiche Lotto — Caldi e Freddi',intro:'Numeri più e meno frequenti della settimana. Aggiornato settimanalmente.',hot:'🔥 Numeri caldi',cold:'❄️ Numeri freddi',disc:'Queste statistiche sono una simulazione di intrattenimento e non prevedono risultati reali.',faqQ:'Numeri caldi e freddi?',faqA:'Caldo = estratto spesso, freddo = raramente. Simulazione deterministica aggiornata settimanalmente, per divertimento.'},id:{t:'Statistik Angka Lotre — Panas & Dingin',intro:'Angka paling sering/jarang muncul minggu ini. Diperbarui mingguan.',hot:'🔥 Angka panas',cold:'❄️ Angka dingin',disc:'Statistik ini simulasi hiburan dan tidak memprediksi hasil nyata.',faqQ:'Apa angka panas & dingin?',faqA:'Panas = sering keluar, dingin = jarang. Simulasi deterministik diperbarui mingguan, untuk hiburan.'}};
+        const S=LS[sl]||LS.en;
+        const cTitle=`${S.t} — all-lifes.com`; const cDesc=S.intro.slice(0,155);
+        const canonical=`${SITE_URL}/${sl}/lottery-stats/`;
+        const hl=buildHreflang(ALL_LANGS.map(l=>({lang:l,url:`${SITE_URL}/${l}/lottery-stats/`})), `${SITE_URL}/en/lottery-stats/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':S.faqQ,'acceptedAnswer':{'@type':'Answer','text':S.faqA}}]});
+        const ball=(n,g)=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:${g};color:#fff;font-weight:900;font-size:16px;margin:4px;">${n}</span>`;
+        const hotB=hot.map(n=>ball(n,'linear-gradient(135deg,#ef4444,#f97316)')).join('');
+        const coldB=cold.map(n=>ball(n,'linear-gradient(135deg,#3b82f6,#06b6d4)')).join('');
+        const html=`<!DOCTYPE html><html lang="${sl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(S.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${APP_URL}/og-${sl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8fafc;color:#1c1917;}
+.hero{background:linear-gradient(135deg,#1e293b,#475569);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:48px;}.hero h1{font-size:clamp(19px,5vw,28px);font-weight:900;margin:4px 0;}.hero p{font-size:13px;color:#cbd5e1;max-width:520px;margin:0 auto;line-height:1.55;}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px;text-align:center;}
+.card{background:#fff;border-radius:16px;padding:20px;margin:12px 0;box-shadow:0 2px 12px rgba(15,23,42,.08);}.card h2{font-size:16px;font-weight:900;margin-bottom:10px;}
+.disc{font-size:11px;color:#94a3b8;line-height:1.6;margin:10px 0;}
+.faq{background:#fff;border-radius:14px;padding:16px 19px;margin:12px 0;text-align:left;box-shadow:0 2px 12px rgba(15,23,42,.06);}.faq h2{font-size:14px;font-weight:800;color:#334155;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#44403c;}
+.cta{display:block;text-align:center;background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-weight:800;font-size:15px;padding:14px;border-radius:13px;text-decoration:none;margin:12px 0;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">📊</div><h1>${esc(S.t)}</h1><p>${esc(S.intro)}</p></div>
+<div class="wrap"><div class="card"><h2 style="color:#dc2626;">${esc(S.hot)}</h2><div>${hotB}</div></div>
+<div class="card"><h2 style="color:#2563eb;">${esc(S.cold)}</h2><div>${coldB}</div></div>
+<a class="cta" href="${SITE_URL}/${sl==='ko'?'':sl+'/'}lucky/">${esc((({ko:'내 행운 번호 뽑기',en:'Get my lucky numbers',ja:'私の幸運数を引く',de:'Meine Glückszahlen',fr:'Mes numéros',es:'Mis números',pt:'Meus números',it:'I miei numeri',id:'Angka keberuntunganku'})[sl])||'Get my lucky numbers')} →</a>
+<p class="disc">${esc(S.disc)}</p>
+<div class="faq"><h2>❓ ${esc(S.faqQ)}</h2><p>${esc(S.faqA)}</p></div></div>${buildNavFooter(sl,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=43200','X-Robots-Tag':'index,follow'}});
       }
     }
 
