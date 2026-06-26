@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v26: 타분야 상위기능 배치1 — 소셜프루프·내 보관함·추천 운세 캐러셀
-const CACHE_NAME = 'lucky-v26';
+// v27: 타분야 상위기능 배치2 — 무드 저널·네이티브 공유
+const CACHE_NAME = 'lucky-v27';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

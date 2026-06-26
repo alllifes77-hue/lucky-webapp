@@ -1649,7 +1649,7 @@ function renderResults(data) {
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
    'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','quiz-launcher','score-panel','spin-panel','countdown-panel','invite-panel','nametool-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
    'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel',
-   'socialproof-panel','savebar-panel','recommend-panel'].forEach(id => {
+   'socialproof-panel','savebar-panel','recommend-panel','mood-panel','nativeshare-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1765,9 +1765,11 @@ function renderResults(data) {
     try { renderElectionalPanel(data); } catch(e){}
     try { renderMoonRitualPanel(data); } catch(e){}
   }
+  if (!_focusedCat) { try { renderMoodPanel(data); } catch(e){} }     // X4 무드 저널(종합 모드)
   try { renderSaveBar(data); } catch(e){}                            // X5 보관함 저장 바(전 모드)
   if (!_focusedCat) { try { renderRecommendPanel(data); } catch(e){} } // X8 추천 캐러셀(종합 모드)
   try { _initInstallPrompt(); _maybeShowInstall(); } catch(e){}
+  try { renderNativeShare(data); } catch(e){}                        // X10 네이티브 공유(모바일·전 모드)
   renderShareBtns(data);
   if (!_focusedCat) renderAIChat(data); // 집중형에서는 일반 AI챗 숨김
   renderFaq();
@@ -6772,6 +6774,50 @@ function renderRecommendPanel(data){
   wrap.style.cssText='max-width:480px;margin:18px auto 0;';
   wrap.innerHTML=`<h3 style="font-size:15px;font-weight:900;color:var(--text,#1c1917);text-align:center;margin-bottom:12px;">${t.reco}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">${cards}</div>`;
   const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
+}
+
+// X4 무드/에너지 저널 (Daylio/Calm식) — 오늘 기분 기록 + 7일 히스토리
+const MOOD_EMOJI = ['😄','🙂','😐','😟','😢'];
+const MOOD_I18N = {
+  ko:{q:'오늘 기분은 어땠나요?',saved:'기록 완료! 내일 또 만나요 🌙',hist:'최근 7일 기분'},
+  en:{q:'How are you feeling today?',saved:'Logged! See you tomorrow 🌙',hist:'Last 7 days'},
+  ja:{q:'今日の気分は？',saved:'記録しました！また明日 🌙',hist:'最近7日の気分'},
+  de:{q:'Wie fühlst du dich heute?',saved:'Gespeichert! Bis morgen 🌙',hist:'Letzte 7 Tage'},
+  fr:{q:"Comment te sens-tu aujourd'hui ?",saved:'Enregistré ! À demain 🌙',hist:'7 derniers jours'},
+  es:{q:'¿Cómo te sientes hoy?',saved:'¡Guardado! Hasta mañana 🌙',hist:'Últimos 7 días'},
+  pt:{q:'Como você se sente hoje?',saved:'Registrado! Até amanhã 🌙',hist:'Últimos 7 dias'},
+  it:{q:'Come ti senti oggi?',saved:'Registrato! A domani 🌙',hist:'Ultimi 7 giorni'},
+  id:{q:'Bagaimana perasaanmu hari ini?',saved:'Tersimpan! Sampai besok 🌙',hist:'7 hari terakhir'},
+};
+function _moodGet(){ try{ return JSON.parse(localStorage.getItem('lucky_mood')||'[]'); }catch(e){ return []; } }
+function _moodSet(a){ try{ localStorage.setItem('lucky_mood', JSON.stringify(a.slice(0,60))); }catch(e){} }
+function logMood(idx){ const today=_ymd(new Date()); const a=_moodGet().filter(x=>x.d!==today); a.unshift({d:today,m:idx}); _moodSet(a); renderMoodPanel(window._lastLuckyData, true); }
+function renderMoodPanel(data, replace){
+  const lang=window.LUCKY_CURRENT_LANG||'ko'; const t=MOOD_I18N[lang]||MOOD_I18N.en;
+  const ex=document.getElementById('mood-panel'); if(ex){ if(!replace) return; ex.remove(); }
+  const today=_ymd(new Date()); const all=_moodGet(); const todayEntry=all.find(x=>x.d===today);
+  let histHtml=''; for(let i=6;i>=0;i--){ const dd=new Date(); dd.setDate(dd.getDate()-i); const e=all.find(x=>x.d===_ymd(dd)); histHtml+=`<span style="font-size:18px;opacity:${e?1:.25};">${e?MOOD_EMOJI[e.m]:'·'}</span>`; }
+  const btns=MOOD_EMOJI.map((em,i)=>{ const on=todayEntry&&todayEntry.m===i; return `<button onclick="logMood(${i})" style="font-size:25px;background:${on?'#ede9fe':'transparent'};border:2px solid ${on?'#7c3aed':'var(--border,#e7e5e4)'};border-radius:12px;width:46px;height:46px;cursor:pointer;transition:transform .12s;">${em}</button>`; }).join('');
+  const wrap=document.createElement('div'); wrap.id='mood-panel';
+  wrap.style.cssText='max-width:480px;margin:18px auto 0;background:var(--card,#fff);border:1.5px solid var(--border,#e7e5e4);border-radius:16px;padding:18px;text-align:center;';
+  wrap.innerHTML=`<div style="font-size:14px;font-weight:800;color:var(--text,#1c1917);margin-bottom:12px;">${todayEntry?t.saved:t.q}</div><div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px;">${btns}</div><div style="font-size:11px;color:#a8a29e;margin-bottom:6px;">${t.hist}</div><div style="display:flex;gap:9px;justify-content:center;">${histHtml}</div>`;
+  const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
+}
+
+// X10 네이티브 공유 (Web Share API) — 모바일 원탭 공유
+const SHARE_NATIVE = {ko:'📤 공유하기',en:'📤 Share',ja:'📤 シェア',de:'📤 Teilen',fr:'📤 Partager',es:'📤 Compartir',pt:'📤 Compartilhar',it:'📤 Condividi',id:'📤 Bagikan'};
+function renderNativeShare(data){
+  if(!navigator.share) return;
+  const lang=window.LUCKY_CURRENT_LANG||'ko';
+  const wrap=document.createElement('div'); wrap.id='nativeshare-panel'; wrap.style.cssText='max-width:480px;margin:16px auto 0;';
+  wrap.innerHTML=`<button onclick="_doNativeShare()" style="width:100%;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,.3);">${SHARE_NATIVE[lang]||SHARE_NATIVE.en}</button>`;
+  const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
+}
+function _doNativeShare(){
+  const lang=window.LUCKY_CURRENT_LANG||'ko';
+  const TXT={ko:'내 오늘의 행운을 확인했어요! 🍀 당신의 행운도 확인해보세요',en:'I just checked my luck today! 🍀 Check yours too',ja:'今日の運勢をチェックしました！🍀 あなたもどうぞ',de:'Ich habe heute mein Glück geprüft! 🍀 Prüfe deins',fr:'J\'ai vérifié ma chance aujourd\'hui ! 🍀 Vérifiez la vôtre',es:'¡Hoy consulté mi suerte! 🍀 Consulta la tuya',pt:'Hoje vi minha sorte! 🍀 Veja a sua',it:'Oggi ho controllato la mia fortuna! 🍀 Controlla la tua',id:'Saya cek keberuntungan hari ini! 🍀 Cek milikmu'};
+  const homeUrl = location.origin + (lang==='ko'?'/lucky/':'/'+lang+'/lucky/');
+  try{ navigator.share({ title:document.title, text:(TXT[lang]||TXT.en), url:homeUrl }).catch(function(){}); }catch(e){}
 }
 
 // 홈 소셜프루프 칩 + 보관함 진입 주입
