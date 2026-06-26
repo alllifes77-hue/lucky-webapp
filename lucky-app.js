@@ -1774,6 +1774,7 @@ function renderResults(data) {
   if (!_focusedCat) renderAIChat(data); // 집중형에서는 일반 AI챗 숨김
   renderFaq();
   _distributeResultAds(); // 콘텐츠 비례 애드센스 자동 분배(self===top·iframe 제외)
+  try{ if(!_reducedMotion()) fireConfetti(_tier==='legend'?48:_tier==='rare'?34:24); }catch(e){} // U4 결과 축하 컨페티
   _saveBirthAndHistory(data);
 }
 
@@ -3027,6 +3028,8 @@ function renderFortuneSummaryGrid(data, onlyCat) {
       <div class="fsg-label" style="${isActive?'color:#fff;font-weight:800;':''}">${c.icon} ${c.label}</div>
     </div>`;
   }).join('');
+  // U10 점수 카운트업
+  try{ const circles=el.querySelectorAll('.fsg-circle'); cats.forEach((c,i)=>{ const s=S[c.key]||{}; if(s.score!=null&&circles[i]) _countUp(circles[i],s.score,850); }); }catch(e){}
 }
 
 // ── Fortune Category Cards ─────────────────────────────────
@@ -6742,7 +6745,9 @@ function renderSaveBar(data){
   const t=_xT(); const wrap=document.createElement('div'); wrap.id='savebar-panel';
   wrap.style.cssText='max-width:480px;margin:16px auto 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';
   const bs='padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:800;cursor:pointer;border:2px solid var(--border2,#d6d3d1);background:var(--card,#fff);color:var(--text2,#78716c);';
-  wrap.innerHTML=`<button id="x-save-btn" onclick="saveCurrentReading()" style="${bs}">${t.save}</button><button onclick="openCollection()" style="${bs}">${t.coll}</button>`;
+  const hasNums=(data&&((data.sets&&data.sets[0]&&data.sets[0].mainNums&&data.sets[0].mainNums.length)||(data.mainNums&&data.mainNums.length)));
+  const copyBtn=hasNums?`<button onclick="copyLuckyNumbers()" style="${bs}">${(COPY_I18N[window.LUCKY_CURRENT_LANG]||COPY_I18N.en).copy}</button>`:'';
+  wrap.innerHTML=`<button id="x-save-btn" onclick="saveCurrentReading()" style="${bs}">${t.save}</button>${copyBtn}<button onclick="openCollection()" style="${bs}">${t.coll}</button>`;
   const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
 }
 function saveCurrentReading(){
@@ -6750,6 +6755,7 @@ function saveCurrentReading(){
   const nums=(d.sets&&d.sets[0]&&d.sets[0].mainNums)||d.mainNums||[];
   const a=_collGet(); a.unshift({ cat:window.LUCKY_SELECTED_CAT||'lucky', nums, ts:Date.now() }); _collSet(a);
   const b=document.getElementById('x-save-btn'); if(b){ b.textContent=_xT().saved; b.disabled=true; b.style.opacity='.65'; }
+  try{ showToast(_xT().saved); _haptic(16); }catch(e){}
 }
 function openCollection(){
   const t=_xT(); const arr=_collGet();
@@ -6794,7 +6800,7 @@ const MOOD_I18N = {
 };
 function _moodGet(){ try{ return JSON.parse(localStorage.getItem('lucky_mood')||'[]'); }catch(e){ return []; } }
 function _moodSet(a){ try{ localStorage.setItem('lucky_mood', JSON.stringify(a.slice(0,60))); }catch(e){} }
-function logMood(idx){ const today=_ymd(new Date()); const a=_moodGet().filter(x=>x.d!==today); a.unshift({d:today,m:idx}); _moodSet(a); renderMoodPanel(window._lastLuckyData, true); }
+function logMood(idx){ const today=_ymd(new Date()); const a=_moodGet().filter(x=>x.d!==today); a.unshift({d:today,m:idx}); _moodSet(a); renderMoodPanel(window._lastLuckyData, true); try{ showToast((MOOD_I18N[window.LUCKY_CURRENT_LANG]||MOOD_I18N.en).saved); _haptic(14); }catch(e){} }
 function renderMoodPanel(data, replace){
   const lang=window.LUCKY_CURRENT_LANG||'ko'; const t=MOOD_I18N[lang]||MOOD_I18N.en;
   const ex=document.getElementById('mood-panel'); if(ex){ if(!replace) return; ex.remove(); }
@@ -6851,6 +6857,29 @@ function _xWelcomeBack(){
   }catch(e){}
 }
 
+// ══ 최신 UX 편의 — U1 토스트 · U2 번호복사 · U3 햅틱 ════════
+function _reducedMotion(){ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } }
+function _haptic(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||10); }catch(e){} }
+function showToast(msg, ms){
+  let host=document.getElementById('toast-host');
+  if(!host){ host=document.createElement('div'); host.id='toast-host'; host.setAttribute('aria-live','polite'); host.setAttribute('role','status'); document.body.appendChild(host); }
+  const el=document.createElement('div'); el.className='toast'; el.textContent=msg; host.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),320); }, ms||2000);
+}
+const COPY_I18N={ko:{copy:'📋 번호 복사',done:'번호가 복사되었어요!'},en:{copy:'📋 Copy numbers',done:'Numbers copied!'},ja:{copy:'📋 番号コピー',done:'番号をコピーしました！'},de:{copy:'📋 Zahlen kopieren',done:'Zahlen kopiert!'},fr:{copy:'📋 Copier',done:'Numéros copiés !'},es:{copy:'📋 Copiar números',done:'¡Números copiados!'},pt:{copy:'📋 Copiar números',done:'Números copiados!'},it:{copy:'📋 Copia numeri',done:'Numeri copiati!'},id:{copy:'📋 Salin angka',done:'Angka disalin!'}};
+function copyLuckyNumbers(){
+  const d=window._lastLuckyData; if(!d) return;
+  const sets=(d.sets&&d.sets.length?d.sets:[d]);
+  const str=sets.map(s=>(s.mainNums||[]).join(', ')).filter(Boolean).join('\n');
+  if(!str) return;
+  const lang=window.LUCKY_CURRENT_LANG||'ko'; const t=COPY_I18N[lang]||COPY_I18N.en;
+  const done=()=>{ showToast(t.done); _haptic(16); };
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(str).then(done,()=>done()); } else { const ta=document.createElement('textarea'); ta.value=str; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); done(); } }catch(e){ done(); }
+}
+// 주요 버튼 탭 가벼운 햅틱
+document.addEventListener('click', function(e){ try{ if(e.target.closest('button,.cat-btn,.share-btn,a.cta,.rl-digit-btn,.fsg-item')) _haptic(9); }catch(_){} }, {passive:true});
+
 // X9 다크모드 토글 (Linear/Apple식) — 시스템 연동 + 수동 토글, localStorage 저장
 function toggleTheme(){
   try{
@@ -6870,9 +6899,66 @@ function _xMountThemeToggle(){
   }catch(e){}
 }
 
+// U6 인앱 언어 스위처 (9개 언어)
+const LANG_NATIVE={ko:'한국어',en:'English',ja:'日本語',de:'Deutsch',fr:'Français',es:'Español',pt:'Português',it:'Italiano',id:'Bahasa Indonesia'};
+function _setLang(code){ try{ const u=new URL(location.href); u.searchParams.set('lang',code); location.href=u.toString(); }catch(e){ location.search='?lang='+code; } }
+function _mountLangSwitcher(){
+  if(document.getElementById('lang-fab')) return;
+  const cur=window.LUCKY_CURRENT_LANG||'ko';
+  const fab=document.createElement('button'); fab.id='lang-fab'; fab.type='button'; fab.setAttribute('aria-label','language'); fab.textContent='🌐';
+  const menu=document.createElement('div'); menu.id='lang-menu'; menu.setAttribute('role','menu');
+  menu.innerHTML=Object.keys(LANG_NATIVE).map(c=>`<button type="button" role="menuitem" onclick="_setLang('${c}')" class="${c===cur?'cur':''}">${LANG_NATIVE[c]}</button>`).join('');
+  fab.onclick=function(e){ e.stopPropagation(); menu.classList.toggle('show'); };
+  menu.addEventListener('click',function(e){ e.stopPropagation(); });
+  document.addEventListener('click',function(){ menu.classList.remove('show'); });
+  document.body.appendChild(fab); document.body.appendChild(menu);
+}
+// U5 스크롤 투 탑 FAB
+function _mountScrollTop(){
+  if(document.getElementById('scrolltop-fab')) return;
+  const b=document.createElement('button'); b.id='scrolltop-fab'; b.type='button'; b.setAttribute('aria-label','top'); b.textContent='↑';
+  b.onclick=function(){ window.scrollTo({top:0,behavior:_reducedMotion()?'auto':'smooth'}); };
+  document.body.appendChild(b);
+  let ticking=false;
+  window.addEventListener('scroll',function(){ if(ticking)return; ticking=true; requestAnimationFrame(function(){ b.classList.toggle('show', window.scrollY>600); ticking=false; }); },{passive:true});
+}
+
+// U4 컨페티 축하 (reduced-motion 존중, 라이브러리 없음)
+function fireConfetti(count){
+  if(_reducedMotion()) return;
+  count=count||28;
+  const host=document.createElement('div'); host.className='confetti-host'; document.body.appendChild(host);
+  const colors=['#f59e0b','#ef4444','#7c3aed','#10b981','#3b82f6','#ec4899','#fde047'];
+  for(let i=0;i<count;i++){
+    const p=document.createElement('i');
+    p.style.cssText=`left:${Math.random()*100}vw;background:${colors[i%colors.length]};animation-delay:${(Math.random()*0.25).toFixed(2)}s;animation-duration:${(1.5+Math.random()*1.3).toFixed(2)}s;`;
+    host.appendChild(p);
+  }
+  setTimeout(function(){ host.remove(); }, 3400);
+}
+// U7 생일 입력 자동 이동(연→월→일) + 포커스 시 선택
+function _initDateAutoAdvance(){
+  const y=document.getElementById('bday-year'),m=document.getElementById('bday-month'),d=document.getElementById('bday-day');
+  if(!y||!m||!d||y.dataset.aa) return; y.dataset.aa='1';
+  [y,m,d].forEach(function(el){ el.addEventListener('focus',function(){ try{el.select();}catch(e){} }); });
+  y.addEventListener('input',function(){ if(y.value.length>=4) m.focus(); });
+  m.addEventListener('input',function(){ if(m.value.length>=2 || (m.value.length===1 && +m.value>1)) d.focus(); });
+}
+// U10 숫자 카운트업(ease-out, reduced-motion 존중)
+function _countUp(el,target,ms){
+  target=+target||0;
+  if(_reducedMotion()||!el){ if(el)el.textContent=target; return; }
+  const start=performance.now(); ms=ms||800;
+  function tick(now){ const p=Math.min(1,(now-start)/ms); el.textContent=Math.round(target*(1-Math.pow(1-p,3))); if(p<1)requestAnimationFrame(tick); }
+  requestAnimationFrame(tick);
+}
+
 // 홈 소셜프루프 칩 + 보관함 진입 주입
 function _xInitHome(){
   try{ _xMountThemeToggle(); }catch(e){}
+  try{ _mountLangSwitcher(); }catch(e){}
+  try{ _mountScrollTop(); }catch(e){}
+  try{ _initDateAutoAdvance(); }catch(e){}
   try{ _xWelcomeBack(); }catch(e){}
   try{
     const tc=document.querySelector('.trust-chips');

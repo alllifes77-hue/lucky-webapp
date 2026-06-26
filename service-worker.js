@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v30: 타분야 상위기능 최종 — X7 행운 랭킹·X2 행운 리포트(워커 SEO + 앱 추천 연결)
-const CACHE_NAME = 'lucky-v30';
+// v31: 최신 UX 10 — 토스트·복사·햅틱·컨페티·스크롤FAB·언어스위처·자동입력·a11y·전환·카운트업
+const CACHE_NAME = 'lucky-v31';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
