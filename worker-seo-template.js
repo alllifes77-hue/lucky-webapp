@@ -1328,6 +1328,8 @@ All content is original, deterministic, and updated daily for time-based pages. 
         ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]).flatMap(l=>CZ_ANIMALS.map(a=>({lang:l,loc:`${SITE_URL}/${l}/zodiac/${a}/`,priority:'0.75',lm:todayStr}))),
         ...ALL_LANGS.filter(l=>typeof TAROT!=='undefined'&&TAROT[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/tarot/three-card/`,priority:'0.75',lm:todayStr})),
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.map(s=>({lang:l,loc:`${SITE_URL}/${l}/lucky-color/${s}/`,priority:'0.72',lm:todayStr}))),
+        ...ALL_LANGS.filter(l=>typeof TAROT!=='undefined'&&TAROT[l]&&typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.map(s=>({lang:l,loc:`${SITE_URL}/${l}/tarot/daily/${s}/`,priority:'0.72',lm:todayStr}))),
+        ...ALL_LANGS.filter(l=>typeof TAROT!=='undefined'&&TAROT[l]).flatMap(l=>[{lang:l,loc:`${SITE_URL}/${l}/tarot/yes-no/`,priority:'0.78',lm:todayStr},{lang:l,loc:`${SITE_URL}/${l}/tarot/birth-card/`,priority:'0.75'}]),
         ...ALL_LANGS.filter(l=>typeof CRYSTALS!=='undefined'&&CRYSTALS[l]).flatMap(l=>CRYSTAL_INTENTS.map(x=>({lang:l,loc:`${SITE_URL}/${l}/crystals/${x}/`,priority:'0.75'}))),
         ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]&&CZ_COMPAT_SLUG[l]).flatMap(l=>{ const arr=[]; for(let a=0;a<12;a++)for(let b=a;b<12;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/${CZ_COMPAT_SLUG[l]}/${CZ_ANIMALS[a]}-${CZ_ANIMALS[b]}/`,priority:'0.65'}); return arr; }),
         ...ALL_LANGS.filter(l=>typeof MANIFEST!=='undefined'&&MANIFEST[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/manifestation/`,priority:'0.75',lm:todayStr})),
@@ -3647,6 +3649,110 @@ iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;marg
 .wrap{max-width:660px;margin:0 auto;padding:14px 16px;}iframe{width:100%;border:none;display:block;height:620px;border-radius:14px;}${NAV_FOOTER_CSS}</style></head><body>
 <div class="hero"><div class="em">🎂</div><h1>${esc(ttl)}</h1><p>${esc(intro)}</p></div>
 <div class="wrap"><iframe src="${esc(`${APP_URL}/?lang=${bl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(bl,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Z1 별자리별 오늘의 타로 (/{lang}/tarot/daily/{sign}/) — TAROT 재사용, 매일 ──
+    {
+      const tzM = path.match(/^\/([a-z]{2})\/tarot\/daily\/([a-z]+)\/?$/);
+      if (tzM && TAROT[tzM[1]] && TAROT_LABELS[tzM[1]] && typeof DAILYHORO!=='undefined' && DAILYHORO[tzM[1]] && H26_SIGNS.indexOf(tzM[2])>=0 && LANGS[tzM[1]]) {
+        const dl=tzM[1], T=TAROT[dl], TL=TAROT_LABELS[dl], si=H26_SIGNS.indexOf(tzM[2]); const sName=DAILYHORO[dl].signs[si].name;
+        const allSlugs=TAROT_MAJOR_SLUG.concat(TAROT_SUITS.flatMap(s=>TAROT_RANKS.map(r=>`${r}-of-${s}`)));
+        const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+        const slug=allSlugs[_lnHash(dn*37+si*53+7)%allSlugs.length]; const rev=(_lnHash(dn*19+si*13+3)%100)<35;
+        const c=T[slug]||T[allSlugs[0]]; const meta=tarotMeta(slug)||{}; const emoji=meta.suit?TAROT_SUIT_EMOJI[meta.suit]:'🔮';
+        const meaning=rev?(c.reversedLine||c.line):c.line; const dir=rev?TL.reversedLabel:TL.uprightLabel; const kw=rev?(c.reversedKeyword||c.keyword):c.keyword;
+        const ZT={ko:'오늘의 타로',en:'Daily Tarot',ja:'今日のタロット',de:'Tageskarte',fr:'Tarot du jour',es:'Tarot de hoy',pt:'Tarô de hoje',it:'Tarocco di oggi',id:'Tarot Harian'};
+        const zt=ZT[dl]||ZT.en; const ttl=`${sName} ${zt}`; const cTitle=`${ttl} ${t.toISOString().slice(0,10)} — ${c.name}`; const cDesc=`${ttl}: ${c.name} (${dir}). ${meaning}`.slice(0,155);
+        const canonical=`${SITE_URL}/${dl}/tarot/daily/${tzM[2]}/`;
+        const hl=buildHreflang(ALL_LANGS.filter(l=>TAROT[l]&&DAILYHORO[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/tarot/daily/${tzM[2]}/`})), `${SITE_URL}/en/tarot/daily/${tzM[2]}/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':`${ttl}?`,'acceptedAnswer':{'@type':'Answer','text':`${c.name} — ${meaning}`}}]});
+        const others=H26_SIGNS.map((x,i)=>i===si?'':(DAILYHORO[dl].signs[i]?`<a href="${SITE_URL}/${dl}/tarot/daily/${x}/">${ZEMOJI12[i]} ${esc(DAILYHORO[dl].signs[i].name)}</a>`:'')).join('');
+        const html=`<!DOCTYPE html><html lang="${dl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(ttl)}: ${esc(c.name)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${dl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1429;color:#e9e3f5;}
+.hero{background:linear-gradient(160deg,#2e1065,#6d28d9);color:#fff;padding:28px 20px;text-align:center;}.hero .dt{font-size:12px;color:#c4b5fd;font-weight:700;}.hero .em{font-size:50px;${rev?'transform:rotate(180deg);display:inline-block;':''}}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:5px 0;}.hero .cn{font-size:16px;color:#fbbf24;font-weight:800;}.hero .dir{font-size:12px;color:#ddd6fe;}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px;}.card{background:#241a3a;border-radius:14px;padding:16px 18px;margin:12px 0;}.card .kw{font-size:12px;color:#a78bfa;font-weight:700;margin-bottom:5px;}.card p{font-size:14.5px;line-height:1.8;color:#e0d8f0;}
+.more{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;justify-content:center;}.more a{background:#3b2a63;color:#ddd6fe;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:16px;text-decoration:none;}
+iframe{width:100%;border:none;display:block;height:540px;border-radius:12px;margin-top:10px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="dt">${t.toISOString().slice(0,10)} · ${ZEMOJI12[si]} ${esc(sName)}</div><div class="em">${emoji}</div><h1>${esc(ttl)}</h1><div class="cn">${esc(c.name)}</div><div class="dir">${esc(dir)}</div></div>
+<div class="wrap"><div class="card"><div class="kw">${esc(TL.keywordsLabel)}: ${esc(kw)}</div><p>${esc(meaning)}</p></div>
+<div class="more"><a href="${SITE_URL}/${dl}/tarot/${slug}/">${esc(c.name)} →</a><a href="${SITE_URL}/${dl}/tarot/daily/">${esc(zt)}</a><a href="${SITE_URL}/${dl}/tarot/three-card/">3-Card</a></div>
+<div class="more">${others}</div>
+<iframe src="${esc(`${APP_URL}/?lang=${dl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(dl,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Z2 타로 예/아니오 오라클 (/{lang}/tarot/yes-no/) — 인터랙티브 ──
+    {
+      const ynM = path.match(/^\/([a-z]{2})\/tarot\/yes-no\/?$/);
+      if (ynM && TAROT[ynM[1]] && TAROT_LABELS[ynM[1]] && LANGS[ynM[1]]) {
+        const dl=ynM[1], T=TAROT[dl], TL=TAROT_LABELS[dl];
+        const allSlugs=TAROT_MAJOR_SLUG.concat(TAROT_SUITS.flatMap(s=>TAROT_RANKS.map(r=>`${r}-of-${s}`)));
+        const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+        const si0=_lnHash(dn*41+11)%allSlugs.length; const rev0=(_lnHash(dn*23+5)%100)<40; const slug0=allSlugs[si0]; const c0=T[slug0]||T[allSlugs[0]];
+        const YN={ko:{t:'타로 예 / 아니오',intro:'마음속 질문을 떠올린 뒤 카드를 뽑아 답을 확인하세요.',yes:'예 · YES',no:'아니오 · NO',maybe:'아마도 · MAYBE',ans:'오늘의 답',again:'🔮 다시 뽑기',faqQ:'예/아니오 타로는 정확한가요?',faqA:'오락·참고용입니다. 카드는 결정의 힌트를 줄 뿐, 최종 선택은 당신의 몫이에요.'},en:{t:'Tarot Yes / No',intro:'Hold your question in mind, then draw a card for your answer.',yes:'YES',no:'NO',maybe:'MAYBE',ans:"Today's answer",again:'🔮 Draw again',faqQ:'Is yes/no tarot accurate?',faqA:'For entertainment only. The card offers a hint — the final choice is yours.'},ja:{t:'タロット イエス / ノー',intro:'心の中の質問を思い浮かべ、カードを引いて答えを確認しましょう。',yes:'はい · YES',no:'いいえ · NO',maybe:'たぶん · MAYBE',ans:'今日の答え',again:'🔮 もう一度引く',faqQ:'イエス/ノータロットは当たる？',faqA:'娯楽用です。カードはヒントを示すだけで、最終判断はあなた次第です。'},de:{t:'Tarot Ja / Nein',intro:'Halte deine Frage im Kopf und ziehe eine Karte für die Antwort.',yes:'JA',no:'NEIN',maybe:'VIELLEICHT',ans:'Heutige Antwort',again:'🔮 Neu ziehen',faqQ:'Ist Ja/Nein-Tarot genau?',faqA:'Nur zur Unterhaltung. Die Karte gibt einen Hinweis — die Wahl liegt bei dir.'},fr:{t:'Tarot Oui / Non',intro:'Gardez votre question en tête et tirez une carte pour la réponse.',yes:'OUI',no:'NON',maybe:'PEUT-ÊTRE',ans:'Réponse du jour',again:'🔮 Retirer',faqQ:'Le tarot oui/non est-il précis ?',faqA:'Pour s\'amuser. La carte donne un indice — le choix final vous appartient.'},es:{t:'Tarot Sí / No',intro:'Piensa tu pregunta y saca una carta para tu respuesta.',yes:'SÍ',no:'NO',maybe:'QUIZÁS',ans:'Respuesta de hoy',again:'🔮 Sacar otra',faqQ:'¿Es preciso el tarot sí/no?',faqA:'Solo para diversión. La carta da una pista — la decisión es tuya.'},pt:{t:'Tarô Sim / Não',intro:'Pense na sua pergunta e tire uma carta para a resposta.',yes:'SIM',no:'NÃO',maybe:'TALVEZ',ans:'Resposta de hoje',again:'🔮 Tirar de novo',faqQ:'O tarô sim/não é preciso?',faqA:'Apenas diversão. A carta dá uma dica — a escolha é sua.'},it:{t:'Tarocchi Sì / No',intro:'Pensa alla tua domanda ed estrai una carta per la risposta.',yes:'SÌ',no:'NO',maybe:'FORSE',ans:'Risposta di oggi',again:'🔮 Estrai ancora',faqQ:'I tarocchi sì/no sono precisi?',faqA:'Solo per divertimento. La carta dà un indizio — la scelta è tua.'},id:{t:'Tarot Ya / Tidak',intro:'Pikirkan pertanyaanmu, lalu tarik kartu untuk jawabannya.',yes:'YA',no:'TIDAK',maybe:'MUNGKIN',ans:'Jawaban hari ini',again:'🔮 Tarik lagi',faqQ:'Apakah tarot ya/tidak akurat?',faqA:'Hanya hiburan. Kartu memberi petunjuk — pilihan akhir milikmu.'}};
+        const Y=YN[dl]||YN.en; const vmap=[Y.yes,Y.maybe,Y.no]; const vcol=['#22c55e','#f59e0b','#ef4444'];
+        const disp0=_lnHash(si0*13+7)%100; const v0=rev0?(disp0<55?2:disp0<80?1:0):(disp0<55?0:disp0<80?1:2);
+        const cTitle=`${Y.t} — all-lifes.com`; const cDesc=Y.intro.slice(0,155); const canonical=`${SITE_URL}/${dl}/tarot/yes-no/`;
+        const hl=buildHreflang(ALL_LANGS.filter(l=>TAROT[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/tarot/yes-no/`})), `${SITE_URL}/en/tarot/yes-no/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':Y.faqQ,'acceptedAnswer':{'@type':'Answer','text':Y.faqA}}]});
+        const DECK=allSlugs.map(s=>({n:(T[s]||{}).name||s,k:(T[s]||{}).keyword||''}));
+        const html=`<!DOCTYPE html><html lang="${dl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(Y.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${APP_URL}/og-${dl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1429;color:#e9e3f5;}
+.hero{background:linear-gradient(160deg,#2e1065,#6d28d9);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:48px;}.hero h1{font-size:clamp(21px,5.5vw,32px);font-weight:900;margin:5px 0;}.hero p{font-size:13px;color:#ddd6fe;max-width:480px;margin:0 auto;line-height:1.5;}
+.wrap{max-width:480px;margin:0 auto;padding:20px 16px;text-align:center;}
+#yv{font-size:50px;font-weight:900;margin:6px 0;}#yc{font-size:16px;font-weight:800;color:#c4b5fd;}#yk{font-size:13px;color:#a78bfa;margin-top:4px;}
+.ybtn{margin-top:18px;width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:16px;font-weight:800;cursor:pointer;}
+.faq{background:#241a3a;border-radius:14px;padding:16px 18px;margin:16px 0;text-align:left;}.faq h2{font-size:14px;font-weight:800;color:#a78bfa;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#cfc6e6;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">🔮</div><h1>${esc(Y.t)}</h1><p>${esc(Y.intro)}</p></div>
+<div class="wrap"><div style="font-size:12px;color:#a78bfa;font-weight:700;">${esc(Y.ans)}</div>
+<div id="yv" style="color:${vcol[v0]};">${esc(vmap[v0])}</div><div id="yc">${esc(c0.name)}</div><div id="yk">${esc(c0.keyword||'')}</div>
+<button class="ybtn" onclick="yn()">${esc(Y.again)}</button>
+<div class="faq"><h2>❓ ${esc(Y.faqQ)}</h2><p>${esc(Y.faqA)}</p></div></div>
+<script>var DK=${JSON.stringify(DECK)},VM=${JSON.stringify(vmap)},VC=${JSON.stringify(vcol)};function yn(){var i=Math.floor(Math.random()*DK.length),rev=Math.random()<0.4,h=0,s=DK[i].n;for(var j=0;j<s.length;j++)h=(h*31+s.charCodeAt(j))>>>0;var dp=h%100,v=rev?(dp<55?2:dp<80?1:0):(dp<55?0:dp<80?1:2);document.getElementById('yv').textContent=VM[v];document.getElementById('yv').style.color=VC[v];document.getElementById('yc').textContent=DK[i].n;document.getElementById('yk').textContent=DK[i].k;}</script>
+${buildNavFooter(dl,'lucky')}</body></html>`;
+        return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+      }
+    }
+
+    // ── Z3 타로 생일 카드 (/{lang}/tarot/birth-card/) — 메이저 아르카나 계산 도구 ──
+    {
+      const bcM = path.match(/^\/([a-z]{2})\/tarot\/birth-card\/?$/);
+      if (bcM && TAROT[bcM[1]] && TAROT_LABELS[bcM[1]] && LANGS[bcM[1]]) {
+        const dl=bcM[1], T=TAROT[dl];
+        const majors=TAROT_MAJOR_SLUG.map(s=>({sl:s,n:(T[s]||{}).name||s,k:(T[s]||{}).keyword||'',l:(T[s]||{}).line||''}));
+        const BC={ko:{t:'타로 생일 카드',intro:'생년월일을 입력하면 평생의 테마를 상징하는 타로 생일 카드(메이저 아르카나)를 찾아드려요.',y:'연도',m:'월',d:'일',btn:'내 카드 찾기 🔮',res:'당신의 생일 카드',faqQ:'타로 생일 카드란?',faqA:'생년월일의 모든 숫자를 더해 22 이하로 줄여 대응하는 메이저 아르카나를 찾는 방식입니다. 평생의 핵심 테마를 상징해요. 오락·참고용.'},en:{t:'Tarot Birth Card',intro:'Enter your birth date to find your Tarot Birth Card (Major Arcana) — the theme of your life.',y:'Year',m:'Month',d:'Day',btn:'Find my card 🔮',res:'Your birth card',faqQ:'What is a tarot birth card?',faqA:'Add all digits of your birth date and reduce to 22 or less to find the matching Major Arcana — your lifelong theme. For entertainment.'},ja:{t:'タロット誕生日カード',intro:'生年月日を入れると、人生のテーマを象徴するタロット誕生日カード（大アルカナ）が分かります。',y:'年',m:'月',d:'日',btn:'カードを見る 🔮',res:'あなたの誕生日カード',faqQ:'タロット誕生日カードとは？',faqA:'生年月日の全数字を足して22以下に縮め、対応する大アルカナを見つけます。人生の核となるテーマを象徴。娯楽用。'},de:{t:'Tarot-Geburtskarte',intro:'Gib dein Geburtsdatum ein und finde deine Tarot-Geburtskarte (Große Arkana) — das Thema deines Lebens.',y:'Jahr',m:'Monat',d:'Tag',btn:'Karte finden 🔮',res:'Deine Geburtskarte',faqQ:'Was ist eine Tarot-Geburtskarte?',faqA:'Addiere alle Ziffern deines Geburtsdatums und reduziere auf 22 oder weniger für die passende Große Arkana — dein Lebensthema. Zur Unterhaltung.'},fr:{t:'Carte de Naissance Tarot',intro:'Entrez votre date de naissance pour trouver votre carte de naissance (Arcane majeur) — le thème de votre vie.',y:'Année',m:'Mois',d:'Jour',btn:'Trouver ma carte 🔮',res:'Votre carte de naissance',faqQ:'Qu\'est-ce qu\'une carte de naissance tarot ?',faqA:'Additionnez tous les chiffres de votre date de naissance et réduisez à 22 ou moins pour l\'Arcane majeur correspondant — le thème de votre vie. Pour s\'amuser.'},es:{t:'Carta de Nacimiento del Tarot',intro:'Ingresa tu fecha de nacimiento para encontrar tu carta de nacimiento (Arcano Mayor) — el tema de tu vida.',y:'Año',m:'Mes',d:'Día',btn:'Encontrar mi carta 🔮',res:'Tu carta de nacimiento',faqQ:'¿Qué es una carta de nacimiento del tarot?',faqA:'Suma todos los dígitos de tu fecha de nacimiento y redúcelos a 22 o menos para el Arcano Mayor correspondiente — el tema de tu vida. Por diversión.'},pt:{t:'Carta de Nascimento do Tarô',intro:'Insira sua data de nascimento para encontrar sua carta de nascimento (Arcano Maior) — o tema da sua vida.',y:'Ano',m:'Mês',d:'Dia',btn:'Encontrar minha carta 🔮',res:'Sua carta de nascimento',faqQ:'O que é uma carta de nascimento do tarô?',faqA:'Some todos os dígitos da sua data de nascimento e reduza a 22 ou menos para o Arcano Maior correspondente — o tema da sua vida. Diversão.'},it:{t:'Carta di Nascita dei Tarocchi',intro:'Inserisci la tua data di nascita per trovare la tua carta di nascita (Arcano Maggiore) — il tema della tua vita.',y:'Anno',m:'Mese',d:'Giorno',btn:'Trova la mia carta 🔮',res:'La tua carta di nascita',faqQ:'Cos\'è una carta di nascita dei tarocchi?',faqA:'Somma tutte le cifre della tua data di nascita e riducile a 22 o meno per l\'Arcano Maggiore corrispondente — il tema della tua vita. Per divertimento.'},id:{t:'Kartu Lahir Tarot',intro:'Masukkan tanggal lahir untuk menemukan Kartu Lahir Tarot (Arkana Mayor) — tema hidupmu.',y:'Tahun',m:'Bulan',d:'Tanggal',btn:'Cari kartuku 🔮',res:'Kartu lahirmu',faqQ:'Apa itu kartu lahir tarot?',faqA:'Jumlahkan semua angka tanggal lahir dan kurangi hingga 22 atau kurang untuk Arkana Mayor yang sesuai — tema hidupmu. Untuk hiburan.'}};
+        const X=BC[dl]||BC.en; const cTitle=`${X.t} — all-lifes.com`; const cDesc=X.intro.slice(0,155); const canonical=`${SITE_URL}/${dl}/tarot/birth-card/`;
+        const hl=buildHreflang(ALL_LANGS.filter(l=>TAROT[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/tarot/birth-card/`})), `${SITE_URL}/en/tarot/birth-card/`);
+        const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':X.faqQ,'acceptedAnswer':{'@type':'Answer','text':X.faqA}}]});
+        const html=`<!DOCTYPE html><html lang="${dl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(X.t)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:image" content="${APP_URL}/og-${dl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1429;color:#e9e3f5;}
+.hero{background:linear-gradient(160deg,#2e1065,#6d28d9);color:#fff;padding:30px 20px;text-align:center;}.hero .em{font-size:48px;}.hero h1{font-size:clamp(20px,5vw,30px);font-weight:900;margin:5px 0;}.hero p{font-size:13px;color:#ddd6fe;max-width:500px;margin:0 auto;line-height:1.5;}
+.wrap{max-width:460px;margin:0 auto;padding:20px 16px;text-align:center;}
+.bin{display:flex;gap:8px;}.bin input{flex:1;padding:13px;border:none;border-radius:11px;background:#241a3a;color:#fff;font-size:16px;text-align:center;outline:none;}
+.bbtn{margin-top:10px;width:100%;padding:15px;border:none;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:16px;font-weight:800;cursor:pointer;}
+#bcR{display:none;background:#241a3a;border-radius:16px;padding:22px;margin-top:16px;}#bcN{font-size:24px;font-weight:900;color:#fbbf24;}#bcK{font-size:13px;color:#a78bfa;margin:6px 0;}#bcL{font-size:14px;color:#e0d8f0;line-height:1.7;}
+.faq{background:#241a3a;border-radius:14px;padding:16px 18px;margin:16px 0;text-align:left;}.faq h2{font-size:14px;font-weight:800;color:#a78bfa;margin-bottom:6px;}.faq p{font-size:13.5px;line-height:1.7;color:#cfc6e6;}
+${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="em">🎂🔮</div><h1>${esc(X.t)}</h1><p>${esc(X.intro)}</p></div>
+<div class="wrap"><div class="bin"><input id="bcY" type="number" inputmode="numeric" placeholder="${esc(X.y)}" min="1920" max="2025"><input id="bcM" type="number" inputmode="numeric" placeholder="${esc(X.m)}" min="1" max="12"><input id="bcD" type="number" inputmode="numeric" placeholder="${esc(X.d)}" min="1" max="31"></div>
+<button class="bbtn" onclick="bc()">${esc(X.btn)}</button>
+<div id="bcR"><div style="font-size:12px;color:#a78bfa;font-weight:700;">${esc(X.res)}</div><div id="bcN"></div><div id="bcK"></div><div id="bcL"></div></div>
+<div class="faq"><h2>❓ ${esc(X.faqQ)}</h2><p>${esc(X.faqA)}</p></div></div>
+<script>var MJ=${JSON.stringify(majors)};function bc(){var y=document.getElementById('bcY').value,m=document.getElementById('bcM').value,d=document.getElementById('bcD').value;if(!y||!m||!d)return;var s=(''+y+(''+m).padStart(2,'0')+(''+d).padStart(2,'0'));var t=0;for(var i=0;i<s.length;i++)t+=+s[i];while(t>21){t=(''+t).split('').reduce(function(a,x){return a+(+x);},0);}var c=MJ[t]||MJ[0];document.getElementById('bcR').style.display='block';document.getElementById('bcN').textContent=c.n;document.getElementById('bcK').textContent=c.k;document.getElementById('bcL').textContent=c.l;}</script>
+${buildNavFooter(dl,'lucky')}</body></html>`;
         return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=86400','X-Robots-Tag':'index,follow'}});
       }
     }
