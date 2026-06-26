@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v25: 메인(홈) 화면 AdSense 제거 — 광고는 결과 화면(#ad-bottom)에서만 노출
-const CACHE_NAME = 'lucky-v25';
+// v26: 타분야 상위기능 배치1 — 소셜프루프·내 보관함·추천 운세 캐러셀
+const CACHE_NAME = 'lucky-v26';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',

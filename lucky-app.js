@@ -1648,7 +1648,8 @@ function renderResults(data) {
    'hari-baik-panel','annual-calendar-panel','auspicious-calendar-panel','name-panel',
    'cz-badge-panel','daily-energy-panel','ai-chat-panel','ae-aff-panel',
    'biorhythm-panel','birthstone-panel','sunsign-panel','tarot-panel','luckyone-panel','quiz-launcher','score-panel','spin-panel','countdown-panel','invite-panel','nametool-panel','luckyfour-panel','lifepath-panel','dream-panel','angel-panel',
-   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel'].forEach(id => {
+   'retro-panel','electional-panel','moonritual-panel','transit-panel','saturn-panel','solar-panel','lilith-panel','astrocarto-panel','humandesign-panel',
+   'socialproof-panel','savebar-panel','recommend-panel'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
@@ -1662,6 +1663,7 @@ function renderResults(data) {
   // 알리익스프레스 + ko 쿠팡도 상단(광고 바로 아래)에 배치 — 잘 보이는 위치
   renderAliExpressPanel(data);
   _resultCoupang(lang);
+  try { renderSocialProof(data); } catch(e){} // X6 소셜 프루프(결과 상단)
 
   // ══ LUCKY: 행운 번호 전용 ════════════════════════════════
   if (cat === 'lucky') {
@@ -1763,6 +1765,8 @@ function renderResults(data) {
     try { renderElectionalPanel(data); } catch(e){}
     try { renderMoonRitualPanel(data); } catch(e){}
   }
+  try { renderSaveBar(data); } catch(e){}                            // X5 보관함 저장 바(전 모드)
+  if (!_focusedCat) { try { renderRecommendPanel(data); } catch(e){} } // X8 추천 캐러셀(종합 모드)
   try { _initInstallPrompt(); _maybeShowInstall(); } catch(e){}
   renderShareBtns(data);
   if (!_focusedCat) renderAIChat(data); // 집중형에서는 일반 AI챗 숨김
@@ -6703,6 +6707,87 @@ function _rlMountAd(){
   slot.innerHTML='<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1378943893051810" data-ad-slot="8233374508" data-ad-format="auto" data-full-width-responsive="true"></ins>';
   try{ (adsbygoogle=window.adsbygoogle||[]).push({}); }catch(e){}
 }
+
+// ══ 타분야 상위기능 — X6 소셜프루프 · X5 보관함 · X8 추천 ════════
+const X_I18N = {
+  ko:{viewed:n=>`🔥 오늘 ${n.toLocaleString()}명이 행운을 확인했어요`,watching:n=>`👀 지금 ${n}명이 보는 중`,save:'💾 보관함에 저장',saved:'✅ 저장됨',coll:'📁 내 보관함',collEmpty:'아직 저장한 운세가 없어요',collTitle:'📁 내 행운 보관함',del:'삭제',reco:'✨ 이런 운세도 봐보세요',recoItems:[['🃏','오늘의 타로','tarot/daily'],['💎','행운의 크리스탈','crystals/love'],['🌙','이번달 음력 달력','moon-calendar'],['♈','내 별자리','zodiac-signs'],['✨','매니페스테이션','manifestation'],['🎯','내 행운 숫자','lucky-number']]},
+  en:{viewed:n=>`🔥 ${n.toLocaleString()} checked their luck today`,watching:n=>`👀 ${n} viewing now`,save:'💾 Save',saved:'✅ Saved',coll:'📁 My Saved',collEmpty:'No saved readings yet',collTitle:'📁 My Lucky Collection',del:'Delete',reco:'✨ You might also like',recoItems:[['🃏','Tarot of the Day','tarot/daily'],['💎','Lucky Crystals','crystals/love'],['🌙','Moon Calendar','moon-calendar'],['♈','Zodiac Signs','zodiac-signs'],['✨','Manifestation','manifestation'],['🎯','My Lucky Number','lucky-number']]},
+  ja:{viewed:n=>`🔥 今日 ${n.toLocaleString()}人が運勢をチェック`,watching:n=>`👀 今 ${n}人が閲覧中`,save:'💾 保存',saved:'✅ 保存済み',coll:'📁 保存した運勢',collEmpty:'まだ保存した運勢はありません',collTitle:'📁 マイ運勢コレクション',del:'削除',reco:'✨ こちらもおすすめ',recoItems:[['🃏','今日のタロット','tarot/daily'],['💎','幸運のクリスタル','crystals/love'],['🌙','今月の月暦','moon-calendar'],['♈','私の星座','zodiac-signs'],['✨','引き寄せ','manifestation'],['🎯','私の幸運数','lucky-number']]},
+  de:{viewed:n=>`🔥 Heute haben ${n.toLocaleString()} ihr Glück geprüft`,watching:n=>`👀 ${n} sehen gerade zu`,save:'💾 Speichern',saved:'✅ Gespeichert',coll:'📁 Gespeichert',collEmpty:'Noch nichts gespeichert',collTitle:'📁 Meine Glücks-Sammlung',del:'Löschen',reco:'✨ Das könnte dir gefallen',recoItems:[['🃏','Tageskarte','tarot/daily'],['💎','Glückskristalle','crystals/love'],['🌙','Mondkalender','moon-calendar'],['♈','Mein Sternzeichen','zodiac-signs'],['✨','Manifestieren','manifestation'],['🎯','Meine Glückszahl','lucky-number']]},
+  fr:{viewed:n=>`🔥 ${n.toLocaleString()} ont vérifié leur chance aujourd'hui`,watching:n=>`👀 ${n} en train de regarder`,save:'💾 Enregistrer',saved:'✅ Enregistré',coll:'📁 Mes favoris',collEmpty:'Aucun tirage enregistré',collTitle:'📁 Ma collection chance',del:'Supprimer',reco:'✨ Vous aimerez aussi',recoItems:[['🃏','Tarot du jour','tarot/daily'],['💎','Cristaux chance','crystals/love'],['🌙','Calendrier lunaire','moon-calendar'],['♈','Mon signe','zodiac-signs'],['✨','Manifestation','manifestation'],['🎯','Mon numéro','lucky-number']]},
+  es:{viewed:n=>`🔥 Hoy ${n.toLocaleString()} consultaron su suerte`,watching:n=>`👀 ${n} viéndolo ahora`,save:'💾 Guardar',saved:'✅ Guardado',coll:'📁 Mis guardados',collEmpty:'Sin tiradas guardadas',collTitle:'📁 Mi colección de suerte',del:'Eliminar',reco:'✨ También te puede gustar',recoItems:[['🃏','Tarot del día','tarot/daily'],['💎','Cristales suerte','crystals/love'],['🌙','Calendario lunar','moon-calendar'],['♈','Mi signo','zodiac-signs'],['✨','Manifestación','manifestation'],['🎯','Mi número','lucky-number']]},
+  pt:{viewed:n=>`🔥 Hoje ${n.toLocaleString()} consultaram a sorte`,watching:n=>`👀 ${n} vendo agora`,save:'💾 Salvar',saved:'✅ Salvo',coll:'📁 Meus salvos',collEmpty:'Nenhuma leitura salva',collTitle:'📁 Minha coleção da sorte',del:'Excluir',reco:'✨ Você também pode gostar',recoItems:[['🃏','Tarô do dia','tarot/daily'],['💎','Cristais da sorte','crystals/love'],['🌙','Calendário lunar','moon-calendar'],['♈','Meu signo','zodiac-signs'],['✨','Manifestação','manifestation'],['🎯','Meu número','lucky-number']]},
+  it:{viewed:n=>`🔥 Oggi ${n.toLocaleString()} hanno controllato la fortuna`,watching:n=>`👀 ${n} stanno guardando`,save:'💾 Salva',saved:'✅ Salvato',coll:'📁 Salvati',collEmpty:'Nessuna lettura salvata',collTitle:'📁 La mia raccolta fortuna',del:'Elimina',reco:'✨ Potrebbe piacerti anche',recoItems:[['🃏','Tarocco del giorno','tarot/daily'],['💎','Cristalli fortuna','crystals/love'],['🌙','Calendario lunare','moon-calendar'],['♈','Il mio segno','zodiac-signs'],['✨','Manifestazione','manifestation'],['🎯','Il mio numero','lucky-number']]},
+  id:{viewed:n=>`🔥 Hari ini ${n.toLocaleString()} cek keberuntungan`,watching:n=>`👀 ${n} sedang melihat`,save:'💾 Simpan',saved:'✅ Tersimpan',coll:'📁 Tersimpan',collEmpty:'Belum ada yang disimpan',collTitle:'📁 Koleksi Keberuntungan',del:'Hapus',reco:'✨ Mungkin Anda suka',recoItems:[['🃏','Tarot Hari Ini','tarot/daily'],['💎','Kristal Keberuntungan','crystals/love'],['🌙','Kalender Bulan','moon-calendar'],['♈','Zodiak Saya','zodiac-signs'],['✨','Manifestasi','manifestation'],['🎯','Angka Saya','lucky-number']]},
+};
+function _xT(){ return X_I18N[window.LUCKY_CURRENT_LANG] || X_I18N.en; }
+function _xDayNum(){ const t=new Date(); return Math.floor(Date.UTC(t.getFullYear(),t.getMonth(),t.getDate())/86400000); }
+function _xViewed(seed){ const t=new Date(); const prog=(t.getHours()*60+t.getMinutes())/1440; const base=900+Math.abs((_xDayNum()*7919+((seed|0)))%1500); return Math.max(12,Math.floor(base*(0.18+0.82*prog))); }
+function _xWatching(){ const t=new Date(); return 6+Math.abs((t.getMinutes()*31+t.getHours()*7)%34); }
+
+// X6 실시간 소셜 프루프 (Booking.com식) — 결과 상단
+function renderSocialProof(data){
+  const t=_xT(); const wrap=document.createElement('div'); wrap.id='socialproof-panel';
+  wrap.style.cssText='max-width:480px;margin:14px auto 0;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;';
+  wrap.innerHTML=`<span style="background:#fef3c7;color:#92400e;font-weight:800;font-size:12.5px;padding:7px 13px;border-radius:20px;">${t.viewed(_xViewed(data&&data.seed))}</span><span style="background:#dcfce7;color:#166534;font-weight:800;font-size:12.5px;padding:7px 13px;border-radius:20px;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle;animation:sppulse 1.5s infinite;"></span>${t.watching(_xWatching())}</span>`;
+  const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
+}
+
+// X5 내 행운 보관함 (Pinterest식) — 저장/조회
+function _collGet(){ try{ return JSON.parse(localStorage.getItem('lucky_saved')||'[]'); }catch(e){ return []; } }
+function _collSet(a){ try{ localStorage.setItem('lucky_saved', JSON.stringify(a.slice(0,50))); }catch(e){} }
+function renderSaveBar(data){
+  const t=_xT(); const wrap=document.createElement('div'); wrap.id='savebar-panel';
+  wrap.style.cssText='max-width:480px;margin:16px auto 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';
+  const bs='padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:800;cursor:pointer;border:2px solid var(--border2,#d6d3d1);background:var(--card,#fff);color:var(--text2,#78716c);';
+  wrap.innerHTML=`<button id="x-save-btn" onclick="saveCurrentReading()" style="${bs}">${t.save}</button><button onclick="openCollection()" style="${bs}">${t.coll}</button>`;
+  const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
+}
+function saveCurrentReading(){
+  const d=window._lastLuckyData; if(!d) return;
+  const nums=(d.sets&&d.sets[0]&&d.sets[0].mainNums)||d.mainNums||[];
+  const a=_collGet(); a.unshift({ cat:window.LUCKY_SELECTED_CAT||'lucky', nums, ts:Date.now() }); _collSet(a);
+  const b=document.getElementById('x-save-btn'); if(b){ b.textContent=_xT().saved; b.disabled=true; b.style.opacity='.65'; }
+}
+function openCollection(){
+  const t=_xT(); const arr=_collGet();
+  const ex=document.getElementById('x-coll-overlay'); if(ex) ex.remove();
+  const ov=document.createElement('div'); ov.id='x-coll-overlay'; ov.className='x-coll-overlay';
+  ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+  const CATE={lucky:'🎯',saju:'🔮',love:'💝',money:'💰',career:'💼',achievement:'🏆',gunghap:'💑',roulette:'🎰'};
+  const rows = arr.length ? arr.map((it,i)=>{
+    const d=new Date(it.ts); const ds=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`; const nums=(it.nums||[]).join(' · ');
+    return `<div style="display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--border,#e7e5e4);"><span style="font-size:22px;">${CATE[it.cat]||'🍀'}</span><div style="flex:1;min-width:0;"><div style="font-weight:800;font-size:14px;color:var(--text,#1c1917);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${nums||'—'}</div><div style="font-size:11px;color:#a8a29e;">${ds}</div></div><button onclick="_collDel(${i})" style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;">${t.del}</button></div>`;
+  }).join('') : `<p style="text-align:center;color:#a8a29e;padding:34px 0;font-size:14px;">${t.collEmpty}</p>`;
+  ov.innerHTML=`<div style="background:var(--card,#fff);border-radius:18px;max-width:420px;width:100%;max-height:80vh;overflow:auto;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.3);"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><h3 style="font-size:17px;font-weight:900;color:var(--text,#1c1917);">${t.collTitle}</h3><button onclick="document.getElementById('x-coll-overlay').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#9ca3af;">✕</button></div>${rows}</div>`;
+  document.body.appendChild(ov);
+}
+function _collDel(i){ const a=_collGet(); a.splice(i,1); _collSet(a); openCollection(); }
+
+// X8 추천 운세 캐러셀 (Amazon/Netflix식) — 결과 하단, 내부링크 SEO
+function renderRecommendPanel(data){
+  const t=_xT(); const lang=window.LUCKY_CURRENT_LANG||'ko';
+  const cards=t.recoItems.map(([emo,label,path])=>`<a href="/${lang}/${path}/" target="_blank" rel="noopener" class="x-reco-card" style="display:flex;align-items:center;gap:9px;background:var(--card,#fff);border:1.5px solid var(--border,#e7e5e4);border-radius:13px;padding:13px 14px;text-decoration:none;color:var(--text,#1c1917);font-size:13.5px;font-weight:700;transition:transform .12s,border-color .12s;"><span style="font-size:20px;flex-shrink:0;">${emo}</span><span>${label}</span></a>`).join('');
+  const wrap=document.createElement('div'); wrap.id='recommend-panel';
+  wrap.style.cssText='max-width:480px;margin:18px auto 0;';
+  wrap.innerHTML=`<h3 style="font-size:15px;font-weight:900;color:var(--text,#1c1917);text-align:center;margin-bottom:12px;">${t.reco}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">${cards}</div>`;
+  const share=document.querySelector('.share-section'); if(share) share.parentNode.insertBefore(wrap, share);
+}
+
+// 홈 소셜프루프 칩 + 보관함 진입 주입
+function _xInitHome(){
+  try{
+    const tc=document.querySelector('.trust-chips');
+    if(tc && !document.getElementById('home-social')){
+      const t=_xT(); const s=document.createElement('div'); s.id='home-social';
+      s.style.cssText='margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';
+      s.innerHTML=`<span style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fde68a;font-weight:700;font-size:12px;padding:6px 13px;border-radius:20px;">${t.viewed(_xViewed(1))}</span><button onclick="openCollection()" style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#e0e7ff;font-weight:700;font-size:12px;padding:6px 13px;border-radius:20px;cursor:pointer;">${t.coll}</button>`;
+      tc.parentNode.insertBefore(s, tc.nextSibling);
+    }
+  }catch(e){}
+}
+(function(){ try{ const st=document.createElement('style'); st.textContent='@keyframes sppulse{0%,100%{opacity:1}50%{opacity:.25}}.x-reco-card:hover{transform:translateY(-2px);border-color:var(--gold,#d97706)!important;}.x-coll-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;}'; document.head.appendChild(st); }catch(e){} })();
+if(document.readyState!=='loading') _xInitHome(); else document.addEventListener('DOMContentLoaded', _xInitHome);
 
 function selectCategory(cat) {
   window.LUCKY_SELECTED_CAT = cat;
