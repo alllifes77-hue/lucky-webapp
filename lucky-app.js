@@ -6848,8 +6848,28 @@ function _xWelcomeBack(){
   }catch(e){}
 }
 
+// X9 다크모드 토글 (Linear/Apple식) — 시스템 연동 + 수동 토글, localStorage 저장
+function toggleTheme(){
+  try{
+    const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    localStorage.setItem('lucky_theme',next);
+    const b=document.getElementById('theme-toggle'); if(b) b.textContent=next==='dark'?'☀️':'🌙';
+  }catch(e){}
+}
+function _xMountThemeToggle(){
+  try{
+    if(document.getElementById('theme-toggle')) return;
+    const tb=document.createElement('button'); tb.id='theme-toggle'; tb.type='button';
+    tb.setAttribute('aria-label','theme'); tb.onclick=toggleTheme;
+    tb.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'☀️':'🌙';
+    document.body.appendChild(tb);
+  }catch(e){}
+}
+
 // 홈 소셜프루프 칩 + 보관함 진입 주입
 function _xInitHome(){
+  try{ _xMountThemeToggle(); }catch(e){}
   try{ _xWelcomeBack(); }catch(e){}
   try{
     const tc=document.querySelector('.trust-chips');

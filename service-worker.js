@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v28: 타분야 상위기능 배치3 — 재방문자 환영 배너(온보딩 개인화)
-const CACHE_NAME = 'lucky-v28';
+// v29: 타분야 상위기능 X9 — 다크모드(시스템연동·토글·localStorage)
+const CACHE_NAME = 'lucky-v29';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
