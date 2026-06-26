@@ -1851,9 +1851,9 @@ function renderDrawEnergyPanel(data) {
 
     // ── Compatibility Score Gauge ──────────────────────────
     html += `
-      <div style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px;border:1px solid #bbf7d0;">
+      <div style="background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:14px;border:1px solid #bbf7d0;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div style="font-size:12px;font-weight:700;color:#374151;">${fb('compatScoreLabel')||'Compatibility'}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text2);">${fb('compatScoreLabel')||'Compatibility'}</div>
           <div style="font-size:26px;font-weight:900;color:${gColor};">${compat}%</div>
         </div>
         <div style="font-family:monospace;font-size:18px;color:${gColor};letter-spacing:3px;margin-bottom:4px;">${bar}</div>
@@ -1866,36 +1866,36 @@ function renderDrawEnergyPanel(data) {
       const drawElName  = ELEMENT_KO_NAME[de.drawEl]||de.drawEl;
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')}</div>
             <div style="font-size:22px;">${de.birthEl}</div>
-            <div style="font-size:12px;font-weight:700;color:#1c1917;">${birthElName}</div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);">${birthElName}</div>
           </div>
           <div style="font-size:24px;text-align:center;">${h.emoji}</div>
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('drawEnergyLabel')}</div>
             <div style="font-size:22px;">${de.drawEl}</div>
-            <div style="font-size:12px;font-weight:700;color:#1c1917;">${drawElName}</div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);">${drawElName}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+        <div style="background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
           <strong>${h.rel} ${h.emoji}</strong> — ${h[lang]||h.en}
         </div>`;
     } else if (de.type === 'kyusei') {
       const h = de.harmony;
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')||'本命星'}</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.birthStar]||de.birthStar}</div>
           </div>
           <div style="font-size:24px;text-align:center;">${h.emoji}</div>
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('drawEnergyLabel')||'日星'}</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${KYUSEI_NAMES[de.drawStar]||de.drawStar}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+        <div style="background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
           ${h[lang === 'ja' ? 'ja' : 'en']||h.en}
         </div>`;
     } else if (de.type === 'numerology') {
@@ -1910,33 +1910,33 @@ function renderDrawEnergyPanel(data) {
       };
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('birthEnergyLabel')||'Life Path'}</div>
             <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.lpn}</div>
           </div>
           <div style="font-size:24px;text-align:center;">✕</div>
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">${fb('drawEnergyLabel')||'Universal Day'}</div>
             <div style="font-size:32px;font-weight:900;color:#1e1b4b;">${de.udn}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+        <div style="background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
           ${compatTxt[lang]||compatTxt.en}
         </div>`;
     } else if (de.type === 'jawanese') {
       html += `
         <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:12px;">
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Weton Lahir</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${de.birthName}</div>
           </div>
           <div style="font-size:24px;text-align:center;">+</div>
-          <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
+          <div style="background:var(--card);border-radius:12px;padding:12px;text-align:center;border:1px solid #e7e5e4;">
             <div style="font-size:10px;color:#78716c;font-weight:600;margin-bottom:4px;">Pasaran Undian</div>
             <div style="font-size:18px;font-weight:800;color:#1e1b4b;">${de.drawName}</div>
           </div>
         </div>
-        <div style="background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
+        <div style="background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid #bbf7d0;font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;">
           Kompatibilitas Weton ${de.birthName} × Pasaran undian ${de.drawName}: ${compat}%
         </div>`;
     }
@@ -1964,13 +1964,13 @@ function renderDrawEnergyPanel(data) {
     const legDraw  = {ko:'💧 추첨일 기운',en:'💧 Draw Energy',ja:'💧 抽選日',de:'💧 Ziehung',fr:'💧 Tirage',es:'💧 Sorteo',pt:'💧 Sorteio',it:'💧 Estrazione',id:'💧 Undian'};
 
     html += `
-      <div style="background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #e5e7eb;">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:8px;">${heatmapTitle[lang]||heatmapTitle.en}</div>
+      <div style="background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid #e5e7eb;">
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px;">${heatmapTitle[lang]||heatmapTitle.en}</div>
         <div style="display:flex;flex-wrap:wrap;">${numsHtml}</div>
         <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
-          <span style="font-size:10px;color:#374151;">${legBoth[lang]||legBoth.en}</span>
-          <span style="font-size:10px;color:#374151;">${legBirth[lang]||legBirth.en}</span>
-          <span style="font-size:10px;color:#374151;">${legDraw[lang]||legDraw.en}</span>
+          <span style="font-size:10px;color:var(--text2);">${legBoth[lang]||legBoth.en}</span>
+          <span style="font-size:10px;color:var(--text2);">${legBirth[lang]||legBirth.en}</span>
+          <span style="font-size:10px;color:var(--text2);">${legDraw[lang]||legDraw.en}</span>
         </div>
       </div>`;
 
@@ -1992,8 +1992,8 @@ function renderDrawEnergyPanel(data) {
     const upLabel = (UI_FALLBACKS.upcomingLabel||{})[lang] || 'Best Draw Dates TOP 3';
     const dayNames = DAY_NAMES_SHORT[lang] || DAY_NAMES_SHORT.en;
     html += `
-      <div style="background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #e5e7eb;margin-top:14px;">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:10px;">📅 ${upLabel}</div>`;
+      <div style="background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid #e5e7eb;margin-top:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:10px;">📅 ${upLabel}</div>`;
     upcoming.forEach((ud, i) => {
       const rankEmoji = ['🥇','🥈','🥉'][i] || '▸';
       const sc = ud.score || 0;
@@ -2004,7 +2004,7 @@ function renderDrawEnergyPanel(data) {
       html += `
         <div style="display:flex;align-items:center;gap:8px;padding:7px 0;${i < upcoming.length-1 ? 'border-bottom:1px solid #f3f4f6;' : ''}">
           <div style="font-size:15px;min-width:20px;">${rankEmoji}</div>
-          <div style="min-width:78px;font-size:12px;font-weight:700;color:#111827;">${dateStr}</div>
+          <div style="min-width:78px;font-size:12px;font-weight:700;color:var(--text);">${dateStr}</div>
           <div style="min-width:18px;font-size:11px;color:#6b7280;">${dayNames[ud.dow]||''}</div>
           <div style="flex:1;font-family:monospace;font-size:11px;color:${barColor};overflow:hidden;">${bar2}</div>
           <div style="font-size:11px;font-weight:700;color:${barColor};min-width:30px;text-align:right;">${sc}%</div>
@@ -2173,7 +2173,7 @@ function renderAlgorithmPanel(data) {
   };
 
   const t = k => ALGO[k]?.[lang] || ALGO[k]?.en || '';
-  const boxStyle = 'display:inline-block;padding:6px 10px;border-radius:8px;border:1px solid #d6d3d1;background:#fff;font-size:12px;font-weight:700;color:#1c1917;';
+  const boxStyle = 'display:inline-block;padding:6px 10px;border-radius:8px;border:1px solid #d6d3d1;background:var(--card);font-size:12px;font-weight:700;color:var(--text);';
   const arrowStyle = 'display:inline-block;color:#d97706;font-weight:900;font-size:14px;padding:0 2px;';
 
   // Calculation chain
@@ -3340,14 +3340,14 @@ function renderHapChongPanel(data) {
     const pl = item.p1&&item.p2 ? ` (${item.p1}柱↔${item.p2}柱)` : '';
     return `<div style="background:${bg};border-left:3px solid ${m.bc};border-radius:0 10px 10px 0;padding:10px 12px;margin-bottom:8px;">
       <div style="font-size:12px;font-weight:800;color:${m.bc};">${item.sub}${pl}</div>
-      <div style="font-size:11px;color:#475569;margin-top:3px;line-height:1.55;">${m[lang]||m.en}</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:3px;line-height:1.55;">${m[lang]||m.en}</div>
     </div>`;
   }).join('');
 
   const div = document.createElement('div');
   div.id = 'hapchong-panel';
-  div.style.cssText = 'background:#f8fafc;border:2px solid #e2e8f0;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
-  div.innerHTML = `<div style="font-size:12px;font-weight:800;color:#1e293b;margin-bottom:12px;">⚡ ${title}</div>${items}`;
+  div.style.cssText = 'background:var(--card);border:2px solid #e2e8f0;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.innerHTML = `<div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:12px;">⚡ ${title}</div>${items}`;
 
   const seun = document.getElementById('seun-panel');
   const detail = document.getElementById('detailed-reading-panel');
@@ -3436,7 +3436,7 @@ function renderShinsalPanel(data) {
         <div style="font-size:20px;">${s.icon}</div>
         ${s.name?`<div style="font-size:8px;color:${s.color};font-weight:700;margin-top:2px;line-height:1.3;">${s.name}</div>`:''}
       </div>
-      <div style="font-size:12px;color:#374151;line-height:1.7;">${s.txt}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7;">${s.txt}</div>
     </div>`).join('');
 
   const div = document.createElement('div');
@@ -3484,7 +3484,7 @@ function renderSipiunsungPanel(data) {
     const lv   = meta.lv ?? 2;
     const clr  = LV_CLR[lv] || '#4f46e5';
     const border = p.isDay ? `border:2px solid ${clr};` : `border:1px solid ${clr}40;`;
-    return `<div style="background:#fff;${border}border-radius:14px;padding:12px 10px;text-align:center;flex:1;min-width:0;">
+    return `<div style="background:var(--card);${border}border-radius:14px;padding:12px 10px;text-align:center;flex:1;min-width:0;">
       <div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:4px;">${p.lbl}주</div>
       <div style="font-size:13px;font-weight:800;color:#1e1b4b;margin-bottom:6px;">${p.gz}</div>
       <div style="font-size:20px;margin-bottom:4px;">${icon}</div>
@@ -3545,7 +3545,7 @@ function renderIljuronPanel(data) {
 
   const div = document.createElement('div');
   div.id = 'iljuron-panel';
-  div.style.cssText = 'background:#fff;border:2px solid #ddd6fe;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.style.cssText = 'background:var(--card);border:2px solid #ddd6fe;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
   div.innerHTML = `
     <div style="font-size:12px;font-weight:800;color:#5b21b6;margin-bottom:14px;">🧬 ${title}</div>
     <div style="background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:14px;padding:14px 16px;margin-bottom:14px;color:#fff;">
@@ -3553,18 +3553,18 @@ function renderIljuronPanel(data) {
       <div style="font-size:13px;font-weight:800;line-height:1.6;">${e[1]}</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-      <div style="background:#f8fafc;border-radius:12px;padding:10px 12px;">
+      <div style="background:var(--card);border-radius:12px;padding:10px 12px;">
         <div style="font-size:10px;font-weight:700;color:#64748b;margin-bottom:6px;">${careerLbl}</div>
         <div>${careerBadges}</div>
       </div>
       <div style="background:#fdf4ff;border-radius:12px;padding:10px 12px;">
         <div style="font-size:10px;font-weight:700;color:#a21caf;margin-bottom:6px;">${loveLbl}</div>
-        <div style="font-size:12px;color:#374151;line-height:1.6;">${e[3]}</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6;">${e[3]}</div>
       </div>
     </div>
     <div style="background:#f0fdf4;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
       <span style="font-size:18px;">${sm.icon||'○'}</span>
-      <div><span style="font-size:10px;font-weight:700;color:#166534;">${siuLbl}: </span><span style="font-size:11px;color:#374151;font-weight:600;">${siuLabel}</span></div>
+      <div><span style="font-size:10px;font-weight:700;color:#166534;">${siuLbl}: </span><span style="font-size:11px;color:var(--text2);font-weight:600;">${siuLabel}</span></div>
     </div>`;
 
   const siuPanel = document.getElementById('sipiunsung-panel');
@@ -3650,12 +3650,12 @@ function renderWoluunPanel(data) {
       <div style="background:rgba(255,255,255,.7);border-radius:12px;padding:10px 12px;">
         <div style="font-size:9px;font-weight:700;color:#64748b;margin-bottom:4px;">${el_lbl} / ${sipsin_lbl}</div>
         <div style="font-size:14px;font-weight:800;color:${elClr};">${wu.element}</div>
-        <div style="font-size:11px;color:#374151;margin-top:2px;">${sipsinLabel}</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px;">${sipsinLabel}</div>
       </div>
     </div>
     <div style="background:rgba(255,255,255,.6);border-radius:12px;padding:10px 12px;margin-bottom:10px;">
       <div style="font-size:9px;font-weight:700;color:#64748b;margin-bottom:4px;">${rel_lbl}</div>
-      <div style="font-size:12px;color:#374151;line-height:1.6;">${relTxt}</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;">${relTxt}</div>
     </div>
     ${relsHtml ? `<div style="margin-bottom:10px;">${relsHtml}</div>` : ''}
     <div style="background:${luckClr}18;border:1px solid ${luckClr}40;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;color:${luckClr};">
@@ -3842,7 +3842,7 @@ function renderGunghapPanel(data) {
   const s1 = T.sipsin[gh.sipsinAtoB] || gh.sipsinAtoB || '';
   const s2 = T.sipsin[gh.sipsinBtoA] || gh.sipsinBtoA || '';
   const arrowLbl = T.tenGods;
-  const vsHtml = (s1&&s2) ? `<div style="text-align:center;margin-top:10px;font-size:11px;color:#374151;">
+  const vsHtml = (s1&&s2) ? `<div style="text-align:center;margin-top:10px;font-size:11px;color:var(--text2);">
     <span style="font-weight:700;color:#4f46e5;">${s1}</span> ↔ <span style="font-weight:700;color:#ec4899;">${s2}</span>
     <div style="font-size:9px;color:#9ca3af;margin-top:2px;">${arrowLbl}</div>
   </div>` : '';
@@ -3873,27 +3873,27 @@ function renderGunghapPanel(data) {
     const czA=_getCZName(data.year,lang), czB=_getCZName(pb.year,lang);
     outerHtml = `<div style="margin-top:12px;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:11px 13px;">
       <div style="font-size:10.5px;color:#9d174d;font-weight:700;text-transform:uppercase;margin-bottom:8px;">🔮 ${escHtml(CPC.outerTitle||'')}</div>
-      <div style="display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:#374151;margin-bottom:6px;flex-wrap:wrap;"><span style="font-weight:700;">${escHtml(czA)} × ${escHtml(czB)}</span><span style="color:#9d174d;">— ${escHtml((CPC.zodiacRel||{})[zr]||'')}</span></div>
-      <div style="display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:#374151;flex-wrap:wrap;"><span style="font-weight:700;">${_SIGN_EMJ[siA]||''} × ${_SIGN_EMJ[siB]||''}</span><span style="color:#9d174d;">— ${escHtml((CPC.sunRel||{})[sr]||'')}</span></div>
+      <div style="display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:var(--text2);margin-bottom:6px;flex-wrap:wrap;"><span style="font-weight:700;">${escHtml(czA)} × ${escHtml(czB)}</span><span style="color:#9d174d;">— ${escHtml((CPC.zodiacRel||{})[zr]||'')}</span></div>
+      <div style="display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:var(--text2);flex-wrap:wrap;"><span style="font-weight:700;">${_SIGN_EMJ[siA]||''} × ${_SIGN_EMJ[siB]||''}</span><span style="color:#9d174d;">— ${escHtml((CPC.sunRel||{})[sr]||'')}</span></div>
     </div>`;
   }
 
   const div = document.createElement('div');
   div.id = 'gunghap-section';
-  div.style.cssText = 'background:#fff;border:2px solid #fbcfe8;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.style.cssText = 'background:var(--card);border:2px solid #fbcfe8;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
   div.innerHTML = `
     <div style="font-size:12px;font-weight:800;color:#9d174d;margin-bottom:14px;">💑 ${title}</div>
     <div style="display:flex;gap:10px;margin-bottom:14px;">
       <div style="flex:1;background:${e1Clr}10;border:2px solid ${e1Clr}40;border-radius:14px;padding:10px 12px;text-align:center;">
         <div style="font-size:20px;margin-bottom:4px;">👤</div>
-        <div style="font-size:11px;font-weight:700;color:#374151;">${yA}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);">${yA}</div>
         <div style="font-size:12px;font-weight:800;color:${e1Clr};">${_gz(dA)}</div>
         <div style="font-size:10px;color:#64748b;margin-top:2px;">${elA}</div>
       </div>
       <div style="display:flex;align-items:center;justify-content:center;font-size:20px;">💞</div>
       <div style="flex:1;background:${e2Clr}10;border:2px solid ${e2Clr}40;border-radius:14px;padding:10px 12px;text-align:center;">
         <div style="font-size:20px;margin-bottom:4px;">👤</div>
-        <div style="font-size:11px;font-weight:700;color:#374151;">${yB}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text2);">${yB}</div>
         <div style="font-size:12px;font-weight:800;color:${e2Clr};">${_gz(dB)}</div>
         <div style="font-size:10px;color:#64748b;margin-top:2px;">${elB}</div>
       </div>
@@ -3909,8 +3909,8 @@ function renderGunghapPanel(data) {
       const n = NA[gh.compat] || NA.good;
       const row = (lbl,txt,clr) => `<div style="display:flex;gap:9px;align-items:flex-start;margin-bottom:8px;">
         <span style="flex-shrink:0;font-size:10px;font-weight:800;color:#fff;background:${clr};border-radius:6px;padding:3px 8px;min-width:54px;text-align:center;">${lbl}</span>
-        <span style="font-size:12px;line-height:1.55;color:#374151;">${txt}</span></div>`;
-      return `<div style="margin-top:12px;background:#fff;border:1px solid #fbcfe8;border-radius:14px;padding:13px 14px;">
+        <span style="font-size:12px;line-height:1.55;color:var(--text2);">${txt}</span></div>`;
+      return `<div style="margin-top:12px;background:var(--card);border:1px solid #fbcfe8;border-radius:14px;padding:13px 14px;">
         ${row(NA.sLbl, n.s, '#16a34a')}${row(NA.cLbl, n.c, '#d97706')}${row(NA.tLbl, n.t, '#7c3aed')}</div>`;
     })()}
     ${axesHtml}
@@ -3964,7 +3964,7 @@ function renderGeokkukPanel(data) {
         </div>
       </div>
     </div>
-    <div style="background:rgba(255,255,255,.65);border-radius:12px;padding:10px 14px;font-size:12px;color:#374151;line-height:1.7;">${strategy}</div>`;
+    <div style="background:rgba(255,255,255,.65);border-radius:12px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.7;">${strategy}</div>`;
 
   const siuPanel = document.getElementById('sipiunsung-panel');
   const shinsal  = document.getElementById('shinsal-panel');
@@ -4068,7 +4068,7 @@ function renderHariBaikPanel(data) {
 
   const div = document.createElement('div');
   div.id = 'hari-baik-panel';
-  div.style.cssText = 'background:#fff;border:2px solid #dc2626;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.style.cssText = 'background:var(--card);border:2px solid #dc2626;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
   div.innerHTML = `
     <div style="font-size:12px;font-weight:800;color:#dc2626;margin-bottom:12px;">🗓️ ${title}</div>
     ${legend}
@@ -4109,9 +4109,9 @@ function renderAnnualCalendarPanel(data) {
 
   const div = document.createElement('div');
   div.id = 'annual-calendar-panel';
-  div.style.cssText = 'background:#fff;border:2px solid #e5e7eb;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.style.cssText = 'background:var(--card);border:2px solid #e5e7eb;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
   div.innerHTML = `
-    <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:14px;">📊 ${title}</div>
+    <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:14px;">📊 ${title}</div>
     <div style="display:flex;gap:3px;align-items:flex-end;height:90px;">${bars}</div>`;
 
   const fortCats = document.querySelector('.fortune-cats-section');
@@ -4155,9 +4155,9 @@ function renderAuspiciousCalendarPanel(data) {
 
   const div = document.createElement('div');
   div.id = 'auspicious-calendar-panel';
-  div.style.cssText = 'background:#fff;border:2px solid #e5e7eb;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
+  div.style.cssText = 'background:var(--card);border:2px solid #e5e7eb;border-radius:20px;padding:18px 20px;margin-bottom:16px;';
   div.innerHTML = `
-    <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:10px;">📅 ${title}</div>
+    <div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:10px;">📅 ${title}</div>
     ${legendHtml}
     <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>`;
 
@@ -4200,7 +4200,7 @@ function renderNamePanel(nameResult) {
   const mkRing = (num, clr, lbl) => `
     <div style="text-align:center;flex:1;">
       <div style="width:56px;height:56px;border-radius:50%;background:${clr};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin:0 auto 6px;">${num}</div>
-      <div style="font-size:10px;font-weight:700;color:#374151;margin-bottom:3px;">${lbl}</div>
+      <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px;">${lbl}</div>
       <div style="font-size:10px;color:#6b7280;line-height:1.4;">${numDesc[num]||num}</div>
     </div>`;
 
@@ -4526,12 +4526,12 @@ function renderAIChat(data) {
   window._aiSugg     = lb.sugg;
 
   const chips = lb.sugg.map((s,i)=>
-    `<button type="button" onclick="_aiAskSuggestion(${i})" style="background:#fff;border:1px solid #c7d2fe;color:#4338ca;border-radius:50px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;line-height:1.3;text-align:left;">${s}</button>`
+    `<button type="button" onclick="_aiAskSuggestion(${i})" style="background:var(--card);border:1px solid #c7d2fe;color:#4338ca;border-radius:50px;padding:7px 13px;font-size:12px;font-weight:600;cursor:pointer;line-height:1.3;text-align:left;">${s}</button>`
   ).join('');
 
   const panel = document.createElement('div');
   panel.id = 'ai-chat-panel';
-  panel.style.cssText = 'background:#fff;border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.10);margin:16px 0;overflow:hidden;';
+  panel.style.cssText = 'background:var(--card);border-radius:20px;box-shadow:0 2px 16px rgba(0,0,0,0.10);margin:16px 0;overflow:hidden;';
   panel.innerHTML = `
 <div style="background:linear-gradient(135deg,#1e1b4b,#4c1d95);padding:14px 18px;display:flex;align-items:center;gap:10px;">
   <span style="color:#fff;font-weight:800;font-size:15px;">${lb.title}</span>
@@ -4572,7 +4572,7 @@ function _aiAddMessage(role, text, streaming) {
   const div = document.createElement('div');
   div.style.cssText = role === 'user'
     ? 'align-self:flex-end;background:#4c1d95;color:#fff;padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:13px;max-width:80%;line-height:1.6;'
-    : 'align-self:flex-start;background:#f3f4f6;color:#1c1917;padding:10px 14px;border-radius:16px 16px 16px 4px;font-size:13px;max-width:90%;line-height:1.7;white-space:pre-wrap;';
+    : 'align-self:flex-start;background:#f3f4f6;color:var(--text);padding:10px 14px;border-radius:16px 16px 16px 4px;font-size:13px;max-width:90%;line-height:1.7;white-space:pre-wrap;';
   if (streaming) {
     div.innerHTML = '<span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s infinite;margin-right:3px;"></span><span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s .3s infinite;margin-right:3px;"></span><span style="display:inline-block;width:6px;height:6px;background:#9ca3af;border-radius:50%;animation:ai-blink 1s .6s infinite;"></span>';
     if (!document.getElementById('ai-blink-style')) {
@@ -4737,7 +4737,7 @@ function _renderStreak() {
       </div>`;
     }
     wrap.style.display = '';
-    wrap.style.cssText = 'display:flex;align-items:center;gap:12px;max-width:500px;margin:0 auto 18px;background:#fff;border:1.5px solid var(--border,#e7e5e4);border-radius:14px;padding:11px 16px;';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:12px;max-width:500px;margin:0 auto 18px;background:var(--card);border:1.5px solid var(--border,#e7e5e4);border-radius:14px;padding:11px 16px;';
     wrap.innerHTML = `<span style="font-size:13px;font-weight:800;color:#ea580c;white-space:nowrap;">${STREAK_T[lang]||STREAK_T.en}</span>${mileHtml}`;
   } catch(e) {}
 }
@@ -4884,7 +4884,7 @@ function _renderHistoryChips() {
     wrap.style.display = '';
     wrap.innerHTML = `<div style="font-size:12px;font-weight:700;color:var(--text3,#78716c);margin-bottom:7px;">${TITLE[lang]||TITLE.en}</div>` +
       hist.map((h,i) =>
-        `<button type="button" onclick="_useHistory(${i})" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--border2,#e7e5e4);border-radius:50px;padding:7px 13px;margin:0 6px 6px 0;font-size:12px;font-weight:600;color:var(--text,#1c1917);cursor:pointer;">${catIcons[h.cat]||'🍀'} ${h.y}.${String(h.m).padStart(2,'0')}.${String(h.d).padStart(2,'0')}${h.nums&&h.nums.length?` · ${h.nums.slice(0,3).join(',')}…`:''}</button>`
+        `<button type="button" onclick="_useHistory(${i})" style="display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1.5px solid var(--border2,#e7e5e4);border-radius:50px;padding:7px 13px;margin:0 6px 6px 0;font-size:12px;font-weight:600;color:var(--text,#1c1917);cursor:pointer;">${catIcons[h.cat]||'🍀'} ${h.y}.${String(h.m).padStart(2,'0')}.${String(h.d).padStart(2,'0')}${h.nums&&h.nums.length?` · ${h.nums.slice(0,3).join(',')}…`:''}</button>`
       ).join('');
   } catch(e) {}
 }
@@ -4944,10 +4944,10 @@ async function renderAliExpressPanel(data) {
     if (!document.getElementById('s-result')) return;
 
     const cards = payload.products.map(p => `
-      <a href="${p.url}" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:#1c1917;background:#fff;border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;">
+      <a href="${p.url}" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:var(--text);background:var(--card);border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;">
         <img src="${p.img}" alt="" loading="lazy" style="width:122px;height:122px;object-fit:cover;display:block;">
         <div style="padding:7px 8px 9px;">
-          <div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:#44403c;">${(p.t||'').replace(/</g,'&lt;').slice(0,60)}</div>
+          <div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:var(--text2);">${(p.t||'').replace(/</g,'&lt;').slice(0,60)}</div>
           <div style="font-size:12px;font-weight:800;color:#d97706;margin-top:4px;">${p.price} ${p.cur}</div>
         </div>
       </a>`).join('');
@@ -4956,9 +4956,9 @@ async function renderAliExpressPanel(data) {
     if (old) old.remove();
     const div = document.createElement('div');
     div.id = 'ae-aff-panel';
-    div.style.cssText = 'background:#fff;border:2px solid #e7e5e4;border-radius:20px;padding:16px 0 12px;margin-bottom:16px;overflow:hidden;';
+    div.style.cssText = 'background:var(--card);border:2px solid #e7e5e4;border-radius:20px;padding:16px 0 12px;margin-bottom:16px;overflow:hidden;';
     div.innerHTML = `
-      <div style="font-size:12px;font-weight:800;color:#374151;margin:0 18px 10px;">${lb.title}</div>
+      <div style="font-size:12px;font-weight:800;color:var(--text2);margin:0 18px 10px;">${lb.title}</div>
       <div style="display:flex;gap:9px;overflow-x:auto;padding:0 18px 6px;-webkit-overflow-scrolling:touch;">${cards}</div>
       <p style="font-size:9.5px;color:#a8a29e;margin:8px 18px 0;line-height:1.5;">${lb.disc}</p>`;
     // 상단(결과 번호/광고 바로 아래)에 배치 — 잘 보이는 위치
@@ -5434,11 +5434,11 @@ function renderScorePanel(data){
   panel.innerHTML=`<div style="font-size:12px;font-weight:700;letter-spacing:.05em;color:#64748b;margin-bottom:10px;text-transform:uppercase;">⚡ ${escHtml(S.title)}</div>
     <div style="position:relative;width:128px;height:128px;margin:0 auto;">
       <div style="width:128px;height:128px;border-radius:50%;background:conic-gradient(${col} ${deg}deg,#e2e8f0 ${deg}deg);"></div>
-      <div style="position:absolute;inset:11px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+      <div style="position:absolute;inset:11px;background:var(--card);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <div style="font-size:38px;font-weight:900;color:${col};line-height:1;">${sc}</div>
         <div style="font-size:10px;color:#94a3b8;font-weight:700;">/ 100</div></div></div>
     <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;margin-top:9px;">${escHtml(S.badgeTagline||'')}</div>
-    <div style="font-size:12.5px;color:#475569;line-height:1.5;margin-top:6px;max-width:300px;margin-left:auto;margin-right:auto;">${escHtml(ptxt)}</div>`;
+    <div style="font-size:12.5px;color:var(--text2);line-height:1.5;margin-top:6px;max-width:300px;margin-left:auto;margin-right:auto;">${escHtml(ptxt)}</div>`;
   _luxInsert(panel);
 }
 
@@ -5496,7 +5496,7 @@ function renderSpinPanel(data){
     <div style="position:relative;width:184px;height:184px;margin:0 auto 6px;">
       <div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:22px;z-index:2;">🔻</div>
       <div id="spin-wheel" style="width:184px;height:184px;border-radius:50%;background:conic-gradient(${conic});border:5px solid #fbbf24;box-shadow:0 4px 18px rgba(0,0,0,.35);transition:transform 4s cubic-bezier(.17,.67,.16,1);transform:rotate(0deg);"></div>
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:34px;height:34px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3);"></div></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:34px;height:34px;border-radius:50%;background:var(--card);box-shadow:0 2px 6px rgba(0,0,0,.3);"></div></div>
     </div>
     <div id="spin-result" style="min-height:54px;margin-top:8px;"></div>
     <button id="spin-btn" style="background:#fbbf24;color:#1e1b4b;border:none;font-weight:900;font-size:15px;padding:11px 30px;border-radius:50px;cursor:pointer;${doneToday?'opacity:.55;':''}">${escHtml(SP.button)}</button>`;
@@ -5624,7 +5624,7 @@ function renderInvitePanel(data){
   panel.style.cssText='background:linear-gradient(135deg,#be185d,#db2777);border-radius:16px;padding:17px;margin:16px 0;text-align:center;color:#fff;';
   panel.innerHTML=`<div style="font-size:14px;font-weight:900;margin-bottom:3px;">${escHtml(I.title)}</div>
     <div style="font-size:12px;color:rgba(255,255,255,.88);margin-bottom:12px;line-height:1.45;">${escHtml(I.desc)}</div>
-    <button id="invite-btn" style="background:#fff;color:#be185d;border:none;font-weight:800;font-size:14.5px;padding:11px 22px;border-radius:50px;cursor:pointer;">${escHtml(I.button)}</button>`;
+    <button id="invite-btn" style="background:var(--card);color:#be185d;border:none;font-weight:800;font-size:14.5px;padding:11px 22px;border-radius:50px;cursor:pointer;">${escHtml(I.button)}</button>`;
   panel.querySelector('#invite-btn').onclick=shareInviteLink;
   _luxInsert(panel);
 }
@@ -5645,7 +5645,7 @@ function renderNameToolPanel(data){
   const run=()=>{ const nm=(inp.value||'').trim(); if(!nm) return;
     let r; try{ r=(/[가-힣]/.test(nm)?calcHangulNumerology(nm):calcNameNumerology(nm)); }catch(e){ r=null; }
     const dn=r?r.destinyNum:1; const d1=((dn-1)%9)+1; const vibe=(X.luckyOne&&X.luckyOne.meanings&&X.luckyOne.meanings[d1-1])||'';
-    res.innerHTML=`<div style="display:flex;gap:9px;align-items:center;background:#fff;border-radius:12px;padding:13px 15px;">
+    res.innerHTML=`<div style="display:flex;gap:9px;align-items:center;background:var(--card);border-radius:12px;padding:13px 15px;">
       <div style="font-size:34px;font-weight:900;color:#c026d3;line-height:1;">${dn}</div>
       <div style="flex:1;"><div style="font-size:10px;color:#a21caf;font-weight:700;text-transform:uppercase;">${escHtml(N.numberLabel)}</div>
         <div style="font-size:12.5px;color:#6b21a8;line-height:1.5;margin-top:2px;">${escHtml(vibe)}</div></div></div>`; };
@@ -5667,7 +5667,7 @@ function renderLuckyOnePanel(data){
   const t3=_luxPick(seed,13,1000);                     // 오늘 3자리 0~999
   const p2=n=>('0'+n).slice(-2), p3=n=>('00'+n).slice(-3);
   const mean=O.meanings[d1-1]||'';
-  const big=(lbl,val)=>`<div style="flex:1;background:#fff;border-radius:13px;padding:13px 6px;text-align:center;box-shadow:0 2px 10px rgba(180,83,9,.13);">
+  const big=(lbl,val)=>`<div style="flex:1;background:var(--card);border-radius:13px;padding:13px 6px;text-align:center;box-shadow:0 2px 10px rgba(180,83,9,.13);">
     <div style="font-size:9.5px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.02em;">${escHtml(lbl)}</div>
     <div style="font-size:33px;font-weight:900;color:#b45309;line-height:1.05;margin-top:3px;letter-spacing:-1px;">${escHtml(String(val))}</div></div>`;
   const sml=(lbl,val)=>`<div style="flex:1;background:rgba(255,255,255,.72);border-radius:11px;padding:9px 4px;text-align:center;">

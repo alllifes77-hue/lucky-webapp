@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v32: 네비게이션 — 좌상단 홈배너(전 페이지)·둘러보기 디렉터리·별자리/띠 허브 드릴다운·홈 explore 링크
-const CACHE_NAME = 'lucky-v32';
+// v33: 다크모드 가독성 수정 — 홈 컴포넌트 다크 오버라이드 + 결과화면 라이트스코프 + 인라인색 변수화
+const CACHE_NAME = 'lucky-v33';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
