@@ -179,8 +179,8 @@ try {
       else { Warn "IndexNow 청크 $($ci+1)/$chunks 실패 (HTTP $inCode)" }
     }
     if ($chunks -eq 0) { Warn "IndexNow: 사이트맵 URL 0개 (건너뜀)" }
-    elseif ($okChunks -eq $chunks) { Ok "IndexNow 핑 완료 ($sent개 URL, $chunks개 청크)" }
-    elseif ($okChunks -gt 0) { Warn "IndexNow 부분 성공 ($okChunks/$chunks 청크, $sent개 URL — 나머지는 다음 배포 때 재시도)" }
+    elseif ($okChunks -eq $chunks) { Ok "IndexNow 핑 완료 ($($sent)개 URL, $($chunks)개 청크)" }
+    elseif ($okChunks -gt 0) { Warn "IndexNow 부분 성공 ($($okChunks)/$($chunks) 청크, $($sent)개 URL — 나머지는 다음 배포 때 재시도)" }
     else { Warn "IndexNow 핑 실패 (HTTP $lastCode — 키 검증 대기 중이면 다음 배포 때 자동 재시도)" }
   } else { Warn "INDEXNOW_KEY 미설정 → IndexNow 핑 건너뜀" }
 } catch { Warn "사이트맵/IndexNow 단계 실패 (무시 가능): $($_.Exception.Message)" }
