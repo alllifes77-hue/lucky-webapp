@@ -1319,6 +1319,7 @@ All content is original, deterministic, and updated daily for time-based pages. 
         ...ALL_LANGS.flatMap(l=>{ const arr=[]; for(let a=1;a<=9;a++)for(let b=a;b<=9;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/numerology-compatibility/${a}-${b}/`,priority:'0.6'}); return arr; }),
         // 트렌디 신규 — 콘텐츠형(보유 언어만): 오늘의운세·크리스탈·십이지궁합·매니페스테이션
         ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.map(s=>({lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/`,priority:'0.85',lm:todayStr}))),
+        ...ALL_LANGS.filter(l=>typeof DAILYHORO!=='undefined'&&DAILYHORO[l]).flatMap(l=>H26_SIGNS.flatMap(s=>[{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/weekly/`,priority:'0.7',lm:todayStr},{lang:l,loc:`${SITE_URL}/${l}/horoscope/${s}/monthly/`,priority:'0.7',lm:todayStr}])),
         ...ALL_LANGS.filter(l=>typeof CRYSTALS!=='undefined'&&CRYSTALS[l]).flatMap(l=>CRYSTAL_INTENTS.map(x=>({lang:l,loc:`${SITE_URL}/${l}/crystals/${x}/`,priority:'0.75'}))),
         ...ALL_LANGS.filter(l=>typeof CZCOMPAT!=='undefined'&&CZCOMPAT[l]&&CZ_COMPAT_SLUG[l]).flatMap(l=>{ const arr=[]; for(let a=0;a<12;a++)for(let b=a;b<12;b++) arr.push({lang:l,loc:`${SITE_URL}/${l}/${CZ_COMPAT_SLUG[l]}/${CZ_ANIMALS[a]}-${CZ_ANIMALS[b]}/`,priority:'0.65'}); return arr; }),
         ...ALL_LANGS.filter(l=>typeof MANIFEST!=='undefined'&&MANIFEST[l]).map(l=>({lang:l,loc:`${SITE_URL}/${l}/manifestation/`,priority:'0.75',lm:todayStr})),
@@ -3090,6 +3091,45 @@ iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;marg
 <div class="wrap">${sec('🔮 '+esc(HL2.overallLabel||'Overview'),ov,'#6366f1')}${sec('❤️ '+esc(HL2.loveLabel||'Love'),lv,'#f43f5e')}${sec('💼 '+esc(HL2.careerLabel||'Work'),wk,'#0ea5e9')}${sec('🍀 '+esc(HL2.luckyLabel||'Lucky'),tp,'#f59e0b')}
 <div class="more">${others}</div><iframe src="${esc(`${APP_URL}/?lang=${dl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(dl,'lucky')}</body></html>`;
           return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=10800','X-Robots-Tag':'index,follow'}});
+        }
+      }
+    }
+
+    // ── Y2/Y3 별자리 주간·월간 운세 (/{lang}/horoscope/{sign}/weekly|monthly/) — DAILYHORO 재사용 ──
+    {
+      const phM = path.match(/^\/([a-z]{2})\/horoscope\/([a-z]+)\/(weekly|monthly)\/?$/);
+      if (phM && DAILYHORO[phM[1]] && LANGS[phM[1]]) {
+        const dl=phM[1], si=H26_SIGNS.indexOf(phM[2]), period=phM[3]; const D=DAILYHORO[dl];
+        if (si>=0 && D.signs && D.signs[si]) {
+          const s=D.signs[si]; const t=new Date(); const dn=Math.floor(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())/86400000);
+          const seed = period==='weekly' ? Math.floor(dn/7)*3+1 : (t.getUTCFullYear()*12+t.getUTCMonth())*5+2;
+          const pick=(arr,salt)=>arr[_lnHash(seed*salt+si*13)%arr.length];
+          const ov=pick(s.overall,7), lv=pick(s.love,11), wk=pick(s.work,17), tp=pick(s.tip,23);
+          const HL2=HOROSCOPE2026_LABELS[dl]||{}; const emj=ZEMOJI12[si];
+          const PT={weekly:{ko:'이번 주 운세',en:'Weekly Horoscope',ja:'今週の運勢',de:'Wochenhoroskop',fr:'Horoscope de la semaine',es:'Horóscopo semanal',pt:'Horóscopo semanal',it:'Oroscopo settimanale',id:'Horoskop Mingguan'},monthly:{ko:'이번 달 운세',en:'Monthly Horoscope',ja:'今月の運勢',de:'Monatshoroskop',fr:'Horoscope du mois',es:'Horóscopo mensual',pt:'Horóscopo mensal',it:'Oroscopo mensile',id:'Horoskop Bulanan'}};
+          const pl=PT[period][dl]||PT[period].en;
+          const range = period==='weekly' ? (()=>{ const wd=(t.getUTCDay()+6)%7; const ms=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate()-wd); const me=ms+6*86400000; const f=x=>new Date(x).toISOString().slice(5,10); return `${f(ms)} ~ ${f(me)}`; })() : t.toISOString().slice(0,7);
+          const ttl=`${s.name} ${pl}`; const cTitle=`${ttl} ${range} — all-lifes.com`; const cDesc=`${ov}`.slice(0,155);
+          const canonical=`${SITE_URL}/${dl}/horoscope/${phM[2]}/${period}/`;
+          const hl=buildHreflang(ALL_LANGS.filter(l=>DAILYHORO[l]).map(l=>({lang:l,url:`${SITE_URL}/${l}/horoscope/${phM[2]}/${period}/`})), `${SITE_URL}/en/horoscope/${phM[2]}/${period}/`);
+          const others=H26_SIGNS.map((x,i)=>i===si?'':(D.signs[i]?`<a href="${SITE_URL}/${dl}/horoscope/${x}/${period}/">${ZEMOJI12[i]} ${esc(D.signs[i].name)}</a>`:'')).join('');
+          const xlinks=`<a href="${SITE_URL}/${dl}/horoscope/${phM[2]}/">${esc((({ko:'오늘',en:'Today',ja:'今日',de:'Heute',fr:'Jour',es:'Hoy',pt:'Hoje',it:'Oggi',id:'Hari Ini'})[dl])||'Today')}</a><a href="${SITE_URL}/${dl}/horoscope/${phM[2]}/${period==='weekly'?'monthly':'weekly'}/">${esc((PT[period==='weekly'?'monthly':'weekly'][dl]||PT[period==='weekly'?'monthly':'weekly'].en))}</a>`;
+          const faqSchema=JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{'@type':'Question','name':ttl,'acceptedAnswer':{'@type':'Answer','text':ov}}]});
+          const artSchema=JSON.stringify({"@context":"https://schema.org","@type":"Article","headline":cTitle,"inLanguage":dl,"dateModified":t.toISOString().slice(0,10),"author":{"@type":"Organization","name":"all-lifes.com"},"publisher":{"@type":"Organization","name":"all-lifes.com"},"description":cDesc});
+          const sec=(t2,v,c)=>`<div class="card" style="border-left:4px solid ${c};"><h2>${t2}</h2><p>${esc(v)}</p></div>`;
+          const html=`<!DOCTYPE html><html lang="${dl}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">${FAVICON_TAGS}${ADS_TAG}
+<title>${esc(cTitle)}</title><meta name="description" content="${esc(cDesc)}"><link rel="canonical" href="${esc(canonical)}">${hl}
+<meta property="og:title" content="${esc(ttl)}"><meta property="og:description" content="${esc(cDesc)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:image" content="${APP_URL}/og-${dl}.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${faqSchema}</script><script type="application/ld+json">${artSchema}</script>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef2ff;color:#1e293b;}
+.hero{background:linear-gradient(135deg,#3730a3,#6d28d9);color:#fff;padding:28px 20px;text-align:center;}.hero .dt{font-size:12px;color:#c4b5fd;font-weight:700;}.hero .em{font-size:50px;}.hero h1{font-size:clamp(21px,5vw,30px);font-weight:900;margin:4px 0;}
+.wrap{max-width:620px;margin:0 auto;padding:18px 16px;}.card{background:#fff;border-radius:13px;padding:14px 17px;margin:11px 0;box-shadow:0 1px 8px rgba(79,70,229,.08);}.card h2{font-size:13px;font-weight:800;color:#3730a3;margin-bottom:5px;}.card p{font-size:14.5px;line-height:1.75;color:#334155;}
+.more{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}.more a{background:#e0e7ff;color:#3730a3;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:16px;text-decoration:none;}
+iframe{width:100%;border:none;display:block;height:520px;border-radius:12px;margin-top:10px;}${NAV_FOOTER_CSS}</style></head><body>
+<div class="hero"><div class="dt">${range}</div><div class="em">${emj}</div><h1>${esc(ttl)}</h1></div>
+<div class="wrap"><div class="more">${xlinks}</div>${sec('🔮 '+esc(HL2.overallLabel||'Overview'),ov,'#6366f1')}${sec('❤️ '+esc(HL2.loveLabel||'Love'),lv,'#f43f5e')}${sec('💼 '+esc(HL2.careerLabel||'Work'),wk,'#0ea5e9')}${sec('🍀 '+esc(HL2.luckyLabel||'Lucky'),tp,'#f59e0b')}
+<div class="more">${others}</div><iframe src="${esc(`${APP_URL}/?lang=${dl}`)}" title="${esc(ttl)}" loading="lazy"></iframe></div>${buildNavFooter(dl,'lucky')}</body></html>`;
+          return new Response(html,{headers:{'Content-Type':'text/html;charset=UTF-8','Cache-Control':'public,max-age=43200','X-Robots-Tag':'index,follow'}});
         }
       }
     }
