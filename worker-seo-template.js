@@ -1495,14 +1495,32 @@ ${urlsXml}
         const apiResp = await fetch(`https://api-sg.aliexpress.com/sync?${qs}`, { method:'POST' });
         const j = await apiResp.json().catch(() => null);
         const r = j && j.aliexpress_affiliate_link_generate_response && j.aliexpress_affiliate_link_generate_response.resp_result && j.aliexpress_affiliate_link_generate_response.resp_result.result;
-        const link = r && r.promotion_links && r.promotion_links.promotion_link && r.promotion_links.promotion_link[0] && r.promotion_links.promotion_link[0].promotion_link;
+        let link = r && r.promotion_links && r.promotion_links.promotion_link && r.promotion_links.promotion_link[0] && r.promotion_links.promotion_link[0].promotion_link;
+        let via = 'link.generate';
+        // 폴백: 검색 랜딩 추적링크가 비면(테스트 앱 제약) 상품 쿼리 첫 상품의 추적링크 사용(항상 유효).
+        if (!link) {
+          const pParams = {
+            app_key: env.AE_APP_KEY,
+            method: 'aliexpress.affiliate.product.query',
+            sign_method: 'sha256', timestamp: String(Date.now()), format: 'json', v: '2.0',
+            keywords: 'lucky charm', target_currency: 'USD', target_language: 'en',
+            tracking_id: 'luckynum', ship_to_country: 'US', page_size: '5', sort: 'LAST_VOLUME_DESC',
+          };
+          const ps = Object.keys(pParams).sort().map(k => k + pParams[k]).join('');
+          const pSig = [...new Uint8Array(await crypto.subtle.sign('HMAC', cryptoKey, new TextEncoder().encode(ps)))].map(b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+          const pQs = new URLSearchParams({ ...pParams, sign: pSig }).toString();
+          const pj = await (await fetch(`https://api-sg.aliexpress.com/sync?${pQs}`, { method:'POST' })).json().catch(() => null);
+          const pr = pj && pj.aliexpress_affiliate_product_query_response && pj.aliexpress_affiliate_product_query_response.resp_result && pj.aliexpress_affiliate_product_query_response.resp_result.result;
+          const prod = pr && pr.products && pr.products.product && pr.products.product[0];
+          if (prod && prod.promotion_link) { link = prod.promotion_link; via = 'product.query'; }
+        }
         if (!link) {
           const detail = (j && j.error_response && (j.error_response.msg || j.error_response.code))
             || (j && j.aliexpress_affiliate_link_generate_response && j.aliexpress_affiliate_link_generate_response.resp_result && j.aliexpress_affiliate_link_generate_response.resp_result.resp_msg)
             || 'empty';
           return new Response(JSON.stringify({ ok:false, reason:String(detail).slice(0,200), raw: debug?j:undefined }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
         }
-        const body = JSON.stringify({ ok:true, link, dl });
+        const body = JSON.stringify({ ok:true, link, via, dl });
         if (!debug) await cache.put(cacheKey, new Response(body, { headers: { 'Cache-Control':'public, max-age=2592000' } }));
         return new Response(body, { headers: jsonHeaders });
       } catch (e) {
