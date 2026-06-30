@@ -1460,6 +1460,56 @@ ${urlsXml}
       }
     }
 
+    // ── AliExpress 영구 어필리에이트 링크 생성 (/ko/aff-link) ──
+    // affiliate.link.generate 로 "검색/카테고리 랜딩"의 추적링크를 만든다(상품별이 아니라 품절無 → 폴백에 적합).
+    // 30일 엣지캐시. dl 은 aliexpress.com 도메인만 허용(타사 URL 추적링크 남용 방지).
+    if (path === '/ko/aff-link') {
+      const jsonHeaders = { 'Content-Type':'application/json;charset=UTF-8', 'Access-Control-Allow-Origin':'*', 'Cache-Control':'public, max-age=2592000' };
+      const debug = url.searchParams.get('debug') === '1';
+      try {
+        if (!env || !env.AE_APP_KEY || !env.AE_APP_SECRET) {
+          return new Response(JSON.stringify({ ok:false, reason:'no-creds' }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+        }
+        let dl = url.searchParams.get('dl') || 'https://www.aliexpress.com/wholesale?SearchText=lucky+charm';
+        try { const h = new URL(dl).hostname.toLowerCase(); if (!/(^|\.)aliexpress\.com$/.test(h)) dl = 'https://www.aliexpress.com/wholesale?SearchText=lucky+charm'; } catch(_) { dl = 'https://www.aliexpress.com/wholesale?SearchText=lucky+charm'; }
+        const cache = caches.default;
+        const cacheKey = new Request('https://ae-aff.cache/link-' + encodeURIComponent(dl));
+        const hit = debug ? null : await cache.match(cacheKey);
+        if (hit) return new Response(await hit.text(), { headers: jsonHeaders });
+        const params = {
+          app_key: env.AE_APP_KEY,
+          method: 'aliexpress.affiliate.link.generate',
+          sign_method: 'sha256',
+          timestamp: String(Date.now()),
+          format: 'json',
+          v: '2.0',
+          promotion_link_type: '0',
+          source_values: dl,
+          tracking_id: 'luckynum',
+        };
+        const sorted = Object.keys(params).sort().map(k => k + params[k]).join('');
+        const cryptoKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.AE_APP_SECRET), { name:'HMAC', hash:'SHA-256' }, false, ['sign']);
+        const sigBuf = await crypto.subtle.sign('HMAC', cryptoKey, new TextEncoder().encode(sorted));
+        const sign = [...new Uint8Array(sigBuf)].map(b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+        const qs = new URLSearchParams({ ...params, sign }).toString();
+        const apiResp = await fetch(`https://api-sg.aliexpress.com/sync?${qs}`, { method:'POST' });
+        const j = await apiResp.json().catch(() => null);
+        const r = j && j.aliexpress_affiliate_link_generate_response && j.aliexpress_affiliate_link_generate_response.resp_result && j.aliexpress_affiliate_link_generate_response.resp_result.result;
+        const link = r && r.promotion_links && r.promotion_links.promotion_link && r.promotion_links.promotion_link[0] && r.promotion_links.promotion_link[0].promotion_link;
+        if (!link) {
+          const detail = (j && j.error_response && (j.error_response.msg || j.error_response.code))
+            || (j && j.aliexpress_affiliate_link_generate_response && j.aliexpress_affiliate_link_generate_response.resp_result && j.aliexpress_affiliate_link_generate_response.resp_result.resp_msg)
+            || 'empty';
+          return new Response(JSON.stringify({ ok:false, reason:String(detail).slice(0,200), raw: debug?j:undefined }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+        }
+        const body = JSON.stringify({ ok:true, link, dl });
+        if (!debug) await cache.put(cacheKey, new Response(body, { headers: { 'Cache-Control':'public, max-age=2592000' } }));
+        return new Response(body, { headers: jsonHeaders });
+      } catch (e) {
+        return new Response(JSON.stringify({ ok:false, reason:'error' }), { status:200, headers:{ ...jsonHeaders, 'Cache-Control':'no-store' } });
+      }
+    }
+
     // ── AliExpress 어필리에이트 추천 상품 (/ko/aff-products?lang=xx) ──
     // 기존 /ko/* 라우트로 도달하는 내부 API. App Secret 은 워커 시크릿(AE_APP_SECRET)에만 존재.
     // 엣지 캐시 6시간 → API 호출량 최소화 (Test 앱 한도 보호).
