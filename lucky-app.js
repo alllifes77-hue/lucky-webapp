@@ -1660,9 +1660,8 @@ function renderResults(data) {
 
   // 결과 상단 광고 — 핵심 결과(번호/점수) 바로 아래, 가장 잘 보이는 위치
   _resultAdSense('ad-result-top', 360);
-  // 알리익스프레스 + ko 쿠팡도 상단(광고 바로 아래)에 배치 — 잘 보이는 위치
+  // 알리익스프레스 추천(전 언어 공통, 상품없으면 폴백카드로 무조건 1개). 쿠팡 제거.
   renderAliExpressPanel(data);
-  _resultCoupang(lang);
   try { renderSocialProof(data); } catch(e){} // X6 소셜 프루프(결과 상단)
 
   // ══ LUCKY: 행운 번호 전용 ════════════════════════════════
@@ -4921,11 +4920,24 @@ const AE_AFF_L = {
   it:{ title:'🧧 Portafortuna · Annuncio', disc:'In qualità di affiliati AliExpress, potremmo ricevere una commissione sugli acquisti idonei.' },
   id:{ title:'🧧 Jimat keberuntungan · Iklan', disc:'Sebagai afiliasi AliExpress, kami dapat menerima komisi dari pembelian yang memenuhi syarat.' },
 };
+// 폴백 단일 카드 CTA(상품 fetch가 비었을 때 — AliExpress 배너 "무조건 1개" 보장). 9개 언어.
+const AE_CTA_L = {
+  ko:{ t:'행운 아이템 보러가기', s:'AliExpress 인기 행운 부적·풍수 소품' },
+  en:{ t:'Shop Lucky Charms', s:'Popular charms & feng shui picks on AliExpress' },
+  ja:{ t:'開運アイテムを見る', s:'AliExpressの人気お守り・風水グッズ' },
+  de:{ t:'Glücksbringer ansehen', s:'Beliebte Talismane & Feng Shui auf AliExpress' },
+  fr:{ t:'Voir les porte-bonheur', s:'Amulettes & Feng Shui populaires sur AliExpress' },
+  es:{ t:'Ver amuletos de la suerte', s:'Amuletos y Feng Shui populares en AliExpress' },
+  pt:{ t:'Ver amuletos da sorte', s:'Amuletos e Feng Shui populares no AliExpress' },
+  it:{ t:'Vedi i portafortuna', s:'Amuleti e Feng Shui popolari su AliExpress' },
+  id:{ t:'Lihat Jimat Keberuntungan', s:'Jimat & Feng Shui populer di AliExpress' },
+};
 
 async function renderAliExpressPanel(data) {
   try {
     const lang = data.lang || window.LUCKY_CURRENT_LANG || 'ko';
     const lb = AE_AFF_L[lang] || AE_AFF_L.en;
+    if (!document.getElementById('s-result')) return;
 
     // 세션 캐시 3시간 (엣지 캐시와 별개로 클라 재호출 절약). v3=지오/통화 변경 캐시버스트
     const ck = 'ae_aff_v3_' + lang;
@@ -4935,22 +4947,30 @@ async function renderAliExpressPanel(data) {
       if (c && (Date.now() - c.t) < 3*3600*1000) payload = c.d;
     } catch(_) {}
     if (!payload) {
-      const res = await fetch('https://all-lifes.com/ko/aff-products?lang=' + lang + '&v=3');
-      if (!res.ok) return;
-      payload = await res.json();
-      try { sessionStorage.setItem(ck, JSON.stringify({ t: Date.now(), d: payload })); } catch(_) {}
+      try {
+        const res = await fetch('https://all-lifes.com/ko/aff-products?lang=' + lang + '&v=3');
+        if (res.ok) { payload = await res.json(); try { sessionStorage.setItem(ck, JSON.stringify({ t: Date.now(), d: payload })); } catch(_) {} }
+      } catch(_) {}
     }
-    if (!payload || !payload.ok || !payload.products || !payload.products.length) return;
-    if (!document.getElementById('s-result')) return;
 
-    const cards = payload.products.map(p => `
-      <a href="${p.url}" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:var(--text);background:var(--card);border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;">
-        <img src="${p.img}" alt="" loading="lazy" style="width:122px;height:122px;object-fit:cover;display:block;">
-        <div style="padding:7px 8px 9px;">
-          <div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:var(--text2);">${(p.t||'').replace(/</g,'&lt;').slice(0,60)}</div>
-          <div style="font-size:12px;font-weight:800;color:#d97706;margin-top:4px;">${p.price} ${p.cur}</div>
-        </div>
-      </a>`).join('');
+    let cards;
+    if (payload && payload.ok && payload.products && payload.products.length) {
+      cards = payload.products.map(p => `
+        <a href="${p.url}" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 122px;text-decoration:none;color:var(--text);background:var(--card);border:1.5px solid #e7e5e4;border-radius:14px;overflow:hidden;">
+          <img src="${p.img}" alt="" loading="lazy" style="width:122px;height:122px;object-fit:cover;display:block;">
+          <div style="padding:7px 8px 9px;">
+            <div style="font-size:10.5px;line-height:1.35;height:28px;overflow:hidden;color:var(--text2);">${(p.t||'').replace(/</g,'&lt;').slice(0,60)}</div>
+            <div style="font-size:12px;font-weight:800;color:#d97706;margin-top:4px;">${p.price} ${p.cur}</div>
+          </div>
+        </a>`).join('');
+    } else {
+      // 폴백: 영구 추적링크 단일 카드 → 상품이 비어도 AliExpress 배너 무조건 1개 노출
+      let link = null;
+      try { const lr = await fetch('https://all-lifes.com/ko/aff-link'); if (lr.ok) { const lj = await lr.json(); if (lj && lj.ok) link = lj.link; } } catch(_) {}
+      if (!link) return; // 링크조차 못 얻으면 빈 박스 대신 미표시
+      const cta = AE_CTA_L[lang] || AE_CTA_L.en;
+      cards = `<a href="${link}" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 100%;display:flex;align-items:center;gap:12px;text-decoration:none;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fed7aa;border-radius:14px;padding:14px 16px;color:#7c2d12;"><span style="font-size:30px;">🧧</span><span style="flex:1;min-width:0;"><span style="display:block;font-size:13.5px;font-weight:800;">${escHtml(cta.t)}</span><span style="display:block;font-size:11.5px;color:#9a3412;margin-top:2px;">${escHtml(cta.s)}</span></span><span style="font-size:16px;font-weight:800;color:#ea580c;">→</span></a>`;
+    }
 
     const old = document.getElementById('ae-aff-panel');
     if (old) old.remove();
@@ -6315,7 +6335,7 @@ function renderSolarPanel(data){
   _luxInsert(panel);
 }
 
-// ══ 결과화면 광고 (AdSense + ko 쿠팡) ══════════════════════
+// ══ 결과화면 광고 (AdSense — AliExpress 패널은 renderAliExpressPanel 담당) ══════
 // 단독 접속(iframe 아님)에서만, 1회 생성(재렌더 시 중복/재push 방지),
 // .share-section 앞에 삽입. 크기는 축소(콘텐츠 가독성 우선).
 function _resultAdSense(id, maxW){
@@ -6357,32 +6377,6 @@ function _distributeResultAds(){
     try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e){}
   }
 }
-function _resultCoupang(lang){
-  if (window.self !== window.top) return;
-  if (lang !== 'ko') return;
-  if (document.getElementById('coupang-result')) return;
-  // 상단(결과 번호/광고 바로 아래)에 배치 — 잘 보이는 위치
-  const topA = document.getElementById('ad-result-top') || document.querySelector('.fortune-card') || document.getElementById('lottery-section');
-  if (!topA || !topA.parentNode) return;
-  const wrap = document.createElement('div');
-  wrap.id = 'coupang-result';
-  wrap.style.cssText = 'max-width:680px;margin:14px auto;text-align:center;overflow:hidden;box-sizing:border-box;';
-  topA.after(wrap);
-  try {
-    var cpW = Math.min(680, Math.max(300, document.documentElement.clientWidth - 32));
-    var cpF = document.createElement('iframe');
-    cpF.src = 'https://ads-partners.coupang.com/widgets.html?id=996633&template=carousel&trackingCode=AF4227535&subId=&width=' + cpW + '&height=140&tsource=';
-    cpF.style.cssText = 'width:' + cpW + 'px;max-width:100%;height:140px;border:0;display:block;margin:0 auto;';
-    cpF.scrolling = 'no'; cpF.loading = 'lazy'; cpF.referrerPolicy = 'unsafe-url';
-    cpF.title = '쿠팡 파트너스 추천 상품';
-    wrap.appendChild(cpF);
-    var p = document.createElement('p');
-    p.style.cssText = 'font-size:10px;color:#9ca3af;margin-top:7px;line-height:1.5;';
-    p.textContent = '이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.';
-    wrap.appendChild(p);
-  } catch(e){}
-}
-
 // ── 십이지 (Chinese Zodiac) 배지 패널 ───────────────────────
 function renderChineseZodiacBadge(data) {
   const existing = document.getElementById('cz-badge-panel');

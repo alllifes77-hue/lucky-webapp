@@ -553,7 +553,7 @@ const _NAV_CAT_LABELS = {
 const _NAV_MAIN = {ko:'🍀 행운의 번호',ja:'🍀 幸運の数字',en:'🍀 Lucky Numbers',de:'🍀 Glückszahlen',fr:'🍀 Numéros de Chance',es:'🍀 Números de Suerte',pt:'🍀 Números da Sorte',it:'🍀 Numeri Fortunati',id:'🍀 Angka Keberuntungan'};
 
 // ★광고 자동화 규칙★ 새 콘텐츠 페이지는 본문 끝에 `${buildNavFooter(lang,'...')}` 만 호출하면
-// AdSense(상단+하단)·AliExpress 스트립·ko 쿠팡이 전부 자동 주입된다. ADS_TAG(head)·.hero 는 선택사항
+// AdSense(상단+하단)·AliExpress 스트립(전 언어, 상품없으면 폴백카드로 무조건 1개)이 전부 자동 주입된다. ADS_TAG(head)·.hero 는 선택사항
 // (ADS_TOP_INJECT 가 로더 자동삽입 + 앵커 폴백 처리). 광고 없이 내보낼 페이지(embed/widget iframe 페이로드)
 // 만 buildNavFooter 를 호출하지 않으면 된다.
 function buildNavFooter(lang, activePage) {
@@ -740,22 +740,20 @@ const AFF_OFFERS = {
 };
 const AFF_LABELS = { ko:'추천 서비스 · 광고', en:'Recommended · Ad', ja:'おすすめ · 広告', de:'Empfohlen · Anzeige', fr:'Recommandé · Pub', es:'Recomendado · Anuncio', pt:'Recomendado · Anúncio', it:'Consigliato · Annuncio', id:'Rekomendasi · Iklan' };
 
-// ── 쿠팡 파트너스 다이내믹 위젯 (ko 페이지 전용) ─────────────
-// 화면 폭에 맞춰 위젯 너비를 동적 계산(모바일 잘림 방지). 경제적 이해관계 표시 문구 의무 포함.
-const COUPANG_WIDGET = `<div class="cp-slot"><div class="aff-label">쿠팡 추천 상품 · 광고</div><iframe id="cp-frame" style="width:680px;max-width:100%;height:140px;border:0;display:block;margin:0 auto;" scrolling="no" referrerpolicy="unsafe-url" loading="lazy" title="쿠팡 파트너스 추천 상품"></iframe><script>(function(){var f=document.getElementById('cp-frame');var w=Math.min(680,Math.max(300,document.documentElement.clientWidth-32));f.style.width=w+'px';f.src='https://ads-partners.coupang.com/widgets.html?id=996633&template=carousel&trackingCode=AF4227535&subId=&width='+w+'&height=140&tsource=';})();</script><p class="cp-disclosure">이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p></div>`;
-// 상단 통합 어필리에이트 주입: AdSense(#ads-top) 바로 아래로 알리익스프레스 스트립 + ko 쿠팡을 이동.
+// 상단 통합 어필리에이트 주입: AdSense(#ads-top) 바로 아래로 알리익스프레스 스트립을 이동(전 언어 공통).
+// 쿠팡 제거 — ko 포함 전 언어 AliExpress 단일화. 상품이 비면 영구 추적링크 폴백 카드로 항상 1개 노출.
 // 라벨은 HTML 컨텍스트(아포스트로피 안전)로 hidden src 에 두고, 스크립트가 .hero/#ads-top 직후로 relocate.
 function TOP_AFF_INJECT(lang){
   const ae = AE_STRIP_L[lang] || AE_STRIP_L.en;
-  const koCp = lang==='ko'
-    ? `<div style="max-width:780px;margin:0 auto;padding:0 16px;"><div style="margin-top:12px;text-align:center;"><div style="font-size:11px;color:#9ca3af;margin-bottom:6px;">쿠팡 추천 상품 · 광고</div><iframe id="cp-frame" style="width:680px;max-width:100%;height:140px;border:0;display:block;margin:0 auto;" scrolling="no" referrerpolicy="unsafe-url" loading="lazy" title="쿠팡 파트너스 추천 상품"></iframe><p style="font-size:9.5px;color:#a8a29e;margin:6px 0 0;line-height:1.5;">이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p></div></div>`
-    : '';
+  const cta = AE_CTA_L[lang] || AE_CTA_L.en;
+  // 쿠팡 제거 — 전 언어 AliExpress 단일화. 상품 fetch가 비면 /ko/aff-link(영구 추적링크)로
+  // 단일 폴백 카드를 렌더해 "AliExpress 배너 무조건 1개" 보장.
   return `<div id="top-aff-src" style="display:none;">
   <div id="ae-top" style="max-width:780px;margin:12px auto 0;padding:0 16px;display:none;">
     <div style="font-size:12px;font-weight:800;color:#374151;margin-bottom:8px;">${ae.t}</div>
     <div class="ae-top-cards" style="display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;"></div>
     <p style="font-size:9.5px;color:#a8a29e;margin:6px 0 0;line-height:1.5;">${ae.d}</p>
-  </div>${koCp}
+  </div>
 </div>
 <script>(function(){try{
   var src=document.getElementById('top-aff-src');if(!src)return;
@@ -764,8 +762,13 @@ function TOP_AFF_INJECT(lang){
   while(src.firstElementChild){anchor.parentNode.insertBefore(src.firstElementChild,anchor.nextSibling);anchor=anchor.nextSibling;}
   src.remove();
   var box=document.getElementById('ae-top');var w=box&&box.querySelector('.ae-top-cards');
-  if(w){fetch('${SITE_URL}/ko/aff-products?lang=${lang}&v=3').then(function(r){return r.json();}).then(function(j){if(!j||!j.ok||!j.products||!j.products.length)return;w.innerHTML=j.products.map(function(p){return '<a href="'+p.url+'" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 110px;text-decoration:none;color:#1c1917;background:#fff;border:1.5px solid #e7e5e4;border-radius:12px;overflow:hidden;"><img src="'+p.img+'" alt="" loading="lazy" style="width:110px;height:110px;object-fit:cover;display:block;"><div style="padding:6px 7px 8px;"><div style="font-size:10px;line-height:1.3;height:26px;overflow:hidden;color:#44403c;">'+(p.t||'').replace(/</g,'&lt;').slice(0,55)+'</div><div style="font-size:11.5px;font-weight:800;color:#d97706;margin-top:3px;">'+p.price+' '+p.cur+'</div></div></a>';}).join('');box.style.display='block';}).catch(function(){});}
-  var cf=document.getElementById('cp-frame');if(cf){var cw=Math.min(680,Math.max(300,document.documentElement.clientWidth-32));cf.style.width=cw+'px';cf.src='https://ads-partners.coupang.com/widgets.html?id=996633&template=carousel&trackingCode=AF4227535&subId=&width='+cw+'&height=140&tsource=';}
+  if(!w)return;
+  function fb(){fetch('${SITE_URL}/ko/aff-link').then(function(r){return r.json();}).then(function(j){if(!j||!j.ok||!j.link)return;w.innerHTML='<a href="'+j.link+'" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 100%;display:flex;align-items:center;gap:12px;text-decoration:none;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fed7aa;border-radius:14px;padding:13px 15px;color:#7c2d12;"><span style="font-size:28px;">🧧</span><span style="flex:1;min-width:0;"><span style="display:block;font-size:13px;font-weight:800;">${esc(cta.t)}</span><span style="display:block;font-size:11px;color:#9a3412;margin-top:2px;">${esc(cta.s)}</span></span><span style="font-size:15px;font-weight:800;color:#ea580c;">→</span></a>';box.style.display='block';}).catch(function(){});}
+  fetch('${SITE_URL}/ko/aff-products?lang=${lang}&v=3').then(function(r){return r.json();}).then(function(j){
+    if(!j||!j.ok||!j.products||!j.products.length){fb();return;}
+    w.innerHTML=j.products.map(function(p){return '<a href="'+p.url+'" target="_blank" rel="sponsored nofollow noopener" style="flex:0 0 110px;text-decoration:none;color:#1c1917;background:#fff;border:1.5px solid #e7e5e4;border-radius:12px;overflow:hidden;"><img src="'+p.img+'" alt="" loading="lazy" style="width:110px;height:110px;object-fit:cover;display:block;"><div style="padding:6px 7px 8px;"><div style="font-size:10px;line-height:1.3;height:26px;overflow:hidden;color:#44403c;">'+(p.t||'').replace(/</g,'&lt;').slice(0,55)+'</div><div style="font-size:11.5px;font-weight:800;color:#d97706;margin-top:3px;">'+p.price+' '+p.cur+'</div></div></a>';}).join('');
+    box.style.display='block';
+  }).catch(function(){fb();});
 }catch(e){}})();</script>`;
 }
 function renderAffSlot(lang){
@@ -788,6 +791,18 @@ const AE_STRIP_L = {
   pt:{t:'🧧 Amuletos da sorte · Anúncio', d:'Como afiliados do AliExpress, podemos receber comissão por compras qualificadas.'},
   it:{t:'🧧 Portafortuna · Annuncio', d:'In qualità di affiliati AliExpress, potremmo ricevere una commissione sugli acquisti idonei.'},
   id:{t:'🧧 Jimat keberuntungan · Iklan', d:'Sebagai afiliasi AliExpress, kami dapat menerima komisi dari pembelian yang memenuhi syarat.'},
+};
+// 폴백 단일 카드 CTA(상품 fetch가 비었을 때 — AliExpress 배너 "무조건 1개" 보장). 9개 언어.
+const AE_CTA_L = {
+  ko:{t:'행운 아이템 보러가기', s:'AliExpress 인기 행운 부적·풍수 소품'},
+  en:{t:'Shop Lucky Charms', s:'Popular charms & feng shui picks on AliExpress'},
+  ja:{t:'開運アイテムを見る', s:'AliExpressの人気お守り・風水グッズ'},
+  de:{t:'Glücksbringer ansehen', s:'Beliebte Talismane & Feng Shui auf AliExpress'},
+  fr:{t:'Voir les porte-bonheur', s:'Amulettes & Feng Shui populaires sur AliExpress'},
+  es:{t:'Ver amuletos de la suerte', s:'Amuletos y Feng Shui populares en AliExpress'},
+  pt:{t:'Ver amuletos da sorte', s:'Amuletos e Feng Shui populares no AliExpress'},
+  it:{t:'Vedi i portafortuna', s:'Amuleti e Feng Shui popolari su AliExpress'},
+  id:{t:'Lihat Jimat Keberuntungan', s:'Jimat & Feng Shui populer di AliExpress'},
 };
 function _aeStrip(lang){
   const lb = AE_STRIP_L[lang] || AE_STRIP_L.en;

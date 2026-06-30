@@ -1,6 +1,6 @@
 // Lucky Numbers PWA Service Worker
-// v33: 다크모드 가독성 수정 — 홈 컴포넌트 다크 오버라이드 + 결과화면 라이트스코프 + 인라인색 변수화
-const CACHE_NAME = 'lucky-v33';
+// v34: 광고 — 쿠팡 전면 제거 + AliExpress 단일화(전 언어), 상품없으면 영구링크 폴백카드로 무조건 1개 노출
+const CACHE_NAME = 'lucky-v34';
 const STATIC_ASSETS = [
   '/lucky/',
   '/lucky/index.html',
